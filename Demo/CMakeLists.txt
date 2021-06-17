@@ -14,6 +14,13 @@ file(GLOB_RECURSE HEADER CONFIGURE_DEPENDS "${SRC_DIR}/${PROJECT_NAME}/*.hpp")
 set(RESOURCE_FILES)
 
 add_executable(${PROJECT_NAME} ${SRC} ${HEADER} ${RESOURCE_FILES})
+
+if(WIN32)
+    set_target_properties(${PROJECT_NAME}
+    PROPERTIES LINK_FLAGS_DEBUG "/SUBSYSTEM:CONSOLE"
+               LINK_FLAGS_RELEASE "/SUBSYSTEM:WINDOWS /ENTRY:mainCRTStartup")
+endif()
+
 include_directories(${INC_DIR} AFTER)
 
 target_link_libraries(${PROJECT_NAME} Akila)

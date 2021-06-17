@@ -43,7 +43,7 @@ void ThreadPool::start(TaskManager *taskManager, unsigned int max) {
     if(count == 0) count = 1;
 
     for(unsigned int i = 0; i < count; ++i) {
-        threads.emplace_back(std::thread([this, taskManager]() {
+        threads.push_back(std::thread([this, taskManager]() {
             
             while(!exit) {
                 std::shared_ptr<Task> t;
@@ -73,7 +73,6 @@ void ThreadPool::start(TaskManager *taskManager, unsigned int max) {
 
 ThreadPool::~ThreadPool() {
     exit = true;
-
     cv.notify_all();
     for(int i = 0; i < threads.size(); i++) threads[i].join();
 }
