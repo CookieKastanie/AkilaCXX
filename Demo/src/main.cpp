@@ -1,15 +1,9 @@
-#include "Akila/Akila.hpp"
-#include "Akila/Test.hpp"
-#include "glm/vec3.hpp"
+#include "Akila/core/Core.hpp"
+#include "Demo/LoadingState.hpp"
 
-int main() {
-	Akila::hello();
-
-	glm::vec3 pos{0, 5, 1};
-	std::cout << pos.y << std::endl;
-
-	std::cout << Akila::test() << std::endl;
-
-	return 0;
+int main(int argc, char *argv[]) {
+	return Akila::Core::run(argc, argv, [](void) {
+		Akila::Core::setState(new LoadingState{});
+		//Akila::Core::display->setFullscreen(true);
+	});
 }
-
