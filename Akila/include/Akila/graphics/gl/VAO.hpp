@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Akila/graphics/Buffer.hpp"
+#include "Akila/graphics/gl/Buffer.hpp"
 
 namespace Akila {
 	class VAO {

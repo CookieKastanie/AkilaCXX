@@ -5,8 +5,10 @@
 using namespace Akila;
 
 Display *Core::display = nullptr;
+StateManager *Core::stateManager = nullptr;
 TaskManager *Core::taskManager = nullptr;
-std::shared_ptr<State> Core::currentState = nullptr;
+
+Core::Core() {}
 
 int Core::run(int argc, char *argv[], void (*init)(void)) {
 	glfwInit();
@@ -16,6 +18,7 @@ int Core::run(int argc, char *argv[], void (*init)(void)) {
 	glfwWindowHint(GLFW_SAMPLES, 0);
 
 	display = new Display{};
+	stateManager = new StateManager{};
 	taskManager = new TaskManager{};
 
 	if(!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) {
@@ -26,9 +29,12 @@ int Core::run(int argc, char *argv[], void (*init)(void)) {
 	init();
 
 	Time::update();
+	State *currentState = nullptr;
 	while(!display->shouldClose()) {
 		Time::update();
 		taskManager->flush();
+
+		currentState = stateManager->getCurrentState();
 		currentState->update();
 		currentState->draw();
 
@@ -37,15 +43,8 @@ int Core::run(int argc, char *argv[], void (*init)(void)) {
 	}
 
 	delete taskManager;
+	delete stateManager;
 	delete display;
 
 	return EXIT_SUCCESS;
-}
-
-void Core::setState(std::shared_ptr<State> state) {
-	currentState = state;
-}
-
-void Core::setState(State *state) {
-	setState(std::shared_ptr<State>(state));
 }

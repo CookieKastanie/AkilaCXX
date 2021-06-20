@@ -55,6 +55,9 @@ namespace Akila {
 			void submit(std::shared_ptr<Task> task);
 			void submit(Task *task);
 
+			void submitSync(std::shared_ptr<Task> task);
+			void submitSync(Task *task);
+
 			void flush();
 	};
 }

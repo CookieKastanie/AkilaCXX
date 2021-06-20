@@ -1,4 +1,4 @@
-#include "Akila/graphics/Buffer.hpp"
+#include "Akila/graphics/gl/Buffer.hpp"
 
 using namespace Akila;
 
@@ -50,3 +50,5 @@ void VBO::bindToArrayBuffer(unsigned int dataType) const {
 	glVertexAttribPointer(getLocation(), getTupleSize(), dataType, GL_FALSE, 0, 0);
 	glEnableVertexAttribArray(getLocation());
 }
+
+/////////////////////////////////////////////////////////////////////////////////////////////////

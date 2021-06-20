@@ -1,4 +1,4 @@
-#include "Akila/graphics/VAO.hpp"
+#include "Akila/graphics/gl/VAO.hpp"
 
 using namespace Akila;
 

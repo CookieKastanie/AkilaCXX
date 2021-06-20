@@ -18,14 +18,21 @@ void TaskManager::submit(Task *task) {
 	submit(std::shared_ptr<Task>(task));
 }
 
+void TaskManager::submitSync(std::shared_ptr<Task> task) {
+    std::lock_guard<std::mutex> lck(queueMutex);
+    tasks.push(task);
+}
+
+void TaskManager::submitSync(Task *task) {
+    submitSync(std::shared_ptr<Task>(task));
+}
+
 void TaskManager::flush() {
-    {
-        std::lock_guard<std::mutex> lck(queueMutex);
-        while(!tasks.empty()) {
-            auto t = tasks.front();
-            tasks.pop();
-            t->onMain();
-        }
+    std::lock_guard<std::mutex> lck(queueMutex);
+    while(!tasks.empty()) {
+        auto t = tasks.front();
+        tasks.pop();
+        t->onMain();
     }
 }
 
