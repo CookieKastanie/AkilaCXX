@@ -10,12 +10,11 @@ set(INC_DIR "${PROJECT_SOURCE_DIR}/include")
 ## Files
 file(GLOB_RECURSE SRC CONFIGURE_DEPENDS "${SRC_DIR}/*.cpp")
 file(GLOB_RECURSE HEADER CONFIGURE_DEPENDS "${SRC_DIR}/${PROJECT_NAME}/*.hpp")
+file(GLOB_RECURSE RESOURCE_FILES CONFIGURE_DEPENDS "${RESOURCES_DIRECTORY}/*")
 
-set(RESOURCE_FILES
-     ${CMAKE_CURRENT_SOURCE_DIR}/../Akila/resources/Akila.rc
-)
+set(APP_ICON ${CMAKE_CURRENT_SOURCE_DIR}/../Akila/resources/Akila.rc)
 
-add_executable(${PROJECT_NAME} ${SRC} ${HEADER} ${RESOURCE_FILES})
+add_executable(${PROJECT_NAME} ${SRC} ${HEADER} ${RESOURCE_FILES} ${APP_ICON})
 
 if(WIN32)
     set_target_properties(${PROJECT_NAME}
@@ -26,3 +25,13 @@ endif()
 include_directories(${INC_DIR} AFTER)
 
 target_link_libraries(${PROJECT_NAME} Akila)
+
+
+
+#Copy resources
+add_custom_command(
+	TARGET ${PROJECT_NAME} POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy_directory
+        ${PROJECT_SOURCE_DIR}/resources
+        $<TARGET_FILE_DIR:${PROJECT_NAME}>/resources
+)

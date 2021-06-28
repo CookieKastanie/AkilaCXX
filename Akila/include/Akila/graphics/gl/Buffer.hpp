@@ -26,7 +26,7 @@ namespace Akila {
             Buffer(unsigned int kind, unsigned int usage);
             virtual ~Buffer();
             virtual void bind() const;
-            virtual void setData(const void *data, int size, int offset = 0);
+            virtual void setRawData(const void *data, int size, int offset = 0);
             virtual int getLength() const;
     };
 
@@ -45,5 +45,15 @@ namespace Akila {
             unsigned int getLocation() const;
 
             void bindToArrayBuffer(unsigned int dataType = FLOAT) const;
+    };
+
+    class UBO: public Buffer {
+        //private:
+
+
+        public:
+            UBO(unsigned int size, unsigned int usage = DYNAMIC);
+
+            void setData(const void *data);
     };
 }

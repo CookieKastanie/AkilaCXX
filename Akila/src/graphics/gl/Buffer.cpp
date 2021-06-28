@@ -14,7 +14,7 @@ void Buffer::bind() const {
 	glBindBuffer(kind, id);
 }
 
-void Buffer::setData(const void *data, int size, int offset) {
+void Buffer::setRawData(const void *data, int size, int offset) {
 	bind();
 	if(length == -1) glBufferData(kind, size, data, usage);
 	else glBufferSubData(kind, offset, size, data);
@@ -33,9 +33,15 @@ VBO::VBO(int tupleSize, unsigned int attributeLocation, unsigned int usage): Buf
 
 template<typename T>
 void VBO::setData(const std::vector<T> &data) {
-	setData(data.data(), data.size() * sizeof(T));
+	setRawData(data.data(), data.size() * sizeof(T));
 	length = data.size();
 }
+
+// declaration de tous les templates possibles
+template void VBO::setData(const std::vector<float> &data);
+template void VBO::setData(const std::vector<glm::vec2> &data);
+template void VBO::setData(const std::vector<glm::vec3> &data);
+template void VBO::setData(const std::vector<glm::vec4> &data);
 
 int VBO::getTupleSize() const {
 	return tupleSize;
@@ -52,3 +58,12 @@ void VBO::bindToArrayBuffer(unsigned int dataType) const {
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////////////
+
+UBO::UBO(unsigned int size, unsigned int usage): Buffer{GL_UNIFORM_BUFFER, usage} {
+	setRawData(NULL, size);
+	length = size;
+}
+
+void UBO::setData(const void *data) {
+	setRawData(data, length);
+}

@@ -4,9 +4,10 @@
 
 using namespace Akila;
 
-Display *Core::display = nullptr;
-StateManager *Core::stateManager = nullptr;
-TaskManager *Core::taskManager = nullptr;
+std::shared_ptr<Display> Core::display = nullptr;
+std::shared_ptr<StateManager> Core::stateManager = nullptr;
+std::shared_ptr<TaskManager> Core::taskManager = nullptr;
+std::shared_ptr<Renderer> Core::renderer = nullptr;
 
 Core::Core() {}
 
@@ -17,9 +18,15 @@ int Core::run(int argc, char *argv[], void (*init)(void)) {
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 	glfwWindowHint(GLFW_SAMPLES, 0);
 
-	display = new Display{};
-	stateManager = new StateManager{};
-	taskManager = new TaskManager{};
+	FileSystem::init();
+
+	std::cout << FileSystem::path("resources/textures/citron.png") << std::endl;
+	std::cout << FileSystem::exist("resources/textures/citron.png") << std::endl;
+
+	display = std::make_shared<Display>();
+	stateManager = std::make_shared<StateManager>();
+	taskManager = std::make_shared<TaskManager>();
+	renderer = std::make_shared<Renderer>(display);
 
 	if(!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) {
 		std::cerr << "Failed to retrieve OpenGL functions" << std::endl;
@@ -41,10 +48,6 @@ int Core::run(int argc, char *argv[], void (*init)(void)) {
 		display->swapBuffers();
 		glfwPollEvents();
 	}
-
-	delete taskManager;
-	delete stateManager;
-	delete display;
 
 	return EXIT_SUCCESS;
 }
