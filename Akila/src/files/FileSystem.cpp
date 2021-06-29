@@ -49,11 +49,13 @@ void FileSystem::init() {
 	root = procPath();
 }
 
+void FileSystem::setResourceFolder(const std::string &name) {
+	root = procPath() + name + "/";
+}
+
 std::string FileSystem::path(const std::string &file) {
 	return root + file;
 }
-
-
 
 bool FileSystem::exist(const std::string &name) {
 	std::ifstream f((root + name).c_str());

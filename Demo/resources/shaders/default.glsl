@@ -13,5 +13,5 @@ in vec2 uv;
 out vec4 fragColor;
 
 void main() {
-	fragColor = vec4(uv, 1., 1.);
+	fragColor = vec4(uv, u_camera.position.x, 1.);
 }

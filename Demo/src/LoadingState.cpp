@@ -56,7 +56,10 @@ LoadingState::LoadingState(): Akila::State{} {
 		//std::this_thread::sleep_for(std::chrono::microseconds(10));
 	}*/
 
-	shader = Akila::ShaderBuilder::buildFromFile("resources/shaders/default.glsl");
+	shader = Akila::ShaderBuilder::buildFromFile("shaders/default.glsl");
+
+	shader->setUBOIndex("akila_camera_ubo", 0);
+	shader->setUBOIndex("akila_lights_ubo", 1);
 
 	vertex = std::make_shared<Akila::VBO>(2, Akila::ShaderBuilder::Attributes::A_POSITION);
 	vertex->setData(std::vector<glm::vec2>({
@@ -78,7 +81,11 @@ LoadingState::LoadingState(): Akila::State{} {
 }
 
 void LoadingState::update() {
+	auto &cam = Akila::Core::renderer->getSharedCamera();
 
+	float t = std::sin(Akila::Time::now);
+	glm::vec3 pos{t * t, 0, 0};
+	cam->setPosition(pos);
 }
 
 void LoadingState::draw() {

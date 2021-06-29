@@ -73,6 +73,11 @@ void Shader::bind() const {
     glUseProgram(id);
 }
 
+void Shader::setUBOIndex(const std::string &name, unsigned int index) {
+    GLuint uniformBlock = glGetUniformBlockIndex(id, name.c_str());
+    glUniformBlockBinding(id, uniformBlock, index);
+}
+
 void Shader::send(unsigned int uid, int value) const {
 
 }

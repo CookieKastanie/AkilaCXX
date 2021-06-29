@@ -22,6 +22,8 @@ namespace Akila {
 
 			void bind() const;
 
+			void setUBOIndex(const std::string &name, unsigned int index);
+
 			void send(unsigned int uid, int value) const;
 			void send(unsigned int uid, float value) const;
 			void send(unsigned int uid, const glm::vec2 &value) const;

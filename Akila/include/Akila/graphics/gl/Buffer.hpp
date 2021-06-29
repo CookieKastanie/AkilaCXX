@@ -48,12 +48,15 @@ namespace Akila {
     };
 
     class UBO: public Buffer {
-        //private:
+        private:
+            static unsigned int nextBindingPoint;
 
+            unsigned int bindingPoint;
 
         public:
             UBO(unsigned int size, unsigned int usage = DYNAMIC);
 
             void setData(const void *data);
+            unsigned int getBindingPoint();
     };
 }

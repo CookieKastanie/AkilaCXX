@@ -11,6 +11,8 @@ Camera::Camera(): uniforms{
 
 Camera::~Camera() {}
 
+void Camera::onResize() {}
+
 void Camera::update() {}
 
 void Camera::setPosition(glm::vec3 &pos) {

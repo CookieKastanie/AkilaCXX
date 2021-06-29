@@ -59,11 +59,19 @@ void VBO::bindToArrayBuffer(unsigned int dataType) const {
 
 /////////////////////////////////////////////////////////////////////////////////////////////////
 
+unsigned int UBO::nextBindingPoint = 0;
+
 UBO::UBO(unsigned int size, unsigned int usage): Buffer{GL_UNIFORM_BUFFER, usage} {
 	setRawData(NULL, size);
 	length = size;
+	bindingPoint = nextBindingPoint++;
+	glBindBufferBase(GL_UNIFORM_BUFFER, bindingPoint, id);
 }
 
 void UBO::setData(const void *data) {
 	setRawData(data, length);
+}
+
+unsigned int UBO::getBindingPoint() {
+	return bindingPoint;
 }

@@ -19,19 +19,16 @@ int Core::run(int argc, char *argv[], void (*init)(void)) {
 	glfwWindowHint(GLFW_SAMPLES, 0);
 
 	FileSystem::init();
-
-	std::cout << FileSystem::path("resources/textures/citron.png") << std::endl;
-	std::cout << FileSystem::exist("resources/textures/citron.png") << std::endl;
-
 	display = std::make_shared<Display>();
-	stateManager = std::make_shared<StateManager>();
-	taskManager = std::make_shared<TaskManager>();
-	renderer = std::make_shared<Renderer>(display);
 
 	if(!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) {
 		std::cerr << "Failed to retrieve OpenGL functions" << std::endl;
 		std::exit(EXIT_FAILURE);
 	}
+
+	stateManager = std::make_shared<StateManager>();
+	taskManager = std::make_shared<TaskManager>();
+	renderer = std::make_shared<Renderer>(display);
 
 	init();
 
@@ -43,6 +40,7 @@ int Core::run(int argc, char *argv[], void (*init)(void)) {
 
 		currentState = stateManager->getCurrentState();
 		currentState->update();
+		renderer->prepare();
 		currentState->draw();
 
 		display->swapBuffers();

@@ -19,11 +19,26 @@ layout(location = 4) in vec4 a_color;
 )---";
 
 const std::string ShaderBuilder::uniforms = R"---(
-layout(std140) uniform camera {
+struct akila_camera {
 	mat4 projection;
 	mat4 view;
-	mat4 PV;
+	mat4 pv;
 	vec3 position;
+};
+layout(std140) uniform akila_camera_ubo {
+	 akila_camera u_camera;
+};
+
+const int AKILA_POINT_LIGHT_COUNT = 4;
+struct akila_lights {
+	vec3 directionalLight;
+	vec3 directionalColor;
+
+	vec3 pointsPositions[AKILA_POINT_LIGHT_COUNT];
+	vec3 pointsColors[AKILA_POINT_LIGHT_COUNT];
+};
+layout(std140) uniform akila_lights_ubo {
+	 akila_lights u_lights;
 };
 )---";
 
@@ -58,7 +73,7 @@ std::shared_ptr<Shader> ShaderBuilder::build(const std::string &source) {
 	frag = vuf + frag;
 	if(!geo.empty()) geo = vuf + geo;
 
-	std::cout << vert << std::endl;
+	//std::cout << frag << std::endl;
 
 	return std::make_shared<Shader>(vert, frag, geo);
 }
