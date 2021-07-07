@@ -24,6 +24,8 @@ namespace Akila {
 
 			void prepare();
 			void useDefaultFrameBuffer();
+
+			void setSharedCamera(const std::shared_ptr<Camera> &cam);
 			std::shared_ptr<Camera> &getSharedCamera();
 
 			void loadMaterialFromFile(const std::string &fileName);

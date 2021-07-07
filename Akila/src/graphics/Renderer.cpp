@@ -25,6 +25,10 @@ void Renderer::useDefaultFrameBuffer() {
 	glViewport(0, 0, display->getWidth(), display->getHeight());
 }
 
+void Renderer::setSharedCamera(const std::shared_ptr<Camera> &cam) {
+	camera = cam;
+}
+
 std::shared_ptr<Camera> &Renderer::getSharedCamera() {
 	return camera;
 }

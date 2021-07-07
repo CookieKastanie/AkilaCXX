@@ -4,16 +4,12 @@
 
 using namespace Akila;
 
-Material::Material(): name{"alo"} {
-
-}
+Material::Material(): name{"unnamed"} {}
 
 void Material::loadFromFile(const std::string &fileName) {
 	std::ifstream file;
 	file.open(FileSystem::path(fileName).c_str(), std::ifstream::in);
-	if(!file.good()) std::cout << "Material loading error : can't read " << fileName << std::endl;
-
-	std::stringstream stream;
+	if(!file.good()) std::cerr << "Material loading error : can't read " << fileName << std::endl;
 	
 	std::string line;
 	while(std::getline(file, line)) {
@@ -26,6 +22,11 @@ void Material::loadFromFile(const std::string &fileName) {
 	}
 
 	file.close();
+
+	if(shader.get() == nullptr) {
+		std::cerr << name << " material don't have shader program !" << std::endl;
+		shader = std::make_shared<Shader>("", "");
+	}
 }
 
 Shader *Material::getShader() {
