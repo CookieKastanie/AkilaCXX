@@ -1,6 +1,8 @@
 #pragma once
 
 #include "GLFW/glfw3.h"
+#include "Akila/inputs/Keyboard.hpp"
+#include <functional>
 
 namespace Akila {
 	class Display {
@@ -12,6 +14,12 @@ namespace Akila {
 
 			int winSize[2];
 			int winPos[2];
+
+			Keyboard keybord;
+
+			friend class Renderer;
+
+			std::function<void()> rendererResizeCallback;
 
 		public:
 			static int const DONT_CARE = GLFW_DONT_CARE;
@@ -33,5 +41,10 @@ namespace Akila {
 
 			bool isFullscreen();
 			void setFullscreen(bool fullscreen);
+
+			Keyboard *getKeybord();
+
+		private:
+			void setRendererResizeCallback(const std::function<void()> &cb);
 	};
 }

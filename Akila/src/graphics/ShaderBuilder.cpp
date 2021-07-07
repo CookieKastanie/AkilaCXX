@@ -1,8 +1,6 @@
 #include "Akila/graphics/ShaderBuilder.hpp"
 
 #include "Akila/files/FileSystem.hpp"
-#include <sstream>
-#include <fstream>
 #include <iostream>
 
 using namespace Akila;
@@ -24,9 +22,14 @@ struct akila_camera {
 	mat4 view;
 	mat4 pv;
 	vec3 position;
+	float ratio;
 };
 layout(std140) uniform akila_camera_ubo {
 	 akila_camera u_camera;
+};
+
+layout(std140) uniform akila_time_ubo {
+	 float u_time;
 };
 
 const int AKILA_POINT_LIGHT_COUNT = 4;
@@ -43,6 +46,7 @@ layout(std140) uniform akila_lights_ubo {
 )---";
 
 const std::string ShaderBuilder::functions = R"---(
+const float PI = 3.1415926535897932;
 )---";
 
 const std::string ShaderBuilder::vertDelimiter = "#AKILA_VERTEX";

@@ -61,3 +61,15 @@ bool FileSystem::exist(const std::string &name) {
 	std::ifstream f((root + name).c_str());
 	return f.good();
 }
+
+void FileSystem::splitString(std::vector<std::string> &list, std::string str, const std::string &delimiter) {
+	list.clear();
+
+	int pos = 0;
+	while((pos = str.find(delimiter)) != std::string::npos) {
+		list.push_back(str.substr(0, pos));
+		str.erase(0, pos + delimiter.length());
+	}
+
+	list.push_back(str);
+}

@@ -2,6 +2,7 @@
 
 #include "glm/mat4x4.hpp"
 #include "glm/vec3.hpp"
+#include <glm/gtc/matrix_transform.hpp>
 
 namespace Akila {
 	class Camera {
@@ -11,6 +12,7 @@ namespace Akila {
 				glm::mat4 view;
 				glm::mat4 pv;
 				glm::vec3 position;
+				float ratio;
 			};
 
 			Uniforms uniforms;
@@ -19,7 +21,7 @@ namespace Akila {
 			Camera();
 			virtual ~Camera();
 
-			virtual void onResize();
+			virtual void onResize(int width, int height);
 			virtual void update();
 
 			void setPosition(glm::vec3 &pos);

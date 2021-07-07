@@ -28,6 +28,25 @@ Display::Display() {
 
 		if(self->width <= 0) self->width = 1;
 		if(self->height <= 0) self->height = 1;
+
+		self->rendererResizeCallback();
+	});
+
+	glfwSetKeyCallback(window, [](GLFWwindow *window, int key, int scancode, int action, int mods) -> void {
+		Display *self = (Display *)glfwGetWindowUserPointer(window);
+
+		if(key != GLFW_KEY_UNKNOWN) {
+			const char *name = glfwGetKeyName(key, 0);
+			if(name != NULL) {
+				int n = *name;
+				if(n >= 'a' && n <= 'z') n -= 0x20; // lowercase to uppercase
+				key = n;
+			}
+			
+			self->keybord.setKeyState((Keyboard::Key)key, action != GLFW_RELEASE);
+
+			if(action == GLFW_PRESS) self->keybord.firePressEvent();
+		}
 	});
 }
 
@@ -89,6 +108,14 @@ void Display::setFullscreen(bool fullscreen) {
 	}
 
 	glfwSwapInterval(vSync);
+}
+
+Keyboard *Display::getKeybord() {
+	return &keybord;
+}
+
+void Display::setRendererResizeCallback(const std::function<void()> &cb) {
+	rendererResizeCallback = cb;
 }
 
 Display::~Display() {

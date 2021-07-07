@@ -8,7 +8,6 @@
 
 class LoadingState: public Akila::State {
 	public:
-		std::shared_ptr<Akila::Shader> shader;
 		std::shared_ptr<Akila::VAO> vao;
 		std::shared_ptr<Akila::VBO> vertex;
 		std::shared_ptr<Akila::VBO> uv;

@@ -3,15 +3,18 @@
 using namespace Akila;
 
 Camera::Camera(): uniforms{
-	glm::mat4{},
-	glm::mat4{},
-	glm::mat4{},
-	glm::vec3{}
+	glm::mat4{1.},
+	glm::mat4{1.},
+	glm::mat4{1.},
+	glm::vec3{},
+	1
 } {}
 
 Camera::~Camera() {}
 
-void Camera::onResize() {}
+void Camera::onResize(int width, int height) {
+	uniforms.ratio = (float)width / (float)height;
+}
 
 void Camera::update() {}
 

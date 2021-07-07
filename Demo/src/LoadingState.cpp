@@ -56,10 +56,9 @@ LoadingState::LoadingState(): Akila::State{} {
 		//std::this_thread::sleep_for(std::chrono::microseconds(10));
 	}*/
 
-	shader = Akila::ShaderBuilder::buildFromFile("shaders/default.glsl");
+	//shader = Akila::ShaderBuilder::buildFromFile("shaders/default.glsl");
 
-	shader->setUBOIndex("akila_camera_ubo", 0);
-	shader->setUBOIndex("akila_lights_ubo", 1);
+	Akila::Core::renderer->loadMaterialFromFile("materials/loadingScreen.mat");
 
 	vertex = std::make_shared<Akila::VBO>(2, Akila::ShaderBuilder::Attributes::A_POSITION);
 	vertex->setData(std::vector<glm::vec2>({
@@ -78,6 +77,10 @@ LoadingState::LoadingState(): Akila::State{} {
 	vao->registerVBO(vertex.get());
 	vao->registerVBO(uv.get());
 	vao->unbind();
+
+	Akila::Core::display->getKeybord()->onKeyPress([](Akila::Keyboard *keyboard) -> void {
+		if(keyboard->isPressed(Akila::Keyboard::TAB)) Akila::Core::display->setFullscreen(!Akila::Core::display->isFullscreen());
+	});
 }
 
 void LoadingState::update() {
@@ -96,6 +99,12 @@ void LoadingState::draw() {
 	Akila::Core::display->setTitle(std::string("FPS ").append(std::to_string(fps)).c_str());
 	
 	Akila::Core::renderer->useDefaultFrameBuffer();
-	shader->bind();
+	Akila::Core::renderer->getMaterialbyName("loadingScreen")->getShader()->bind();
 	vao->draw();
+
+	if(Akila::Core::display->getKeybord()->isPressed(Akila::Keyboard::Key::A)) std::cout << "A" << std::endl;
+	if(Akila::Core::display->getKeybord()->isPressed(Akila::Keyboard::Key::Q)) std::cout << "Q" << std::endl;
+	if(Akila::Core::display->getKeybord()->isPressed(Akila::Keyboard::Key::UP)) std::cout << "UP" << std::endl;
+	if(Akila::Core::display->getKeybord()->isPressed(Akila::Keyboard::Key::SPACE)) std::cout << "SPACE" << std::endl;
+	//else std::cout << std::endl;
 }
