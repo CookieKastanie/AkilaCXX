@@ -15,13 +15,10 @@ set(HEADER
   ${INC_DIR}/${PROJECT_NAME}/stb_image.h
   ${INC_DIR}/${PROJECT_NAME}/stb_image_resize.h
   ${INC_DIR}/${PROJECT_NAME}/stb_image_write.h
+  ${INC_DIR}/${PROJECT_NAME}/stb_truetype.h
 )
 
-set(RESOURCE_FILES
-#	${PROJECT_SOURCE_DIR}/resources/truc.txt
-)
-
-add_library(${PROJECT_NAME} ${SRC} ${HEADER} ${RESOURCE_FILES})
+add_library(${PROJECT_NAME} ${SRC} ${HEADER})
 target_include_directories (${PROJECT_NAME}
   PUBLIC ${INC_DIR}
 )
