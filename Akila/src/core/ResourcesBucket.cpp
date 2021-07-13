@@ -14,6 +14,25 @@ ResourcesBucket::ResourcesBucket(const std::shared_ptr<Renderer> &renderer): ren
 	defaultMaterial->setShader(defaultShader);
 }
 
+std::shared_ptr<Shader> &ResourcesBucket::getShader(const std::string &name) {
+	auto &&val = shaders[name];
+	if(val != nullptr) return val;
+	else return defaultShader;
+}
+
+std::shared_ptr<Texture> &ResourcesBucket::getTexture(const std::string &name) {
+	auto &&val = textures[name];
+	if(val != nullptr) return val;
+	else return defaultTexture;
+}
+
+std::shared_ptr<Material> &ResourcesBucket::getMaterial(const std::string &name) {
+	auto &&val = materials[name];
+	if(val != nullptr) return val;
+	else return defaultMaterial;
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 struct ShaderState {
 	static const int STATE_ID = 0;
@@ -33,27 +52,50 @@ struct TextureState {
 	std::string name;
 	std::string src;
 	TextureBuffer::Format format;
-
-	void setFormat(const std::string &str) {
-		if(!str.compare("DEPTH_COMPONENT")) format = TextureBuffer::Format::DEPTH_COMPONENT;
-		if(!str.compare("DEPTH_STENCIL")) format = TextureBuffer::Format::DEPTH_STENCIL;
-		if(!str.compare("RED")) format = TextureBuffer::Format::RED;
-		if(!str.compare("RG")) format = TextureBuffer::Format::RG;
-		if(!str.compare("RGB")) format = TextureBuffer::Format::RGB;
-		if(!str.compare("RGBA")) format = TextureBuffer::Format::RGBA;
-		if(!str.compare("SRGB")) format = TextureBuffer::Format::SRGB;
-		if(!str.compare("SRGB_ALPHA")) format = TextureBuffer::Format::SRGB_ALPHA;
-		if(!str.compare("RGB16F")) format = TextureBuffer::Format::RGB16F;
-		if(!str.compare("RGBA16F")) format = TextureBuffer::Format::RGBA16F;
-	}
+	TextureBuffer::Parameters parameters;
+	bool generateMips;
 
 	void clear() {
 		name = "none";
 		src = "";
 		format = TextureBuffer::Format::RGB;
+		parameters = TextureBuffer::Parameters{};
+		generateMips = false;
+	}
+
+	static TextureBuffer::Format stringToFormat(const std::string &str) {
+		if(!str.compare("DEPTH_COMPONENT")) return TextureBuffer::Format::DEPTH_COMPONENT;
+		if(!str.compare("DEPTH_STENCIL")) return TextureBuffer::Format::DEPTH_STENCIL;
+		if(!str.compare("RED")) return TextureBuffer::Format::RED;
+		if(!str.compare("RG")) return TextureBuffer::Format::RG;
+		if(!str.compare("RGB")) return TextureBuffer::Format::RGB;
+		if(!str.compare("RGBA")) return TextureBuffer::Format::RGBA;
+		if(!str.compare("SRGB")) return TextureBuffer::Format::SRGB;
+		if(!str.compare("SRGB_ALPHA")) return TextureBuffer::Format::SRGB_ALPHA;
+		if(!str.compare("RGB16F")) return TextureBuffer::Format::RGB16F;
+		if(!str.compare("RGBA16F")) return TextureBuffer::Format::RGBA16F;
+	}
+
+	static TextureBuffer::WrapMode stringToWrapMode(const std::string &str) {
+		if(!str.compare("CLAMP_TO_EDGE")) return TextureBuffer::WrapMode::CLAMP_TO_EDGE;
+		if(!str.compare("CLAMP_TO_BORDER")) return TextureBuffer::WrapMode::CLAMP_TO_BORDER;
+		if(!str.compare("MIRRORED_REPEAT")) return TextureBuffer::WrapMode::MIRRORED_REPEAT;
+		if(!str.compare("REPEAT")) return TextureBuffer::WrapMode::REPEAT;
+	}
+
+	static TextureBuffer::FilterMode stringToFilterMode(const std::string &str) {
+		if(!str.compare("NEAREST")) return TextureBuffer::FilterMode::NEAREST;
+		if(!str.compare("LINEAR")) return TextureBuffer::FilterMode::LINEAR;
+		if(!str.compare("NEAREST_MIPMAP_NEAREST")) return TextureBuffer::FilterMode::NEAREST_MIPMAP_NEAREST;
+		if(!str.compare("LINEAR_MIPMAP_NEAREST")) return TextureBuffer::FilterMode::LINEAR_MIPMAP_NEAREST;
+		if(!str.compare("NEAREST_MIPMAP_LINEAR")) return TextureBuffer::FilterMode::NEAREST_MIPMAP_LINEAR;
+		if(!str.compare("LINEAR_MIPMAP_LINEAR")) return TextureBuffer::FilterMode::LINEAR_MIPMAP_LINEAR;
+	}
+
+	static bool stringToBool(const std::string &str) {
+		return !str.compare("true");
 	}
 };
-
 
 struct MaterialState {
 	static const int STATE_ID = 2;
@@ -66,24 +108,6 @@ struct MaterialState {
 		shader = "";
 	}
 };
-
-std::shared_ptr<Shader> &ResourcesBucket::getShader(const std::string &name) {
-	auto &&val = shaders[name];
-	if(val != nullptr) return val;
-	else return defaultShader;
-}
-
-std::shared_ptr<Texture> &ResourcesBucket::getTexture(const std::string &name) {
-	auto &&val = textures[name];
-	if(val != nullptr) return val;
-	else return defaultTexture;
-}
-
-std::shared_ptr<Material> &ResourcesBucket::getMaterial(const std::string &name) {
-	auto &&val = materials[name];
-	if(val != nullptr) return val;
-	else return defaultMaterial;
-}
 
 void ResourcesBucket::loadResourceFile(const std::string &path, TaskManager *taskManger) {
 	std::ifstream file;
@@ -139,6 +163,7 @@ void ResourcesBucket::loadResourceFile(const std::string &path, TaskManager *tas
 
 				else if(state == TextureState::STATE_ID) {
 					auto t = std::make_shared<Texture>(textureState.format);
+					t->setParameters(textureState.parameters);
 					Loader::asyncTexture(t.get(), textureState.src, taskManger);
 					textures.emplace(textureState.name, t);
 				}
@@ -160,13 +185,26 @@ void ResourcesBucket::loadResourceFile(const std::string &path, TaskManager *tas
 				if(state == ShaderState::STATE_ID) {
 					if(!values[0].compare("name")) shaderState.name = values[1];
 					else if(!values[0].compare("src")) shaderState.src = values[1];
-				} else if(state == MaterialState::STATE_ID) {
+				} 
+				
+				else if(state == MaterialState::STATE_ID) {
 					if(!values[0].compare("name")) materialState.name = values[1];
 					else if(!values[0].compare("shader")) materialState.shader = values[1];
-				} else if(state == TextureState::STATE_ID) {
+				} 
+				
+				else if(state == TextureState::STATE_ID) {
 					if(!values[0].compare("name")) textureState.name = values[1];
 					else if(!values[0].compare("src")) textureState.src = values[1];
-					else if(!values[0].compare("format")) textureState.setFormat(values[1]);
+					else if(!values[0].compare("format")) textureState.format = TextureState::stringToFormat(values[1]);
+
+					else if(!values[0].compare("wrapS")) textureState.parameters.wrapS = TextureState::stringToWrapMode(values[1]);
+					else if(!values[0].compare("wrapT")) textureState.parameters.wrapT = TextureState::stringToWrapMode(values[1]);
+					else if(!values[0].compare("wrapR")) textureState.parameters.wrapR = TextureState::stringToWrapMode(values[1]);
+
+					else if(!values[0].compare("minFilter")) textureState.parameters.minFilter = TextureState::stringToFilterMode(values[1]);
+					else if(!values[0].compare("magFilter")) textureState.parameters.magFilter = TextureState::stringToFilterMode(values[1]);
+
+					else if(!values[0].compare("mips")) textureState.generateMips = TextureState::stringToBool(values[1]);
 				}
 			}
 		}

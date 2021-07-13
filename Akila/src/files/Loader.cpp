@@ -20,8 +20,10 @@ private:
 	Texture *texture;
 	const std::string path;
 
+	bool generateMips;
+
 public:
-	TextureTask(Texture *texture, const std::string &path):
+	TextureTask(Texture *texture, const std::string &path, const bool generateMips):
 		fileFormat{TextureBuffer::RGBA},
 		dataType{TextureBuffer::UNSIGNED_BYTE},
 		textureNrChannels{3},
@@ -29,7 +31,8 @@ public:
 		fheight{1},
 		data{nullptr},
 		texture{texture},
-		path{path} {
+		path{path},
+		generateMips{generateMips} {
 	}
 
 	void onBackground() override {
@@ -52,6 +55,7 @@ public:
 		if(data != nullptr) {
 			texture->setSize(fwidth, fheight);
 			texture->setData(data, fileFormat, dataType);
+			if(generateMips) texture->generateMipmap();
 
 			stbi_image_free(data);
 		} else {
@@ -60,9 +64,9 @@ public:
 	}
 };
 
-void Loader::asyncTexture(Texture *texture, const std::string &path, TaskManager *tm) {
+void Loader::asyncTexture(Texture *texture, const std::string &path, const bool generateMips, TaskManager *tm) {
 	if(tm == nullptr) tm = Core::taskManager.get();
-	tm->submit(new TextureTask(texture, path));
+	tm->submit(new TextureTask(texture, path, generateMips));
 }
 
 

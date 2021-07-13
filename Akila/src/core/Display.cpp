@@ -80,8 +80,8 @@ void Display::setLimits(int minW, int minH, int maxW, int maxH) {
 	glfwSetWindowSizeLimits(window, minW, minH, maxW, maxH);
 }
 
-void Display::setTitle(const char *title) {
-	glfwSetWindowTitle(window, title);
+void Display::setTitle(const std::string &title) {
+	glfwSetWindowTitle(window, title.c_str());
 }
 
 void Display::makeCurrent() {

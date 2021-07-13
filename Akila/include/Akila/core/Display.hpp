@@ -4,6 +4,7 @@
 #include "Akila/inputs/Keyboard.hpp"
 #include "Akila/inputs/Mouse.hpp"
 #include <functional>
+#include <string>
 
 namespace Akila {
 	class Display {
@@ -31,7 +32,7 @@ namespace Akila {
 
 			void setSize(int w, int h);
 			void setLimits(int minW, int minH, int maxW, int maxH);
-			void setTitle(const char *title);
+			void setTitle(const std::string &title);
 
 			int getWidth();
 			int getHeight();

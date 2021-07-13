@@ -50,15 +50,15 @@ void LoadingState::draw() {
 	//std::cout << Akila::Core::display->getWidth() << std::endl;
 
 	float fps{1.f / Akila::Time::delta};
-	Akila::Core::display->setTitle(std::string("FPS ").append(std::to_string(fps)).c_str());
+	Akila::Core::display->setTitle(std::string("FPS ").append(std::to_string(fps)));
 
 	Akila::Core::renderer->useDefaultFrameBuffer();
 	Akila::Core::resourcesBucket->getMaterial("loadingScreen")->getShader()->bind();
 	vao->draw();
 
-	Akila::Core::resourcesBucket->getMaterial("textureTest")->getShader()->bind();
-	Akila::Core::resourcesBucket->getTexture("citron")->bind();
-	vao->draw();
+	//Akila::Core::resourcesBucket->getMaterial("textureTest")->getShader()->bind();
+	//Akila::Core::resourcesBucket->getTexture("citron")->bind();
+	//vao->draw();
 
 	if(Akila::Core::display->getKeybord()->isPressed(Akila::Keyboard::Key::A)) std::cout << "A" << std::endl;
 	if(Akila::Core::display->getKeybord()->isPressed(Akila::Keyboard::Key::Q)) std::cout << "Q" << std::endl;

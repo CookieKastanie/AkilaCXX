@@ -42,6 +42,33 @@ namespace Akila {
 		virtual void setSize(int width, int height);
 		virtual void setData(const void *data, Format format, Type type);
 
+
+		enum WrapMode: GLenum {
+			CLAMP_TO_EDGE = GL_CLAMP_TO_EDGE,
+			CLAMP_TO_BORDER = GL_CLAMP_TO_BORDER,
+			MIRRORED_REPEAT = GL_MIRRORED_REPEAT,
+			REPEAT = GL_REPEAT
+		};
+		enum FilterMode: GLenum {
+			NEAREST = GL_NEAREST,
+			LINEAR = GL_LINEAR,
+			NEAREST_MIPMAP_NEAREST = GL_NEAREST_MIPMAP_NEAREST,
+			LINEAR_MIPMAP_NEAREST = GL_LINEAR_MIPMAP_NEAREST,
+			NEAREST_MIPMAP_LINEAR = GL_NEAREST_MIPMAP_LINEAR,
+			LINEAR_MIPMAP_LINEAR = GL_LINEAR_MIPMAP_LINEAR
+		};
+		struct Parameters {
+			Parameters();
+
+			WrapMode wrapS;
+			WrapMode wrapT;
+			WrapMode wrapR;
+
+			FilterMode minFilter;
+			FilterMode magFilter;
+		};
+		void setParameters(const Parameters &params);
+
 		Format getInternalFormat();
 
 		virtual void generateMipmap();

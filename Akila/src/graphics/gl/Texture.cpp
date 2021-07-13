@@ -29,11 +29,18 @@ void TextureBuffer::setSize(int width, int height) {
 void TextureBuffer::setData(const void *data, Format format, Type type) {
 	bind();
 	glTexSubImage2D(kind, 0, 0, 0, width, height, format, type, data);
+}
 
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+TextureBuffer::Parameters::Parameters(): wrapS{REPEAT}, wrapT{REPEAT}, wrapR{REPEAT}, minFilter{LINEAR}, magFilter{LINEAR} {}
+
+void TextureBuffer::setParameters(const Parameters &params) {
+	bind();
+
+	glTexParameteri(kind, GL_TEXTURE_WRAP_S, params.wrapS);
+	glTexParameteri(kind, GL_TEXTURE_WRAP_T, params.wrapT);
+	glTexParameteri(kind, GL_TEXTURE_WRAP_R, params.wrapR);
+	glTexParameteri(kind, GL_TEXTURE_MIN_FILTER, params.minFilter);
+	glTexParameteri(kind, GL_TEXTURE_MAG_FILTER, params.magFilter);
 }
 
 TextureBuffer::Format TextureBuffer::getInternalFormat() {

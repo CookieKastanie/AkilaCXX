@@ -14,6 +14,12 @@ texture {
 	format: RGBA
 }
 
+texture {
+	name: font
+	src: fonts/FredokaOne-Regular.png
+	format: RGBA
+}
+
 material {
 	name: loadingScreen
 	shader: loadingAnimation
