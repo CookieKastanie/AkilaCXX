@@ -7,7 +7,7 @@ Keyboard::Keyboard() {
 		keysState[i] = false;
 	}
 
-	releasePressEvent();
+	detachPressEvent();
 }
 
 bool Keyboard::isPressed(Key k) const {
@@ -22,7 +22,7 @@ void Keyboard::onKeyPress(const std::function<void(Keyboard*)> &cb) {
 	pressCallback = cb;
 }
 
-void Keyboard::releasePressEvent() {
+void Keyboard::detachPressEvent() {
 	pressCallback = [](Keyboard*) -> void {};
 }
 

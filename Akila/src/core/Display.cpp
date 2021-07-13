@@ -48,6 +48,18 @@ Display::Display() {
 			if(action == GLFW_PRESS) self->keybord.firePressEvent();
 		}
 	});
+
+	glfwSetMouseButtonCallback(window, [](GLFWwindow *window, int button, int action, int mods) -> void {
+		Display *self = (Display *)glfwGetWindowUserPointer(window);
+		self->mouse.setKeyState((Mouse::Key)button, action != GLFW_RELEASE);
+
+		if(action == GLFW_PRESS) self->mouse.firePressEvent();
+	});
+
+	glfwSetCursorPosCallback(window, [](GLFWwindow *window, double xpos, double ypos) ->void {
+		Display *self = (Display *)glfwGetWindowUserPointer(window);
+		self->mouse.setPosition((float)xpos, (float)ypos);
+	});
 }
 
 void Display::setSize(int w, int h) {
@@ -112,6 +124,10 @@ void Display::setFullscreen(bool fullscreen) {
 
 Keyboard *Display::getKeybord() {
 	return &keybord;
+}
+
+Mouse *Display::getMouse() {
+	return &mouse;
 }
 
 void Display::setRendererResizeCallback(const std::function<void()> &cb) {

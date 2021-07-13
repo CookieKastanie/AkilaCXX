@@ -67,7 +67,7 @@ void ThreadPool::start(TaskManager *taskManager, unsigned int max) {
                     tasks.pop();
                 }
 
-                t->onBackGround();
+                t->onBackground();
 
                 {
                     std::lock_guard<std::mutex> lck(taskManager->queueMutex);
@@ -98,6 +98,6 @@ Task::Task() {}
 
 Task::~Task() {}
 
-void Task::onBackGround() {}
+void Task::onBackground() {}
 
 void Task::onMain() {}

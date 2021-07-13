@@ -15,7 +15,5 @@ namespace Akila {
 			static void setResourceFolder(const std::string &name);
 			static std::string path(const std::string &file);
 			static bool exist(const std::string &name);
-
-			static void splitString(std::vector<std::string> &list, std::string str, const std::string &delimiter);
 	};
 }

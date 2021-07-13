@@ -24,12 +24,14 @@ namespace Akila {
 
 			void setUBOIndex(const std::string &name, unsigned int index);
 
-			void send(unsigned int uid, int value) const;
-			void send(unsigned int uid, float value) const;
-			void send(unsigned int uid, const glm::vec2 &value) const;
-			void send(unsigned int uid, const glm::vec3 &value) const;
-			void send(unsigned int uid, const std::vector<glm::vec3> &values) const;
-			void send(unsigned int uid, const glm::mat4 &mat) const;
-			void send(unsigned int uid, const bool value) const;
+			unsigned int getUniformId(const std::string &name);
+
+			void send(const unsigned int &uid, const int &value) const;
+			void send(const unsigned int &uid, const float &value) const;
+			void send(const unsigned int &uid, const glm::vec2 &value) const;
+			void send(const unsigned int &uid, const glm::vec3 &value) const;
+			void send(const unsigned int &uid, const std::vector<glm::vec3> &values) const;
+			void send(const unsigned int &uid, const glm::mat4 &mat) const;
+			void send(const unsigned int &uid, const bool &value) const;
 	};
 }

@@ -79,15 +79,3 @@ std::shared_ptr<Shader> ShaderBuilder::build(const std::string &source) {
 
 	return std::make_shared<Shader>(vert, frag, geo);
 }
-
-std::shared_ptr<Shader> ShaderBuilder::buildFromFile(const std::string &path) {
-	std::ifstream file;
-	file.open(FileSystem::path(path).c_str());
-	if(!file.good()) std::cerr << "Shader loading error : can't read " << path << std::endl;
-
-	std::stringstream stream;
-	stream << file.rdbuf();
-	file.close();
-
-	return build(stream.str());
-}

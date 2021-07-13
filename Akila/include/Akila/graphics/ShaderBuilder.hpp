@@ -26,6 +26,5 @@ namespace Akila {
 			};
 
 			static std::shared_ptr<Shader> build(const std::string &source);
-			static std::shared_ptr<Shader> buildFromFile(const std::string &path);
 	};
 }

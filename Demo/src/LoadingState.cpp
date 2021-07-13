@@ -5,61 +5,13 @@
 #include <string>
 
 #include <chrono>
-#include <stdlib.h> 
-
-class TestTask: public Akila::Task {
-	public:
-		int id;
-		int t;
-		TestTask(int id) {
-			this->id = id;
-			t = rand() % 5 + 1;
-		}
-
-		void onBackGround() override {
-			std::cout << "start background (" << id << ") (" << t << "s) " << std::this_thread::get_id() << std::endl;
-			std::this_thread::sleep_for(std::chrono::seconds(t));
-			std::cout << "end background (" << id << ") (" << t << "s) " << std::this_thread::get_id() << std::endl;
-		}
-
-		void onMain() override {
-			std::cout << "wow main (" << id << ") " << std::this_thread::get_id() << std::endl;
-		}
-};
-
-class TestTask2: public Akila::Task {
-public:
-
-	TestTask2() {
-
-	}
-
-	void onBackGround() override {
-		std::this_thread::sleep_for(std::chrono::seconds(10));
-	}
-
-	void onMain() override {
-		std::cout << "EEEEE" << std::endl;
-		Akila::Core::taskManager->submit(new TestTask{88});
-	}
-};
+#include <stdlib.h>
 
 #include "Akila/graphics/ShaderBuilder.hpp"
 #include <vector>
 #include "glm/vec2.hpp"
 
 LoadingState::LoadingState(): Akila::State{} {
-	/*srand(time(NULL));
-	Akila::Core::taskManager->submit(new TestTask2{});
-	for(int i = 0; i < 10; ++i) {
-		Akila::Core::taskManager->submit(new TestTask{i});
-		//std::this_thread::sleep_for(std::chrono::microseconds(10));
-	}*/
-
-	//shader = Akila::ShaderBuilder::buildFromFile("shaders/default.glsl");
-
-	Akila::Core::renderer->loadMaterialFromFile("materials/loadingScreen.mat");
-
 	vertex = std::make_shared<Akila::VBO>(2, Akila::ShaderBuilder::Attributes::A_POSITION);
 	vertex->setData(std::vector<glm::vec2>({
 		{-1, -1}, {1, -1}, {1, 1},
@@ -81,6 +33,8 @@ LoadingState::LoadingState(): Akila::State{} {
 	Akila::Core::display->getKeybord()->onKeyPress([](Akila::Keyboard *keyboard) -> void {
 		if(keyboard->isPressed(Akila::Keyboard::TAB)) Akila::Core::display->setFullscreen(!Akila::Core::display->isFullscreen());
 	});
+
+	Akila::Core::resourcesBucket->loadResourceFile("main.res");
 }
 
 void LoadingState::update() {
@@ -97,14 +51,19 @@ void LoadingState::draw() {
 
 	float fps{1.f / Akila::Time::delta};
 	Akila::Core::display->setTitle(std::string("FPS ").append(std::to_string(fps)).c_str());
-	
+
 	Akila::Core::renderer->useDefaultFrameBuffer();
-	Akila::Core::renderer->getMaterialbyName("loadingScreen")->getShader()->bind();
+	Akila::Core::resourcesBucket->getMaterial("loadingScreen")->getShader()->bind();
+	vao->draw();
+
+	Akila::Core::resourcesBucket->getMaterial("textureTest")->getShader()->bind();
+	Akila::Core::resourcesBucket->getTexture("citron")->bind();
 	vao->draw();
 
 	if(Akila::Core::display->getKeybord()->isPressed(Akila::Keyboard::Key::A)) std::cout << "A" << std::endl;
 	if(Akila::Core::display->getKeybord()->isPressed(Akila::Keyboard::Key::Q)) std::cout << "Q" << std::endl;
 	if(Akila::Core::display->getKeybord()->isPressed(Akila::Keyboard::Key::UP)) std::cout << "UP" << std::endl;
 	if(Akila::Core::display->getKeybord()->isPressed(Akila::Keyboard::Key::SPACE)) std::cout << "SPACE" << std::endl;
+
 	//else std::cout << std::endl;
 }

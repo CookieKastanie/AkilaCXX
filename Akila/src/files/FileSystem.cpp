@@ -25,7 +25,7 @@ std::string procPath() {
 	#if WIN32
 	GetModuleFileName(NULL, buffer, MAX_PATH);
 
-	unsigned int i = strlen(buffer);
+	std::size_t i = strlen(buffer);
 	while(i && buffer[i] != '\\') {
 		buffer[i--] = 0;
 	}
@@ -60,16 +60,4 @@ std::string FileSystem::path(const std::string &file) {
 bool FileSystem::exist(const std::string &name) {
 	std::ifstream f((root + name).c_str());
 	return f.good();
-}
-
-void FileSystem::splitString(std::vector<std::string> &list, std::string str, const std::string &delimiter) {
-	list.clear();
-
-	int pos = 0;
-	while((pos = str.find(delimiter)) != std::string::npos) {
-		list.push_back(str.substr(0, pos));
-		str.erase(0, pos + delimiter.length());
-	}
-
-	list.push_back(str);
 }

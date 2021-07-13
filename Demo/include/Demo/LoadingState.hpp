@@ -12,7 +12,6 @@ class LoadingState: public Akila::State {
 		std::shared_ptr<Akila::VBO> vertex;
 		std::shared_ptr<Akila::VBO> uv;
 
-
 	public:
 		LoadingState();
 

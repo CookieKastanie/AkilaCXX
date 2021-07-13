@@ -15,4 +15,3 @@ include_directories(imgui)
 
 add_subdirectory(assimp-5.0.1)
 include_directories(assimp-5.0.1)
-

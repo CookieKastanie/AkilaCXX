@@ -78,30 +78,34 @@ void Shader::setUBOIndex(const std::string &name, unsigned int index) {
     glUniformBlockBinding(id, uniformBlock, index);
 }
 
-void Shader::send(unsigned int uid, int value) const {
-
+unsigned int Shader::getUniformId(const std::string &name) {
+    return glGetUniformLocation(id, name.c_str());
 }
 
-void Shader::send(unsigned int uid, float value) const {
-
+void Shader::send(const unsigned int &uid, const int &value) const {
+    glUniform1i(uid, value);
 }
 
-void Shader::send(unsigned int uid, const glm::vec2 &value) const {
-
+void Shader::send(const unsigned int &uid, const float &value) const {
+    glUniform1f(uid, value);
 }
 
-void Shader::send(unsigned int uid, const glm::vec3 &value) const {
-
+void Shader::send(const unsigned int &uid, const glm::vec2 &value) const {
+    glUniform2fv(uid, 1, &value[0]);
 }
 
-void Shader::send(unsigned int uid, const std::vector<glm::vec3> &values) const {
-
+void Shader::send(const unsigned int &uid, const glm::vec3 &value) const {
+    glUniform3fv(uid, 1, &value[0]);
 }
 
-void Shader::send(unsigned int uid, const glm::mat4 &mat) const {
-
+void Shader::send(const unsigned int &uid, const std::vector<glm::vec3> &values) const {
+    glUniform3fv(uid, (GLsizei)values.size(), (GLfloat*)values.data());
 }
 
-void Shader::send(unsigned int uid, const bool value) const {
+void Shader::send(const unsigned int &uid, const glm::mat4 &mat) const {
+    glUniformMatrix4fv(uid, 1, GL_FALSE, &mat[0][0]);
+}
 
+void Shader::send(const unsigned int &uid, const bool &value) const {
+    glUniform1i(uid, value);
 }

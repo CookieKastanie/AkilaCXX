@@ -2,6 +2,7 @@
 
 #include "GLFW/glfw3.h"
 #include "Akila/inputs/Keyboard.hpp"
+#include "Akila/inputs/Mouse.hpp"
 #include <functional>
 
 namespace Akila {
@@ -16,6 +17,7 @@ namespace Akila {
 			int winPos[2];
 
 			Keyboard keybord;
+			Mouse mouse;
 
 			friend class Renderer;
 
@@ -43,6 +45,7 @@ namespace Akila {
 			void setFullscreen(bool fullscreen);
 
 			Keyboard *getKeybord();
+			Mouse *getMouse();
 
 		private:
 			void setRendererResizeCallback(const std::function<void()> &cb);

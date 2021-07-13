@@ -15,13 +15,16 @@ namespace Akila {
             GLenum usage;
 
         public:
-            static unsigned int const STATIC = GL_STATIC_DRAW;
-            static unsigned int const DYNAMIC = GL_DYNAMIC_DRAW;
+            enum Usage: GLenum {
+                STATIC = GL_STATIC_DRAW,
+                DYNAMIC = GL_DYNAMIC_DRAW
+            };
 
-            static unsigned int const FLOAT = GL_FLOAT;
-            static unsigned int const UNSIGNED_SHORT = GL_UNSIGNED_SHORT;
-            static unsigned int const INT = GL_INT;
-            
+            enum Type: GLenum {
+                FLOAT = GL_FLOAT,
+                UNSIGNED_SHORT = GL_UNSIGNED_SHORT,
+                INT = GL_INT
+            };
 
             Buffer(unsigned int kind, unsigned int usage);
             virtual ~Buffer();
@@ -36,7 +39,7 @@ namespace Akila {
             GLuint location;
 
         public:
-            VBO(int tupleSize, unsigned int attributeLocation, unsigned int usage = STATIC);
+            VBO(int tupleSize, unsigned int attributeLocation, Usage usage = STATIC);
 
             template<typename T>
             void setData(const std::vector<T> &data);
@@ -44,7 +47,7 @@ namespace Akila {
             int getTupleSize() const;
             unsigned int getLocation() const;
 
-            void bindToArrayBuffer(unsigned int dataType = FLOAT) const;
+            void bindToArrayBuffer(Type dataType = FLOAT) const;
     };
 
     class UBO: public Buffer {
@@ -54,7 +57,7 @@ namespace Akila {
             unsigned int bindingPoint;
 
         public:
-            UBO(unsigned int size, unsigned int usage = DYNAMIC);
+            UBO(unsigned int size, Buffer::Usage usage = DYNAMIC);
 
             void setData(const void *data);
             unsigned int getBindingPoint();

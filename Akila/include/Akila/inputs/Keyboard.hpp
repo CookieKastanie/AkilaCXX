@@ -13,7 +13,7 @@ namespace Akila {
 			std::function<void(Keyboard*)> pressCallback;
 
 		public:
-			enum Key : int {
+			enum Key: int {
 				A = GLFW_KEY_A,
 				B = GLFW_KEY_B,
 				C = GLFW_KEY_C,
@@ -60,7 +60,7 @@ namespace Akila {
 			bool isPressed(Key k) const;
 
 			void onKeyPress(const std::function<void(Keyboard*)> &cb);
-			void releasePressEvent();
+			void detachPressEvent();
 
 		private:
 			void setKeyState(Key k, bool state);

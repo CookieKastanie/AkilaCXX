@@ -13,6 +13,14 @@ Renderer::Renderer(std::shared_ptr<Display> &display): display{display} {
 	display->setRendererResizeCallback([this]() -> void {
 		camera->onResize(this->display->getWidth(), this->display->getHeight());
 	});
+
+	enable(BLEND);
+	blendFunc(SRC_ALPHA, ONE_MINUS_SRC_ALPHA);
+	//enable(DEPTH_TEST);
+	enable(CULL_FACE);
+	glFrontFace(GL_CCW);
+	glCullFace(GL_BACK);
+	enable(TEXTURE_CUBE_MAP_SEAMLESS);
 }
 
 void Renderer::prepare() {
@@ -33,19 +41,26 @@ std::shared_ptr<Camera> &Renderer::getSharedCamera() {
 	return camera;
 }
 
-void Renderer::loadMaterialFromFile(const std::string &fileName) {
-	auto m = std::make_shared<Material>();
+void Renderer::affectUBOToShader(Shader *shader) {
+	if(shader == nullptr) return;
 
-	m->loadFromFile(fileName);
-
-	Shader *s = m->getShader();
-	s->setUBOIndex("akila_camera_ubo", cameraUBO->getBindingPoint());
-	s->setUBOIndex("akila_time_ubo", timeUBO->getBindingPoint());
-	//s->setUBOIndex("akila_lights_ubo", lightsUBO->getBindingPoint());
-
-	materials.emplace(m->getName(), m);
+	shader->setUBOIndex("akila_camera_ubo", cameraUBO->getBindingPoint());
+	shader->setUBOIndex("akila_time_ubo", timeUBO->getBindingPoint());
+	//shader->setUBOIndex("akila_lights_ubo", renderer->lightsUBO->getBindingPoint());
 }
 
-std::shared_ptr<Material> &Renderer::getMaterialbyName(const std::string &name) {
-	return materials[name];
+void Renderer::enable(Capability cap) {
+	glEnable(cap);
+}
+
+void Renderer::disable(Capability cap) {
+	glDisable(cap);
+}
+
+void Renderer::blendFunc(BlendFactor sfactor, BlendFactor dfactor) {
+	glBlendFunc(sfactor, dfactor);
+}
+
+void Renderer::clearDepth() {
+	glClear(GL_DEPTH_BUFFER_BIT);
 }

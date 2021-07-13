@@ -26,15 +26,15 @@ int Buffer::getLength() const {
 
 /////////////////////////////////////////////////////////////////////////////////////////////////
 
-VBO::VBO(int tupleSize, unsigned int attributeLocation, unsigned int usage): Buffer{GL_ARRAY_BUFFER, usage},
+VBO::VBO(int tupleSize, unsigned int attributeLocation, Usage usage): Buffer{GL_ARRAY_BUFFER, usage},
 	tupleSize{tupleSize}, location{attributeLocation} {
 	
 }
 
 template<typename T>
 void VBO::setData(const std::vector<T> &data) {
-	setRawData(data.data(), data.size() * sizeof(T));
-	length = data.size();
+	setRawData(data.data(), (int)data.size() * sizeof(T));
+	length = (int)data.size();
 }
 
 // declaration de tous les templates possibles
@@ -51,7 +51,7 @@ unsigned int VBO::getLocation() const {
 	return location;
 }
 
-void VBO::bindToArrayBuffer(unsigned int dataType) const {
+void VBO::bindToArrayBuffer(Type dataType) const {
 	bind();
 	glVertexAttribPointer(getLocation(), getTupleSize(), dataType, GL_FALSE, 0, 0);
 	glEnableVertexAttribArray(getLocation());
@@ -61,7 +61,7 @@ void VBO::bindToArrayBuffer(unsigned int dataType) const {
 
 unsigned int UBO::nextBindingPoint = 0;
 
-UBO::UBO(unsigned int size, unsigned int usage): Buffer{GL_UNIFORM_BUFFER, usage} {
+UBO::UBO(unsigned int size, Buffer::Usage usage): Buffer{GL_UNIFORM_BUFFER, usage} {
 	setRawData(NULL, size);
 	length = size;
 	bindingPoint = nextBindingPoint++;
