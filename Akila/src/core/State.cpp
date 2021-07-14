@@ -16,7 +16,7 @@ StateManager::StateManager() {
 	setState(new State{});
 }
 
-void StateManager::setState(std::shared_ptr<State> state) {
+void StateManager::setState(const std::shared_ptr<State> &state) {
 	currentState = state;
 }
 
@@ -24,6 +24,6 @@ void StateManager::setState(State *state) {
 	setState(std::shared_ptr<State>(state));
 }
 
-State *StateManager::getCurrentState() {
+State *StateManager::getCurrentState() const {
 	return currentState.get();
 }

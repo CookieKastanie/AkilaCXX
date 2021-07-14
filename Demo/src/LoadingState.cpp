@@ -12,6 +12,8 @@
 #include "glm/vec2.hpp"
 
 LoadingState::LoadingState(): Akila::State{} {
+	Akila::Core::display->setTitle("Demo Akila (o.o)");
+
 	vertex = std::make_shared<Akila::VBO>(2, Akila::ShaderBuilder::Attributes::A_POSITION);
 	vertex->setData(std::vector<glm::vec2>({
 		{-1, -1}, {1, -1}, {1, 1},
@@ -46,15 +48,8 @@ void LoadingState::update() {
 }
 
 void LoadingState::draw() {
-	//std::cout << (1.f / Akila::Time::delta) << std::endl;
-	//std::cout << Akila::Core::display->getWidth() << std::endl;
-
-	float fps{1.f / Akila::Time::delta};
-	Akila::Core::display->setTitle(std::string("FPS ").append(std::to_string(fps)));
-
 	Akila::Core::renderer->useDefaultFrameBuffer();
-	Akila::Core::resourcesBucket->getMaterial("loadingScreen")->getShader()->bind();
-	vao->draw();
+	Akila::Core::renderer->render(Akila::Core::resourcesBucket->getMaterial("loadingScreen").get(), vao.get());;
 
 	//Akila::Core::resourcesBucket->getMaterial("textureTest")->getShader()->bind();
 	//Akila::Core::resourcesBucket->getTexture("citron")->bind();

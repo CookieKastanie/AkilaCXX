@@ -7,6 +7,7 @@
 #include "Akila/graphics/gl/Buffer.hpp"
 #include "Akila/graphics/Material.hpp"
 #include <map>
+#include "Akila/graphics/gl/VAO.hpp"
 
 namespace Akila {
 	class Renderer {
@@ -21,6 +22,7 @@ namespace Akila {
 			Renderer(std::shared_ptr<Display> &Display);
 
 			void prepare();
+			void finish();
 			void useDefaultFrameBuffer();
 
 			void setSharedCamera(const std::shared_ptr<Camera> &cam);
@@ -61,5 +63,7 @@ namespace Akila {
 			void blendFunc(BlendFactor sfactor, BlendFactor dfactor);
 
 			void clearDepth();
+
+			void render(const Material *material, const VAO *vao);
 	};
 }

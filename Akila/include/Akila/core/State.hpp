@@ -19,9 +19,9 @@ namespace Akila {
 		public:
 			StateManager();
 
-			void setState(std::shared_ptr<State> state);
+			void setState(const std::shared_ptr<State> &state);
 			void setState(State *state);
 
-			State *getCurrentState();
+			State *getCurrentState() const;
 	};
 }

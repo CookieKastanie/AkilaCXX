@@ -33,5 +33,8 @@ namespace Akila {
 			void send(const unsigned int &uid, const std::vector<glm::vec3> &values) const;
 			void send(const unsigned int &uid, const glm::mat4 &mat) const;
 			void send(const unsigned int &uid, const bool &value) const;
+
+			void sendRawFloat(const unsigned int &uid, const void *values, const int &count) const;
+			void sendRawInt(const unsigned int &uid, const void *values, const int &count) const;
 	};
 }

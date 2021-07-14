@@ -1,5 +1,7 @@
 ﻿project("Akila")
 
+set(CMAKE_CXX_STANDARD 17)
+
 set(RESOURCES_DIRECTORY "${PROJECT_SOURCE_DIR}/resources")
 set(SRC_DIR "${PROJECT_SOURCE_DIR}/src")
 set(INC_DIR "${PROJECT_SOURCE_DIR}/include")

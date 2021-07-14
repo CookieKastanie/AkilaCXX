@@ -28,6 +28,10 @@ void Renderer::prepare() {
 	timeUBO->setData(&Time::now);
 }
 
+void Renderer::finish() {
+	Material::currentUsed = -1;
+}
+
 void Renderer::useDefaultFrameBuffer() {
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	glViewport(0, 0, display->getWidth(), display->getHeight());
@@ -63,4 +67,13 @@ void Renderer::blendFunc(BlendFactor sfactor, BlendFactor dfactor) {
 
 void Renderer::clearDepth() {
 	glClear(GL_DEPTH_BUFFER_BIT);
+}
+
+void Renderer::render(const Material *material, const VAO *vao) {
+	if(material->getId() != Material::currentUsed) {
+		material->getShader()->bind();
+		material->sendUniforms();
+	}
+	
+	vao->draw();
 }

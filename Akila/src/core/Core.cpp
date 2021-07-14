@@ -44,6 +44,7 @@ int Core::run(int argc, char *argv[], void (*init)(void)) {
 		currentState->update();
 		renderer->prepare();
 		currentState->draw();
+		renderer->finish();
 
 		display->swapBuffers();
 		glfwPollEvents();
