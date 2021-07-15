@@ -27,6 +27,8 @@ int Core::run(int argc, char *argv[], void (*init)(void)) {
 		std::exit(EXIT_FAILURE);
 	}
 
+	Shader::funcInit();
+
 	stateManager = std::make_shared<StateManager>();
 	taskManager = std::make_shared<TaskManager>();
 	renderer = std::make_shared<Renderer>(display);

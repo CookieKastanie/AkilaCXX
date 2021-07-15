@@ -6,13 +6,7 @@
 
 namespace Akila {
 	class Material {
-	private:
-		static int lastId;
-
-		int id;
-
-		std::shared_ptr<Shader> shader;
-
+	public:
 		union UniformValueType {
 			float f;
 			int i;
@@ -21,6 +15,13 @@ namespace Akila {
 			unsigned int uid;
 			std::vector<UniformValueType> values;
 		};
+
+	private:
+		static int lastId;
+
+		int id;
+
+		std::shared_ptr<Shader> shader;
 
 		std::vector<UniformValue> uniformsFloat;
 		std::vector<UniformValue> uniformsInts;

@@ -40,9 +40,19 @@ struct ShaderState {
 	std::string name;
 	std::string src;
 
+	// initial values
+	std::vector<std::string> unifNames;
+	std::vector<bool> unifIsInt;
+	std::vector<Material::UniformValue> uniformsValues;
+
+
 	void clear() {
 		name = "none";
 		src = "";
+
+		unifNames.clear();
+		unifIsInt.clear();
+		uniformsValues.clear();
 	}
 };
 
@@ -103,11 +113,59 @@ struct MaterialState {
 	std::string name;
 	std::string shader;
 
+	std::vector<std::string> unifNames;
+	std::vector<bool> unifIsInt;
+	std::vector<Material::UniformValue> uniformsValues;
+
 	void clear() {
 		name = "none";
 		shader = "";
+
+		unifNames.clear();
+		unifIsInt.clear();
+		uniformsValues.clear();
 	}
 };
+
+static bool parseUniformValue(Material::UniformValue &uv, std::string &name, bool &isInt, std::string &line) {
+	std::vector<std::string> values;
+	Loader::splitString(values, line, "=");
+	if(values.size() < 2) return false;
+
+	name = values[0];
+
+	if(values[1].size() < 3) return false;
+
+	if(values[1][values[1].size() - 1] != ']') return false;
+	values[1].erase(values[1].end() - 1);
+
+	if(values[1][0] == 'i') {
+		values[1].erase(values[1].begin());
+		isInt = true;
+	} else {
+		isInt = false;
+	}
+
+	if(values[1][0] != '[') return false;
+	values[1].erase(values[1].begin());
+
+	if(values[1].size() <= 0) return false;
+
+	std::string s = values[1];
+	Loader::splitString(values, s, ",");
+
+	int maxValueCount = 4;
+	for(std::string &v : values) {
+		Material::UniformValueType data;
+		if(isInt) data.i = std::stoi(v);
+		else data.f = std::stof(v);
+		uv.values.push_back(data);
+
+		if(--maxValueCount == 0) break;
+	}
+
+	return uv.values.size() != 0;
+}
 
 void ResourcesBucket::loadResourceFile(const std::string &path, TaskManager *taskManger) {
 	std::ifstream file;
@@ -145,7 +203,19 @@ void ResourcesBucket::loadResourceFile(const std::string &path, TaskManager *tas
 			if(!values[0].compare("}")) {
 
 				if(state == ShaderState::STATE_ID) {
-					shaders.emplace(shaderState.name, Loader::shader(shaderState.src));
+					auto shader = Loader::shader(shaderState.src);
+					shaders.emplace(shaderState.name, shader);
+
+					shader->bind();
+					for(int i = 0; i < shaderState.uniformsValues.size(); ++i) {
+						unsigned int uid = shader->getUniformId(shaderState.unifNames[i]);
+
+						if(shaderState.unifIsInt[i]) {
+							shader->sendRawInt(uid, shaderState.uniformsValues[i].values.data(), shaderState.uniformsValues[i].values.size());
+						} else {
+							shader->sendRawFloat(uid, shaderState.uniformsValues[i].values.data(), shaderState.uniformsValues[i].values.size());
+						}
+					}
 				}
 				
 				else if(state == MaterialState::STATE_ID) {
@@ -158,6 +228,11 @@ void ResourcesBucket::loadResourceFile(const std::string &path, TaskManager *tas
 						m->setShader(defaultShader);
 					} else {
 						renderer->affectUBOToShader(m->getShader());
+					}
+
+					for(int i = 0; i < materialState.uniformsValues.size(); ++i) {
+						materialState.uniformsValues[i].uid = m->getShader()->getUniformId(materialState.unifNames[i]);
+						m->addUniformValue(materialState.uniformsValues[i], materialState.unifIsInt[i]);
 					}
 				}
 
@@ -185,11 +260,31 @@ void ResourcesBucket::loadResourceFile(const std::string &path, TaskManager *tas
 				if(state == ShaderState::STATE_ID) {
 					if(!values[0].compare("name")) shaderState.name = values[1];
 					else if(!values[0].compare("src")) shaderState.src = values[1];
+					else if(!values[0].compare("uniform")) {
+						Material::UniformValue uv;
+						std::string name;
+						bool isInt;
+						if(parseUniformValue(uv, name, isInt, values[1])) {
+							shaderState.uniformsValues.push_back(uv);
+							shaderState.unifNames.push_back(name);
+							shaderState.unifIsInt.push_back(isInt);
+						}
+					}
 				} 
 				
 				else if(state == MaterialState::STATE_ID) {
 					if(!values[0].compare("name")) materialState.name = values[1];
 					else if(!values[0].compare("shader")) materialState.shader = values[1];
+					else if(!values[0].compare("uniform")) {
+						Material::UniformValue uv;
+						std::string name;
+						bool isInt;
+						if(parseUniformValue(uv, name, isInt, values[1])) {
+							materialState.uniformsValues.push_back(uv);
+							materialState.unifNames.push_back(name);
+							materialState.unifIsInt.push_back(isInt);
+						}
+					}
 				} 
 				
 				else if(state == TextureState::STATE_ID) {

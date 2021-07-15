@@ -12,6 +12,8 @@ void main() {
 in vec2 uv;
 out vec4 fragColor;
 
+uniform vec3 color;
+
 mat2 rotate(float a) {
     float c = cos(a);
     float s = sin(a);
@@ -59,6 +61,6 @@ void main() {
     smoothstep(t - 0.001, t + 0.001, abs(plr.y - 0.5)); // longueur de la corde (en miroir avec le abs)
 
     // animation couleur
-    const vec3 baseColor = vec3(1.5, 2.9, 3.5);
-    fragColor.rgb = (sin(baseColor + id * 5. + u_time) * 0.5 + 0.5) * value;
+    //const vec3 baseColor = vec3(1.5, 2.9, 3.5);
+    fragColor.rgb = (sin(color + id * 5. + u_time) * 0.5 + 0.5) * value;
 }

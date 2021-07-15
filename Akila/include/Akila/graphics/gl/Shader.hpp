@@ -9,14 +9,21 @@
 #include "glm/vec4.hpp"
 #include "glm/mat4x4.hpp"
 
+#include <functional>
+
 namespace Akila {
 	class Shader {
 		private:
+			static void(*funifFuncs[5])(GLint, GLsizei, GLfloat*);
+			static void(*iunifFuncs[5])(GLint, GLsizei, GLint*);
+
 			GLuint id;
 
 			bool checkErrors(GLuint shader, std::string type);
 
 		public:
+			static void funcInit();
+
 			Shader(const std::string &vertexCode, const std::string &fragmentCode, const std::string &geometryCode = "");
 			~Shader();
 
@@ -34,7 +41,7 @@ namespace Akila {
 			void send(const unsigned int &uid, const glm::mat4 &mat) const;
 			void send(const unsigned int &uid, const bool &value) const;
 
-			void sendRawFloat(const unsigned int &uid, const void *values, const int &count) const;
-			void sendRawInt(const unsigned int &uid, const void *values, const int &count) const;
+			void sendRawFloat(const unsigned int &uid, const void *values, const int &funcId) const;
+			void sendRawInt(const unsigned int &uid, const void *values, const int &funcId) const;
 	};
 }

@@ -2,6 +2,27 @@
 
 using namespace Akila;
 
+void(*Shader::funifFuncs[5])(GLint, GLsizei, GLfloat *);
+void(*Shader::iunifFuncs[5])(GLint, GLsizei, GLint *);
+
+void Shader::funcInit() {
+    funifFuncs[0] = (void(*)(GLint, GLsizei, GLfloat *))glUniform1fv;////
+
+    funifFuncs[1] = (void(*)(GLint, GLsizei, GLfloat *))glUniform1fv;
+    funifFuncs[2] = (void(*)(GLint, GLsizei, GLfloat *))glUniform2fv;
+    funifFuncs[3] = (void(*)(GLint, GLsizei, GLfloat *))glUniform3fv;
+    funifFuncs[4] = (void(*)(GLint, GLsizei, GLfloat *))glUniform4fv;
+
+
+    iunifFuncs[0] = (void(*)(GLint, GLsizei, GLint *))glUniform1iv;/////
+
+    iunifFuncs[1] = (void(*)(GLint, GLsizei, GLint *))glUniform1iv;
+    iunifFuncs[2] = (void(*)(GLint, GLsizei, GLint *))glUniform2iv;
+    iunifFuncs[3] = (void(*)(GLint, GLsizei, GLint *))glUniform3iv;
+    iunifFuncs[4] = (void(*)(GLint, GLsizei, GLint *))glUniform4iv;
+}
+
+
 Shader::Shader(const std::string &vertexCode, const std::string &fragmentCode, const std::string &geometryCode) {
     id = glCreateProgram();
 
@@ -110,10 +131,11 @@ void Shader::send(const unsigned int &uid, const bool &value) const {
     glUniform1i(uid, value);
 }
 
-void Shader::sendRawFloat(const unsigned int &uid, const void *values, const int &count) const {
-    glUniform1fv(uid, (GLsizei)count, (GLfloat*)values);
+
+void Shader::sendRawFloat(const unsigned int &uid, const void *values, const int &funcId) const {
+    funifFuncs[funcId](uid, 1, (GLfloat*)values);
 }
 
-void Shader::sendRawInt(const unsigned int &uid, const void *values, const int &count) const {
-    glUniform1iv(uid, (GLsizei)count, (GLint*)values);
+void Shader::sendRawInt(const unsigned int &uid, const void *values, const int &funcId) const {
+    iunifFuncs[funcId](uid, 1, (GLint*)values);
 }
