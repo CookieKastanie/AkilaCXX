@@ -78,28 +78,34 @@ struct TextureState {
 		if(!str.compare("DEPTH_STENCIL")) return TextureBuffer::Format::DEPTH_STENCIL;
 		if(!str.compare("RED")) return TextureBuffer::Format::RED;
 		if(!str.compare("RG")) return TextureBuffer::Format::RG;
-		if(!str.compare("RGB")) return TextureBuffer::Format::RGB;
 		if(!str.compare("RGBA")) return TextureBuffer::Format::RGBA;
 		if(!str.compare("SRGB")) return TextureBuffer::Format::SRGB;
 		if(!str.compare("SRGB_ALPHA")) return TextureBuffer::Format::SRGB_ALPHA;
 		if(!str.compare("RGB16F")) return TextureBuffer::Format::RGB16F;
 		if(!str.compare("RGBA16F")) return TextureBuffer::Format::RGBA16F;
+
+		//default
+		return TextureBuffer::Format::RGB;
 	}
 
 	static TextureBuffer::WrapMode stringToWrapMode(const std::string &str) {
 		if(!str.compare("CLAMP_TO_EDGE")) return TextureBuffer::WrapMode::CLAMP_TO_EDGE;
 		if(!str.compare("CLAMP_TO_BORDER")) return TextureBuffer::WrapMode::CLAMP_TO_BORDER;
 		if(!str.compare("MIRRORED_REPEAT")) return TextureBuffer::WrapMode::MIRRORED_REPEAT;
-		if(!str.compare("REPEAT")) return TextureBuffer::WrapMode::REPEAT;
+
+		//default
+		return TextureBuffer::WrapMode::REPEAT;
 	}
 
 	static TextureBuffer::FilterMode stringToFilterMode(const std::string &str) {
 		if(!str.compare("NEAREST")) return TextureBuffer::FilterMode::NEAREST;
-		if(!str.compare("LINEAR")) return TextureBuffer::FilterMode::LINEAR;
 		if(!str.compare("NEAREST_MIPMAP_NEAREST")) return TextureBuffer::FilterMode::NEAREST_MIPMAP_NEAREST;
 		if(!str.compare("LINEAR_MIPMAP_NEAREST")) return TextureBuffer::FilterMode::LINEAR_MIPMAP_NEAREST;
 		if(!str.compare("NEAREST_MIPMAP_LINEAR")) return TextureBuffer::FilterMode::NEAREST_MIPMAP_LINEAR;
 		if(!str.compare("LINEAR_MIPMAP_LINEAR")) return TextureBuffer::FilterMode::LINEAR_MIPMAP_LINEAR;
+		
+		// default
+		return TextureBuffer::FilterMode::LINEAR;
 	}
 
 	static bool stringToBool(const std::string &str) {
@@ -211,9 +217,9 @@ void ResourcesBucket::loadResourceFile(const std::string &path, TaskManager *tas
 						unsigned int uid = shader->getUniformId(shaderState.unifNames[i]);
 
 						if(shaderState.unifIsInt[i]) {
-							shader->sendRawInt(uid, shaderState.uniformsValues[i].values.data(), shaderState.uniformsValues[i].values.size());
+							shader->sendRawInt(uid, shaderState.uniformsValues[i].values.data(), (int)shaderState.uniformsValues[i].values.size());
 						} else {
-							shader->sendRawFloat(uid, shaderState.uniformsValues[i].values.data(), shaderState.uniformsValues[i].values.size());
+							shader->sendRawFloat(uid, shaderState.uniformsValues[i].values.data(), (int)shaderState.uniformsValues[i].values.size());
 						}
 					}
 				}

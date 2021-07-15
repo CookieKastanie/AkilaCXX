@@ -28,10 +28,10 @@ void Material::addUniformValue(const UniformValue &uv, bool isInts) {
 
 void Material::sendUniforms() const {
 	for(auto uv : uniformsFloat) {
-		shader->sendRawFloat(uv.uid, uv.values.data(), uv.values.size());
+		shader->sendRawFloat(uv.uid, uv.values.data(), (int)uv.values.size());
 	}
 
 	for(auto uv : uniformsInts) {
-		shader->sendRawInt(uv.uid, uv.values.data(), uv.values.size());
+		shader->sendRawInt(uv.uid, uv.values.data(), (int)uv.values.size());
 	}
 }
