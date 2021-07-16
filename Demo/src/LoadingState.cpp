@@ -6,6 +6,8 @@ LoadingState::LoadingState(): Akila::State{} {
 	Akila::Core::resourcesBucket->loadResourceFile("main.res");
 	defaultTriangle = Akila::Core::resourcesBucket->getMesh("defaultTriangle");
 
+	Akila::Core::renderer->setSharedCamera(std::make_shared<Akila::PerspectiveCamera>());
+
 	Akila::Core::display->getKeybord()->onKeyPress([](Akila::Keyboard *keyboard) -> void {
 		if(keyboard->isPressed(Akila::Keyboard::TAB)) Akila::Core::display->setFullscreen(!Akila::Core::display->isFullscreen());
 	});

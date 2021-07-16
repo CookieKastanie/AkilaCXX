@@ -118,8 +118,6 @@ public:
 	}
 
 	void onBackground() override {
-		std::cout << "Chargement de " << path << std::endl;
-
 		std::ifstream file(FileSystem::path(path));
 
 		std::vector<glm::vec3> tmpVertex;

@@ -140,8 +140,23 @@ struct TextureState {
 	}
 };
 
-struct MaterialState {
+
+struct MeshState {
 	static const int STATE_ID = 2;
+
+	std::string name;
+	std::string src;
+
+	void clear() {
+		name = "none";
+		src = "";
+	}
+};
+
+
+
+struct MaterialState {
+	static const int STATE_ID = 3;
 
 	std::string name;
 	std::string shader;
@@ -216,6 +231,7 @@ void ResourcesBucket::loadResourceFile(const std::string &path, TaskManager *tas
 	ShaderState shaderState;
 	MaterialState materialState;
 	TextureState textureState;
+	MeshState meshState;
 
 	std::string line;
 	while(std::getline(file, line)) {
@@ -229,6 +245,7 @@ void ResourcesBucket::loadResourceFile(const std::string &path, TaskManager *tas
 					if(!values[0].compare("shader")) { state = ShaderState::STATE_ID; shaderState.clear(); }
 					else if(!values[0].compare("material")) { state = MaterialState::STATE_ID; materialState.clear(); }
 					else if(!values[0].compare("texture")) { state = TextureState::STATE_ID; textureState.clear(); }
+					else if(!values[0].compare("mesh")) { state = MeshState::STATE_ID; meshState.clear(); }
 				}
 			}
 
@@ -282,6 +299,12 @@ void ResourcesBucket::loadResourceFile(const std::string &path, TaskManager *tas
 					t->setParameters(textureState.parameters);
 					Loader::asyncTexture(t.get(), textureState.src, taskManger);
 					textures.emplace(textureState.name, t);
+				}
+
+				else if(state == MeshState::STATE_ID) {
+					auto m = std::make_shared<Mesh>();
+					Loader::asyncMesh(m.get(), meshState.src);
+					meshs.emplace(meshState.name, m);
 				}
 
 				state = -1;
@@ -352,6 +375,11 @@ void ResourcesBucket::loadResourceFile(const std::string &path, TaskManager *tas
 					else if(!values[0].compare("magFilter")) textureState.parameters.magFilter = TextureState::stringToFilterMode(values[1]);
 
 					else if(!values[0].compare("mips")) textureState.generateMips = TextureState::stringToBool(values[1]);
+				}
+
+				else if(state == MeshState::STATE_ID) {
+					if(!values[0].compare("name")) meshState.name = values[1];
+					else if(!values[0].compare("src")) meshState.src = values[1];
 				}
 			}
 		}
