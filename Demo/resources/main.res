@@ -30,13 +30,42 @@ texture {
 	name: sword_A
 	src: textures/sword/sword_A.png
 	format: SRGB
+	mips: true
+}
+
+texture {
+	name: sword_N
+	src: textures/sword/sword_N.png
+	format: RGB
+	mips: true
+}
+
+texture {
+	name: sword_M
+	src: textures/sword/sword_M.png
+	format: RED
+	mips: true
+}
+
+texture {
+	name: sword_R
+	src: textures/sword/sword_R.png
+	format: RED
+	mips: true
+}
+
+texture {
+	name: sword_AO
+	src: textures/sword/sword_AO.png
+	format: RED
+	mips: true
 }
 
 ////////////////////////////////////////////////////////////////////////////////////
 
 mesh {
 	name: sword
-	src: meshs/sword.obj
+	src: meshs/sword.ob
 }
 
 ////////////////////////////////////////////////////////////////////////////////////
@@ -50,5 +79,5 @@ material {
 	name: textureTest
 	shader: textureTest
 
-	texture: citron = 0
+	texture: sword_A = 0
 }

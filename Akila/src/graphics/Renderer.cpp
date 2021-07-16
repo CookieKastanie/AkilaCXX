@@ -39,6 +39,7 @@ void Renderer::useDefaultFrameBuffer() {
 
 void Renderer::setSharedCamera(const std::shared_ptr<Camera> &cam) {
 	camera = cam;
+	camera->onResize(display->getWidth(), display->getHeight());
 }
 
 std::shared_ptr<Camera> &Renderer::getSharedCamera() {

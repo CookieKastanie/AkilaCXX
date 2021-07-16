@@ -3,7 +3,7 @@
 out vec2 uv;
 
 void main() {
-	gl_Position = a_position;
+	gl_Position = u_camera.pv * a_position;
 	uv = a_uv.xy;
 }
 

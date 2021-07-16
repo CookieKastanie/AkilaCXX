@@ -119,6 +119,7 @@ public:
 
 	void onBackground() override {
 		std::ifstream file(FileSystem::path(path));
+		if(!file.good()) std::cerr << "Mesh loading error : can't read " << path << std::endl;
 
 		std::vector<glm::vec3> tmpVertex;
 		std::vector<glm::vec3> tmpNormal; bool haveNormal = true;
