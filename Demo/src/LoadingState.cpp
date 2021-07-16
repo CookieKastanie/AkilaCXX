@@ -14,9 +14,10 @@ LoadingState::LoadingState(): Akila::State{} {
 void LoadingState::update() {
 	auto &cam = Akila::Core::renderer->getSharedCamera();
 
-	float t = std::sin(Akila::Time::now);
-	glm::vec3 pos{t * t, 0, 0};
-	cam->setPosition(pos);
+	float x = std::cos(Akila::Time::now);
+	float y = std::cos(Akila::Time::now);
+
+	cam->setPosition({x, y, 0.5});
 }
 
 void LoadingState::draw() {

@@ -24,7 +24,7 @@ namespace Akila {
 			virtual void onResize(int width, int height);
 			virtual void update();
 
-			void setPosition(glm::vec3 &pos);
+			void setPosition(const glm::vec3 &pos);
 			glm::vec3 &getPosition();
 
 			Uniforms &getUniforms();

@@ -18,7 +18,7 @@ void Camera::onResize(int width, int height) {
 
 void Camera::update() {}
 
-void Camera::setPosition(glm::vec3 &pos) {
+void Camera::setPosition(const glm::vec3 &pos) {
 	uniforms.position = pos;
 }
 
