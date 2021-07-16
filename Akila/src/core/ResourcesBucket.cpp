@@ -123,6 +123,8 @@ struct MaterialState {
 	std::vector<bool> unifIsInt;
 	std::vector<Material::UniformValue> uniformsValues;
 
+	std::vector<Material::TextureBinding> textureBindings;
+
 	void clear() {
 		name = "none";
 		shader = "";
@@ -130,6 +132,8 @@ struct MaterialState {
 		unifNames.clear();
 		unifIsInt.clear();
 		uniformsValues.clear();
+
+		textureBindings.clear();
 	}
 };
 
@@ -240,6 +244,10 @@ void ResourcesBucket::loadResourceFile(const std::string &path, TaskManager *tas
 						materialState.uniformsValues[i].uid = m->getShader()->getUniformId(materialState.unifNames[i]);
 						m->addUniformValue(materialState.uniformsValues[i], materialState.unifIsInt[i]);
 					}
+
+					for(auto tb : materialState.textureBindings) {
+						m->addTextureBinding(tb);
+					}
 				}
 
 				else if(state == TextureState::STATE_ID) {
@@ -289,6 +297,17 @@ void ResourcesBucket::loadResourceFile(const std::string &path, TaskManager *tas
 							materialState.uniformsValues.push_back(uv);
 							materialState.unifNames.push_back(name);
 							materialState.unifIsInt.push_back(isInt);
+						}
+					}
+					else if(!values[0].compare("texture")) {
+						std::string d = values[1];
+						Loader::splitString(values, d, "=");
+
+						if(values.size() >= 2) {
+							Material::TextureBinding tb;
+							tb.textureBuffer = getTexture(values[0]);
+							tb.unit = (unsigned int)stoi(values[1]);
+							materialState.textureBindings.push_back(tb);
 						}
 					}
 				} 

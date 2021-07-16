@@ -35,3 +35,13 @@ void Material::sendUniforms() const {
 		shader->sendRawInt(uv.uid, uv.values.data(), (int)uv.values.size());
 	}
 }
+
+void Material::addTextureBinding(const TextureBinding &tb) {
+	textures.push_back(tb);
+}
+
+void Material::bindTextures() const {
+	for(auto tex : textures) {
+		tex.textureBuffer->bind(tex.unit);
+	}
+}

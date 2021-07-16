@@ -73,6 +73,7 @@ void Renderer::render(const Material *material, const VAO *vao) {
 	if(material->getId() != Material::currentUsed) {
 		material->getShader()->bind();
 		material->sendUniforms();
+		material->bindTextures();
 	}
 	
 	vao->draw();

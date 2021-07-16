@@ -32,4 +32,6 @@ material {
 material {
 	name: textureTest
 	shader: textureTest
+
+	texture: citron = 0
 }

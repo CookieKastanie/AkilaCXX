@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Akila/graphics/gl/Shader.hpp"
+#include "Akila/graphics/gl/Texture.hpp"
 #include <memory>
 #include <vector>
 
@@ -16,6 +17,11 @@ namespace Akila {
 			std::vector<UniformValueType> values;
 		};
 
+		struct TextureBinding {
+			unsigned int unit;
+			std::shared_ptr<TextureBuffer> textureBuffer;
+		};
+
 	private:
 		static int lastId;
 
@@ -25,6 +31,8 @@ namespace Akila {
 
 		std::vector<UniformValue> uniformsFloat;
 		std::vector<UniformValue> uniformsInts;
+
+		std::vector<TextureBinding> textures;
 
 	public:
 		static int currentUsed;
@@ -38,5 +46,8 @@ namespace Akila {
 
 		void addUniformValue(const UniformValue &uv, bool isInts = false);
 		void sendUniforms() const;
+
+		void addTextureBinding(const TextureBinding &tb);
+		void bindTextures() const;
 	};
 }
