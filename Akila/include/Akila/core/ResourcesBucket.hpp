@@ -6,6 +6,7 @@
 #include "Akila/graphics/gl/Shader.hpp"
 #include "Akila/graphics/gl/Texture.hpp"
 #include "Akila/graphics/Material.hpp"
+#include "Akila/graphics/Mesh.hpp"
 #include "Akila/graphics/Renderer.hpp"
 #include "Akila/core/Task.hpp"
 
@@ -23,12 +24,16 @@ namespace Akila {
 		std::shared_ptr<Material> defaultMaterial;
 		std::map<std::string, std::shared_ptr<Material>> materials;
 
+		std::shared_ptr<Mesh> defaultMesh;
+		std::map<std::string, std::shared_ptr<Mesh>> meshs;
+
 	public:
 		ResourcesBucket(const std::shared_ptr<Renderer> &renderer);
 
 		std::shared_ptr<Shader> &getShader(const std::string &name);
 		std::shared_ptr<Texture> &getTexture(const std::string &name);
 		std::shared_ptr<Material> &getMaterial(const std::string &name);
+		std::shared_ptr<Mesh> &getMesh(const std::string &name);
 
 		void loadResourceFile(const std::string &path, TaskManager *taskManger = nullptr);
 	};

@@ -1,6 +1,4 @@
 #include "Akila/core/Core.hpp"
-#include "Akila/core/Time.hpp"
-#include <iostream>
 
 using namespace Akila;
 

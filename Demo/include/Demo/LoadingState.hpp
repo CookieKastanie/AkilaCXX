@@ -1,16 +1,13 @@
 #pragma once
 
-#include <memory>
+#include "Akila/core/Core.hpp"
 #include "Akila/core/State.hpp"
-#include "Akila/graphics/gl/Shader.hpp"
-#include "Akila/graphics/gl/VAO.hpp"
-#include "Akila/graphics/gl/Buffer.hpp"
+#include "Akila/graphics/Material.hpp"
+#include "Akila/graphics/Mesh.hpp"
 
 class LoadingState: public Akila::State {
 	public:
-		std::shared_ptr<Akila::VAO> vao;
-		std::shared_ptr<Akila::VBO> vertex;
-		std::shared_ptr<Akila::VBO> uv;
+		std::shared_ptr<Akila::Mesh> defaultTriangle;
 
 	public:
 		LoadingState();

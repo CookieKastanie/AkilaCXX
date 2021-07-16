@@ -6,6 +6,7 @@
 #include "Akila/graphics/Camera.hpp"
 #include "Akila/graphics/gl/Buffer.hpp"
 #include "Akila/graphics/Material.hpp"
+#include "Akila/graphics/Mesh.hpp"
 #include <map>
 #include "Akila/graphics/gl/VAO.hpp"
 
@@ -65,5 +66,6 @@ namespace Akila {
 			void clearDepth();
 
 			void render(const Material *material, const VAO *vao);
+			void render(const Material *material, const Mesh *mesh);
 	};
 }

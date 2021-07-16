@@ -2,6 +2,7 @@
 #include "Akila/files/FileSystem.hpp"
 #include "Akila/files/Loader.hpp"
 #include "Akila/graphics/gl/Texture.hpp"
+#include "Akila/graphics/ShaderBuilder.hpp"
 
 using namespace Akila;
 
@@ -12,6 +13,26 @@ ResourcesBucket::ResourcesBucket(const std::shared_ptr<Renderer> &renderer): ren
 
 	defaultMaterial = std::make_shared<Material>();
 	defaultMaterial->setShader(defaultShader);
+
+	defaultMesh = std::make_shared<Mesh>();
+	{
+		auto vertex = std::make_shared<Akila::VBO>(2, ShaderBuilder::Attributes::A_POSITION);
+		vertex->setData(std::vector<glm::vec2>({
+			{-1, -1}, {1, -1}, {1, 1},
+			{-1, -1}, {1, 1}, {-1, 1}
+		}));
+
+		auto uv = std::make_shared<Akila::VBO>(2, ShaderBuilder::Attributes::A_UV);
+		uv->setData(std::vector<glm::vec2>({
+			{0, 0}, {1, 0}, {1, 1},
+			{0, 0}, {1, 1}, {0, 1}
+		}));
+
+		defaultMesh->addVBO(vertex);
+		defaultMesh->addVBO(uv);
+	}
+
+	defaultMesh->prepare();
 }
 
 std::shared_ptr<Shader> &ResourcesBucket::getShader(const std::string &name) {
@@ -30,6 +51,12 @@ std::shared_ptr<Material> &ResourcesBucket::getMaterial(const std::string &name)
 	auto &&val = materials[name];
 	if(val != nullptr) return val;
 	else return defaultMaterial;
+}
+
+std::shared_ptr<Mesh> &ResourcesBucket::getMesh(const std::string &name) {
+	auto &&val = meshs[name];
+	if(val != nullptr) return val;
+	else return defaultMesh;
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////
