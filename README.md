@@ -6,11 +6,11 @@
 
 Vertex attributes :
 
-	    vec4 a_position;
-		vec4 a_uv;
-		vec4 a_normal;
-		vec4 a_tangent;
-		vec4 a_color;
+	vec4 a_position;
+	vec4 a_uv;
+	vec4 a_normal;
+	vec4 a_tangent;
+	vec4 a_color;
 
 Common structs :
 
