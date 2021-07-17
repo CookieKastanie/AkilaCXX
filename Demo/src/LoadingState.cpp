@@ -34,7 +34,7 @@ void LoadingState::draw() {
 	Akila::Core::renderer->clearDepth();
 
 	Akila::Core::renderer->render(
-		Akila::Core::resourcesBucket->getMaterial("textureTest").get(),
+		Akila::Core::resourcesBucket->getMaterial("sword").get(),
 		Akila::Core::resourcesBucket->getMesh("sword").get());
 
 	if(Akila::Core::display->getKeybord()->isPressed(Akila::Keyboard::Key::A)) std::cout << "A" << std::endl;

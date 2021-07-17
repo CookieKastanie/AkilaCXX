@@ -297,7 +297,7 @@ void ResourcesBucket::loadResourceFile(const std::string &path, TaskManager *tas
 				else if(state == TextureState::STATE_ID) {
 					auto t = std::make_shared<Texture>(textureState.format);
 					t->setParameters(textureState.parameters);
-					Loader::asyncTexture(t.get(), textureState.src, taskManger);
+					Loader::asyncTexture(t.get(), textureState.src, textureState.generateMips, taskManger);
 					textures.emplace(textureState.name, t);
 				}
 
