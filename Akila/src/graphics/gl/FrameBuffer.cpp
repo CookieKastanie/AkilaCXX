@@ -11,7 +11,7 @@ FrameBuffer::FrameBuffer() {
 }
 
 FrameBuffer::~FrameBuffer() {
-    glDeleteBuffers(1, &id);
+    glDeleteFramebuffers(1, &id);
 }
 
 void FrameBuffer::setTexture(const std::shared_ptr<Texture> &texture, int unit) {

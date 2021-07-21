@@ -45,7 +45,7 @@ std::shared_ptr<Shader> &ResourcesBucket::getShader(const std::string &name) {
 
 std::shared_ptr<Texture> &ResourcesBucket::getTexture(const std::string &name) {
 	auto &&val = textures[name];
-	if(val != nullptr) return val;
+	if(val != nullptr) return val; 
 	else return defaultTexture;
 }
 

@@ -1,10 +1,23 @@
 #include "Demo/LoadingState.hpp"
 
+#include "Akila/graphics/pbr/Environment.hpp"
+
+#include "Akila/graphics/gl/Error.hpp"
+
 LoadingState::LoadingState(): Akila::State{} {
 	Akila::Core::display->setTitle("Demo Akila (o.o)");
 
+	Akila::Core::resourcesBucket->setTexture("brdfLUT", Akila::Environment::createBRDFLUT());
+	GL_ERROR_STACK();
+
+
 	Akila::Core::resourcesBucket->loadResourceFile("main.res");
+
+	GL_ERROR_STACK();
 	defaultTriangle = Akila::Core::resourcesBucket->getMesh("defaultTriangle");
+	GL_ERROR_STACK();
+
+	
 
 	Akila::Core::renderer->setSharedCamera(std::make_shared<Akila::PerspectiveCamera>());
 
@@ -24,14 +37,20 @@ void LoadingState::update() {
 }
 
 void LoadingState::draw() {
-	
 	Akila::Core::renderer->useDefaultFrameBuffer();
 
 	Akila::Core::renderer->disable(Akila::Renderer::DEPTH_TEST);
+	Akila::Core::renderer->disable(Akila::Renderer::CULL_FACE);
 	Akila::Core::renderer->render(Akila::Core::resourcesBucket->getMaterial("loadingScreen").get(), defaultTriangle.get());
 
+	
+
 	Akila::Core::renderer->enable(Akila::Renderer::DEPTH_TEST);
+	
 	Akila::Core::renderer->clearDepth();
+
+	Akila::Core::renderer->render(Akila::Core::resourcesBucket->getMaterial("brdfLUT").get(), defaultTriangle.get());
+	Akila::Core::renderer->enable(Akila::Renderer::CULL_FACE);
 
 	Akila::Core::renderer->render(
 		Akila::Core::resourcesBucket->getMaterial("sword").get(),

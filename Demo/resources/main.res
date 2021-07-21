@@ -116,3 +116,10 @@ material {
 	texture: sword_R = 3
 	texture: sword_AO = 4
 }
+
+material {
+	name: brdfLUT
+	shader: textureTest
+
+	texture: brdfLUT = 0
+}
