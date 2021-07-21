@@ -35,7 +35,8 @@ void LoadingState::draw() {
 
 	Akila::Core::renderer->render(
 		Akila::Core::resourcesBucket->getMaterial("sword").get(),
-		Akila::Core::resourcesBucket->getMesh("sword").get());
+		Akila::Core::resourcesBucket->getMesh("sword").get()
+	);
 
 	if(Akila::Core::display->getKeybord()->isPressed(Akila::Keyboard::Key::A)) std::cout << "A" << std::endl;
 	if(Akila::Core::display->getKeybord()->isPressed(Akila::Keyboard::Key::Q)) std::cout << "Q" << std::endl;

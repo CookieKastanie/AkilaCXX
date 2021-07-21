@@ -141,7 +141,7 @@ void main() {
     }   
   
     // static
-    vec3 ambient = vec3(0.03) * albedo * ao;
+    vec3 ambient = vec3(0.259, 0.647, 0.961) * albedo * ao;
 
     // IBL
     // ambient lighting (we now use IBL as the ambient term)

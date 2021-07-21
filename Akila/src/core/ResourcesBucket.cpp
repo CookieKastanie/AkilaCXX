@@ -11,6 +11,8 @@ ResourcesBucket::ResourcesBucket(const std::shared_ptr<Renderer> &renderer): ren
 
 	defaultTexture = std::make_shared<Texture>();
 
+	defaultCubeMapTexture = std::make_shared<CubeMapTexture>();
+
 	defaultMaterial = std::make_shared<Material>();
 	defaultMaterial->setShader(defaultShader);
 
@@ -47,6 +49,12 @@ std::shared_ptr<Texture> &ResourcesBucket::getTexture(const std::string &name) {
 	else return defaultTexture;
 }
 
+std::shared_ptr<CubeMapTexture> &ResourcesBucket::getCubeMapTexture(const std::string &name) {
+	auto &&val = cubeMapTextures[name];
+	if(val != nullptr) return val;
+	else return defaultCubeMapTexture;
+}
+
 std::shared_ptr<Material> &ResourcesBucket::getMaterial(const std::string &name) {
 	auto &&val = materials[name];
 	if(val != nullptr) return val;
@@ -57,6 +65,26 @@ std::shared_ptr<Mesh> &ResourcesBucket::getMesh(const std::string &name) {
 	auto &&val = meshs[name];
 	if(val != nullptr) return val;
 	else return defaultMesh;
+}
+
+void ResourcesBucket::setShader(const std::string &name, const std::shared_ptr<Shader> &shader) {
+	shaders[name] = shader;
+}
+
+void ResourcesBucket::setTexture(const std::string &name, const std::shared_ptr<Texture> &texture) {
+	textures[name] = texture;
+}
+
+void ResourcesBucket::setCubeMapTexture(const std::string &name, const std::shared_ptr<CubeMapTexture> &cubeMapTexture) {
+	cubeMapTextures[name] = cubeMapTexture;
+}
+
+void ResourcesBucket::setMaterial(const std::string &name, const std::shared_ptr<Material> &material) {
+	materials[name] = material;
+}
+
+void ResourcesBucket::setMesh(const std::string &name, const std::shared_ptr<Mesh> &mesh) {
+	meshs[name] = mesh;
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////

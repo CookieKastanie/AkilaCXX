@@ -1,4 +1,5 @@
 #include "Akila/graphics/gl/Texture.hpp"
+#include <iostream>
 
 using namespace Akila;
 
@@ -11,6 +12,10 @@ TextureBuffer::TextureBuffer(unsigned int kind, Format internalFormat):
 
 TextureBuffer::~TextureBuffer() {
 	glDeleteTextures(1, &id);
+}
+
+unsigned int TextureBuffer::getId() const {
+	return id;
 }
 
 void TextureBuffer::bind(const unsigned int &unit) const {
@@ -26,9 +31,17 @@ void TextureBuffer::setSize(int width, int height) {
 	this->height = height;
 }
 
-void TextureBuffer::setData(const void *data, Format format, Type type) {
+void TextureBuffer::setData(const void *data, Format format, Type type, unsigned int mipLevel) {
 	bind();
-	glTexSubImage2D(kind, 0, 0, 0, width, height, format, type, data);
+	glTexSubImage2D(kind, mipLevel, 0, 0, width, height, format, type, data);
+}
+
+int TextureBuffer::getWidth() const {
+	return width;
+}
+
+int TextureBuffer::getHeight() const {
+	return height;
 }
 
 TextureBuffer::Parameters::Parameters(): wrapS{REPEAT}, wrapT{REPEAT}, wrapR{REPEAT}, minFilter{LINEAR}, magFilter{LINEAR} {}
@@ -56,3 +69,30 @@ void TextureBuffer::generateMipmap() {
 //////////////////////////////////////////////////////////////////////////////////////
 
 Texture::Texture(Format internalFormat): TextureBuffer{GL_TEXTURE_2D, internalFormat} {}
+
+//////////////////////////////////////////////////////////////////////////////////////
+
+DepthTexture::DepthTexture(Format internalFormat): TextureBuffer{GL_TEXTURE_2D, internalFormat} {}
+
+//////////////////////////////////////////////////////////////////////////////////////
+
+CubeMapTexture::CubeMapTexture(Format internalFormat): TextureBuffer{GL_TEXTURE_CUBE_MAP, internalFormat} {}
+
+void CubeMapTexture::setSize(int width, int height) {
+	bind();
+	for(unsigned int i = 0; i < 6; ++i) {
+		glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, internalFormat, width, height, 0, RGB, UNSIGNED_BYTE, nullptr);
+	}
+
+	this->width = width;
+	this->height = height;
+}
+
+void CubeMapTexture::setData(const void *data, Format format, Type type, unsigned int mipLevel) {
+	std::cerr << "CubeMapTexture -> setData : You need to specify a face" << std::endl;
+}
+
+void CubeMapTexture::setData(Face face, const void *data, Format format, Type type, unsigned int mipLevel) {
+	bind();
+	glTexSubImage2D(face, mipLevel, 0, 0, width, height, format, type, data);
+}
