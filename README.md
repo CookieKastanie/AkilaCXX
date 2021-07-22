@@ -67,7 +67,7 @@ void main() {
 
 Objects :
 
-```sass
+```css
 shader {
 	name: <string>
 	src: <string>
@@ -111,7 +111,7 @@ material {
 
 Texture formats :
 
-```sass
+```css
 RED
 RG
 RGB
@@ -126,7 +126,7 @@ DEPTH_STENCIL
 
 Texture filters :
 
-```sass
+```css
 NEAREST
 LINEAR
 NEAREST_MIPMAP_NEAREST
@@ -137,7 +137,7 @@ LINEAR_MIPMAP_LINEAR
 
 Texture wraps :
 
-```sass
+```css
 CLAMP_TO_EDGE
 CLAMP_TO_BORDER
 MIRRORED_REPEAT
