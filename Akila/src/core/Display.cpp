@@ -100,6 +100,10 @@ bool Display::shouldClose() {
 	return glfwWindowShouldClose(window);
 }
 
+void Display::close() {
+	glfwSetWindowShouldClose(window, true);
+}
+
 void Display::swapBuffers() {
 	glfwSwapBuffers(window);
 }

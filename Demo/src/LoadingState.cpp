@@ -1,22 +1,35 @@
 #include "Demo/LoadingState.hpp"
 
 #include "Akila/graphics/pbr/Environment.hpp"
+#include "Akila/graphics/gl/Texture.hpp"
 
 #include "Akila/graphics/gl/Error.hpp"
-
+#include <chrono>
 LoadingState::LoadingState(): Akila::State{} {
 	Akila::Core::display->setTitle("Demo Akila (o.o)");
 
 	Akila::Core::resourcesBucket->setTexture("brdfLUT", Akila::Environment::createBRDFLUT());
 	GL_ERROR_STACK();
 
+	
+	Akila::Core::resourcesBucket->setCubeMapTexture("skybox", std::make_shared<Akila::CubeMapTexture>(Akila::TextureBuffer::Format::RGB16F));
+	Akila::Core::resourcesBucket->setCubeMapTexture("irradiance", std::make_shared<Akila::CubeMapTexture>(Akila::TextureBuffer::Format::RGB16F));
+	Akila::Core::resourcesBucket->setCubeMapTexture("prefilter", std::make_shared<Akila::CubeMapTexture>(Akila::TextureBuffer::Format::RGB16F));
 
 	Akila::Core::resourcesBucket->loadResourceFile("main.res", []() -> void {
+		Akila::Environment::createIBL(
+			Akila::Core::resourcesBucket->getTexture("env"),
+			Akila::Core::resourcesBucket->getCubeMapTexture("skybox"),
+			Akila::Core::resourcesBucket->getCubeMapTexture("irradiance"),
+			Akila::Core::resourcesBucket->getCubeMapTexture("prefilter"),
+			Akila::Core::resourcesBucket->getMesh("invertedCube")
+		);
+
 		std::cout << "Fin chargement main.res" << std::endl;
 	});
 
 	GL_ERROR_STACK();
-	defaultTriangle = Akila::Core::resourcesBucket->getMesh("defaultTriangle");
+	defaultTriangle = Akila::Core::resourcesBucket->getMesh("akila_triangle");
 	GL_ERROR_STACK();
 
 	
@@ -24,7 +37,15 @@ LoadingState::LoadingState(): Akila::State{} {
 	Akila::Core::renderer->setSharedCamera(std::make_shared<Akila::PerspectiveCamera>());
 
 	Akila::Core::display->getKeybord()->onKeyPress([](Akila::Keyboard::Key key) -> void {
-		if(key == Akila::Keyboard::TAB) Akila::Core::display->setFullscreen(!Akila::Core::display->isFullscreen());
+		switch(key) {
+			case Akila::Keyboard::TAB:
+				Akila::Core::display->setFullscreen(!Akila::Core::display->isFullscreen());
+				break;
+
+			case Akila::Keyboard::ESC:
+				Akila::Core::display->close();
+				break;
+		}
 	});
 }
 
@@ -51,7 +72,14 @@ void LoadingState::draw() {
 	
 	Akila::Core::renderer->clearDepth();
 
-	Akila::Core::renderer->render(Akila::Core::resourcesBucket->getMaterial("brdfLUT").get(), defaultTriangle.get());
+	glDepthFunc(GL_LEQUAL);
+	Akila::Core::renderer->render(
+		Akila::Core::resourcesBucket->getMaterial("skybox").get(),
+		Akila::Core::resourcesBucket->getMesh("invertedCube").get()
+	);
+	glDepthFunc(GL_LESS);
+
+	//Akila::Core::renderer->render(Akila::Core::resourcesBucket->getMaterial("brdfLUT").get(), defaultTriangle.get());
 	Akila::Core::renderer->enable(Akila::Renderer::CULL_FACE);
 
 	Akila::Core::renderer->render(

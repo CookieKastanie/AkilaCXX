@@ -40,6 +40,7 @@ namespace Akila {
 			void makeCurrent();
 			void setVerticalSync(bool b);
 			bool shouldClose();
+			void close();
 			void swapBuffers();
 
 			bool isFullscreen();

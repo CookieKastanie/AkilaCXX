@@ -35,36 +35,48 @@ ResourcesBucket::ResourcesBucket(const std::shared_ptr<Renderer> &renderer): ren
 	}
 
 	defaultMesh->prepare();
+
+	setMesh("akila_triangle", defaultMesh);
 }
 
 std::shared_ptr<Shader> &ResourcesBucket::getShader(const std::string &name) {
 	auto &&val = shaders[name];
 	if(val != nullptr) return val;
-	else return defaultShader;
+
+	std::cerr << "Shader '" << name << "' does not exist right now" << std::endl;
+	return defaultShader;
 }
 
 std::shared_ptr<Texture> &ResourcesBucket::getTexture(const std::string &name) {
 	auto &&val = textures[name];
-	if(val != nullptr) return val; 
-	else return defaultTexture;
+	if(val != nullptr) return val;
+
+	std::cerr << "Texture '" << name << "' does not exist right now" << std::endl;
+	return defaultTexture;
 }
 
 std::shared_ptr<CubeMapTexture> &ResourcesBucket::getCubeMapTexture(const std::string &name) {
 	auto &&val = cubeMapTextures[name];
 	if(val != nullptr) return val;
-	else return defaultCubeMapTexture;
+
+	std::cerr << "CubeMap '" << name << "' does not exist right now" << std::endl;
+	return defaultCubeMapTexture;
 }
 
 std::shared_ptr<Material> &ResourcesBucket::getMaterial(const std::string &name) {
 	auto &&val = materials[name];
 	if(val != nullptr) return val;
-	else return defaultMaterial;
+	
+	std::cerr << "Material '" << name << "' does not exist right now" << std::endl;
+	return defaultMaterial;
 }
 
 std::shared_ptr<Mesh> &ResourcesBucket::getMesh(const std::string &name) {
 	auto &&val = meshs[name];
 	if(val != nullptr) return val;
-	else return defaultMesh;
+
+	std::cerr << "Mesh '" << name << "' does not exist right now" << std::endl;
+	return defaultMesh;
 }
 
 void ResourcesBucket::setShader(const std::string &name, const std::shared_ptr<Shader> &shader) {
@@ -416,6 +428,17 @@ void ResourcesBucket::loadResourceFile(const std::string &path, const std::funct
 						if(values.size() >= 2) {
 							Material::TextureBinding tb;
 							tb.textureBuffer = getTexture(values[0]);
+							tb.unit = (unsigned int)stoi(values[1]);
+							materialState.textureBindings.push_back(tb);
+						}
+					}
+					else if(!values[0].compare("cubemap")) {
+						std::string d = values[1];
+						Loader::splitString(values, d, "=");
+
+						if(values.size() >= 2) {
+							Material::TextureBinding tb;
+							tb.textureBuffer = getCubeMapTexture(values[0]);
 							tb.unit = (unsigned int)stoi(values[1]);
 							materialState.textureBindings.push_back(tb);
 						}

@@ -24,6 +24,20 @@ shader {
 	uniform: metallicSampler = i[2]
 	uniform: roughnessSampler = i[3]
 	uniform: aoSampler = i[4]
+
+	uniform: irradianceMap = i[5]
+	uniform: prefilterMap = i[6]
+	uniform: brdfLUT = i[7]
+}
+
+shader {
+	name: skybox
+	src: shaders/skybox.glsl
+
+	uniform: exposure = [1]
+	uniform: gamma = [2.2]
+
+	uniform: cubemapTexture = i[0]
 }
 
 ////////////////////////////////////////////////////////////////////////////////////
@@ -32,6 +46,12 @@ texture {
 	name: citron
 	src: textures/citron.png
 	format: RGBA
+}
+
+texture {
+	name: env
+	src: textures/env.jpg
+	format: RGB
 }
 
 texture {
@@ -92,6 +112,11 @@ mesh {
 	src: meshs/sword.ob
 }
 
+mesh {
+	name: invertedCube
+	src: meshs/invertedCube.ob
+}
+
 ////////////////////////////////////////////////////////////////////////////////////
 
 material {
@@ -115,6 +140,10 @@ material {
 	texture: sword_M = 2
 	texture: sword_R = 3
 	texture: sword_AO = 4
+
+	cubemap: irradiance = 5
+	cubemap: prefilter = 6
+	texture: brdfLUT = 7
 }
 
 material {
@@ -122,4 +151,11 @@ material {
 	shader: textureTest
 
 	texture: brdfLUT = 0
+}
+
+material {
+	name: skybox
+	shader: skybox
+
+	cubemap: skybox = 0
 }

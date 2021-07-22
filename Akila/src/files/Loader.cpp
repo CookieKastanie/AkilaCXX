@@ -215,8 +215,6 @@ public:
 				tangent.push_back({n.y, -n.x, n.z});
 			}
 		}
-
-		callback();
 	}
 
 	void onMain() override {
@@ -243,6 +241,8 @@ public:
 		}
 
 		mesh->prepare();
+
+		callback();
 	}
 };
 

@@ -35,9 +35,9 @@ uniform sampler2D roughnessSampler;
 uniform sampler2D aoSampler;
 
 // IBL
-//uniform samplerCube irradianceMap;
-//uniform samplerCube prefilterMap;
-//uniform sampler2D brdfLUT;
+uniform samplerCube irradianceMap;
+uniform samplerCube prefilterMap;
+uniform sampler2D brdfLUT;
 
 // lights
 vec3 lightPositions[1];
@@ -141,11 +141,11 @@ void main() {
     }   
   
     // static
-    vec3 ambient = vec3(0.259, 0.647, 0.961) * albedo * ao;
+    //vec3 ambient = vec3(0.259, 0.647, 0.961) * albedo * ao;
 
     // IBL
     // ambient lighting (we now use IBL as the ambient term)
-    /*vec3 F = fresnelSchlickRoughness(max(dot(N, V), 0.0), F0, roughness);
+    vec3 F = fresnelSchlickRoughness(max(dot(N, V), 0.0), F0, roughness);
     
     vec3 kS = F;
     vec3 kD = 1.0 - kS;
@@ -161,7 +161,7 @@ void main() {
     vec2 brdf  = texture(brdfLUT, vec2(max(dot(N, V), 0.0), roughness)).rg;
     vec3 specular = prefilteredColor * (F * brdf.x + brdf.y);
 
-    vec3 ambient = (kD * diffuse + specular) * ao;*/
+    vec3 ambient = (kD * diffuse + specular) * ao;
 
     vec3 color = ambient + Lo;
 
