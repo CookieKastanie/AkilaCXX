@@ -69,43 +69,43 @@ Objects :
 
 ```css
 shader {
-	name: <string>
-	src: <string>
+	name: "string"
+	src: "string"
 
-	uniform: <name> = [floats values, ...]
-	uniform: <name> = i[ints values, ...]
+	uniform: "name" = [floats, ...]
+	uniform: "name" = i[ints, ...]
 }
 
 texture {
-	name: <string>
-	src: <string>
+	name: "string"
+	src: "string"
 
-	format: <stored texture format>
+	format: "stored texture format"
 
-	minFilter: <filter texture mode>
-	magFilter: <filter texture mode>
+	minFilter: "filter texture mode"
+	magFilter: "filter texture mode"
 
-	wrapS: <wrap texture mode>
-	wrapT: <wrap texture mode>
-	wrapR: <wrap texture mode>
+	wrapS: "wrap texture mode"
+	wrapT: "wrap texture mode"
+	wrapR: "wrap texture mode"
 
-	mips: <boolean>
+	mips: "boolean"
 }
 
 mesh {
-	name: <string>
-	src: <string>
+	name: "string"
+	src: "string"
 }
 
 material {
-	name: <string>
-	shader: <string>
+	name: "string"
+	shader: "string"
 
-	uniform: <name> = [floats values, ...]
-	uniform: <name> = i[ints values, ...]
+	uniform: "name" = [floats, ...]
+	uniform: "name" = i[ints, ...]
 
-	texture: <texture name> = <texture index>
-	cubemap: <cubemap name> = <texture index>
+	texture: "texture name" = "texture index"
+	cubemap: "cubemap name" = "texture index"
 }
 ```
 
