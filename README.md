@@ -14,21 +14,23 @@ Vertex attributes :
 
 Common structs :
 
-	struct akila_camera {
-		mat4 projection;
-		mat4 view;
-		mat4 pv;
-		vec3 position;
-		float ratio;
-	};
+```
+struct akila_camera {
+	mat4 projection;
+	mat4 view;
+	mat4 pv;
+	vec3 position;
+	float ratio;
+};
 	
-	struct akila_lights {
-		vec3 directionalLight;
-		vec3 directionalColor;
-		vec3 pointsPositions[AKILA_POINT_LIGHT_COUNT];
-		vec3 pointsColors[AKILA_POINT_LIGHT_COUNT];
-	};
-	
+struct akila_lights {
+	vec3 directionalLight;
+	vec3 directionalColor;
+	vec3 pointsPositions[AKILA_POINT_LIGHT_COUNT];
+	vec3 pointsColors[AKILA_POINT_LIGHT_COUNT];
+};
+```
+
 Uniforms
 
 	akila_camera u_camera;
