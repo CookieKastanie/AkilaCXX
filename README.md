@@ -39,7 +39,7 @@ Default template :
 	
 	#AKILA_VERTEX
 	
-	out  vec2 uv;
+	out vec2 uv;
 	
 	void main() {
 		gl_Position = a_position;
@@ -48,8 +48,8 @@ Default template :
 
 	#AKILA_FRAGMENT
 	
-	in  vec2 uv;
-	out  vec4 fragColor;
+	in vec2 uv;
+	out vec4 fragColor;
 	
 	void main() {
 		fragColor = vec4(uv, 0.0, 1.0);
@@ -57,3 +57,73 @@ Default template :
 
 ## Resources files
 
+Objects :
+	
+	shader {
+		name: <string>
+		src: <string>
+
+		uniform: <name> = [floats values, ...]
+		uniform: <name> = i[ints values, ...]
+	}
+
+	texture {
+		name: <string>
+		src: <string>
+
+		format: <stored texture format>
+		
+		minFilter: <filter texture mode>
+		magFilter: <filter texture mode>
+
+		wrapS: <wrap texture mode>
+		wrapT: <wrap texture mode>
+		wrapR: <wrap texture mode>
+
+		mips: <boolean>
+	}
+
+	mesh {
+		name: <string>
+		src: <string>
+	}
+
+	material {
+		name: <string>
+		shader: <string>
+
+		uniform: <name> = [floats values, ...]
+		uniform: <name> = i[ints values, ...]
+
+		texture: <texture name> = <texture index>
+		cubemap: <cubemap name> = <texture index>
+	}
+
+Texture formats :
+
+	RED
+	RG
+	RGB
+	RGBA
+	SRGB
+	SRGB_ALPHA
+	RGB16F
+	RGBA16F
+	DEPTH_COMPONENT
+	DEPTH_STENCIL
+
+Texture filters :
+
+	NEAREST
+	LINEAR
+	NEAREST_MIPMAP_NEAREST
+	LINEAR_MIPMAP_NEAREST
+	NEAREST_MIPMAP_LINEAR
+	LINEAR_MIPMAP_LINEAR
+
+Texture wraps :
+
+	CLAMP_TO_EDGE
+	CLAMP_TO_BORDER
+	MIRRORED_REPEAT
+	REPEAT
