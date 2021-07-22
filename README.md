@@ -67,7 +67,7 @@ void main() {
 
 Objects :
 
-```yaml
+```json
 shader {
 	name: <string>
 	src: <string>
@@ -81,7 +81,7 @@ texture {
 	src: <string>
 
 	format: <stored texture format>
-		
+
 	minFilter: <filter texture mode>
 	magFilter: <filter texture mode>
 
