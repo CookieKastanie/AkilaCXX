@@ -1,5 +1,4 @@
 #include "Akila/graphics/gl/FrameBuffer.hpp"
-//#include "DemoTER/glwrapper/Display.hpp"
 
 #include <iostream>
 
@@ -87,16 +86,13 @@ void FrameBuffer::unbind() {
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
 
-void FrameBuffer::blitToScreen(int unit, TextureBuffer::FilterMode filter) {
+void FrameBuffer::blitToDisplay(int unit, Display *display, TextureBuffer::FilterMode filter) {
     glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
     glBindFramebuffer(GL_READ_FRAMEBUFFER, id);
     glReadBuffer(GL_COLOR_ATTACHMENT0 + unit);
-    //Display *d = Display::getInstance();
-    //TexBuffer *t = textures[unit].get();
-    //glBlitFramebuffer(0, 0, t->getWidth(), t->getHeight(), 0, 0, d->getWidth(), d->getHeight(), GL_COLOR_BUFFER_BIT, filter);
 
     TextureBuffer *t = textures[unit].get();
-    glBlitFramebuffer(0, 0, t->getWidth(), t->getHeight(), 0, 0, t->getWidth(), t->getHeight(), GL_COLOR_BUFFER_BIT, filter);
+    glBlitFramebuffer(0, 0, t->getWidth(), t->getHeight(), 0, 0, display->getWidth(), display->getHeight(), GL_COLOR_BUFFER_BIT, filter);
 }
 
 void FrameBuffer::blitTo(int seflUnit, FrameBuffer *fb, TextureBuffer::FilterMode filter) {

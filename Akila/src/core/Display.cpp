@@ -43,17 +43,20 @@ Display::Display() {
 				key = n;
 			}
 			
-			self->keybord.setKeyState((Keyboard::Key)key, action != GLFW_RELEASE);
+			Keyboard::Key &&currentkey = (Keyboard::Key)key;
+			self->keybord.setKeyState(currentkey, action != GLFW_RELEASE);
 
-			if(action == GLFW_PRESS) self->keybord.firePressEvent();
+			if(action == GLFW_PRESS) self->keybord.firePressEvent(currentkey);
 		}
 	});
 
 	glfwSetMouseButtonCallback(window, [](GLFWwindow *window, int button, int action, int mods) -> void {
 		Display *self = (Display *)glfwGetWindowUserPointer(window);
-		self->mouse.setKeyState((Mouse::Key)button, action != GLFW_RELEASE);
 
-		if(action == GLFW_PRESS) self->mouse.firePressEvent();
+		Mouse::Key &&currentButton = (Mouse::Key)button;
+		self->mouse.setKeyState(currentButton, action != GLFW_RELEASE);
+
+		if(action == GLFW_PRESS) self->mouse.firePressEvent(currentButton);
 	});
 
 	glfwSetCursorPosCallback(window, [](GLFWwindow *window, double xpos, double ypos) ->void {

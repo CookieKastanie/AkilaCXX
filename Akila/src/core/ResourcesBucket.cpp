@@ -247,7 +247,29 @@ static bool parseUniformValue(Material::UniformValue &uv, std::string &name, boo
 	return uv.values.size() != 0;
 }
 
-void ResourcesBucket::loadResourceFile(const std::string &path, TaskManager *taskManger) {
+
+
+class LoadingInstance {
+public:
+	bool fileEnd;
+	int fileCount;
+	int loadedFileCount;
+
+	std::function<void()> callback;
+
+	LoadingInstance(): fileEnd{false}, fileCount{0}, loadedFileCount{0} {
+
+	}
+
+	void check() {
+		if(fileEnd && (fileCount == loadedFileCount)) callback();
+	}
+};
+
+void ResourcesBucket::loadResourceFile(const std::string &path, const std::function<void()> &cb, TaskManager *taskManger) {
+	std::shared_ptr<LoadingInstance> loadingInstance = std::make_shared<LoadingInstance>();
+	loadingInstance->callback = cb;
+
 	std::ifstream file;
 	file.open(FileSystem::path(path).c_str(), std::ifstream::in);
 	if(!file.good()) {
@@ -325,13 +347,23 @@ void ResourcesBucket::loadResourceFile(const std::string &path, TaskManager *tas
 				else if(state == TextureState::STATE_ID) {
 					auto t = std::make_shared<Texture>(textureState.format);
 					t->setParameters(textureState.parameters);
-					Loader::asyncTexture(t.get(), textureState.src, textureState.generateMips, taskManger);
+
+					loadingInstance->fileCount += 1;
+					Loader::asyncTexture(t.get(), textureState.src, textureState.generateMips, [loadingInstance]() -> void {
+						loadingInstance->loadedFileCount += 1;
+						loadingInstance->check();
+					}, taskManger);
 					textures.emplace(textureState.name, t);
 				}
 
 				else if(state == MeshState::STATE_ID) {
 					auto m = std::make_shared<Mesh>();
-					Loader::asyncMesh(m.get(), meshState.src);
+
+					loadingInstance->fileCount += 1;
+					Loader::asyncMesh(m.get(), meshState.src, [loadingInstance]() -> void {
+						loadingInstance->loadedFileCount += 1;
+						loadingInstance->check();
+					}, taskManger);
 					meshs.emplace(meshState.name, m);
 				}
 
@@ -414,5 +446,8 @@ void ResourcesBucket::loadResourceFile(const std::string &path, TaskManager *tas
 	}
 
 	file.close();
+
+	loadingInstance->fileEnd = true;
+	loadingInstance->check();
 }
 

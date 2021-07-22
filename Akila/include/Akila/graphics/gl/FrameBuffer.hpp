@@ -3,6 +3,7 @@
 #include "glad/glad.h"
 #include <memory>
 #include "Akila/graphics/gl/Texture.hpp"
+#include "Akila/core/Display.hpp"
 
 namespace Akila {
 	class FrameBuffer {
@@ -33,7 +34,7 @@ namespace Akila {
 		void bindWithSize(int width, int height);
 		void unbind();
 
-		void blitToScreen(int unit = 0, TextureBuffer::FilterMode filter = TextureBuffer::FilterMode::NEAREST);
+		void blitToDisplay(int unit, Display *display, TextureBuffer::FilterMode filter = TextureBuffer::FilterMode::NEAREST);
 		void blitTo(int seflUnit, FrameBuffer *fb, TextureBuffer::FilterMode filter = TextureBuffer::FilterMode::NEAREST);
 
 		void resizeAll(int width, int height);

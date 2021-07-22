@@ -27,15 +27,15 @@ void Mouse::setKeyState(Key k, bool state) {
 	keysState[k] = state;
 }
 
-void Mouse::onKeyPress(const std::function<void(Mouse *)> &cb) {
+void Mouse::onKeyPress(const std::function<void(Key)> &cb) {
 	pressCallback = cb;
 }
 
 void Mouse::detachPressEvent() {
-	pressCallback = [](Mouse *) -> void {};
+	pressCallback = [](Key) -> void {};
 }
 
-void Mouse::firePressEvent() {
-	pressCallback(this);
+void Mouse::firePressEvent(Key &key) {
+	pressCallback(key);
 }
 

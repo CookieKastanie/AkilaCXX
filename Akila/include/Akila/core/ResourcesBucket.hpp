@@ -45,6 +45,6 @@ namespace Akila {
 		void setMaterial(const std::string &name, const std::shared_ptr<Material> &material);
 		void setMesh(const std::string &name, const std::shared_ptr<Mesh> &mesh);
 
-		void loadResourceFile(const std::string &path, TaskManager *taskManger = nullptr);
+		void loadResourceFile(const std::string &path, const std::function<void()> &cb = []() {}, TaskManager *taskManger = nullptr);
 	};
 }

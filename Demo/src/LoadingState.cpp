@@ -11,7 +11,9 @@ LoadingState::LoadingState(): Akila::State{} {
 	GL_ERROR_STACK();
 
 
-	Akila::Core::resourcesBucket->loadResourceFile("main.res");
+	Akila::Core::resourcesBucket->loadResourceFile("main.res", []() -> void {
+		std::cout << "Fin chargement main.res" << std::endl;
+	});
 
 	GL_ERROR_STACK();
 	defaultTriangle = Akila::Core::resourcesBucket->getMesh("defaultTriangle");
@@ -21,8 +23,8 @@ LoadingState::LoadingState(): Akila::State{} {
 
 	Akila::Core::renderer->setSharedCamera(std::make_shared<Akila::PerspectiveCamera>());
 
-	Akila::Core::display->getKeybord()->onKeyPress([](Akila::Keyboard *keyboard) -> void {
-		if(keyboard->isPressed(Akila::Keyboard::TAB)) Akila::Core::display->setFullscreen(!Akila::Core::display->isFullscreen());
+	Akila::Core::display->getKeybord()->onKeyPress([](Akila::Keyboard::Key key) -> void {
+		if(key == Akila::Keyboard::TAB) Akila::Core::display->setFullscreen(!Akila::Core::display->isFullscreen());
 	});
 }
 

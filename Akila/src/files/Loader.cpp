@@ -6,7 +6,23 @@
 
 using namespace Akila;
 
-class TextureTask: public Task {
+
+class LoaderTask: public Task {
+protected:
+	std::function<void()> callback;
+
+public:
+	LoaderTask(): callback{[]() {}} {
+
+	}
+
+	void setCallBack(const std::function<void()> &cb) {
+		callback = cb;
+	}
+};
+
+
+class TextureTask: public LoaderTask {
 private:
 	TextureBuffer::Format fileFormat;
 	TextureBuffer::Type dataType;
@@ -61,12 +77,16 @@ public:
 		} else {
 			std::cerr << "Texture loading error : can't read " << path << std::endl;
 		}
+
+		callback();
 	}
 };
 
-void Loader::asyncTexture(Texture *texture, const std::string &path, const bool generateMips, TaskManager *tm) {
+void Loader::asyncTexture(Texture *texture, const std::string &path, const bool generateMips, const std::function<void()> &cb, TaskManager *tm) {
 	if(tm == nullptr) tm = Core::taskManager.get();
-	tm->submit(new TextureTask(texture, path, generateMips));
+	TextureTask *t = new TextureTask(texture, path, generateMips);
+	t->setCallBack(cb);
+	tm->submit(t);
 }
 
 
@@ -85,7 +105,7 @@ std::shared_ptr<Shader> Loader::shader(const std::string &path) {
 
 
 
-class MeshTask: public Task {
+class MeshTask: public LoaderTask {
 private:
 	Mesh *mesh;
 	const std::string path;
@@ -96,8 +116,7 @@ private:
 	std::vector<glm::vec2> uv;
 
 public:
-	MeshTask(Mesh *mesh, const std::string &path): mesh{mesh}, path{path} {
-	}
+	MeshTask(Mesh *mesh, const std::string &path): mesh{mesh}, path{path} {}
 
 	glm::vec3 calcTangent(glm::vec3 &n, glm::vec3 &p1, glm::vec3 &p2, glm::vec3 &p3, glm::vec2 &uv1, glm::vec2 &uv2, glm::vec2 &uv3) {
 		glm::vec3 edge1 = p2 - p1;
@@ -196,6 +215,8 @@ public:
 				tangent.push_back({n.y, -n.x, n.z});
 			}
 		}
+
+		callback();
 	}
 
 	void onMain() override {
@@ -225,9 +246,11 @@ public:
 	}
 };
 
-void Loader::asyncMesh(Mesh *mesh, const std::string &path, TaskManager *tm) {
+void Loader::asyncMesh(Mesh *mesh, const std::string &path, const std::function<void()> &cb, TaskManager *tm) {
 	if(tm == nullptr) tm = Core::taskManager.get();
-	tm->submit(new MeshTask(mesh, path));
+	MeshTask *t = new MeshTask(mesh, path);
+	t->setCallBack(cb);
+	tm->submit(t);
 }
 
 

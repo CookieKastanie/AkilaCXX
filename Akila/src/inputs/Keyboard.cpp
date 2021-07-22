@@ -18,14 +18,14 @@ void Keyboard::setKeyState(Key k, bool state) {
 	keysState[k] = state;
 }
 
-void Keyboard::onKeyPress(const std::function<void(Keyboard*)> &cb) {
+void Keyboard::onKeyPress(const std::function<void(Keyboard::Key)> &cb) {
 	pressCallback = cb;
 }
 
 void Keyboard::detachPressEvent() {
-	pressCallback = [](Keyboard*) -> void {};
+	pressCallback = [](Key) -> void {};
 }
 
-void Keyboard::firePressEvent() {
-	pressCallback(this);
+void Keyboard::firePressEvent(Keyboard::Key &key) {
+	pressCallback(key);
 }
