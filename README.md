@@ -6,15 +6,17 @@
 
 Vertex attributes :
 
-	vec4 a_position;
-	vec4 a_uv;
-	vec4 a_normal;
-	vec4 a_tangent;
-	vec4 a_color;
+```glsl
+vec4 a_position;
+vec4 a_uv;
+vec4 a_normal;
+vec4 a_tangent;
+vec4 a_color;
+```
 
 Common structs :
 
-```
+```glsl
 struct akila_camera {
 	mat4 projection;
 	mat4 view;
@@ -33,99 +35,111 @@ struct akila_lights {
 
 Uniforms
 
-	akila_camera u_camera;
-	float u_time;
-	akila_lights u_lights;
+```glsl
+akila_camera u_camera;
+float u_time;
+akila_lights u_lights;
+```
 
 Default template :
-	
-	#AKILA_VERTEX
-	
-	out vec2 uv;
-	
-	void main() {
-		gl_Position = a_position;
-		uv = a_uv.xy;
-	}
 
-	#AKILA_FRAGMENT
+```glsl
+#AKILA_VERTEX
 	
-	in vec2 uv;
-	out vec4 fragColor;
+out vec2 uv;
 	
-	void main() {
-		fragColor = vec4(uv, 0.0, 1.0);
-	}
+void main() {
+	gl_Position = a_position;
+	uv = a_uv.xy;
+}
+
+#AKILA_FRAGMENT
+	
+in vec2 uv;
+out vec4 fragColor;
+	
+void main() {
+	fragColor = vec4(uv, 0.0, 1.0);
+}
+```
 
 ## Resources files
 
 Objects :
-	
-	shader {
-		name: <string>
-		src: <string>
 
-		uniform: <name> = [floats values, ...]
-		uniform: <name> = i[ints values, ...]
-	}
+```yaml
+shader {
+	name: <string>
+	src: <string>
 
-	texture {
-		name: <string>
-		src: <string>
+	uniform: <name> = [floats values, ...]
+	uniform: <name> = i[ints values, ...]
+}
 
-		format: <stored texture format>
+texture {
+	name: <string>
+	src: <string>
+
+	format: <stored texture format>
 		
-		minFilter: <filter texture mode>
-		magFilter: <filter texture mode>
+	minFilter: <filter texture mode>
+	magFilter: <filter texture mode>
 
-		wrapS: <wrap texture mode>
-		wrapT: <wrap texture mode>
-		wrapR: <wrap texture mode>
+	wrapS: <wrap texture mode>
+	wrapT: <wrap texture mode>
+	wrapR: <wrap texture mode>
 
-		mips: <boolean>
-	}
+	mips: <boolean>
+}
 
-	mesh {
-		name: <string>
-		src: <string>
-	}
+mesh {
+	name: <string>
+	src: <string>
+}
 
-	material {
-		name: <string>
-		shader: <string>
+material {
+	name: <string>
+	shader: <string>
 
-		uniform: <name> = [floats values, ...]
-		uniform: <name> = i[ints values, ...]
+	uniform: <name> = [floats values, ...]
+	uniform: <name> = i[ints values, ...]
 
-		texture: <texture name> = <texture index>
-		cubemap: <cubemap name> = <texture index>
-	}
+	texture: <texture name> = <texture index>
+	cubemap: <cubemap name> = <texture index>
+}
+```
 
 Texture formats :
 
-	RED
-	RG
-	RGB
-	RGBA
-	SRGB
-	SRGB_ALPHA
-	RGB16F
-	RGBA16F
-	DEPTH_COMPONENT
-	DEPTH_STENCIL
+```php
+RED
+RG
+RGB
+RGBA
+SRGB
+SRGB_ALPHA
+RGB16F
+RGBA16F
+DEPTH_COMPONENT
+DEPTH_STENCIL
+```
 
 Texture filters :
 
-	NEAREST
-	LINEAR
-	NEAREST_MIPMAP_NEAREST
-	LINEAR_MIPMAP_NEAREST
-	NEAREST_MIPMAP_LINEAR
-	LINEAR_MIPMAP_LINEAR
+```php
+NEAREST
+LINEAR
+NEAREST_MIPMAP_NEAREST
+LINEAR_MIPMAP_NEAREST
+NEAREST_MIPMAP_LINEAR
+LINEAR_MIPMAP_LINEAR
+```
 
 Texture wraps :
 
-	CLAMP_TO_EDGE
-	CLAMP_TO_BORDER
-	MIRRORED_REPEAT
-	REPEAT
+```php
+CLAMP_TO_EDGE
+CLAMP_TO_BORDER
+MIRRORED_REPEAT
+REPEAT
+```
