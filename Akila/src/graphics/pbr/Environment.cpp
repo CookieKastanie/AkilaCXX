@@ -187,9 +187,9 @@ void Environment::createIBL(const std::shared_ptr<Texture> &input,
 	data->invertedCube = invertedCube;
 
 
-	Core::taskManager->submit(new SkyboxTask{data}); 
-	Core::taskManager->submit(new IrradianceTask{data});
-	Core::taskManager->submit(new PrefilterTask{data});
+	Core::taskManager->submitSync(new SkyboxTask{data}); 
+	Core::taskManager->submitSync(new IrradianceTask{data});
+	Core::taskManager->submitSync(new PrefilterTask{data});
 }
 
 std::shared_ptr<Texture> Environment::createBRDFLUT() {

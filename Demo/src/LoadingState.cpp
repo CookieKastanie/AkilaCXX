@@ -6,26 +6,6 @@
 
 #include "Akila/graphics/gl/Error.hpp"
 
-
-class EnvTask: public Akila::Task {
-public:
-	void onMain() override {
-		Akila::Core::resourcesBucket->getCubeMapTexture("skybox")->setSize(1024, 1024);
-		Akila::Core::resourcesBucket->getCubeMapTexture("irradiance")->setSize(32, 32);
-		Akila::Core::resourcesBucket->getCubeMapTexture("prefilter")->setSize(64, 64);
-
-		Akila::Environment::createIBL(
-			Akila::Core::resourcesBucket->getTexture("env"),
-			Akila::Core::resourcesBucket->getCubeMapTexture("skybox"),
-			Akila::Core::resourcesBucket->getCubeMapTexture("irradiance"),
-			Akila::Core::resourcesBucket->getCubeMapTexture("prefilter"),
-			Akila::Core::resourcesBucket->getMesh("invertedCube")
-		);
-	}
-};
-
-
-
 LoadingState::LoadingState(): Akila::State{} {
 	Akila::Core::display->setTitle("camecasselescouilles");
 
@@ -37,7 +17,18 @@ LoadingState::LoadingState(): Akila::State{} {
 	Akila::Core::resourcesBucket->setCubeMapTexture("prefilter", std::make_shared<Akila::CubeMapTexture>(Akila::TextureBuffer::Format::RGB16F));
 
 	Akila::Core::resourcesBucket->loadResourceFile("main.res", []() -> void {
-		Akila::Core::taskManager->submit(new EnvTask{});
+		Akila::Core::resourcesBucket->getCubeMapTexture("skybox")->setSize(1024, 1024);
+		Akila::Core::resourcesBucket->getCubeMapTexture("irradiance")->setSize(32, 32);
+		Akila::Core::resourcesBucket->getCubeMapTexture("prefilter")->setSize(64, 64);
+
+		Akila::Environment::createIBL(
+			Akila::Core::resourcesBucket->getTexture("env"),
+			Akila::Core::resourcesBucket->getCubeMapTexture("skybox"),
+			Akila::Core::resourcesBucket->getCubeMapTexture("irradiance"),
+			Akila::Core::resourcesBucket->getCubeMapTexture("prefilter"),
+			Akila::Core::resourcesBucket->getMesh("invertedCube")
+		);
+
 		std::cout << "Fin chargement main.res" << std::endl;
 	});
 

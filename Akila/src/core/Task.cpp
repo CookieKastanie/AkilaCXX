@@ -19,7 +19,6 @@ void TaskManager::submit(Task *task) {
 }
 
 void TaskManager::submitSync(std::shared_ptr<Task> task) {
-    std::lock_guard<std::mutex> lck(queueMutex);
     tasks.push(task);
 }
 
@@ -71,9 +70,11 @@ void ThreadPool::start(TaskManager *taskManager, unsigned int max) {
                         if(exit) return;
                     }
 
-                    std::lock_guard<std::mutex> lck(queueMutex);
-                    t = tasks.front();
-                    tasks.pop();
+                    {
+                        std::lock_guard<std::mutex> lck(queueMutex);
+                        t = tasks.front();
+                        tasks.pop();
+                    }
                 }
 
                 t->onBackground();
