@@ -6,7 +6,7 @@ Camera::Camera(): uniforms{
 	glm::mat4{1.},
 	glm::mat4{1.},
 	glm::mat4{1.},
-	glm::vec3{},
+	glm::vec3{0.},
 	1
 } {}
 
@@ -34,7 +34,7 @@ Camera::Uniforms &Camera::getUniforms() {
 
 void PerspectiveCamera::onResize(int width, int height) {
 	uniforms.ratio = (float)width / (float)height;
-	uniforms.projection = glm::perspective(70.f, uniforms.ratio, 0.01f, 10.f);
+	uniforms.projection = glm::perspective(70.f, uniforms.ratio, 0.01f, 100.f);
 }
 
 void PerspectiveCamera::update() {

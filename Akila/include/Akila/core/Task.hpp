@@ -60,5 +60,6 @@ namespace Akila {
 		void submitSync(Task *task);
 
 		void flush();
+		void flushOne();
 	};
 }

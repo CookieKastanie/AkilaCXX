@@ -15,7 +15,8 @@ int Core::run(int argc, char *argv[], void (*init)(void)) {
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-	glfwWindowHint(GLFW_SAMPLES, 0);
+	//glfwWindowHint(GLFW_SAMPLES, 0);
+	glfwWindowHint(GLFW_SAMPLES, 4);
 
 	FileSystem::init();
 	display = std::make_shared<Display>();
@@ -24,6 +25,8 @@ int Core::run(int argc, char *argv[], void (*init)(void)) {
 		std::cerr << "Failed to retrieve OpenGL functions" << std::endl;
 		std::exit(EXIT_FAILURE);
 	}
+
+	glGetError(); // bruh
 
 	Shader::funcInit();
 
@@ -38,7 +41,7 @@ int Core::run(int argc, char *argv[], void (*init)(void)) {
 	State *currentState = nullptr;
 	while(!display->shouldClose()) {
 		Time::update();
-		taskManager->flush();
+		taskManager->flushOne();
 
 		currentState = stateManager->getCurrentState();
 		currentState->update();
@@ -47,6 +50,7 @@ int Core::run(int argc, char *argv[], void (*init)(void)) {
 		renderer->finish();
 
 		display->swapBuffers();
+		display->beforePollEvent();
 		glfwPollEvents();
 	}
 

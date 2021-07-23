@@ -36,6 +36,15 @@ void TaskManager::flush() {
     }
 }
 
+void TaskManager::flushOne() {
+    std::lock_guard<std::mutex> lck(queueMutex);
+    if(!tasks.empty()) {
+        auto t = tasks.front();
+        tasks.pop();
+        t->onMain();
+    }
+}
+
 
 ///////////////////////////////////////////////////////////////////////////////////////////
 

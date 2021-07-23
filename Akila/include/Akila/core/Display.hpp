@@ -49,6 +49,8 @@ namespace Akila {
 			Keyboard *getKeybord();
 			Mouse *getMouse();
 
+			void beforePollEvent();
+
 		private:
 			void setRendererResizeCallback(const std::function<void()> &cb);
 	};

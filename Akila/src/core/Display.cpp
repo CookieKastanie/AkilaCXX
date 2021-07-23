@@ -59,9 +59,14 @@ Display::Display() {
 		if(action == GLFW_PRESS) self->mouse.firePressEvent(currentButton);
 	});
 
-	glfwSetCursorPosCallback(window, [](GLFWwindow *window, double xpos, double ypos) ->void {
+	glfwSetCursorPosCallback(window, [](GLFWwindow *window, double xpos, double ypos) -> void {
 		Display *self = (Display *)glfwGetWindowUserPointer(window);
 		self->mouse.setPosition((float)xpos, (float)ypos);
+	});
+
+	glfwSetScrollCallback(window, [](GLFWwindow *window, double xoffset, double yoffset) -> void {
+		Display *self = (Display *)glfwGetWindowUserPointer(window);
+		self->mouse.setScrollOffset((float)xoffset, (float)yoffset);
 	});
 }
 
@@ -135,6 +140,10 @@ Keyboard *Display::getKeybord() {
 
 Mouse *Display::getMouse() {
 	return &mouse;
+}
+
+void Display::beforePollEvent() {
+	mouse.update();
 }
 
 void Display::setRendererResizeCallback(const std::function<void()> &cb) {

@@ -66,7 +66,7 @@ texture {
 	format: SRGB
 	mips: true
 	minFilter: LINEAR_MIPMAP_LINEAR
-	magFilter: LINEAR_MIPMAP_LINEAR
+	magFilter: LINEAR
 }
 
 texture {
@@ -75,7 +75,7 @@ texture {
 	format: RGB
 	mips: true
 	minFilter: LINEAR_MIPMAP_LINEAR
-	magFilter: LINEAR_MIPMAP_LINEAR
+	magFilter: LINEAR
 }
 
 texture {
@@ -84,7 +84,7 @@ texture {
 	format: RED
 	mips: true
 	minFilter: LINEAR_MIPMAP_LINEAR
-	magFilter: LINEAR_MIPMAP_LINEAR
+	magFilter: LINEAR
 }
 
 texture {
@@ -93,7 +93,7 @@ texture {
 	format: RED
 	mips: true
 	minFilter: LINEAR_MIPMAP_LINEAR
-	magFilter: LINEAR_MIPMAP_LINEAR
+	magFilter: LINEAR
 }
 
 texture {
@@ -102,7 +102,7 @@ texture {
 	format: RED
 	mips: true
 	minFilter: LINEAR_MIPMAP_LINEAR
-	magFilter: LINEAR_MIPMAP_LINEAR
+	magFilter: LINEAR
 }
 
 ////////////////////////////////////////////////////////////////////////////////////

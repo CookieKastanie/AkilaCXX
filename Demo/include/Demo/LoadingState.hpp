@@ -4,6 +4,7 @@
 #include "Akila/core/State.hpp"
 #include "Akila/graphics/Material.hpp"
 #include "Akila/graphics/Mesh.hpp"
+#include "Demo/MouseCamera.hpp"
 
 class LoadingState: public Akila::State {
 	public:
