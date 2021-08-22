@@ -17,7 +17,7 @@ int main(int argc, char *argv[]) {
 
 ## Shaders
 
-Vertex attributes :
+Integrated vertex attributes :
 
 ```glsl
 vec4 a_position;
@@ -27,7 +27,7 @@ vec4 a_tangent;
 vec4 a_color;
 ```
 
-Common structs :
+Integrated common structs :
 
 ```glsl
 struct akila_camera {
@@ -46,7 +46,7 @@ struct akila_lights {
 };
 ```
 
-Uniforms
+Integrated uniforms :
 
 ```glsl
 akila_camera u_camera;
@@ -54,7 +54,7 @@ float u_time;
 akila_lights u_lights;
 ```
 
-Default template :
+Basic template :
 
 ```glsl
 #AKILA_VERTEX
