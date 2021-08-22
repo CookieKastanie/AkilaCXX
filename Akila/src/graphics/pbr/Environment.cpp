@@ -212,7 +212,7 @@ std::shared_ptr<Texture> Environment::createBRDFLUT() {
 	fbo.prepare();
 
     
-	auto triangleVAO = Core::resourcesBucket->getMesh("akila_triangle");
+	auto triangleVAO = Core::resourcePool->getMesh("akila_triangle");
 
 	auto brdfShader = ShaderBuilder::build(BRDF_SHADER);
 

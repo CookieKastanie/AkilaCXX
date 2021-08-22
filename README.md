@@ -160,7 +160,7 @@ REPEAT
 ## Load a resource file
 
 ```cpp
-Akila::Core::resourcesBucket->loadResourceFile("myResourceFile.res", []() -> void {
+Akila::Core::resourcePool->loadResourceFile("myResourceFile.res", []() -> void {
 	std::cout << "Done !" << std::endl;
 });
 ```

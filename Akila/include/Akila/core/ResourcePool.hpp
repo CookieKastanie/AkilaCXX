@@ -11,8 +11,10 @@
 #include "Akila/core/Task.hpp"
 
 namespace Akila {
-	class ResourcesBucket {
+	class ResourcePool {
 	private:
+		friend class ResourceFileParser;
+
 		std::shared_ptr<Renderer> renderer;
 
 		std::shared_ptr<Shader> defaultShader;
@@ -31,7 +33,7 @@ namespace Akila {
 		std::map<std::string, std::shared_ptr<Mesh>> meshs;
 
 	public:
-		ResourcesBucket(const std::shared_ptr<Renderer> &renderer);
+		ResourcePool(const std::shared_ptr<Renderer> &renderer);
 
 		std::shared_ptr<Shader> &getShader(const std::string &name);
 		std::shared_ptr<Texture> &getTexture(const std::string &name);

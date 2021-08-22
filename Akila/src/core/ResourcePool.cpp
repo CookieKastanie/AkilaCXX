@@ -1,4 +1,4 @@
-#include "Akila/core/ResourcesBucket.hpp"
+#include "Akila/core/ResourcePool.hpp"
 #include "Akila/files/FileSystem.hpp"
 #include "Akila/files/Loader.hpp"
 #include "Akila/graphics/gl/Texture.hpp"
@@ -6,7 +6,7 @@
 
 using namespace Akila;
 
-ResourcesBucket::ResourcesBucket(const std::shared_ptr<Renderer> &renderer): renderer{renderer} {
+ResourcePool::ResourcePool(const std::shared_ptr<Renderer> &renderer): renderer{renderer} {
 	defaultShader = std::make_shared<Shader>("void main(){gl_Position=vec4(0.);}", "void main(){gl_FragColor=vec4(1.);}");
 
 	defaultTexture = std::make_shared<Texture>();
@@ -39,7 +39,7 @@ ResourcesBucket::ResourcesBucket(const std::shared_ptr<Renderer> &renderer): ren
 	setMesh("akila_triangle", defaultMesh);
 }
 
-std::shared_ptr<Shader> &ResourcesBucket::getShader(const std::string &name) {
+std::shared_ptr<Shader> &ResourcePool::getShader(const std::string &name) {
 	auto &&val = shaders[name];
 	if(val != nullptr) return val;
 
@@ -47,7 +47,7 @@ std::shared_ptr<Shader> &ResourcesBucket::getShader(const std::string &name) {
 	return defaultShader;
 }
 
-std::shared_ptr<Texture> &ResourcesBucket::getTexture(const std::string &name) {
+std::shared_ptr<Texture> &ResourcePool::getTexture(const std::string &name) {
 	auto &&val = textures[name];
 	if(val != nullptr) return val;
 
@@ -55,7 +55,7 @@ std::shared_ptr<Texture> &ResourcesBucket::getTexture(const std::string &name) {
 	return defaultTexture;
 }
 
-std::shared_ptr<CubeMapTexture> &ResourcesBucket::getCubeMapTexture(const std::string &name) {
+std::shared_ptr<CubeMapTexture> &ResourcePool::getCubeMapTexture(const std::string &name) {
 	auto &&val = cubeMapTextures[name];
 	if(val != nullptr) return val;
 
@@ -63,7 +63,7 @@ std::shared_ptr<CubeMapTexture> &ResourcesBucket::getCubeMapTexture(const std::s
 	return defaultCubeMapTexture;
 }
 
-std::shared_ptr<Material> &ResourcesBucket::getMaterial(const std::string &name) {
+std::shared_ptr<Material> &ResourcePool::getMaterial(const std::string &name) {
 	auto &&val = materials[name];
 	if(val != nullptr) return val;
 	
@@ -71,7 +71,7 @@ std::shared_ptr<Material> &ResourcesBucket::getMaterial(const std::string &name)
 	return defaultMaterial;
 }
 
-std::shared_ptr<Mesh> &ResourcesBucket::getMesh(const std::string &name) {
+std::shared_ptr<Mesh> &ResourcePool::getMesh(const std::string &name) {
 	auto &&val = meshs[name];
 	if(val != nullptr) return val;
 
@@ -79,23 +79,23 @@ std::shared_ptr<Mesh> &ResourcesBucket::getMesh(const std::string &name) {
 	return defaultMesh;
 }
 
-void ResourcesBucket::setShader(const std::string &name, const std::shared_ptr<Shader> &shader) {
+void ResourcePool::setShader(const std::string &name, const std::shared_ptr<Shader> &shader) {
 	shaders[name] = shader;
 }
 
-void ResourcesBucket::setTexture(const std::string &name, const std::shared_ptr<Texture> &texture) {
+void ResourcePool::setTexture(const std::string &name, const std::shared_ptr<Texture> &texture) {
 	textures[name] = texture;
 }
 
-void ResourcesBucket::setCubeMapTexture(const std::string &name, const std::shared_ptr<CubeMapTexture> &cubeMapTexture) {
+void ResourcePool::setCubeMapTexture(const std::string &name, const std::shared_ptr<CubeMapTexture> &cubeMapTexture) {
 	cubeMapTextures[name] = cubeMapTexture;
 }
 
-void ResourcesBucket::setMaterial(const std::string &name, const std::shared_ptr<Material> &material) {
+void ResourcePool::setMaterial(const std::string &name, const std::shared_ptr<Material> &material) {
 	materials[name] = material;
 }
 
-void ResourcesBucket::setMesh(const std::string &name, const std::shared_ptr<Mesh> &mesh) {
+void ResourcePool::setMesh(const std::string &name, const std::shared_ptr<Mesh> &mesh) {
 	meshs[name] = mesh;
 }
 
@@ -278,7 +278,7 @@ public:
 	}
 };
 
-void ResourcesBucket::loadResourceFile(const std::string &path, const std::function<void()> &cb, TaskManager *taskManger) {
+void ResourcePool::loadResourceFile(const std::string &path, const std::function<void()> &cb, TaskManager *taskManger) {
 	std::shared_ptr<LoadingInstance> loadingInstance = std::make_shared<LoadingInstance>();
 	loadingInstance->callback = cb;
 

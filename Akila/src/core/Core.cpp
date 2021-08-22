@@ -6,7 +6,7 @@ std::shared_ptr<Display> Core::display = nullptr;
 std::shared_ptr<StateManager> Core::stateManager = nullptr;
 std::shared_ptr<TaskManager> Core::taskManager = nullptr;
 std::shared_ptr<Renderer> Core::renderer = nullptr;
-std::shared_ptr<ResourcesBucket> Core::resourcesBucket = nullptr;
+std::shared_ptr<ResourcePool> Core::resourcePool = nullptr;
 
 Core::Core() {}
 
@@ -33,7 +33,7 @@ int Core::run(int argc, char *argv[], void (*init)(void)) {
 	stateManager = std::make_shared<StateManager>();
 	taskManager = std::make_shared<TaskManager>();
 	renderer = std::make_shared<Renderer>(display);
-	resourcesBucket = std::make_shared<ResourcesBucket>(renderer);
+	resourcePool = std::make_shared<ResourcePool>(renderer);
 
 	init();
 
