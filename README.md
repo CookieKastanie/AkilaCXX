@@ -2,6 +2,19 @@
 
 🍪 CookieKastanie 🍪
 
+## Starting code
+
+```c++
+#include "Akila/core/Core.hpp"
+
+int main(int argc, char *argv[]) {
+	return Akila::Core::run(argc, argv, [](void) {
+		Akila::FileSystem::setResourceFolder("resources"); // path relative to the executable
+		Akila::Core::stateManager->setState(new MyState{}); // custom class who extend Akila::State
+	});
+}
+```
+
 ## Shaders
 
 Vertex attributes :
