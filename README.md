@@ -4,7 +4,7 @@
 
 ## Starting code
 
-```c++
+```cpp
 #include "Akila/core/Core.hpp"
 
 int main(int argc, char *argv[]) {
