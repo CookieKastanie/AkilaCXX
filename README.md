@@ -76,7 +76,7 @@ void main() {
 }
 ```
 
-## Resources files
+## Resource files
 
 Objects :
 
@@ -155,4 +155,12 @@ CLAMP_TO_EDGE
 CLAMP_TO_BORDER
 MIRRORED_REPEAT
 REPEAT
+```
+
+## Load a resource file
+
+```cpp
+Akila::Core::resourcesBucket->loadResourceFile("myResourceFile.res", []() -> void {
+	std::cout << "Done !" << std::endl;
+});
 ```
