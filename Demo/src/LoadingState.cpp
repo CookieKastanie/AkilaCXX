@@ -9,30 +9,30 @@
 LoadingState::LoadingState(): Akila::State{} {
 	Akila::Core::display->setTitle("camecasselescouilles");
 
-	Akila::Core::resourcesBucket->setTexture("brdfLUT", Akila::Environment::createBRDFLUT());
+	Akila::Core::resourcePool->setTexture("brdfLUT", Akila::Environment::createBRDFLUT());
 
 	
-	Akila::Core::resourcesBucket->setCubeMapTexture("skybox", std::make_shared<Akila::CubeMapTexture>(Akila::TextureBuffer::Format::RGB16F));
-	Akila::Core::resourcesBucket->setCubeMapTexture("irradiance", std::make_shared<Akila::CubeMapTexture>(Akila::TextureBuffer::Format::RGB16F));
-	Akila::Core::resourcesBucket->setCubeMapTexture("prefilter", std::make_shared<Akila::CubeMapTexture>(Akila::TextureBuffer::Format::RGB16F));
+	Akila::Core::resourcePool->setCubeMapTexture("skybox", std::make_shared<Akila::CubeMapTexture>(Akila::TextureBuffer::Format::RGB16F));
+	Akila::Core::resourcePool->setCubeMapTexture("irradiance", std::make_shared<Akila::CubeMapTexture>(Akila::TextureBuffer::Format::RGB16F));
+	Akila::Core::resourcePool->setCubeMapTexture("prefilter", std::make_shared<Akila::CubeMapTexture>(Akila::TextureBuffer::Format::RGB16F));
 
-	Akila::Core::resourcesBucket->loadResourceFile("main.res", []() -> void {
-		Akila::Core::resourcesBucket->getCubeMapTexture("skybox")->setSize(1024, 1024);
-		Akila::Core::resourcesBucket->getCubeMapTexture("irradiance")->setSize(32, 32);
-		Akila::Core::resourcesBucket->getCubeMapTexture("prefilter")->setSize(64, 64);
+	Akila::Core::resourcePool->loadResourceFile("main.res", []() -> void {
+		Akila::Core::resourcePool->getCubeMapTexture("skybox")->setSize(1024, 1024);
+		Akila::Core::resourcePool->getCubeMapTexture("irradiance")->setSize(32, 32);
+		Akila::Core::resourcePool->getCubeMapTexture("prefilter")->setSize(64, 64);
 
 		Akila::Environment::createIBL(
-			Akila::Core::resourcesBucket->getTexture("env"),
-			Akila::Core::resourcesBucket->getCubeMapTexture("skybox"),
-			Akila::Core::resourcesBucket->getCubeMapTexture("irradiance"),
-			Akila::Core::resourcesBucket->getCubeMapTexture("prefilter"),
-			Akila::Core::resourcesBucket->getMesh("invertedCube")
+			Akila::Core::resourcePool->getTexture("env"),
+			Akila::Core::resourcePool->getCubeMapTexture("skybox"),
+			Akila::Core::resourcePool->getCubeMapTexture("irradiance"),
+			Akila::Core::resourcePool->getCubeMapTexture("prefilter"),
+			Akila::Core::resourcePool->getMesh("invertedCube")
 		);
 
 		std::cout << "Fin chargement main.res" << std::endl;
 	});
 
-	defaultTriangle = Akila::Core::resourcesBucket->getMesh("akila_triangle");
+	defaultTriangle = Akila::Core::resourcePool->getMesh("akila_triangle");
 
 	//Akila::Core::renderer->setSharedCamera(std::make_shared<Akila::PerspectiveCamera>());
 	Akila::Core::renderer->setSharedCamera(std::make_shared<MouseCamera>(Akila::Core::display->getMouse()));
@@ -67,7 +67,7 @@ void LoadingState::draw() {
 
 	Akila::Core::renderer->disable(Akila::Renderer::DEPTH_TEST);
 	Akila::Core::renderer->disable(Akila::Renderer::CULL_FACE);
-	Akila::Core::renderer->render(Akila::Core::resourcesBucket->getMaterial("loadingScreen").get(), defaultTriangle.get());
+	Akila::Core::renderer->render(Akila::Core::resourcePool->getMaterial("loadingScreen").get(), defaultTriangle.get());
 
 	
 
@@ -77,8 +77,8 @@ void LoadingState::draw() {
 
 	glDepthFunc(GL_LEQUAL);
 	Akila::Core::renderer->render(
-		Akila::Core::resourcesBucket->getMaterial("skybox").get(),
-		Akila::Core::resourcesBucket->getMesh("invertedCube").get()
+		Akila::Core::resourcePool->getMaterial("skybox").get(),
+		Akila::Core::resourcePool->getMesh("invertedCube").get()
 	);
 	glDepthFunc(GL_LESS);
 
@@ -86,7 +86,14 @@ void LoadingState::draw() {
 	Akila::Core::renderer->enable(Akila::Renderer::CULL_FACE);
 
 	Akila::Core::renderer->render(
-		Akila::Core::resourcesBucket->getMaterial("sword").get(),
-		Akila::Core::resourcesBucket->getMesh("sword").get()
+		Akila::Core::resourcePool->getMaterial("sword").get(),
+		Akila::Core::resourcePool->getMesh("sword").get()
 	);
+
+	/*
+	Akila::Core::renderer->render(
+		Akila::Core::resourcesBucket->getMaterial("terrain").get(),
+		Akila::Core::resourcesBucket->getMesh("terrain").get()
+	);
+	//*/
 }

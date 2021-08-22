@@ -34,7 +34,7 @@ Camera::Uniforms &Camera::getUniforms() {
 
 void PerspectiveCamera::onResize(int width, int height) {
 	uniforms.ratio = (float)width / (float)height;
-	uniforms.projection = glm::perspective(70.f, uniforms.ratio, 0.01f, 100.f);
+	uniforms.projection = glm::perspective(70.f, uniforms.ratio, 0.01f, 1000.f);
 }
 
 void PerspectiveCamera::update() {
