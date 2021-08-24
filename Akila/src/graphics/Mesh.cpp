@@ -3,10 +3,10 @@
 using namespace Akila;
 
 Mesh::Mesh() {
-	vao = std::make_shared<Akila::VAO>();
+	vao = std::make_shared<VAO>();
 }
 
-void Mesh::addVBO(const std::shared_ptr<Akila::VBO> &vbo) {
+void Mesh::addVBO(const std::shared_ptr<VBO> &vbo) {
 	vbos.push_back(vbo);
 }
 

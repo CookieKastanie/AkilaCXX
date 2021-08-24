@@ -1,4 +1,9 @@
 shader {
+	name: lightSource
+	src: shaders/lightSource.glsl
+}
+
+shader {
 	name: loadingAnimation
 	src: shaders/loadingAnimation.glsl
 
@@ -105,6 +110,63 @@ texture {
 	magFilter: LINEAR
 }
 
+
+
+
+
+
+
+texture {
+	name: terrain_A
+	src: textures/terrain/terrain_A.jpg
+	format: SRGB
+	mips: true
+	minFilter: LINEAR_MIPMAP_LINEAR
+	magFilter: LINEAR
+}
+
+texture {
+	name: terrain_N
+	src: textures/terrain/terrain_N.jpg
+	format: RGB
+	mips: true
+	minFilter: LINEAR_MIPMAP_LINEAR
+	magFilter: LINEAR
+}
+
+texture {
+	name: terrain_M
+	src: textures/terrain/terrain_M.jpg
+	format: RED
+	mips: true
+	minFilter: LINEAR_MIPMAP_LINEAR
+	magFilter: LINEAR
+}
+
+texture {
+	name: terrain_R
+	src: textures/terrain/terrain_R.jpg
+	format: RED
+	mips: true
+	minFilter: LINEAR_MIPMAP_LINEAR
+	magFilter: LINEAR
+}
+
+texture {
+	name: terrain_AO
+	src: textures/terrain/terrain_AO.jpg
+	format: RED
+	mips: true
+	minFilter: LINEAR_MIPMAP_LINEAR
+	magFilter: LINEAR
+}
+
+
+
+
+
+
+
 ////////////////////////////////////////////////////////////////////////////////////
 
 mesh {
@@ -117,7 +179,22 @@ mesh {
 	src: meshs/invertedCube.ob
 }
 
+mesh {
+	name: terrain
+	src: meshs/terrain.ob
+}
+
+
 ////////////////////////////////////////////////////////////////////////////////////
+
+
+material {
+	name: red
+	shader: lightSource
+
+	uniform: color = [1, 0, 0]
+}
+
 
 material {
 	name: loadingScreen
@@ -158,4 +235,20 @@ material {
 	shader: skybox
 
 	cubemap: skybox = 0
+}
+
+
+material {
+	name: terrain
+	shader: pbr
+
+	texture: terrain_A = 0
+	texture: terrain_N = 1
+	texture: terrain_M = 2
+	texture: terrain_R = 3
+	texture: terrain_AO = 4
+
+	cubemap: irradiance = 5
+	cubemap: prefilter = 6
+	texture: brdfLUT = 7
 }

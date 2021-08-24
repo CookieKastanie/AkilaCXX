@@ -1,8 +1,9 @@
 #include "Demo/LoadingState.hpp"
 
+#include "Demo/PlayState.hpp"
+
 #include "Akila/graphics/pbr/Environment.hpp"
 #include "Akila/graphics/gl/Texture.hpp"
-
 
 #include "Akila/graphics/gl/Error.hpp"
 
@@ -10,7 +11,6 @@ LoadingState::LoadingState(): Akila::State{} {
 	Akila::Core::display->setTitle("camecasselescouilles");
 
 	Akila::Core::resourcePool->setTexture("brdfLUT", Akila::Environment::createBRDFLUT());
-
 	
 	Akila::Core::resourcePool->setCubeMapTexture("skybox", std::make_shared<Akila::CubeMapTexture>(Akila::TextureBuffer::Format::RGB16F));
 	Akila::Core::resourcePool->setCubeMapTexture("irradiance", std::make_shared<Akila::CubeMapTexture>(Akila::TextureBuffer::Format::RGB16F));
@@ -30,12 +30,10 @@ LoadingState::LoadingState(): Akila::State{} {
 		);
 
 		std::cout << "Fin chargement main.res" << std::endl;
+		Akila::Core::stateManager->setState(new PlayState{});
 	});
 
 	defaultTriangle = Akila::Core::resourcePool->getMesh("akila_triangle");
-
-	//Akila::Core::renderer->setSharedCamera(std::make_shared<Akila::PerspectiveCamera>());
-	Akila::Core::renderer->setSharedCamera(std::make_shared<MouseCamera>(Akila::Core::display->getMouse()));
 
 	Akila::Core::display->getKeybord()->onKeyPress([](Akila::Keyboard::Key key) -> void {
 		switch(key) {
@@ -50,17 +48,7 @@ LoadingState::LoadingState(): Akila::State{} {
 	});
 }
 
-void LoadingState::update() {
-	auto &cam = Akila::Core::renderer->getSharedCamera();
-
-	//if(Akila::Core::display->getKeybord()->isPressed(Akila::Keyboard::Key::SPACE))
-	//float x = std::cos(Akila::Time::now) * 3.f;
-	//float z = std::sin(Akila::Time::now) * 3.f;
-
-	//cam->setPosition({x, 0.5, z});
-
-	cam->update();
-}
+void LoadingState::update() {}
 
 void LoadingState::draw() {
 	Akila::Core::renderer->useDefaultFrameBuffer();
@@ -68,32 +56,4 @@ void LoadingState::draw() {
 	Akila::Core::renderer->disable(Akila::Renderer::DEPTH_TEST);
 	Akila::Core::renderer->disable(Akila::Renderer::CULL_FACE);
 	Akila::Core::renderer->render(Akila::Core::resourcePool->getMaterial("loadingScreen").get(), defaultTriangle.get());
-
-	
-
-	Akila::Core::renderer->enable(Akila::Renderer::DEPTH_TEST);
-	
-	Akila::Core::renderer->clearDepth();
-
-	glDepthFunc(GL_LEQUAL);
-	Akila::Core::renderer->render(
-		Akila::Core::resourcePool->getMaterial("skybox").get(),
-		Akila::Core::resourcePool->getMesh("invertedCube").get()
-	);
-	glDepthFunc(GL_LESS);
-
-	//Akila::Core::renderer->render(Akila::Core::resourcesBucket->getMaterial("brdfLUT").get(), defaultTriangle.get());
-	Akila::Core::renderer->enable(Akila::Renderer::CULL_FACE);
-
-	Akila::Core::renderer->render(
-		Akila::Core::resourcePool->getMaterial("sword").get(),
-		Akila::Core::resourcePool->getMesh("sword").get()
-	);
-
-	/*
-	Akila::Core::renderer->render(
-		Akila::Core::resourcesBucket->getMaterial("terrain").get(),
-		Akila::Core::resourcesBucket->getMesh("terrain").get()
-	);
-	//*/
 }

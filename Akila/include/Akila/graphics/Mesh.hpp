@@ -10,13 +10,13 @@ namespace Akila {
 	private:
 		friend class Renderer;
 
-		std::shared_ptr<Akila::VAO> vao;
-		std::vector<std::shared_ptr<Akila::VBO>> vbos;
+		std::shared_ptr<VAO> vao;
+		std::vector<std::shared_ptr<VBO>> vbos;
 
 	public:
 		Mesh();
 
-		void addVBO(const std::shared_ptr<Akila::VBO> &vbo);
+		void addVBO(const std::shared_ptr<VBO> &vbo);
 		void prepare();
 
 		void draw() const;
