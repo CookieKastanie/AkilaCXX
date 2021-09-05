@@ -117,6 +117,24 @@ void brdf(
 }
 
 
+
+vec3 aces(vec3 x) {
+    const float a = 2.51;
+    const float b = 0.03;
+    const float c = 2.43;
+    const float d = 0.59;
+    const float e = 0.14;
+
+    x *= 0.6;
+    return (x * (a * x + b)) / (x * (c * x + d) + e);
+}
+
+vec3 u3(vec3 x) {
+    return x / (x + 0.155) * 1.019;
+}
+
+uniform int tonemapping;
+
 void main() {
     lightPositions[0] = vec3(-5., 5., 5.);
     lightColors[0] = vec3(500., 0., 0.);
@@ -187,8 +205,12 @@ void main() {
 	// exposition
     color = vec3(1.0) - exp(-color * exposure);
 
-    // correction gamma
-    color = pow(color, vec3(1.0 / gamma));
+    // tone mapping
+
+    if(tonemapping == 0) color = pow(color, vec3(1.0 / gamma));
+    else if(tonemapping == 1) color = aces(color);
+    else if(tonemapping == 2) color = u3(color);
+
    
     FragColor = vec4(color, 1.0);
 }

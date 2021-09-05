@@ -64,6 +64,8 @@ Shader::Shader(const std::string &vertexCode, const std::string &fragmentCode, c
     glDeleteShader(vertex);
     glDeleteShader(fragment);
     if(!geometryCode.empty()) glDeleteShader(geometry);
+
+    cacheUniformsLocations();
 }
 
 Shader::~Shader() {
@@ -90,6 +92,30 @@ bool Shader::checkErrors(GLuint shader, std::string type) {
     return !success;
 }
 
+void Shader::cacheUniformsLocations() {
+    bind();
+
+    GLint size; // size of the variable (array length)
+    GLenum type; // (float, vec3 or mat4, etc)
+
+    const GLsizei bufSize = 64;
+    GLchar name[bufSize];
+    GLsizei length;
+
+    GLint count;
+    glGetProgramiv(id, GL_ACTIVE_UNIFORMS, &count);
+
+    for(GLint i = 0; i < count; ++i) {
+        glGetActiveUniform(id, (GLuint)i, bufSize, &length, &size, &type, name);
+
+        unsigned int location = glGetUniformLocation(id, name); // a cause de la suppression des uniforms inutilises,
+                                                                // il faut query le shader pour avoir la vraie location
+        if(location != -1) {
+            uniformCache[name] = location;
+        }
+    }
+}
+
 void Shader::bind() const {
     glUseProgram(id);
 }
@@ -100,8 +126,12 @@ void Shader::setUBOIndex(const std::string &name, unsigned int index) {
 }
 
 unsigned int Shader::getUniformId(const std::string &name) {
-    return glGetUniformLocation(id, name.c_str());
+    return uniformCache[name];
 }
+
+
+/////////////////////////////////
+
 
 void Shader::send(const unsigned int &uid, const int &value) const {
     glUniform1i(uid, value);
@@ -131,6 +161,37 @@ void Shader::send(const unsigned int &uid, const bool &value) const {
     glUniform1i(uid, value);
 }
 
+/////////////////////////////////
+
+void Shader::send(const std::string &name, const int &value) const {
+    glUniform1i(uniformCache.find(name)->second, value);
+}
+
+void Shader::send(const std::string &name, const float &value) const {
+    glUniform1f(uniformCache.find(name)->second, value);
+}
+
+void Shader::send(const std::string &name, const glm::vec2 &value) const {
+    glUniform2fv(uniformCache.find(name)->second, 1, &value[0]);
+}
+
+void Shader::send(const std::string &name, const glm::vec3 &value) const {
+    glUniform3fv(uniformCache.find(name)->second, 1, &value[0]);
+}
+
+void Shader::send(const std::string &name, const std::vector<glm::vec3> &values) const {
+    glUniform3fv(uniformCache.find(name)->second, (GLsizei)values.size(), (GLfloat *)values.data());
+}
+
+void Shader::send(const std::string &name, const glm::mat4 &mat) const {
+    glUniformMatrix4fv(uniformCache.find(name)->second, 1, GL_FALSE, &mat[0][0]);
+}
+
+void Shader::send(const std::string &name, const bool &value) const {
+    glUniform1i(uniformCache.find(name)->second, value);
+}
+
+/////////////////////////////////
 
 void Shader::sendRawFloat(const unsigned int &uid, const void *values, const int &funcId) const {
     funifFuncs[funcId](uid, 1, (GLfloat*)values);

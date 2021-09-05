@@ -21,6 +21,18 @@ void operator delete(void *basePtr) noexcept {
 }
 //*/
 
+/*
+
+void *operator new(std::size_t size, const char *file, int line) {
+	printf("new -> %s : %d\n", file, line);
+	return std::malloc(size);
+}
+
+#define new new(__FILE__, __LINE__)
+//*/
+
+
+
 int main(int argc, char *argv[]) {
 	return Akila::Core::run(argc, argv, [](void) {
 		Akila::FileSystem::setResourceFolder("resources"); // path relative to the executable

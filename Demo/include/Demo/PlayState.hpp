@@ -7,6 +7,9 @@
 #include "Demo/MouseCamera.hpp"
 
 class PlayState: public Akila::State {
+private:
+	float exposure;
+
 public:
 	PlayState();
 

@@ -6,7 +6,7 @@
 
 #include "Akila/graphics/gl/Error.hpp"
 
-PlayState::PlayState(): Akila::State{} {
+PlayState::PlayState(): Akila::State{}, exposure{1.} {
 	//Akila::Core::renderer->setSharedCamera(std::make_shared<Akila::PerspectiveCamera>());
 	Akila::Core::renderer->setSharedCamera(std::make_shared<MouseCamera>(Akila::Core::display->getMouse()));
 }
@@ -17,6 +17,36 @@ void PlayState::update() {
 }
 
 void PlayState::draw() {
+
+	const auto k = Akila::Core::display->getKeybord();
+	auto shader = Akila::Core::resourcePool->getShader("pbr");
+	if(k->isPressed(Akila::Keyboard::A)) {
+		shader->send("tonemapping", 0);
+	}
+	if(k->isPressed(Akila::Keyboard::Z)) {
+		shader->send("tonemapping", 1);
+	}
+	if(k->isPressed(Akila::Keyboard::E)) {
+		shader->send("tonemapping", 2);
+	}
+
+	//std::cout << shader->getUniformId("tonemapping") << std::endl;
+
+	if(k->isPressed(Akila::Keyboard::W)) {
+		exposure += Akila::Time::delta;
+	}
+	if(k->isPressed(Akila::Keyboard::X)) {
+		exposure -= Akila::Time::delta;
+	}
+	{
+		if(exposure < 0) exposure = 0;
+		shader->send("exposure", exposure);
+	}
+	
+
+	///////////////////////////////////////////////////////////////////////////////////////
+
+
 	Akila::Core::renderer->useDefaultFrameBuffer();
 
 	Akila::Core::renderer->enable(Akila::Renderer::DEPTH_TEST);

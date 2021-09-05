@@ -8,7 +8,7 @@ namespace Akila {
 	class Environment {
 	private:
 	public:
-		static std::shared_ptr<Texture> Environment::createBRDFLUT();
+		static std::shared_ptr<Texture> createBRDFLUT();
 		static void createIBL(
 			const std::shared_ptr<Texture> &input,
 			std::shared_ptr<CubeMapTexture> &skybox,
