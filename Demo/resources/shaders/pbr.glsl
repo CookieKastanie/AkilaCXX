@@ -11,8 +11,10 @@ void main() {
     vec4 W = M * a_position;
 
     worldPos = W.xyz;
-    normal = mat3(M) * a_normal.xyz;
-    tangent = mat3(M) * a_tangent.xyz;
+
+    mat3 Mn = mat3(M[0].xyz, M[1].xyz, M[2].xyz); // instead of mat3(M), because c'est de la merde
+    normal = Mn * a_normal.xyz;
+    tangent = Mn * a_tangent.xyz;
     uv = a_uv.xy;
 
     gl_Position = u_camera.pv * W;
@@ -89,7 +91,7 @@ vec3 fresnelSchlickRoughness(float cosTheta, vec3 F0, float roughness) {
 }
 
 void brdf(
-    in out vec3 Lo,
+    inout vec3 Lo,
     in vec3 N, in vec3 V,
     in vec3 L, in vec3 radiance,
     in vec3 albedo, in float metallic, in float roughness, in vec3 F0

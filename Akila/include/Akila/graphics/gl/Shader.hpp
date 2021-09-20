@@ -35,7 +35,7 @@ namespace Akila {
 
 			void setUBOIndex(const std::string &name, unsigned int index);
 
-			unsigned int getUniformId(const std::string &name);
+			unsigned int getUniformId(const std::string &name) const;
 
 			void send(const unsigned int &uid, const int &value) const;
 			void send(const unsigned int &uid, const float &value) const;

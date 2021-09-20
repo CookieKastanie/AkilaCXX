@@ -125,8 +125,8 @@ void Shader::setUBOIndex(const std::string &name, unsigned int index) {
     glUniformBlockBinding(id, uniformBlock, index);
 }
 
-unsigned int Shader::getUniformId(const std::string &name) {
-    return uniformCache[name];
+unsigned int Shader::getUniformId(const std::string &name) const {
+    return uniformCache.find(name)->second;
 }
 
 
