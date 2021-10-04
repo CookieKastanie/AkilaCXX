@@ -4,7 +4,7 @@
 #include "GLFW/glfw3.h"
 
 #include "Akila/core/Display.hpp"
-#include "Akila/core/State.hpp"
+#include "Akila/core/Layer.hpp"
 #include "Akila/core/Task.hpp"
 #include "Akila/core/Time.hpp"
 #include "Akila/graphics/Renderer.hpp"
@@ -21,7 +21,7 @@ namespace Akila {
 
 		public:
 			static std::shared_ptr<Display> display;
-			static std::shared_ptr<StateManager> stateManager;
+			static std::shared_ptr<LayerManager> layerManager;
 			static std::shared_ptr<TaskManager> taskManager;
 			static std::shared_ptr<Renderer> renderer;
 			static std::shared_ptr<ResourcePool> resourcePool;

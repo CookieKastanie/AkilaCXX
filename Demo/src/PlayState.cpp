@@ -1,4 +1,4 @@
-#include "Demo/PlayState.hpp"
+#include "Demo/PlayLayer.hpp"
 
 #include "Akila/graphics/pbr/Environment.hpp"
 #include "Akila/graphics/gl/Texture.hpp"
@@ -6,18 +6,18 @@
 
 #include "Akila/graphics/gl/Error.hpp"
 
-PlayState::PlayState(): Akila::State{}, exposure{1.} {
+PlayLayer::PlayLayer(): Akila::Layer{}, exposure{1.} {
 	//Akila::Core::renderer->setSharedCamera(std::make_shared<Akila::PerspectiveCamera>());
 	Akila::Core::renderer->setSharedCamera(std::make_shared<MouseCamera>(Akila::Core::display->getMouse()));
 
 	Net::fillGrid(net);
 }
 
-void PlayState::update() {
+void PlayLayer::update() {
 	net.update();
 }
 
-void PlayState::draw() {
+void PlayLayer::draw() {
 	auto& cam = Akila::Core::renderer->getSharedCamera();
 	cam->update();
 

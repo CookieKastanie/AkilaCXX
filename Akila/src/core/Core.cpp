@@ -3,7 +3,7 @@
 using namespace Akila;
 
 std::shared_ptr<Display> Core::display = nullptr;
-std::shared_ptr<StateManager> Core::stateManager = nullptr;
+std::shared_ptr<LayerManager> Core::layerManager = nullptr;
 std::shared_ptr<TaskManager> Core::taskManager = nullptr;
 std::shared_ptr<Renderer> Core::renderer = nullptr;
 std::shared_ptr<ResourcePool> Core::resourcePool = nullptr;
@@ -30,7 +30,7 @@ int Core::run(int argc, char *argv[], void (*init)(void)) {
 
 	Shader::funcInit();
 
-	stateManager = std::make_shared<StateManager>();
+	layerManager = std::make_shared<LayerManager>();
 	taskManager = std::make_shared<TaskManager>();
 	renderer = std::make_shared<Renderer>(display);
 	resourcePool = std::make_shared<ResourcePool>(renderer);
@@ -67,14 +67,14 @@ int Core::run(int argc, char *argv[], void (*init)(void)) {
 			//display->beforePollEvent();
 			//glfwPollEvents();
 
-			stateManager->getCurrentState()->update();
+			layerManager->update();
 			accumulator -= Time::fixedDelta;
 		}
 
 		Time::mix = accumulator / Time::fixedDelta;
 
 		renderer->prepare();
-		stateManager->getCurrentState()->draw();
+		layerManager->draw();
 		renderer->finish();
 
 		display->swapBuffers();

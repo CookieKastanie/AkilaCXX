@@ -1,5 +1,5 @@
 #include "Akila/core/Core.hpp"
-#include "Demo/LoadingState.hpp"
+#include "Demo/LoadingLayer.hpp"
 
 /*
 static int objectCount{0};
@@ -36,7 +36,7 @@ void *operator new(std::size_t size, const char *file, int line) {
 int main(int argc, char *argv[]) {
 	return Akila::Core::run(argc, argv, [](void) {
 		Akila::FileSystem::setResourceFolder("resources"); // path relative to the executable
-		Akila::Core::stateManager->setState(new LoadingState{});
+		Akila::Core::layerManager->add(new LoadingLayer{});
 		//Akila::Core::display->setFullscreen(true);
 	});
 }

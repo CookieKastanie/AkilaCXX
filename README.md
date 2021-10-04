@@ -10,7 +10,7 @@
 int main(int argc, char *argv[]) {
 	return Akila::Core::run(argc, argv, [](void) {
 		Akila::FileSystem::setResourceFolder("resources"); // path relative to the executable
-		Akila::Core::stateManager->setState(new MyState{}); // custom class who extend Akila::State
+		Akila::Core::layerManager->add(new MyLayer{}); // custom class who extend Akila::Layer
 	});
 }
 ```

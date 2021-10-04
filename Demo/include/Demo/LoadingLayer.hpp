@@ -1,17 +1,17 @@
 #pragma once
 
 #include "Akila/core/Core.hpp"
-#include "Akila/core/State.hpp"
+#include "Akila/core/Layer.hpp"
 #include "Akila/graphics/Material.hpp"
 #include "Akila/graphics/Mesh.hpp"
 #include "Demo/MouseCamera.hpp"
 
-class LoadingState: public Akila::State {
+class LoadingLayer: public Akila::Layer {
 	public:
 		std::shared_ptr<Akila::Mesh> defaultTriangle;
 
 	public:
-		LoadingState();
+		LoadingLayer();
 
 		virtual void update() override;
 		virtual void draw() override;
