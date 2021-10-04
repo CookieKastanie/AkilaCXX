@@ -6,7 +6,7 @@
 namespace Akila {
 	class Keyboard {
 	public:
-		enum Key: int {
+		enum class Key: int {
 			A = GLFW_KEY_A,
 			B = GLFW_KEY_B,
 			C = GLFW_KEY_C,

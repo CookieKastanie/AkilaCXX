@@ -11,11 +11,11 @@ Keyboard::Keyboard() {
 }
 
 bool Keyboard::isPressed(Key k) const {
-	return keysState[k];
+	return keysState[static_cast<int>(k)];
 }
 
 void Keyboard::setKeyState(Key k, bool state) {
-	keysState[k] = state;
+	keysState[static_cast<int>(k)] = state;
 }
 
 void Keyboard::onKeyPress(const std::function<void(Keyboard::Key)> &cb) {

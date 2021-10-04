@@ -9,33 +9,37 @@
 PlayState::PlayState(): Akila::State{}, exposure{1.} {
 	//Akila::Core::renderer->setSharedCamera(std::make_shared<Akila::PerspectiveCamera>());
 	Akila::Core::renderer->setSharedCamera(std::make_shared<MouseCamera>(Akila::Core::display->getMouse()));
+
+	Net::fillGrid(net);
 }
 
 void PlayState::update() {
-	auto &cam = Akila::Core::renderer->getSharedCamera();
-	cam->update();
+	net.update();
 }
 
 void PlayState::draw() {
+	auto& cam = Akila::Core::renderer->getSharedCamera();
+	cam->update();
 
 	const auto k = Akila::Core::display->getKeybord();
 	auto shader = Akila::Core::resourcePool->getShader("pbr");
-	if(k->isPressed(Akila::Keyboard::A)) {
+	shader->bind();
+	if(k->isPressed(Akila::Keyboard::Key::A)) {
 		shader->send("tonemapping", 0);
 	}
-	if(k->isPressed(Akila::Keyboard::Z)) {
+	if(k->isPressed(Akila::Keyboard::Key::Z)) {
 		shader->send("tonemapping", 1);
 	}
-	if(k->isPressed(Akila::Keyboard::E)) {
+	if(k->isPressed(Akila::Keyboard::Key::E)) {
 		shader->send("tonemapping", 2);
 	}
 
 	//std::cout << shader->getUniformId("tonemapping") << std::endl;
 
-	if(k->isPressed(Akila::Keyboard::W)) {
+	if(k->isPressed(Akila::Keyboard::Key::W)) {
 		exposure += Akila::Time::delta;
 	}
-	if(k->isPressed(Akila::Keyboard::X)) {
+	if(k->isPressed(Akila::Keyboard::Key::X)) {
 		exposure -= Akila::Time::delta;
 	}
 	{
@@ -77,4 +81,6 @@ void PlayState::draw() {
 		Akila::Core::resourcePool->getMesh("terrain").get()
 	);
 	//*/
+
+	net.draw();
 }

@@ -7,6 +7,8 @@
 
 #include "Akila/graphics/gl/Error.hpp"
 
+#include "Akila/datas/Collection.hpp"
+
 LoadingState::LoadingState(): Akila::State{} {
 	Akila::Core::display->setTitle("camecasselescouilles");
 
@@ -37,11 +39,11 @@ LoadingState::LoadingState(): Akila::State{} {
 
 	Akila::Core::display->getKeybord()->onKeyPress([](Akila::Keyboard::Key key) -> void {
 		switch(key) {
-			case Akila::Keyboard::TAB:
+			case Akila::Keyboard::Key::TAB:
 				Akila::Core::display->setFullscreen(!Akila::Core::display->isFullscreen());
 				break;
 
-			case Akila::Keyboard::ESC:
+			case Akila::Keyboard::Key::ESC:
 				Akila::Core::display->close();
 				break;
 		}

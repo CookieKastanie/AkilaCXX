@@ -37,7 +37,7 @@ int Core::run(int argc, char *argv[], void (*init)(void)) {
 
 	init();
 
-	Time::update();
+	/*Time::update();
 	State *currentState = nullptr;
 	while(!display->shouldClose()) {
 		Time::update();
@@ -47,6 +47,34 @@ int Core::run(int argc, char *argv[], void (*init)(void)) {
 		currentState->update();
 		renderer->prepare();
 		currentState->draw();
+		renderer->finish();
+
+		display->swapBuffers();
+		display->beforePollEvent();
+		glfwPollEvents();
+	}*/
+
+
+	Time::update();
+	float accumulator = 0;
+
+	while(!display->shouldClose()) {
+		Time::update();
+		taskManager->flushOne();
+
+		accumulator += Time::delta;
+		while(accumulator >= Time::fixedDelta) {
+			//display->beforePollEvent();
+			//glfwPollEvents();
+
+			stateManager->getCurrentState()->update();
+			accumulator -= Time::fixedDelta;
+		}
+
+		Time::mix = accumulator / Time::fixedDelta;
+
+		renderer->prepare();
+		stateManager->getCurrentState()->draw();
 		renderer->finish();
 
 		display->swapBuffers();

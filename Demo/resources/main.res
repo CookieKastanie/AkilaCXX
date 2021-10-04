@@ -45,6 +45,13 @@ shader {
 	uniform: cubemapTexture = i[0]
 }
 
+shader {
+	name: netShader
+	src: shaders/netShader.glsl
+
+	uniform: color = [1, 0, 0]
+}
+
 ////////////////////////////////////////////////////////////////////////////////////
 
 texture {

@@ -13,24 +13,29 @@ namespace Akila {
             GLenum kind;
             int length;
             GLenum usage;
+            GLenum dataType;
 
         public:
-            enum Usage: GLenum {
+            enum class Usage: GLenum {
                 STATIC = GL_STATIC_DRAW,
                 DYNAMIC = GL_DYNAMIC_DRAW
             };
 
-            enum Type: GLenum {
+            enum class Type: GLenum {
                 FLOAT = GL_FLOAT,
                 UNSIGNED_SHORT = GL_UNSIGNED_SHORT,
+                UNSIGNED_INT = GL_UNSIGNED_INT,
                 INT = GL_INT
             };
 
-            Buffer(unsigned int kind, unsigned int usage);
+            Buffer(unsigned int kind, Usage usage);
             virtual ~Buffer();
             virtual void bind() const;
             virtual void setRawData(const void *data, int size, int offset = 0);
             virtual int getLength() const;
+
+            void setDataType(Type type);
+            Type getDataType() const;
     };
 
     class VBO: public Buffer {
@@ -39,7 +44,7 @@ namespace Akila {
             GLuint location;
 
         public:
-            VBO(int tupleSize, unsigned int attributeLocation, Usage usage = STATIC);
+            VBO(int tupleSize, unsigned int attributeLocation, Usage usage = Usage::STATIC);
 
             template<typename T>
             void setData(const std::vector<T> &data);
@@ -47,7 +52,15 @@ namespace Akila {
             int getTupleSize() const;
             unsigned int getLocation() const;
 
-            void bindToArrayBuffer(Type dataType = FLOAT) const;
+            void bindToArrayBuffer() const;
+    };
+
+    class IBO: public Buffer {
+    public:
+        IBO(Usage usage = Usage::STATIC);
+
+        template<typename T>
+        void setData(const std::vector<T> &data);
     };
 
     class UBO: public Buffer {
@@ -57,7 +70,7 @@ namespace Akila {
             unsigned int bindingPoint;
 
         public:
-            UBO(unsigned int size, Buffer::Usage usage = DYNAMIC);
+            UBO(unsigned int size, Buffer::Usage usage = Usage::DYNAMIC);
 
             void setData(const void *data);
             unsigned int getBindingPoint();

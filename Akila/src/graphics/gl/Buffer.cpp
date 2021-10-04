@@ -2,7 +2,8 @@
 
 using namespace Akila;
 
-Buffer::Buffer(unsigned int kind, unsigned int usage): kind{kind}, length{-1}, usage{usage} {
+Buffer::Buffer(unsigned int kind, Usage usage): kind{kind}, length{-1},
+usage{ static_cast<GLenum>(usage) }, dataType{static_cast<GLenum>(Type::FLOAT)} {
 	glGenBuffers(1, &id);
 }
 
@@ -22,6 +23,14 @@ void Buffer::setRawData(const void *data, int size, int offset) {
 
 int Buffer::getLength() const {
 	return length;
+}
+
+void Buffer::setDataType(Type type) {
+	dataType = static_cast<GLenum>(type);
+}
+
+Buffer::Type Buffer::getDataType() const {
+	return static_cast<Type>(dataType);
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////////////
@@ -51,11 +60,27 @@ unsigned int VBO::getLocation() const {
 	return location;
 }
 
-void VBO::bindToArrayBuffer(Type dataType) const {
+void VBO::bindToArrayBuffer() const {
 	bind();
-	glVertexAttribPointer(getLocation(), getTupleSize(), dataType, GL_FALSE, 0, 0);
+	glVertexAttribPointer(getLocation(), getTupleSize(), static_cast<GLenum>(dataType), GL_FALSE, 0, 0);
 	glEnableVertexAttribArray(getLocation());
 }
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+IBO::IBO(Usage usage): Buffer{GL_ELEMENT_ARRAY_BUFFER, usage} {
+	setDataType(Type::UNSIGNED_SHORT);
+}
+
+template<typename T>
+void IBO::setData(const std::vector<T> &data) {
+	setRawData(data.data(), (int)data.size() * sizeof(T));
+	length = (int)data.size();
+}
+
+// declaration de tous les templates possibles
+template void IBO::setData(const std::vector<unsigned short> &data);
+template void IBO::setData(const std::vector<unsigned int> &data);
 
 /////////////////////////////////////////////////////////////////////////////////////////////////
 

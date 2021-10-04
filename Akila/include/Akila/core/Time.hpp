@@ -2,11 +2,18 @@
 
 namespace Akila {
 	class Time {
-		public:
-			static float last;
-			static float now;
-			static float delta;
+	public:
+		static float last;
+		static float now;
+		static float delta;
+		static float maxDelta;
 
-			static void update();
+		static float fixedDelta;
+		static float mix;
+
+	private:
+		friend class Core;
+
+		static void update();
 	};
 }

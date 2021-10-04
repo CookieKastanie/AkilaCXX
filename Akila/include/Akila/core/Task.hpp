@@ -32,7 +32,7 @@ namespace Akila {
 		std::mutex queueMutex;
 		std::queue<std::shared_ptr<Task>> tasks;
 
-		void start(TaskManager *taskManager, unsigned int max = 4);
+		void start(TaskManager *taskManager, unsigned int max = 99);
 		void submit(std::shared_ptr<Task> task);
 
 	public:
