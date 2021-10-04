@@ -14,6 +14,8 @@
 #include <memory>
 #include <iostream>
 
+#define LOG(x) std::cout << x << std::endl;
+
 namespace Akila {
 	class Core {
 		private:
