@@ -53,7 +53,7 @@ void PlayLayer::draw() {
 
 	Akila::Core::renderer->useDefaultFrameBuffer();
 
-	Akila::Core::renderer->enable(Akila::Renderer::DEPTH_TEST);
+	Akila::Core::renderer->enable(Akila::Renderer::Capability::DEPTH_TEST);
 	Akila::Core::renderer->clearDepth();
 
 	glDepthFunc(GL_LEQUAL);
@@ -63,7 +63,7 @@ void PlayLayer::draw() {
 	);
 	glDepthFunc(GL_LESS);
 
-	Akila::Core::renderer->enable(Akila::Renderer::CULL_FACE);
+	Akila::Core::renderer->enable(Akila::Renderer::Capability::CULL_FACE);
 
 	Akila::Core::renderer->render(
 		Akila::Core::resourcePool->getMaterial("sword").get(),

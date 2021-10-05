@@ -14,7 +14,7 @@ namespace Akila {
 		int height;
 
 	public:
-		enum Format: GLenum {
+		enum class Format: GLenum {
 			DEPTH_COMPONENT = GL_DEPTH_COMPONENT,
 			DEPTH_STENCIL = GL_DEPTH_STENCIL,
 			RED = GL_RED,
@@ -29,7 +29,7 @@ namespace Akila {
 			RGBA16F = GL_RGBA16F
 		};
 
-		enum Type: GLenum {
+		enum class Type: GLenum {
 			UNSIGNED_BYTE = GL_UNSIGNED_BYTE,
 			INT = GL_INT,
 			FLOAT = GL_FLOAT
@@ -47,13 +47,13 @@ namespace Akila {
 		int getWidth() const;
 		int getHeight() const;
 
-		enum WrapMode: GLenum {
+		enum class WrapMode: GLint {
 			CLAMP_TO_EDGE = GL_CLAMP_TO_EDGE,
 			CLAMP_TO_BORDER = GL_CLAMP_TO_BORDER,
 			MIRRORED_REPEAT = GL_MIRRORED_REPEAT,
 			REPEAT = GL_REPEAT
 		};
-		enum FilterMode: GLenum {
+		enum class FilterMode: GLint {
 			NEAREST = GL_NEAREST,
 			LINEAR = GL_LINEAR,
 			NEAREST_MIPMAP_NEAREST = GL_NEAREST_MIPMAP_NEAREST,
@@ -81,19 +81,19 @@ namespace Akila {
 
 	class Texture: public TextureBuffer {
 	public:
-		Texture(Format internalFormat = RGBA);
+		Texture(Format internalFormat = Format::RGBA);
 	};
 
 	class DepthTexture: public TextureBuffer {
 	public:
-		DepthTexture(Format internalFormat = DEPTH_COMPONENT);
+		DepthTexture(Format internalFormat = Format::DEPTH_COMPONENT);
 	};
 
 	class CubeMapTexture: public TextureBuffer {
 	public:
-		CubeMapTexture(Format internalFormat = RGB);
+		CubeMapTexture(Format internalFormat = Format::RGB);
 
-		enum Face: unsigned int {
+		enum class Face: unsigned int {
 			FRONT = GL_TEXTURE_CUBE_MAP_NEGATIVE_Z,
 			BACK = GL_TEXTURE_CUBE_MAP_POSITIVE_Z,
 			LEFT = GL_TEXTURE_CUBE_MAP_NEGATIVE_X,

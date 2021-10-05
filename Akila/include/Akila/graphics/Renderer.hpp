@@ -32,7 +32,7 @@ namespace Akila {
 			void affectUBOToShader(Shader *shader);
 
 
-			enum Capability: GLenum {
+			enum class Capability: GLenum {
 				BLEND = GL_BLEND,
 				DEPTH_TEST = GL_DEPTH_TEST,
 				TEXTURE_CUBE_MAP_SEAMLESS = GL_TEXTURE_CUBE_MAP_SEAMLESS,
@@ -43,7 +43,7 @@ namespace Akila {
 			void disable(Capability cap);
 
 
-			enum BlendFactor: GLenum {
+			enum class BlendFactor: GLenum {
 				ZERO = GL_ZERO,
 				ONE = GL_ONE,
 				SRC_COLOR = GL_SRC_COLOR,

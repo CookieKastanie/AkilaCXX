@@ -92,7 +92,12 @@ void FrameBuffer::blitToDisplay(int unit, Display *display, TextureBuffer::Filte
     glReadBuffer(GL_COLOR_ATTACHMENT0 + unit);
 
     TextureBuffer *t = textures[unit].get();
-    glBlitFramebuffer(0, 0, t->getWidth(), t->getHeight(), 0, 0, display->getWidth(), display->getHeight(), GL_COLOR_BUFFER_BIT, filter);
+    glBlitFramebuffer(0, 0,
+        t->getWidth(), t->getHeight(),
+        0, 0,
+        display->getWidth(), display->getHeight(),
+        GL_COLOR_BUFFER_BIT, static_cast<GLenum>(filter)
+    );
 }
 
 void FrameBuffer::blitTo(int seflUnit, FrameBuffer *fb, TextureBuffer::FilterMode filter) {
@@ -102,7 +107,12 @@ void FrameBuffer::blitTo(int seflUnit, FrameBuffer *fb, TextureBuffer::FilterMod
 
     TextureBuffer *selfTex = textures[seflUnit].get();
     TextureBuffer *otherTex = fb->textures[0].get();
-    glBlitFramebuffer(0, 0, selfTex->getWidth(), selfTex->getHeight(), 0, 0, otherTex->getWidth(), otherTex->getHeight(), GL_COLOR_BUFFER_BIT, filter);
+    glBlitFramebuffer(
+        0, 0,
+        selfTex->getWidth(), selfTex->getHeight(),
+        0, 0, otherTex->getWidth(), otherTex->getHeight(),
+        GL_COLOR_BUFFER_BIT, static_cast<GLenum>(filter)
+    );
 }
 
 void FrameBuffer::resizeAll(int width, int height) {

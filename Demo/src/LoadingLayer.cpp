@@ -56,7 +56,7 @@ void LoadingLayer::update() {}
 void LoadingLayer::draw() {
 	Akila::Core::renderer->useDefaultFrameBuffer();
 
-	Akila::Core::renderer->disable(Akila::Renderer::DEPTH_TEST);
-	Akila::Core::renderer->disable(Akila::Renderer::CULL_FACE);
+	Akila::Core::renderer->disable(Akila::Renderer::Capability::DEPTH_TEST);
+	Akila::Core::renderer->disable(Akila::Renderer::Capability::CULL_FACE);
 	Akila::Core::renderer->render(Akila::Core::resourcePool->getMaterial("loadingScreen").get(), defaultTriangle.get());
 }

@@ -40,8 +40,8 @@ private:
 
 public:
 	TextureTask(Texture *texture, const std::string &path, const bool generateMips):
-		fileFormat{TextureBuffer::RGBA},
-		dataType{TextureBuffer::UNSIGNED_BYTE},
+		fileFormat{TextureBuffer::Format::RGBA},
+		dataType{TextureBuffer::Type::UNSIGNED_BYTE},
 		textureNrChannels{3},
 		fwidth{1},
 		fheight{1},
@@ -53,17 +53,17 @@ public:
 
 	void onBackground() override {
 		stbi_set_flip_vertically_on_load(true);
-		if(texture->getInternalFormat() == TextureBuffer::RGB16F || texture->getInternalFormat() == TextureBuffer::RGBA16F) {// <- pas fou
+		if(texture->getInternalFormat() == TextureBuffer::Format::RGB16F || texture->getInternalFormat() == TextureBuffer::Format::RGBA16F) {// <- pas fou
 			data = stbi_loadf(FileSystem::path(path).c_str(), &fwidth, &fheight, &textureNrChannels, 0);
-			dataType = TextureBuffer::FLOAT;
+			dataType = TextureBuffer::Type::FLOAT;
 		} else {
 			data = stbi_load(FileSystem::path(path).c_str(), &fwidth, &fheight, &textureNrChannels, 0);
 		}
 
 		switch(textureNrChannels) {
-			case 1: fileFormat = TextureBuffer::RED; break;
-			case 3: fileFormat = TextureBuffer::RGB; break;
-			case 4: fileFormat = TextureBuffer::RGBA; break;
+			case 1: fileFormat = TextureBuffer::Format::RED; break;
+			case 3: fileFormat = TextureBuffer::Format::RGB; break;
+			case 4: fileFormat = TextureBuffer::Format::RGBA; break;
 		}
 	}
 

@@ -14,13 +14,13 @@ Renderer::Renderer(std::shared_ptr<Display> &display): display{display} {
 		camera->onResize(this->display->getWidth(), this->display->getHeight());
 	});
 
-	enable(BLEND);
-	blendFunc(SRC_ALPHA, ONE_MINUS_SRC_ALPHA);
-	//enable(DEPTH_TEST);
-	enable(CULL_FACE);
+	enable(Capability::BLEND);
+	blendFunc(BlendFactor::SRC_ALPHA, BlendFactor::ONE_MINUS_SRC_ALPHA);
+	enable(Capability::DEPTH_TEST);
+	enable(Capability::CULL_FACE);
 	glFrontFace(GL_CCW);
 	glCullFace(GL_BACK);
-	enable(TEXTURE_CUBE_MAP_SEAMLESS);
+	enable(Capability::TEXTURE_CUBE_MAP_SEAMLESS);
 }
 
 void Renderer::prepare() {
@@ -55,15 +55,15 @@ void Renderer::affectUBOToShader(Shader *shader) {
 }
 
 void Renderer::enable(Capability cap) {
-	glEnable(cap);
+	glEnable(static_cast<GLenum>(cap));
 }
 
 void Renderer::disable(Capability cap) {
-	glDisable(cap);
+	glDisable(static_cast<GLenum>(cap));
 }
 
 void Renderer::blendFunc(BlendFactor sfactor, BlendFactor dfactor) {
-	glBlendFunc(sfactor, dfactor);
+	glBlendFunc(static_cast<GLenum>(sfactor), static_cast<GLenum>(dfactor));
 }
 
 void Renderer::clearDepth() {
