@@ -7,6 +7,62 @@
 
 using namespace Akila;
 
+ResourcePoolV2::ResourcePoolV2(const std::shared_ptr<Renderer> &renderer) {
+
+}
+
+ResourceReference<Shader> ResourcePoolV2::getShader(const std::string &name) {
+	return shaders[name].createReference();
+}
+
+ResourceReference<Texture> ResourcePoolV2::getTexture(const std::string &name) {
+	return textures[name].createReference();
+}
+
+ResourceReference<CubeMapTexture> ResourcePoolV2::getCubeMapTexture(const std::string &name) {
+	return cubeMapTextures[name].createReference();
+}
+
+ResourceReference<Material> ResourcePoolV2::getMaterial(const std::string &name) {
+	return materials[name].createReference();
+}
+
+ResourceReference<Mesh> ResourcePoolV2::getMesh(const std::string &name) {
+	return meshs[name].createReference();
+}
+
+void ResourcePoolV2::setShader(const std::string &name, const Shader *shader) {
+	shaders[name].setResource(shader);
+}
+
+void ResourcePoolV2::setTexture(const std::string &name, const Texture *texture) {
+	textures[name].setResource(texture);
+}
+
+void ResourcePoolV2::setCubeMapTexture(const std::string &name, const CubeMapTexture *cubeMapTexture) {
+	cubeMapTextures[name].setResource(cubeMapTexture);
+}
+
+void ResourcePoolV2::setMaterial(const std::string &name, const Material *material) {
+	materials[name].setResource(material);
+}
+
+void ResourcePoolV2::setMesh(const std::string &name, const Mesh *mesh) {
+	meshs[name].setResource(mesh);
+}
+
+
+
+
+
+
+
+
+
+
+///////////////////////////////////////////////////////////////////////////////////////
+
+
 ResourcePool::ResourcePool(const std::shared_ptr<Renderer> &renderer): renderer{renderer} {
 	defaultShader = std::make_shared<Shader>("void main(){gl_Position=vec4(0.);}", "void main(){gl_FragColor=vec4(1.);}");
 
