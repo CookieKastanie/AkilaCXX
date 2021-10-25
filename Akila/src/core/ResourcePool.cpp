@@ -7,8 +7,35 @@
 
 using namespace Akila;
 
-ResourcePoolV2::ResourcePoolV2(const std::shared_ptr<Renderer> &renderer) {
+ResourcePoolV2::ResourcePoolV2(const std::shared_ptr<Renderer> &renderer): renderer{renderer} {
+	defaultShader.setResource(new Shader{"void main(){gl_Position=vec4(0.);}", "void main(){gl_FragColor=vec4(1.);}"});
+	defaultTexture.setResource(new Texture{});
+	defaultCubeMapTexture.setResource(new CubeMapTexture{});
+	defaultMaterial.setResource(new Material{});
+	//defaultMaterial.createReference()->setShader(defaultShader.createReference());
+	defaultMesh.setResource(new Mesh{});
 
+	auto meshRef = defaultMesh.createReference();
+	{
+		auto vertex = std::make_shared<Akila::VBO>(2, ShaderBuilder::Attributes::A_POSITION);
+		vertex->setData(std::vector<glm::vec2>({
+			{-1, -1}, {1, -1}, {1, 1},
+			{-1, -1}, {1, 1}, {-1, 1}
+		}));
+
+		auto uv = std::make_shared<Akila::VBO>(2, ShaderBuilder::Attributes::A_UV);
+		uv->setData(std::vector<glm::vec2>({
+			{0, 0}, {1, 0}, {1, 1},
+			{0, 0}, {1, 1}, {0, 1}
+		}));
+
+		meshRef->addVBO(vertex);
+		meshRef->addVBO(uv);
+	}
+
+	meshRef->prepare();
+
+	//setMesh("akila_triangle", defaultMesh);
 }
 
 ResourceReference<Shader> ResourcePoolV2::getShader(const std::string &name) {
@@ -31,32 +58,26 @@ ResourceReference<Mesh> ResourcePoolV2::getMesh(const std::string &name) {
 	return meshs[name].createReference();
 }
 
-void ResourcePoolV2::setShader(const std::string &name, const Shader *shader) {
+void ResourcePoolV2::setShader(const std::string &name, Shader *shader) {
 	shaders[name].setResource(shader);
 }
 
-void ResourcePoolV2::setTexture(const std::string &name, const Texture *texture) {
+void ResourcePoolV2::setTexture(const std::string &name, Texture *texture) {
 	textures[name].setResource(texture);
 }
 
-void ResourcePoolV2::setCubeMapTexture(const std::string &name, const CubeMapTexture *cubeMapTexture) {
+void ResourcePoolV2::setCubeMapTexture(const std::string &name, CubeMapTexture *cubeMapTexture) {
 	cubeMapTextures[name].setResource(cubeMapTexture);
 }
 
-void ResourcePoolV2::setMaterial(const std::string &name, const Material *material) {
+void ResourcePoolV2::setMaterial(const std::string &name, Material *material) {
 	materials[name].setResource(material);
 }
 
-void ResourcePoolV2::setMesh(const std::string &name, const Mesh *mesh) {
+void ResourcePoolV2::setMesh(const std::string &name, Mesh *mesh) {
 	meshs[name].setResource(mesh);
 }
-
-
-
-
-
-
-
+//*/
 
 
 

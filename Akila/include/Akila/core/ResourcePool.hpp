@@ -10,59 +10,18 @@
 #include "Akila/graphics/Renderer.hpp"
 #include "Akila/core/Task.hpp"
 
+#include "Akila/core/ResourceReference.hpp"
+
 namespace Akila {
-	template<class T>
-	class ResourceReference;
-
-	template<class T>
-	class ResourceAnchor {
-	private:
-		friend class ResourceReference<T>;
-
-		T *resource;
-		int refCount;
-
-	public:
-		void setResource(const T *res) {
-			resource = res;
-		}
-
-		~ResourceAnchor() {
-			delete resource;
-		}
-
-		ResourceReference<T> createReference() {
-			++refCount;
-			return { this };
-		}
-
-		bool haveReferences() {
-			return refCount != 0;
-		}
-	};
-
-	template<class T>
-	class ResourceReference {
-	private:
-		friend class ResourceAnchor<T>;
-
-		ResourceAnchor<T> *ra;
-		ResourceReference(ResourceAnchor<T> *ra);
-
-	public:
-		~ResourceReference() {
-			--ra->refCount;
-		}
-
-		T *operator->() {
-			return ra->resource;
-		}
-	};
-
-
 	class ResourcePoolV2 {
 	private:
 		std::shared_ptr<Renderer> renderer;
+
+		ResourceAnchor<Shader> defaultShader;
+		ResourceAnchor<Texture> defaultTexture;
+		ResourceAnchor<CubeMapTexture> defaultCubeMapTexture;
+		ResourceAnchor<Material> defaultMaterial;
+		ResourceAnchor<Mesh> defaultMesh;
 
 		std::map<std::string, ResourceAnchor<Shader>> shaders;
 		std::map<std::string, ResourceAnchor<Texture>> textures;
@@ -79,11 +38,11 @@ namespace Akila {
 		ResourceReference<Material> getMaterial(const std::string &name);
 		ResourceReference<Mesh> getMesh(const std::string &name);
 
-		void setShader(const std::string &name, const Shader *shader);
-		void setTexture(const std::string &name, const Texture *texture);
-		void setCubeMapTexture(const std::string &name, const CubeMapTexture *cubeMapTexture);
-		void setMaterial(const std::string &name, const Material *material);
-		void setMesh(const std::string &name, const Mesh *mesh);
+		void setShader(const std::string &name, Shader *shader);
+		void setTexture(const std::string &name, Texture *texture);
+		void setCubeMapTexture(const std::string &name, CubeMapTexture *cubeMapTexture);
+		void setMaterial(const std::string &name, Material *material);
+		void setMesh(const std::string &name, Mesh *mesh);
 	};
 
 	///////////////////////////////////////////////////////////////////////////////////
