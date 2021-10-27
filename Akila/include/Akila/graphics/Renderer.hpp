@@ -63,6 +63,21 @@ namespace Akila {
 
 			void blendFunc(BlendFactor sfactor, BlendFactor dfactor);
 
+			enum class DepthFunc: GLenum {
+				NEVER = GL_NEVER,
+				LESS = GL_LESS,
+				EQUAL = GL_EQUAL,
+				LEQUAL = GL_LEQUAL,
+				GREATER = GL_GREATER,
+				NOTEQUAL = GL_NOTEQUAL,
+				GEQUAL = GL_GEQUAL,
+				ALWAYS = GL_ALWAYS
+			};
+
+			void depthFunc(DepthFunc func);
+
+			void setClearColor(float r, float g, float b, float a = 1.0);
+			void clear();
 			void clearDepth();
 
 			void render(const Material *material, const VAO *vao);

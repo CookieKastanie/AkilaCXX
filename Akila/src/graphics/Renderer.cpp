@@ -66,6 +66,18 @@ void Renderer::blendFunc(BlendFactor sfactor, BlendFactor dfactor) {
 	glBlendFunc(static_cast<GLenum>(sfactor), static_cast<GLenum>(dfactor));
 }
 
+void Renderer::depthFunc(DepthFunc func) {
+	glDepthFunc(static_cast<GLenum>(func));
+}
+
+void Renderer::setClearColor(float r, float g, float b, float a) {
+	glClearColor(r, g, b, a);
+}
+
+void Renderer::clear() {
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+}
+
 void Renderer::clearDepth() {
 	glClear(GL_DEPTH_BUFFER_BIT);
 }

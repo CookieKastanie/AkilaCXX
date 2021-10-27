@@ -56,12 +56,12 @@ void PlayLayer::draw() {
 	Akila::Core::renderer->enable(Akila::Renderer::Capability::DEPTH_TEST);
 	Akila::Core::renderer->clearDepth();
 
-	glDepthFunc(GL_LEQUAL);
+	Akila::Core::renderer->depthFunc(Akila::Renderer::DepthFunc::LEQUAL);
 	Akila::Core::renderer->render(
 		Akila::Core::resourcePool->getMaterial("skybox").get(),
 		Akila::Core::resourcePool->getMesh("invertedCube").get()
 	);
-	glDepthFunc(GL_LESS);
+	Akila::Core::renderer->depthFunc(Akila::Renderer::DepthFunc::LESS);
 
 	Akila::Core::renderer->enable(Akila::Renderer::Capability::CULL_FACE);
 

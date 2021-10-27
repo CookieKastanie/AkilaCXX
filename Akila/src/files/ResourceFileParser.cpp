@@ -151,6 +151,8 @@ void ResourceFileParser::createShader(const ShaderState &shaderState) {
 			shader->sendRawFloat(uid, shaderState.uniformsValues[i].values.data(), (int)shaderState.uniformsValues[i].values.size());
 		}
 	}
+
+	rp->renderer->affectUBOToShader(shader.get());
 }
 
 void ResourceFileParser::createMaterial(MaterialState &materialState) {
@@ -161,8 +163,6 @@ void ResourceFileParser::createMaterial(MaterialState &materialState) {
 	if(m->getShader() == nullptr) {
 		std::cerr << materialState.name << " material don't have shader program !" << std::endl;
 		m->setShader(rp->defaultShader);
-	} else {
-		rp->renderer->affectUBOToShader(m->getShader());
 	}
 
 	for(int i = 0; i < materialState.uniformsValues.size(); ++i) {
