@@ -9,6 +9,8 @@
 namespace Akila {
 	class Display {
 		private:
+			friend class Core;
+
 			GLFWwindow *window;
 			int width;
 			int height;

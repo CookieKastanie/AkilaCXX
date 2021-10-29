@@ -26,6 +26,14 @@ int Core::run(int argc, char *argv[], void (*init)(void)) {
 		std::exit(EXIT_FAILURE);
 	}
 
+#ifdef IMGUI
+	IMGUI_CHECKVERSION();
+	ImGui::CreateContext();
+	ImGui_ImplGlfw_InitForOpenGL(display->window, true);
+	ImGui_ImplOpenGL3_Init("#version 130");
+	ImGui::StyleColorsClassic();
+#endif
+
 	glGetError(); // bruh
 
 	Shader::funcInit();
@@ -76,6 +84,15 @@ int Core::run(int argc, char *argv[], void (*init)(void)) {
 		renderer->prepare();
 		layerManager->draw();
 		renderer->finish();
+
+#ifdef IMGUI
+		ImGui_ImplOpenGL3_NewFrame();
+		ImGui_ImplGlfw_NewFrame();
+		ImGui::NewFrame();
+		layerManager->drawImGui();
+		ImGui::Render();
+		ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+#endif
 
 		display->swapBuffers();
 		display->beforePollEvent();

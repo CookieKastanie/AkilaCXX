@@ -1,6 +1,10 @@
 #include "Akila/core/Display.hpp"
 #include <iostream>
 
+#ifdef IMGUI
+#include "imgui/imgui.h"
+#endif
+
 using namespace Akila;
 
 Display::Display() {
@@ -51,6 +55,10 @@ Display::Display() {
 	});
 
 	glfwSetMouseButtonCallback(window, [](GLFWwindow *window, int button, int action, int mods) -> void {
+#ifdef IMGUI
+		if(ImGui::GetIO().WantCaptureMouse) return;
+#endif
+
 		Display *self = (Display *)glfwGetWindowUserPointer(window);
 
 		Mouse::Key &&currentButton = (Mouse::Key)button;
@@ -60,11 +68,19 @@ Display::Display() {
 	});
 
 	glfwSetCursorPosCallback(window, [](GLFWwindow *window, double xpos, double ypos) -> void {
+#ifdef IMGUI
+		if(ImGui::GetIO().WantCaptureMouse) return;
+#endif
+
 		Display *self = (Display *)glfwGetWindowUserPointer(window);
 		self->mouse.setPosition((float)xpos, (float)ypos);
 	});
 
 	glfwSetScrollCallback(window, [](GLFWwindow *window, double xoffset, double yoffset) -> void {
+#ifdef IMGUI
+		if(ImGui::GetIO().WantCaptureMouse) return;
+#endif
+
 		Display *self = (Display *)glfwGetWindowUserPointer(window);
 		self->mouse.setScrollOffset((float)xoffset, (float)yoffset);
 	});

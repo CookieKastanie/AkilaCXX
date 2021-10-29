@@ -2,7 +2,7 @@
 
 #include "Akila/graphics/pbr/Environment.hpp"
 #include "Akila/graphics/gl/Texture.hpp"
-
+#include "imgui/imgui.h"
 
 #include "Akila/graphics/gl/Error.hpp"
 
@@ -83,4 +83,9 @@ void PlayLayer::draw() {
 	//*/
 
 	net.draw();
+}
+
+void PlayLayer::drawImGui() {
+	ImGui::Begin("WoulaTest");
+	ImGui::End();
 }

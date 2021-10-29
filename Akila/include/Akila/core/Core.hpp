@@ -14,6 +14,12 @@
 #include <memory>
 #include <iostream>
 
+#ifdef IMGUI
+#include "imgui/imgui.h"
+#include "imgui/imgui_impl_glfw.h"
+#include "imgui/imgui_impl_opengl3.h"
+#endif
+
 #define LOG(x) std::cout << x << std::endl;
 
 namespace Akila {

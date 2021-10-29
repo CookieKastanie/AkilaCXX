@@ -18,4 +18,5 @@ public:
 
 	virtual void update() override;
 	virtual void draw() override;
+	virtual void drawImGui() override;
 };

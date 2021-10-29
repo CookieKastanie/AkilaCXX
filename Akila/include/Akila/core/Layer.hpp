@@ -24,6 +24,11 @@ namespace Akila {
 
 		virtual void update();
 		virtual void draw();
+
+		//#ifdef IMGUI
+		virtual void drawImGui();
+		//#endif
+		
 	};
 
 	class LayerManager {
@@ -40,5 +45,9 @@ namespace Akila {
 		void remove(Layer *layer);
 		void update();
 		void draw();
+
+		#ifdef IMGUI
+		void drawImGui();
+		#endif
 	};
 }

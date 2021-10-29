@@ -2,13 +2,17 @@
 
 using namespace Akila;
 
-Layer::Layer(): index{-1} {}
+Layer::Layer(): index{-1}, depth{PreferredDepth::MIDDLE} {}
 
 Layer::~Layer() {}
 
 void Layer::update() {}
 
 void Layer::draw() {}
+
+//#ifdef IMGUI
+void Layer::drawImGui() {}
+//#endif
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -65,3 +69,9 @@ void LayerManager::update() {
 void LayerManager::draw() {
 	for(const auto &layer : layers) layer->draw();
 }
+
+#ifdef IMGUI
+void LayerManager::drawImGui() {
+	for(const auto &layer : layers) layer->drawImGui();
+}
+#endif
