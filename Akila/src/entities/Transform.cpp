@@ -2,7 +2,12 @@
 
 using namespace Akila;
 
-Transform::Transform(): position{0, 0, 0}, rotation{1, 0, 0, 0}, matrix{1} {}
+Transform::Transform(): 
+	prevPosition{0, 0, 0}, prevRotation{1, 0, 0, 0},
+	position{0, 0, 0}, rotation{1, 0, 0, 0},
+	matrix{1} {
+
+}
 
 void Transform::translate(float dx, float dy, float dz) {
 	position += glm::vec3{dx, dy, dz};
