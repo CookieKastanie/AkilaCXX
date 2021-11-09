@@ -117,6 +117,10 @@ void Display::setVerticalSync(bool b) {
 	vSync = b;
 }
 
+bool Display::isVerticalSyncEnabled() {
+	return vSync;
+}
+
 bool Display::shouldClose() {
 	return glfwWindowShouldClose(window);
 }

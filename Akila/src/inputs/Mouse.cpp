@@ -23,7 +23,7 @@ glm::vec2 &Mouse::getScroll() {
 }
 
 bool Mouse::isPressed(Key k) const {
-	return keysState[k];
+	return keysState[static_cast<int>(k)];
 }
 
 void Mouse::setPosition(float x, float y) {
@@ -48,7 +48,7 @@ void Mouse::update() {
 }
 
 void Mouse::setKeyState(Key k, bool state) {
-	keysState[k] = state;
+	keysState[static_cast<int>(k)] = state;
 }
 
 void Mouse::onKeyPress(const std::function<void(Key)> &cb) {

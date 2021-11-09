@@ -47,6 +47,10 @@ LoadingLayer::LoadingLayer(): Akila::Layer{} {
 			case Akila::Keyboard::Key::ESC:
 				Akila::Core::display->close();
 				break;
+
+			case Akila::Keyboard::Key::V:
+				Akila::Core::display->setVerticalSync(!Akila::Core::display->isVerticalSyncEnabled());
+				break;
 		}
 	});
 }

@@ -40,7 +40,10 @@ namespace Akila {
 			int getHeight();
 
 			void makeCurrent();
+
 			void setVerticalSync(bool b);
+			bool isVerticalSyncEnabled();
+
 			bool shouldClose();
 			void close();
 			void swapBuffers();

@@ -45,24 +45,6 @@ int Core::run(int argc, char *argv[], void (*init)(void)) {
 
 	init();
 
-	/*Time::update();
-	State *currentState = nullptr;
-	while(!display->shouldClose()) {
-		Time::update();
-		taskManager->flushOne();
-
-		currentState = stateManager->getCurrentState();
-		currentState->update();
-		renderer->prepare();
-		currentState->draw();
-		renderer->finish();
-
-		display->swapBuffers();
-		display->beforePollEvent();
-		glfwPollEvents();
-	}*/
-
-
 	Time::update();
 	float accumulator = 0;
 
@@ -71,10 +53,11 @@ int Core::run(int argc, char *argv[], void (*init)(void)) {
 		taskManager->flushOne();
 
 		accumulator += Time::delta;
-		while(accumulator >= Time::fixedDelta) {
-			//display->beforePollEvent();
-			//glfwPollEvents();
 
+		display->beforePollEvent();
+		glfwPollEvents();
+
+		while(accumulator >= Time::fixedDelta) {
 			layerManager->update();
 			accumulator -= Time::fixedDelta;
 		}
@@ -95,8 +78,6 @@ int Core::run(int argc, char *argv[], void (*init)(void)) {
 #endif
 
 		display->swapBuffers();
-		display->beforePollEvent();
-		glfwPollEvents();
 	}
 
 	return EXIT_SUCCESS;

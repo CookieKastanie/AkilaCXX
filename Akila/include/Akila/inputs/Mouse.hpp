@@ -7,7 +7,7 @@
 namespace Akila {
 	class Mouse {
 	public:
-		enum Key: int {
+		enum class Key: int {
 			LEFT = GLFW_MOUSE_BUTTON_LEFT,
 			RIGHT = GLFW_MOUSE_BUTTON_RIGHT,
 			MIDDLE = GLFW_MOUSE_BUTTON_MIDDLE
