@@ -119,7 +119,7 @@ void brdf(
 }
 
 
-
+/*
 vec3 aces(vec3 x) {
     const float a = 2.51;
     const float b = 0.03;
@@ -129,6 +129,15 @@ vec3 aces(vec3 x) {
 
     x *= 0.7;
     return (x * (a * x + b)) / (x * (c * x + d) + e);
+}*/
+
+vec3 aces(vec3 x) {
+    //0.454545 = 1./2.2
+    return pow((1.03292 * x * (x + 0.0170746)) / (x * x + 0.346855 * x + 0.1175780), vec3(0.454545));
+}
+
+vec3 acesAprox(vec3 x) {
+    return x / (x + 0.238) * 1.064;
 }
 
 vec3 u3(vec3 x) {
@@ -208,14 +217,10 @@ void main() {
     color = vec3(1.0) - exp(-color * exposure);
 
     // tone mapping
-    if(tonemapping == 0) {
-        color = pow(color, vec3(1.0 / gamma));
-    } else if(tonemapping == 1) {
-        color = aces(color);
-        color = pow(color, vec3(1.0 / gamma));
-    } else if(tonemapping == 2) {
-        color = u3(color);
-    }
+    if(tonemapping == 0) color = pow(color, vec3(1.0 / gamma));
+    else if(tonemapping == 1) color = aces(color);
+    else if(tonemapping == 2) color = acesAprox(color);
+    else if(tonemapping == 3) color = u3(color);
 
    
     FragColor = vec4(color, 1.0);

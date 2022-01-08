@@ -33,6 +33,9 @@ void PlayLayer::draw() {
 	if(k->isPressed(Akila::Keyboard::Key::E)) {
 		shader->send("tonemapping", 2);
 	}
+	if(k->isPressed(Akila::Keyboard::Key::R)) {
+		shader->send("tonemapping", 3);
+	}
 
 	//std::cout << shader->getUniformId("tonemapping") << std::endl;
 
