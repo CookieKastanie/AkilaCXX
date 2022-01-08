@@ -127,7 +127,7 @@ vec3 aces(vec3 x) {
     const float d = 0.59;
     const float e = 0.14;
 
-    x *= 0.6;
+    x *= 0.7;
     return (x * (a * x + b)) / (x * (c * x + d) + e);
 }
 
