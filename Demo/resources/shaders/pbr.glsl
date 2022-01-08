@@ -208,10 +208,14 @@ void main() {
     color = vec3(1.0) - exp(-color * exposure);
 
     // tone mapping
-
-    if(tonemapping == 0) color = pow(color, vec3(1.0 / gamma));
-    else if(tonemapping == 1) color = aces(color);
-    else if(tonemapping == 2) color = u3(color);
+    if(tonemapping == 0) {
+        color = pow(color, vec3(1.0 / gamma));
+    } else if(tonemapping == 1) {
+        color = aces(color);
+        color = pow(color, vec3(1.0 / gamma));
+    } else if(tonemapping == 2) {
+        color = u3(color);
+    }
 
    
     FragColor = vec4(color, 1.0);
