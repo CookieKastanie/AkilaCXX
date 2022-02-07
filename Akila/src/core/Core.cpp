@@ -4,7 +4,7 @@ using namespace Akila;
 
 std::shared_ptr<Display> Core::display = nullptr;
 std::shared_ptr<LayerManager> Core::layerManager = nullptr;
-std::shared_ptr<TaskManager> Core::taskManager = nullptr;
+std::shared_ptr<CoroutineManager> Core::coroutines = nullptr;
 std::shared_ptr<Renderer> Core::renderer = nullptr;
 std::shared_ptr<ResourcePool> Core::resourcePool = nullptr;
 
@@ -39,9 +39,9 @@ int Core::run(int argc, char *argv[], void (*init)(void)) {
 	Shader::funcInit();
 
 	layerManager = std::make_shared<LayerManager>();
-	taskManager = std::make_shared<TaskManager>();
+	coroutines = std::shared_ptr<CoroutineManager>(new CoroutineManager());
 	renderer = std::make_shared<Renderer>(display);
-	resourcePool = std::make_shared<ResourcePool>(renderer);
+	resourcePool = std::make_shared<ResourcePool>();
 
 	init();
 
@@ -50,7 +50,7 @@ int Core::run(int argc, char *argv[], void (*init)(void)) {
 
 	while(!display->shouldClose()) {
 		Time::update();
-		taskManager->flushOne();
+		coroutines->flushAtFrameStart();
 
 		accumulator += Time::delta;
 
@@ -59,12 +59,14 @@ int Core::run(int argc, char *argv[], void (*init)(void)) {
 
 		while(accumulator >= Time::fixedDelta) {
 			layerManager->update();
+			coroutines->flushAfterFixedUpdate();
 			accumulator -= Time::fixedDelta;
 		}
 
 		Time::mix = accumulator / Time::fixedDelta;
 
 		renderer->prepare();
+		coroutines->flushBeforeDraw();
 		layerManager->draw();
 		renderer->finish();
 

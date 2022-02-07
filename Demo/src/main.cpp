@@ -31,15 +31,10 @@ void *operator new(std::size_t size, const char *file, int line) {
 #define new new(__FILE__, __LINE__)
 //*/
 
-#include "Akila/files/ResourceFile.hpp"
-
 int main(int argc, char *argv[]) {
 	return Akila::Core::run(argc, argv, [](void) {
-		Akila::FileSystem::setResourceFolder("resources"); // path relative to the executable
+		Akila::FileSystem::setResourceFolder("resources");
+		Akila::Core::display->setTitle("Akila");
 		Akila::Core::layerManager->add(new LoadingLayer{});
-		//Akila::Core::display->setFullscreen(true);
-
-		Akila::ResourceFile res;
-		res.unserializeFrom("main.res");
 	});
 }

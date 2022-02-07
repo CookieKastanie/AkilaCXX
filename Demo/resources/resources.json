@@ -1,0 +1,219 @@
+{
+		"shaders": [
+				{
+						"name": "lightSource",
+						"src": "shaders/lightSource.glsl"
+				},
+				{
+						"name": "loadingAnimation",
+						"src": "shaders/loadingAnimation.glsl",
+						"uniforms-f": {
+								"color": [ 1.5, 2.9, 3.5 ]
+						}
+				},
+				{
+						"name": "textureTest",
+						"src": "shaders/textureTest.glsl",
+						"uniforms-i": {
+								"tex": 0
+						}
+				},
+				{
+						"name": "pbr",
+						"src": "shaders/pbr.glsl",
+						"uniforms-f": {
+								"exposure": 1,
+								"gamma": 2.2
+						},
+						"uniforms-i": {
+								"albedoSampler": 0,
+								"normalSampler": 1,
+								"metallicSampler": 2,
+								"roughnessSampler": 3,
+								"aoSampler": 4,
+								"irradianceMap": 5,
+								"prefilterMap": 6,
+								"brdfLUT": 7
+						}
+				},
+				{
+						"name": "skybox",
+						"src": "shaders/skybox.glsl",
+						"uniforms-f": {
+								"exposure": 1,
+								"gamma": 2.2
+						},
+						"uniforms-i": {
+								"cubemapTexture": 0
+						}
+				},
+				{
+						"name": "netShader",
+						"src": "shaders/netShader.glsl",
+						"uniforms-i": {
+								"color": [1, 0, 0]
+						}
+				}
+		],
+		"textures": [
+				{
+						"name": "citron",
+						"src": "textures/citron.png",
+						"format": "RGBA"
+				},
+				{
+						"name": "env",
+						"src": "textures/env.jpg",
+						"format": "RGB"
+				},
+				{
+						"name": "font",
+						"src": "fonts/FredokaOne-Regular.png",
+						"format": "RGBA"
+				},
+				{
+						"name": "sword_A",
+						"src": "textures/sword/sword_A.png",
+						"format": "SRGB",
+						"mips": true,
+						"minFilter": "LINEAR_MIPMAP_LINEAR",
+						"magFilter": "LINEAR"
+				},
+				{
+						"name": "sword_N",
+						"src": "textures/sword/sword_N.png",
+						"format": "RGB",
+						"mips": true,
+						"minFilter": "LINEAR_MIPMAP_LINEAR",
+						"magFilter": "LINEAR"
+				},
+				{
+						"name": "sword_M",
+						"src": "textures/sword/sword_M.png",
+						"format": "RED",
+						"mips": true,
+						"minFilter": "LINEAR_MIPMAP_LINEAR",
+						"magFilter": "LINEAR"
+				},
+				{
+						"name": "sword_R",
+						"src": "textures/sword/sword_R.png",
+						"format": "RED",
+						"mips": true,
+						"minFilter": "LINEAR_MIPMAP_LINEAR",
+						"magFilter": "LINEAR"
+				},
+				{
+						"name": "sword_AO",
+						"src": "textures/sword/sword_AO.png",
+						"format": "RED",
+						"mips": true,
+						"minFilter": "LINEAR_MIPMAP_LINEAR",
+						"magFilter": "LINEAR"
+				},
+				{
+						"name": "terrain_A",
+						"src": "textures/terrain/terrain_A.jpg",
+						"format": "SRGB",
+						"mips": true,
+						"minFilter": "LINEAR_MIPMAP_LINEAR",
+						"magFilter": "LINEAR"
+				},
+				{
+						"name": "terrain_N",
+						"src": "textures/terrain/terrain_N.jpg",
+						"format": "RGB",
+						"mips": true,
+						"minFilter": "LINEAR_MIPMAP_LINEAR",
+						"magFilter": "LINEAR"
+				},
+				{
+						"name": "terrain_M",
+						"src": "textures/terrain/terrain_M.jpg",
+						"format": "RED",
+						"mips": true,
+						"minFilter": "LINEAR_MIPMAP_LINEAR",
+						"magFilter": "LINEAR"
+				},
+				{
+						"name": "terrain_R",
+						"src": "textures/terrain/terrain_R.jpg",
+						"format": "RED",
+						"mips": true,
+						"minFilter": "LINEAR_MIPMAP_LINEAR",
+						"magFilter": "LINEAR"
+				},
+				{
+						"name": "terrain_AO",
+						"src": "textures/terrain/terrain_AO.jpg",
+						"format": "RED",
+						"mips": true,
+						"minFilter": "LINEAR_MIPMAP_LINEAR",
+						"magFilter": "LINEAR"
+				}
+		],
+		"meshs": [
+				{
+						"name": "sword",
+						"src": "meshs/sword.ob"
+				},
+				{
+						"name": "invertedCube",
+						"src": "meshs/invertedCube.ob"
+				},
+				{
+						"name": "terrain",
+						"src": "meshs/terrain.ob"
+				}
+		],
+		"materials": [
+				{
+						"name": "red",
+						"shader": "lightSource",
+						"color": [ 1, 0, 0 ]
+				},
+				{
+						"name": "loadingScreen",
+						"shader": "loadingAnimation"
+				},
+				{
+						"name": "textureTest",
+						"shader": "textureTest",
+						"sword_A": 0
+				},
+				{
+						"name": "sword",
+						"shader": "pbr",
+						"sword_A": 0,
+						"sword_N": 1,
+						"sword_M": 2,
+						"sword_R": 3,
+						"sword_AO": 4,
+						"irradiance": 5,
+						"prefilter": 6,
+						"brdfLUT": 7
+				},
+				{
+						"name": "brdfLUT",
+						"shader": "textureTest",
+						"brdfLUT": 0
+				},
+				{
+						"name": "skybox",
+						"shader": "skybox",
+						"skybox": 0
+				},
+				{
+						"name": "terrain",
+						"shader": "pbr",
+						"terrain_A": 0,
+						"terrain_N": 1,
+						"terrain_M": 2,
+						"terrain_R": 3,
+						"terrain_AO": 4,
+						"irradiance": 5,
+						"prefilter": 6,
+						"brdfLUT": 7
+				}
+		]
+}

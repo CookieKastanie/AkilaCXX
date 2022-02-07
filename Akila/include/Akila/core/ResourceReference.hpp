@@ -29,8 +29,11 @@ namespace Akila {
 
 	public:
 		ResourceAnchor(): resource{ nullptr }, refCount { 0 } {}
-		~ResourceAnchor() { delete resource; }
-		void setResource(T *res) { resource = res; }
+		~ResourceAnchor() { if(resource != nullptr) delete resource; }
+		void setResource(T *res) {
+			if(resource != nullptr) delete resource;
+			resource = res;
+		}
 		
 		ResourceReference<T> createReference() {
 			++refCount;

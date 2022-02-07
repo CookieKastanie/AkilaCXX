@@ -5,7 +5,7 @@
 
 #include "Akila/core/Display.hpp"
 #include "Akila/core/Layer.hpp"
-#include "Akila/core/Task.hpp"
+#include "Akila/core/Coroutine.hpp"
 #include "Akila/core/Time.hpp"
 #include "Akila/graphics/Renderer.hpp"
 #include "Akila/files/FileSystem.hpp"
@@ -30,7 +30,7 @@ namespace Akila {
 		public:
 			static std::shared_ptr<Display> display;
 			static std::shared_ptr<LayerManager> layerManager;
-			static std::shared_ptr<TaskManager> taskManager;
+			static std::shared_ptr<CoroutineManager> coroutines;
 			static std::shared_ptr<Renderer> renderer;
 			static std::shared_ptr<ResourcePool> resourcePool;
 

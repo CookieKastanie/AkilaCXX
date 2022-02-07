@@ -1,5 +1,5 @@
 #include "Akila/files/ResourceFileParser.hpp"
-
+/*/
 #include "Akila/files/FileSystem.hpp"
 #include "Akila/files/Loader.hpp"
 #include "Akila/graphics/gl/Texture.hpp"
@@ -353,3 +353,4 @@ void ResourceFileParser::fromFile(const std::string &path) {
 	loadingInstance->fileEnd = true;
 	loadingInstance->check();
 }
+//*/

@@ -13,6 +13,7 @@ enum class State: int {
 };
 
 void ResourceFile::unserializeFrom(const std::string path) {
+	/*/
 	std::ifstream file;
 	file.open(FileSystem::path(path).c_str(), std::ifstream::in);
 	if(!file.good()) {
@@ -42,4 +43,5 @@ void ResourceFile::unserializeFrom(const std::string path) {
 
 		}
 	}
+	//*/
 }

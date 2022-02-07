@@ -8,9 +8,6 @@
 
 class LoadingLayer: public Akila::Layer {
 	public:
-		std::shared_ptr<Akila::Mesh> defaultTriangle;
-
-	public:
 		LoadingLayer();
 
 		virtual void update() override;
