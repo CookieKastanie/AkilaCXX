@@ -45,7 +45,55 @@ TextureBuffer::FilterMode ResourceFileLoader::stringToFilterMode(std::string con
 	return TextureBuffer::FilterMode::LINEAR;
 }
 
+void affectUniformI(Shader *shader, json &unifIFile) {
+	if(unifIFile.is_object()) for(auto &item : unifIFile.items()) {
+		unsigned int uid = shader->getUniformId(item.key());
+		json &values = item.value();
+		if(values.is_array()) {
+			std::size_t size = values.size();
+			if(size > 4 || size <= 0) continue;
 
+			std::vector<int> ints(size);
+			int index = 0;
+			for(json &v : values) {
+				if(v.is_number_integer()) ints[index] = v;
+				++index;
+			}
+
+			shader->sendRawInt(uid, ints.data(), (int)size);
+		} else if(values.is_number_integer()) {
+			int v[1]{values};
+			shader->sendRawInt(uid, v, 1);
+		}
+	}
+}
+
+void affectUniformF(Shader *shader, json &unifFFile) {
+	if(unifFFile.is_object()) for(auto &item : unifFFile.items()) {
+		unsigned int uid = shader->getUniformId(item.key());
+		json &values = item.value();
+		if(values.is_array()) {
+			std::size_t size = values.size();
+			if(size > 4 || size <= 0) continue;
+
+			std::vector<float> floats(size);
+			int index = 0;
+			for(json &v : values) {
+				if(v.is_number()) floats[index] = v;
+				++index;
+			}
+
+			shader->sendRawFloat(uid, floats.data(), (int)size);
+		} else if(values.is_number()) {
+			float v[1]{values};
+			shader->sendRawFloat(uid, v, 1);
+		}
+	}
+}
+
+void createShader(json &shaderFile) {
+
+}
 
 void ResourceFileLoader::fillResourcePool(ResourcePool *rp, std::string const &path, std::function<void()> callback) {
 	json file;
@@ -64,24 +112,8 @@ void ResourceFileLoader::fillResourcePool(ResourcePool *rp, std::string const &p
 		rp->shaders.set(shaderFile["name"], shader);
 
 		shader->bind();
-
-		json unifF = shaderFile["uniforms-f"];
-		if(unifF.is_object()) for(auto &it : unifF.items()) {
-			LOG(it.key());
-		}
-		//*/
-		
-		/*/
-		for(int i = 0; i < shaderState.uniformsValues.size(); ++i) {
-			unsigned int uid = shader->getUniformId(shaderState.unifNames[i]);
-
-			if(shaderState.unifIsInt[i]) {
-				shader->sendRawInt(uid, shaderState.uniformsValues[i].values.data(), (int)shaderState.uniformsValues[i].values.size());
-			} else {
-				shader->sendRawFloat(uid, shaderState.uniformsValues[i].values.data(), (int)shaderState.uniformsValues[i].values.size());
-			}
-		}//*/
-
-		//rp->renderer->affectUBOToShader(shader.get());
+		affectUniformI(shader, shaderFile["uniforms-i"]);
+		affectUniformF(shader, shaderFile["uniforms-f"]);
+		Core::renderer->affectUBOToShader(shader);
 	}
 }

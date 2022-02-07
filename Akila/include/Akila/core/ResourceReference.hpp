@@ -13,7 +13,17 @@ namespace Akila {
 		ResourceReference(ResourceAnchor<T> *ra): ra{ra} {}
 
 	public:
-		~ResourceReference() { --ra->refCount; }
+		ResourceReference(): ra{nullptr} {}
+
+		ResourceReference &operator=(ResourceReference &&other) {
+			ra = std::move(other.ra);
+			++ra->refCount;
+			return *this;
+		}
+
+		~ResourceReference() {
+			if(ra != nullptr) --ra->refCount;
+		}
 
 		T &operator*() { return *ra->resource; }
 		T *operator->() { return ra->resource; }
