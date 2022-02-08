@@ -38,8 +38,8 @@ glm::vec3 calcTangent(glm::vec3 &n, glm::vec3 &p1, glm::vec3 &p2, glm::vec3 &p3,
 void MeshLoader::obj(Mesh *mesh, std::string const &path, std::function<void()> const &callback) {
 	struct _ {
 		Mesh *mesh;
-		std::string const &path;
-		std::function<void()> const &callback;
+		std::string const path;
+		std::function<void()> const callback;
 		std::vector<glm::vec3> vertex;
 		std::vector<glm::vec3> normal;
 		std::vector<glm::vec3> tangent;
@@ -170,4 +170,6 @@ void MeshLoader::obj(Mesh *mesh, std::string const &path, std::function<void()> 
 
 		return 1;
 	});
+
+	Core::coroutines->start(coro);
 }

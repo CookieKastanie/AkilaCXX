@@ -90,12 +90,13 @@ void affectUniformF(Shader *shader, json &unifFFile) {
 		}
 	}
 }
+int ResourceFileLoader::count = 0;
+std::function<void()> ResourceFileLoader::callback = []() {};
+std::function<void()> ResourceFileLoader::countCB = []() {
+	if(--count <= 0) callback();
+};
 
-void createShader(json &shaderFile) {
-
-}
-
-void ResourceFileLoader::fillResourcePool(ResourcePool *rp, std::string const &path, std::function<void()> callback) {
+void ResourceFileLoader::fillResourcePool(ResourcePool *rp, std::string const &path, std::function<void()> const &cb) {
 	json file;
 
 	try {
@@ -105,6 +106,10 @@ void ResourceFileLoader::fillResourcePool(ResourcePool *rp, std::string const &p
 		return;
 	}
 
+	count = 0;
+	callback = cb;
+
+	//// Shaders
 	if(file["shaders"].is_array()) for(json &shaderFile : file["shaders"]) {
 		if(!shaderFile["name"].is_string() || !shaderFile["src"].is_string()) continue;
 
@@ -116,4 +121,59 @@ void ResourceFileLoader::fillResourcePool(ResourcePool *rp, std::string const &p
 		affectUniformF(shader, shaderFile["uniforms-f"]);
 		Core::renderer->affectUBOToShader(shader);
 	}
+
+	//// Meshs
+	if(file["meshs"].is_array()) for(json &meshFile : file["meshs"]) {
+		if(!meshFile["name"].is_string() || !meshFile["src"].is_string()) continue;
+		
+		Mesh *mesh = new Mesh{};
+		++count;
+		MeshLoader::obj(mesh, meshFile["src"], countCB);
+		rp->meshs.set(meshFile["name"], mesh);
+	}
+
+	//// Textures
+	if(file["textures"].is_array()) for(json &textureFile : file["textures"]) {
+		if(!textureFile["name"].is_string() || !textureFile["src"].is_string()) continue;
+
+		Texture *texture;
+		if(textureFile["format"].is_string())
+			texture = new Texture{ResourceFileLoader::stringToFormat(textureFile["format"])};
+		
+		texture = new Texture{};
+
+		Texture::Parameters params{};
+		if(textureFile["wrapS"].is_string())
+			params.wrapS = ResourceFileLoader::stringToWrapMode(textureFile["wrapS"]);
+
+		if(textureFile["wrapT"].is_string())
+			params.wrapT = ResourceFileLoader::stringToWrapMode(textureFile["wrapT"]);
+
+		if(textureFile["wrapR"].is_string())
+			params.wrapR = ResourceFileLoader::stringToWrapMode(textureFile["wrapR"]);
+
+		if(textureFile["magFilter"].is_string())
+			params.magFilter = ResourceFileLoader::stringToFilterMode(textureFile["magFilter"]);
+
+		if(textureFile["minFilter"].is_string())
+			params.minFilter = ResourceFileLoader::stringToFilterMode(textureFile["minFilter"]);
+
+		bool mips = false;
+		if(textureFile["mips"].is_boolean()) mips = textureFile["mips"];
+
+		++count;
+		TextureLoader::color(texture, textureFile["src"], [=]() {
+			texture->setParameters(params);
+			if(mips) texture->generateMipmap();
+			countCB();
+		});
+		rp->textures.set(textureFile["name"], texture);
+	}
+
+	//// Materials
+	if(file["materials"].is_array()) for(json &materialFile : file["materials"]) {
+
+	}
+
+	if(count <= 0) callback();
 }

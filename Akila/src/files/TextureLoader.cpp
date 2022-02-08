@@ -9,8 +9,8 @@ void TextureLoader::color(Texture *texture, std::string const &path, std::functi
 
 	struct _ {
 		Texture *texture;
-		std::string const &path;
-		std::function<void()> const &callback;
+		std::string const path;
+		std::function<void()> const callback;
 
 		int textureNrChannels;
 		int fwidth;
@@ -19,7 +19,7 @@ void TextureLoader::color(Texture *texture, std::string const &path, std::functi
 		TextureBuffer::Format fileFormat;
 		TextureBuffer::Type dataType;
 	};
-	auto coro = Core::coroutines->create<>(_{texture, path, callback, 3, 1, 1});
+	auto coro = Core::coroutines->create(_{texture, path, callback, 3, 1, 1, nullptr, {}, {}});
 
 	coro->pushInThread(Trigger::AT_FRAME_START, [](_ &state) {
 		Texture *texture = state.texture;
@@ -27,7 +27,7 @@ void TextureLoader::color(Texture *texture, std::string const &path, std::functi
 		int &textureNrChannels = state.textureNrChannels;
 		int &fwidth = state.fwidth;
 		int &fheight = state.fheight;
-		void *data = state.data;
+		void *&data = state.data;
 		auto &dataType = state.dataType;
 		auto &fileFormat = state.fileFormat;
 
@@ -62,4 +62,6 @@ void TextureLoader::color(Texture *texture, std::string const &path, std::functi
 
 		return 1;
 	});
+
+	Core::coroutines->start(coro);
 }

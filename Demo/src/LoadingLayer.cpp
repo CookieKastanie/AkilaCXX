@@ -3,7 +3,9 @@
 #include <Akila/files/ResourceFileLoader.hpp>
 
 LoadingLayer::LoadingLayer(): Akila::Layer{} {
-	Akila::ResourceFileLoader::fillResourcePool(Akila::Core::resourcePool.get(), "resources.json", []() {});
+	Akila::ResourceFileLoader::fillResourcePool(Akila::Core::resourcePool.get(), "resources.json", []() {
+		LOG("WOW")
+	});
 
 	shader = Akila::Core::resourcePool->shaders.get("loadingAnimation");
 	triangle = Akila::Core::resourcePool->meshs.get("");

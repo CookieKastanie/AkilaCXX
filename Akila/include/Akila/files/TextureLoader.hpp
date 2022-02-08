@@ -6,6 +6,7 @@
 
 namespace Akila {
 	class TextureLoader {
+	public:
 		static void color(Texture *texture, std::string const &path, std::function<void()> const &callback);
 	};
 };
