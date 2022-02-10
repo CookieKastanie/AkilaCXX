@@ -6,65 +6,52 @@ namespace Akila {
 
 	template<class T>
 	class ResourceReference {
+	public:
+		union u_RA_void
+		{
+			ResourceAnchor<T> *ra;
+			void *ptr;
+		};
+
 	private:
 		friend class ResourceAnchor<T>;
 
-		ResourceAnchor<T> *ra;
-		ResourceReference(ResourceAnchor<T> *ra): ra{ra} {}
+		u_RA_void u_ra;
 
 	public:
-		ResourceReference(): ra{nullptr} {}
+		ResourceReference(u_RA_void u_ra): u_ra{u_ra} {}
+		ResourceReference(): u_ra{nullptr} {}
 
 		//deplacement
-		/*/
-		ResourceReference &operator=(ResourceReference &&other) {
-			ra = std::move(other.ra);
-			++ra->refCount;
-			return *this;
-		}
-		//*/
 		ResourceReference(ResourceReference &&other) {
-			ra = std::move(other.ra);
-			++ra->refCount;
+			u_ra = std::move(other.u_ra);
+			++u_ra.ra->refCount;
 		}
 		ResourceReference &operator=(ResourceReference &&other) {
-			//return { other };
-			ra = std::move(other.ra);
-			++ra->refCount;
+			u_ra = std::move(other.u_ra);
+			++u_ra.ra->refCount;
 			return *this;
 		}
 
 		// copie
-		/*/
-		ResourceReference &operator=(ResourceReference const &other) {
-			ra = other.ra;
-			++ra->refCount;
-			return *this;
-		}
-		//*/
 		ResourceReference(ResourceReference const &other) {
-			ra = other.ra;
-			++ra->refCount;
+			u_ra = other.u_ra;
+			++u_ra.ra->refCount;
 		}
 		ResourceReference operator=(ResourceReference const &other) {
-			//return { other };
-			ra = other.ra;
-			++ra->refCount;
+			u_ra = other.u_ra;
+			++u_ra.ra->refCount;
 			return *this;
 		}
 
 		~ResourceReference() {
-			if(ra != nullptr) --ra->refCount;
+			if(u_ra.ra != nullptr) --u_ra.ra->refCount;
 		}
 
-		//T &operator*() { return *ra->resource; }
-		//T *operator->() { return ra->resource; }
+		T &operator*() const { return *u_ra.ra->resource; }
+		T *operator->() const { return u_ra.ra->resource; }
 
-		T &operator*() const { return *ra->resource; }
-		T *operator->() const { return ra->resource; }
-
-		//T *raw() { return ra->resource; }
-		T *raw() const { return ra->resource; }
+		T *raw() const { return u_ra.ra->resource; }
 	};
 
 	template<class T>
@@ -89,13 +76,21 @@ namespace Akila {
 		
 		ResourceReference<T> createReference() {
 			++refCount;
-			return { this };
+
+			ResourceReference<T>::u_RA_void u_ra;
+			u_ra.ptr = this;
+
+			return {u_ra};
 		}
 
 		template<class SubT>
 		ResourceReference<SubT> createReference() {
 			++refCount;
-			return {this};
+
+			ResourceReference<SubT>::u_RA_void u_ra;
+			u_ra.ptr = this;
+
+			return {u_ra};
 		}
 
 		bool haveReferences() { return refCount != 0; }

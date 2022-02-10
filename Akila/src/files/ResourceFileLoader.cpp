@@ -168,6 +168,24 @@ void ResourceFileLoader::fillResourcePool(ResourcePool *rp, std::string const &p
 			auto uvfs = readUniform(material->getShader(), materialFile["uniforms-f"], false);
 			for(auto &uvf : uvfs) material->addUniformValue(uvf, false);
 		}
+
+		if(materialFile["texture"].is_object()) for(auto &item : materialFile["texture"].items()) {
+			if(item.value().is_number_integer()) {
+				Material::TextureBinding tb;
+				tb.textureBuffer = rp->textures.get<TextureBuffer>(item.key());
+				tb.unit = item.value();
+				material->addTextureBinding(tb);
+			}
+		}
+
+		if(materialFile["cubemap"].is_object()) for(auto &item : materialFile["cubemap"].items()) {
+			if(item.value().is_number_integer()) {
+				Material::TextureBinding tb;
+				tb.textureBuffer = rp->cubeMaps.get<TextureBuffer>(item.key());
+				tb.unit = item.value();
+				material->addTextureBinding(tb);
+			}
+		}
 	}
 
 	if(count <= 0) callback();

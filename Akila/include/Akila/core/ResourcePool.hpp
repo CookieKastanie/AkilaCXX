@@ -35,6 +35,13 @@ namespace Akila {
 			if(it == map.end()) return defaultValue.createReference();
 			else return it->second.createReference();
 		}
+
+		template<class SubT>
+		ResourceReference<SubT> get(std::string const &name) {
+			auto it = map.find(name);
+			if(it == map.end()) return defaultValue.createReference<SubT>();
+			else return it->second.createReference<SubT>();
+		}
 	};
 
 	class ResourcePool {
