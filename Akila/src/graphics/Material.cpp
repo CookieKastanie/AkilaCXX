@@ -14,10 +14,10 @@ int Material::getId() const {
 }
 
 Shader *Material::getShader() const {
-	return shader.get();
+	return shader.raw();
 }
 
-void Material::setShader(const std::shared_ptr<Shader> &shader) {
+void Material::setShader(ResourceReference<Shader> const &shader) {
 	this->shader = shader;
 }
 
@@ -36,12 +36,12 @@ void Material::sendUniforms() const {
 	}
 }
 
-void Material::addTextureBinding(const TextureBinding &tb) {
+void Material::addTextureBinding(TextureBinding const &tb) {
 	textures.push_back(tb);
 }
 
 void Material::bindTextures() const {
-	for(auto tex : textures) {
+	for(auto &tex : textures) {
 		tex.textureBuffer->bind(tex.unit);
 	}
 }

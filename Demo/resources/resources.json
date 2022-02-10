@@ -218,7 +218,7 @@
 		{
 			"name": "terrain",
 			"shader": "pbr",
-			"terrain": {
+			"texture": {
 				"terrain_A": 0,
 				"terrain_N": 1,
 				"terrain_M": 2,

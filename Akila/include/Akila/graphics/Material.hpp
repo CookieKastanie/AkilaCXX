@@ -2,7 +2,7 @@
 
 #include "Akila/graphics/gl/Shader.hpp"
 #include "Akila/graphics/gl/Texture.hpp"
-#include <memory>
+#include "Akila/core/ResourceReference.hpp"
 #include <vector>
 
 namespace Akila {
@@ -19,7 +19,7 @@ namespace Akila {
 
 		struct TextureBinding {
 			unsigned int unit;
-			std::shared_ptr<TextureBuffer> textureBuffer;
+			ResourceReference<TextureBuffer> textureBuffer;
 		};
 
 	private:
@@ -27,7 +27,7 @@ namespace Akila {
 
 		int id;
 
-		std::shared_ptr<Shader> shader;
+		ResourceReference<Shader> shader;
 
 		std::vector<UniformValue> uniformsFloat;
 		std::vector<UniformValue> uniformsInts;
@@ -42,12 +42,12 @@ namespace Akila {
 		int getId() const;
 
 		Shader *getShader() const;
-		void setShader(const std::shared_ptr<Shader> &shader);
+		void setShader(ResourceReference<Shader> const &shader);
 
 		void addUniformValue(const UniformValue &uv, bool isInts = false);
 		void sendUniforms() const;
 
-		void addTextureBinding(const TextureBinding &tb);
+		void addTextureBinding(TextureBinding const &tb);
 		void bindTextures() const;
 	};
 }

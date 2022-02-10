@@ -65,3 +65,38 @@ void TextureLoader::color(Texture *texture, std::string const &path, std::functi
 
 	Core::coroutines->start(coro);
 }
+
+TextureBuffer::Format TextureLoader::stringToFormat(std::string const &str) {
+	if(!str.compare("DEPTH_COMPONENT")) return TextureBuffer::Format::DEPTH_COMPONENT;
+	if(!str.compare("DEPTH_STENCIL")) return TextureBuffer::Format::DEPTH_STENCIL;
+	if(!str.compare("RED")) return TextureBuffer::Format::RED;
+	if(!str.compare("RG")) return TextureBuffer::Format::RG;
+	if(!str.compare("RGBA")) return TextureBuffer::Format::RGBA;
+	if(!str.compare("SRGB")) return TextureBuffer::Format::SRGB;
+	if(!str.compare("SRGB_ALPHA")) return TextureBuffer::Format::SRGB_ALPHA;
+	if(!str.compare("RGB16F")) return TextureBuffer::Format::RGB16F;
+	if(!str.compare("RGBA16F")) return TextureBuffer::Format::RGBA16F;
+
+	//default
+	return TextureBuffer::Format::RGB;
+}
+
+TextureBuffer::WrapMode TextureLoader::stringToWrapMode(std::string const &str) {
+	if(!str.compare("CLAMP_TO_EDGE")) return TextureBuffer::WrapMode::CLAMP_TO_EDGE;
+	if(!str.compare("CLAMP_TO_BORDER")) return TextureBuffer::WrapMode::CLAMP_TO_BORDER;
+	if(!str.compare("MIRRORED_REPEAT")) return TextureBuffer::WrapMode::MIRRORED_REPEAT;
+
+	//default
+	return TextureBuffer::WrapMode::REPEAT;
+}
+
+TextureBuffer::FilterMode TextureLoader::stringToFilterMode(std::string const &str) {
+	if(!str.compare("NEAREST")) return TextureBuffer::FilterMode::NEAREST;
+	if(!str.compare("NEAREST_MIPMAP_NEAREST")) return TextureBuffer::FilterMode::NEAREST_MIPMAP_NEAREST;
+	if(!str.compare("LINEAR_MIPMAP_NEAREST")) return TextureBuffer::FilterMode::LINEAR_MIPMAP_NEAREST;
+	if(!str.compare("NEAREST_MIPMAP_LINEAR")) return TextureBuffer::FilterMode::NEAREST_MIPMAP_LINEAR;
+	if(!str.compare("LINEAR_MIPMAP_LINEAR")) return TextureBuffer::FilterMode::LINEAR_MIPMAP_LINEAR;
+
+	// default
+	return TextureBuffer::FilterMode::LINEAR;
+}

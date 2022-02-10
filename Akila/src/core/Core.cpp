@@ -82,5 +82,7 @@ int Core::run(int argc, char *argv[], void (*init)(void)) {
 		display->swapBuffers();
 	}
 
+	layerManager.reset();
+
 	return EXIT_SUCCESS;
 }

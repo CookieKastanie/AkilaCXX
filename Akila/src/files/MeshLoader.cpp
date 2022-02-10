@@ -167,7 +167,7 @@ void MeshLoader::obj(Mesh *mesh, std::string const &path, std::function<void()> 
 		mesh->prepare();
 
 		state.callback();
-
+		
 		return 1;
 	});
 
