@@ -26,6 +26,8 @@
 				"gamma": 2.2
 			},
 			"uniforms-i": {
+				"tonemapping": 0,
+
 				"albedoSampler": 0,
 				"normalSampler": 1,
 				"metallicSampler": 2,

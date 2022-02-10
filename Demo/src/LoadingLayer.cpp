@@ -1,10 +1,13 @@
 #include "Demo/LoadingLayer.hpp"
 
 #include <Akila/files/ResourceFileLoader.hpp>
+#include "Demo/GameLayer.hpp"
 
 LoadingLayer::LoadingLayer(): Akila::Layer{} {
-	Akila::ResourceFileLoader::fillResourcePool(Akila::Core::resourcePool.get(), "resources.json", []() {
+	Akila::ResourceFileLoader::fillResourcePool(Akila::Core::resourcePool.get(), "resources.json", [&]() {
 		LOG("WOW")
+		Akila::Core::layerManager->add(new GameLayer{});
+		Akila::Core::layerManager->remove(this);
 	});
 
 	shader = Akila::Core::resourcePool->shaders.get("loadingAnimation");

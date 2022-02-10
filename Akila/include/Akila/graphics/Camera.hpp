@@ -22,7 +22,7 @@ namespace Akila {
 		virtual ~Camera();
 
 		virtual void onResize(int width, int height);
-		virtual void update();
+		virtual void onPrepare();
 
 		void setPosition(const glm::vec3 &pos);
 		glm::vec3 &getPosition();
@@ -33,6 +33,6 @@ namespace Akila {
 	class PerspectiveCamera: public Camera {
 	public:
 		virtual void onResize(int width, int height) override;
-		virtual void update() override;
+		virtual void onPrepare() override;
 	};
 }

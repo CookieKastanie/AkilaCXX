@@ -19,7 +19,7 @@ void TextureLoader::color(Texture *texture, std::string const &path, std::functi
 		TextureBuffer::Format fileFormat;
 		TextureBuffer::Type dataType;
 	};
-	auto coro = Core::coroutines->create(_{texture, path, callback, 3, 1, 1, nullptr, {}, {}});
+	auto coro = Core::coroutines->create(_{texture, path, callback, 3, 1, 1, nullptr, {}, TextureBuffer::Type::UNSIGNED_BYTE});
 
 	coro->pushInThread(Trigger::AT_FRAME_START, [](_ &state) {
 		Texture *texture = state.texture;
@@ -27,16 +27,15 @@ void TextureLoader::color(Texture *texture, std::string const &path, std::functi
 		int &textureNrChannels = state.textureNrChannels;
 		int &fwidth = state.fwidth;
 		int &fheight = state.fheight;
-		void *&data = state.data;
 		auto &dataType = state.dataType;
 		auto &fileFormat = state.fileFormat;
 
 		stbi_set_flip_vertically_on_load(true);
 		if(texture->getInternalFormat() == TextureBuffer::Format::RGB16F || texture->getInternalFormat() == TextureBuffer::Format::RGBA16F) {// <- pas fou
-			data = stbi_loadf(FileSystem::path(path).c_str(), &fwidth, &fheight, &textureNrChannels, 0);
+			state.data = stbi_loadf(FileSystem::path(path).c_str(), &fwidth, &fheight, &textureNrChannels, 0);
 			dataType = TextureBuffer::Type::FLOAT;
 		} else {
-			data = stbi_load(FileSystem::path(path).c_str(), &fwidth, &fheight, &textureNrChannels, 0);
+			state.data = stbi_load(FileSystem::path(path).c_str(), &fwidth, &fheight, &textureNrChannels, 0);
 		}
 
 		switch(textureNrChannels) {

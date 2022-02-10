@@ -138,12 +138,13 @@ void ResourceFileLoader::fillResourcePool(ResourcePool *rp, std::string const &p
 		if(textureFile["minFilter"].is_string())
 			params.minFilter = TextureLoader::stringToFilterMode(textureFile["minFilter"]);
 
+		texture->setParameters(params);
+
 		bool mips = false;
 		if(textureFile["mips"].is_boolean()) mips = textureFile["mips"];
 
 		++count;
 		TextureLoader::color(texture, textureFile["src"], [=]() {
-			texture->setParameters(params);
 			if(mips) texture->generateMipmap();
 			countCB();
 		});

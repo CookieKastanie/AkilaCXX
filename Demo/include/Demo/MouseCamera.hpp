@@ -19,5 +19,5 @@ private:
 public:
 	MouseCamera(Akila::Mouse *mouse);
 
-	void update() override;
+	void onPrepare() override;
 };

@@ -24,6 +24,8 @@ Renderer::Renderer(std::shared_ptr<Display> &display): display{display} {
 }
 
 void Renderer::prepare() {
+	camera->onPrepare();
+
 	cameraUBO->setData(&camera->getUniforms());
 	timeUBO->setData(&Time::now);
 }
