@@ -1,7 +1,6 @@
 #include "Akila/files/ResourceFileLoader.hpp"
 
 #include "Akila/core/Core.hpp"
-#include "nlohmann/json.hpp"
 #include <fstream>
 #include "Akila/files/ShaderLoader.hpp"
 #include "Akila/files/TextureLoader.hpp"
@@ -73,16 +72,7 @@ std::function<void()> ResourceFileLoader::countCB = []() {
 	if(--count <= 0) callback();
 };
 
-void ResourceFileLoader::fillResourcePool(ResourcePool *rp, std::string const &path, std::function<void()> const &cb) {
-	json file;
-
-	try {
-		std::ifstream{FileSystem::path(path)} >> file;
-	} catch(const std::exception &) {
-		std::cerr << "Resource list loading error : can't read " << path << std::endl;
-		return;
-	}
-
+void ResourceFileLoader::fillResourcePool(ResourcePool *rp, nlohmann::json &file, std::function<void()> const &cb) {
 	count = 0;
 	callback = cb;
 	
@@ -190,4 +180,14 @@ void ResourceFileLoader::fillResourcePool(ResourcePool *rp, std::string const &p
 	}
 
 	if(count <= 0) callback();
+}
+
+void ResourceFileLoader::fillResourcePool(ResourcePool *rp, std::string const &path, std::function<void()> const &callback) {
+	try {
+		json file;
+		std::ifstream{FileSystem::path(path)} >> file;
+		fillResourcePool(rp, file, callback);
+	} catch(const std::exception &) {
+		std::cerr << "Resource list loading error : can't read " << path << std::endl;
+	}
 }

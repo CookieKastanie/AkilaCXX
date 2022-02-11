@@ -1,5 +1,8 @@
 #include "Demo/GameLayer.hpp"
 #include "Demo/MouseCamera.hpp"
+#include <Akila/files/ResourceFileLoader.hpp>
+#include <nlohmann/json.hpp>
+using nlohmann::json;
 
 GameLayer::GameLayer() {
 	sword = Akila::Core::resourcePool->meshs.get("sword");
@@ -7,6 +10,38 @@ GameLayer::GameLayer() {
 
 	Akila::Core::renderer->setSharedCamera(std::make_shared<MouseCamera>(Akila::Core::display->getMouse()));
 	Akila::Core::renderer->setClearColor(0, 0, 0);
+
+	Akila::Core::display->getKeybord()->onKeyPress([](Akila::Keyboard::Key key) {
+		if(key == Akila::Keyboard::Key::SPACE) {
+			json file = {
+				{"shaders", {
+					{
+						{"name", "pbr"},
+						{"src", "shaders/pbr.glsl"},
+						{"uniforms-f", {
+							{"exposure", 1},
+							{"gamma", 2.2}
+						}},
+						{"uniforms-i", {
+							{"tonemapping", 0},
+							{"albedoSampler", 0},
+							{"normalSampler", 1},
+							{"metallicSampler", 2},
+							{"roughnessSampler", 3},
+							{"aoSampler", 4},
+							{"irradianceMap", 5},
+							{"prefilterMap", 6},
+							{"brdfLUT", 7}
+						}}
+					}
+				}}
+			};
+
+			Akila::ResourceFileLoader::fillResourcePool(Akila::Core::resourcePool.get(), file, []() {
+				LOG("pbr shader reloaded");
+			});
+		}
+	});
 }
 
 void GameLayer::update() {
@@ -22,15 +57,4 @@ void GameLayer::draw() {
 	Akila::Core::renderer->clear();
 
 	Akila::Core::renderer->render(swordMaterial.raw(), sword.raw());
-
-	/*/
-	Akila::ResourceReference<Akila::Shader> shader = Akila::Core::resourcePool->shaders.get("textureTest");
-	Akila::ResourceReference<Akila::Texture> texture = Akila::Core::resourcePool->textures.get("env");
-	Akila::ResourceReference<Akila::Mesh> mesh = Akila::Core::resourcePool->meshs.get("");
-
-	shader->bind();
-	shader->send("tex", 1);
-	texture->bind(1);
-	mesh->draw();
-	//*/
 }
