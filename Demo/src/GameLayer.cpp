@@ -2,6 +2,8 @@
 #include "Demo/MouseCamera.hpp"
 #include <Akila/files/ResourceFileLoader.hpp>
 #include <nlohmann/json.hpp>
+#include <imgui/imgui.h>
+
 using nlohmann::json;
 
 GameLayer::GameLayer() {
@@ -58,3 +60,9 @@ void GameLayer::draw() {
 
 	Akila::Core::renderer->render(swordMaterial.raw(), sword.raw());
 }
+
+void GameLayer::drawImGui() {
+	ImGui::Begin("Test");
+	ImGui::End();
+}
+

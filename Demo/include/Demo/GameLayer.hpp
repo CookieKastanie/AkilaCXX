@@ -12,4 +12,5 @@ public:
 
 	void update() override;
 	void draw() override;
+	void drawImGui() override;
 };

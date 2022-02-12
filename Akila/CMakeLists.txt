@@ -41,7 +41,7 @@ add_subdirectory(libs/glm-0.9.9.9/glm)
 target_link_libraries(${PROJECT_NAME} PUBLIC glm)
 
 if(USE_IMGUI)
-    add_subdirectory(libs/imgui)
+    add_subdirectory(libs/imgui-docking)
     target_link_libraries(${PROJECT_NAME} PUBLIC imgui)
 endif(USE_IMGUI)
 
