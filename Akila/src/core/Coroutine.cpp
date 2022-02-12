@@ -51,7 +51,7 @@ void CoroutineManager::start(std::shared_ptr<CoroutineBase> coroutine) {
 void CoroutineManager::flush(std::queue<QData> &queue) {
 	std::size_t count = queue.size();
 	while(count--) {
-		auto c = queue.front();
+		auto c = std::move(queue.front());
 		queue.pop();
 
 		if(c->infos[c->index].executeInThread) {

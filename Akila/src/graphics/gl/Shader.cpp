@@ -126,7 +126,9 @@ void Shader::setUBOIndex(const std::string &name, unsigned int index) {
 }
 
 unsigned int Shader::getUniformId(const std::string &name) const {
-    return uniformCache.find(name)->second;
+    auto &it = uniformCache.find(name);
+    if(it == uniformCache.end()) return -1;
+    else return it->second;
 }
 
 

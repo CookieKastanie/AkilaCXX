@@ -22,7 +22,7 @@ ThreadPool::ThreadPool(unsigned int count): exit{false} {
 
                     {
                         std::lock_guard<std::mutex> lck(jobsMutex);
-                        job = jobs.front();
+                        job = std::move(jobs.front());
                         jobs.pop();
                     }
                 }

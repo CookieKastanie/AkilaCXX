@@ -42,6 +42,21 @@ namespace Akila {
 			if(it == map.end()) return defaultValue.createReference<SubT>();
 			else return it->second.createReference<SubT>();
 		}
+
+		bool remove(std::string const &name, bool force = false) {
+			auto it = map.find(name);
+
+			if(it == map.end()) return false;
+			if(it->second->haveReferences() && !force) return false;
+
+			map.erase(it);
+
+			return true;
+		}
+
+		void clear(bool force = false) {
+			for(auto it : map) remove(it->first, force);
+		}
 	};
 
 	class ResourcePool {
