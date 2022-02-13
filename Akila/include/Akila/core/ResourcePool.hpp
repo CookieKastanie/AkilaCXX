@@ -14,14 +14,15 @@ namespace Akila {
 	template<class T>
 	class ResourceMap {
 	private:
-		ResourceAnchor<T> defaultValue;
+		typedef T*(*G)();
+		G generator;
 		std::map<std::string, ResourceAnchor<T>> map;
 
 	public:
-		ResourceMap() {};
+		ResourceMap(): generator{[]() -> T* {return nullptr;}} {};
 
-		void setDefault(T *value) {
-			defaultValue.setResource(value);
+		void setGenerator(G const &generator) {
+			this->generator = generator;
 		};
 
 		void set(std::string const &name, T *value) {
@@ -32,15 +33,19 @@ namespace Akila {
 
 		ResourceReference<T> get(std::string const &name) {
 			auto it = map.find(name);
-			if(it == map.end()) return defaultValue.createReference();
+			if(it == map.end()) set(name, generator());
 			else return it->second.createReference();
+
+			return get(name);
 		}
 
 		template<class SubT>
 		ResourceReference<SubT> get(std::string const &name) {
 			auto it = map.find(name);
-			if(it == map.end()) return defaultValue.createReference<SubT>();
+			if(it == map.end()) set(name, generator());
 			else return it->second.createReference<SubT>();
+
+			return get<SubT>(name);
 		}
 
 		bool remove(std::string const &name, bool force = false) {

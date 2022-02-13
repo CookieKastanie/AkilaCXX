@@ -1,6 +1,7 @@
 #include "Demo/LoadingLayer.hpp"
 
 #include <Akila/files/ResourceFileLoader.hpp>
+#include <Akila/graphics/MeshPrimitives.hpp>
 #include "Demo/GameLayer.hpp"
 
 LoadingLayer::LoadingLayer(): Akila::Layer{} {
@@ -10,8 +11,10 @@ LoadingLayer::LoadingLayer(): Akila::Layer{} {
 		Akila::Core::layerManager->remove(this);
 	});
 
+	Akila::Core::resourcePool->meshs.set("screenTriangle", Akila::MeshPrimitives::screenTriangle());
+
 	shader = Akila::Core::resourcePool->shaders.get("loadingAnimation");
-	triangle = Akila::Core::resourcePool->meshs.get("");
+	triangle = Akila::Core::resourcePool->meshs.get("screenTriangle");
 }
 
 void LoadingLayer::update() {
@@ -22,7 +25,7 @@ void LoadingLayer::draw() {
 	Akila::Core::renderer->useDefaultFrameBuffer();
 
 	Akila::Core::renderer->disable(Akila::Renderer::Capability::DEPTH_TEST);
-	Akila::Core::renderer->disable(Akila::Renderer::Capability::CULL_FACE);
+	//Akila::Core::renderer->disable(Akila::Renderer::Capability::CULL_FACE);
 
 	shader->bind();
 	//shader->send("color", {1.f, 0.f, 1.f});

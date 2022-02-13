@@ -21,7 +21,7 @@ ThreadPool::ThreadPool(unsigned int count): exit{false} {
                     }
 
                     {
-                        std::lock_guard<std::mutex> lck(jobsMutex);
+                        std::scoped_lock<std::mutex> lck(jobsMutex);
                         job = std::move(jobs.front());
                         jobs.pop();
                     }
@@ -30,7 +30,7 @@ ThreadPool::ThreadPool(unsigned int count): exit{false} {
                 job.task();
 
                 {
-                    std::lock_guard<std::mutex> lck(jobsMutex);
+                    std::scoped_lock<std::mutex> lck(jobsMutex);
                     job.join();
                 }
             }

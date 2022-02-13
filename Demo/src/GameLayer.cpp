@@ -53,8 +53,8 @@ void GameLayer::update() {
 void GameLayer::draw() {
 	Akila::Core::renderer->useDefaultFrameBuffer();
 
-	Akila::Core::renderer->depthFunc(Akila::Renderer::DepthFunc::LESS);
-	Akila::Core::renderer->disable(Akila::Renderer::Capability::CULL_FACE);
+	//Akila::Core::renderer->depthFunc(Akila::Renderer::DepthFunc::LESS);
+	//Akila::Core::renderer->disable(Akila::Renderer::Capability::CULL_FACE);
 	Akila::Core::renderer->enable(Akila::Renderer::Capability::DEPTH_TEST);
 	Akila::Core::renderer->clear();
 
@@ -63,6 +63,9 @@ void GameLayer::draw() {
 
 void GameLayer::drawImGui() {
 	ImGui::Begin("Test");
+	ImGui::End();
+
+	ImGui::Begin("Test2");
 	ImGui::End();
 }
 
