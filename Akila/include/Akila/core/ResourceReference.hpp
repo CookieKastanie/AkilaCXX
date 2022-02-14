@@ -64,6 +64,7 @@ namespace Akila {
 
 	public:
 		ResourceAnchor(): resource{ nullptr }, refCount { 0 } {}
+		ResourceAnchor(ResourceAnchor const &) = delete;
 		~ResourceAnchor() {
 			if(haveReferences()) std::cout << "Anchor deleted with " << refCount << " refs !\n";
 			if(resource != nullptr) delete resource;

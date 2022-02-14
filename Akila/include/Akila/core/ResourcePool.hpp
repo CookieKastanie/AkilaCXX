@@ -52,7 +52,7 @@ namespace Akila {
 			auto it = map.find(name);
 
 			if(it == map.end()) return false;
-			if(it->second->haveReferences() && !force) return false;
+			if(it->second.haveReferences() && !force) return false;
 
 			map.erase(it);
 
@@ -60,7 +60,10 @@ namespace Akila {
 		}
 
 		void clear(bool force = false) {
-			for(auto it : map) remove(it->first, force);
+			for(auto it = map.begin(); it != map.end();) {
+				if(!it->second.haveReferences() || force) it = map.erase(it);
+				else it++;
+			}
 		}
 	};
 
@@ -73,5 +76,7 @@ namespace Akila {
 		ResourceMap<Material> materials;
 
 		ResourcePool();
+
+		void clearAll(bool force = false);
 	};
 }

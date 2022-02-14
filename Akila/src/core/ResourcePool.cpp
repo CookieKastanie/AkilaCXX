@@ -24,3 +24,11 @@ ResourcePool::ResourcePool() {
 		return new Mesh{};
 	});
 }
+
+void ResourcePool::clearAll(bool force) {
+	materials.clear(force);
+	meshs.clear(force);
+	cubeMaps.clear(force);
+	textures.clear(force);
+	shaders.clear(force);
+}
