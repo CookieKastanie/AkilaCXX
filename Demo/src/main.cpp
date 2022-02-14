@@ -34,7 +34,7 @@ void *operator new(std::size_t size, const char *file, int line) {
 int main(int argc, char *argv[]) {
 	return Akila::Core::run(argc, argv, [](void) {
 		Akila::FileSystem::setResourceFolder("resources");
-		Akila::Core::display->setTitle("Akila");
+		Akila::Core::display->setTitle("Bruh");
 		Akila::Core::layerManager->add(new LoadingLayer{});
 	});
 }

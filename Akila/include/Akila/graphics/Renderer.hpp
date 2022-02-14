@@ -1,7 +1,7 @@
 #pragma once
 
 #include "glad/glad.h"
-#include <memory>
+#include "Akila/core/Memory.hpp"
 #include "Akila/core/Display.hpp"
 #include "Akila/graphics/Camera.hpp"
 #include "Akila/graphics/gl/Buffer.hpp"
@@ -13,21 +13,21 @@
 namespace Akila {
 	class Renderer {
 		private:
-			std::shared_ptr<Display> display;
-			std::shared_ptr<Camera> camera;
+			Ptr<Display> display;
+			Ptr<Camera> camera;
 
-			std::shared_ptr<UBO> cameraUBO;
-			std::shared_ptr<UBO> timeUBO;
+			Ptr<UBO> cameraUBO;
+			Ptr<UBO> timeUBO;
 
 		public:
-			Renderer(std::shared_ptr<Display> &Display);
+			Renderer(Ptr<Display> &Display);
 
 			void prepare();
 			void finish();
 			void useDefaultFrameBuffer();
 
-			void setSharedCamera(const std::shared_ptr<Camera> &cam);
-			std::shared_ptr<Camera> &getSharedCamera();
+			void setCamera(const Ptr<Camera> &cam);
+			Ptr<Camera> &getCamera();
 
 			void affectUBOToShader(Shader *shader);
 

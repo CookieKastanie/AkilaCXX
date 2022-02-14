@@ -17,7 +17,7 @@ Shader *Material::getShader() const {
 	return shader.raw();
 }
 
-void Material::setShader(ResourceReference<Shader> const &shader) {
+void Material::setShader(Ref<Shader> const &shader) {
 	this->shader = shader;
 }
 

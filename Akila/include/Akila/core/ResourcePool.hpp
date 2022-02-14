@@ -1,14 +1,14 @@
 #pragma once
 
 #include <vector>
-#include <memory>
 #include <map>
 #include "Akila/graphics/gl/Shader.hpp"
 #include "Akila/graphics/gl/Texture.hpp"
 #include "Akila/graphics/Material.hpp"
 #include "Akila/graphics/Mesh.hpp"
+#include "Akila/core/Memory.hpp"
 
-#include "Akila/core/ResourceReference.hpp"
+#include "nlohmann/json.hpp"
 
 namespace Akila {
 	template<class T>
@@ -16,7 +16,7 @@ namespace Akila {
 	private:
 		typedef T*(*G)();
 		G generator;
-		std::map<std::string, ResourceAnchor<T>> map;
+		std::map<std::string, RefAnchor<T>> map;
 
 	public:
 		ResourceMap(): generator{[]() -> T* {return nullptr;}} {};
@@ -27,11 +27,11 @@ namespace Akila {
 
 		void set(std::string const &name, T *value) {
 			auto it = map.find(name);
-			if(it == map.end()) map[name].setResource(value);
-			else it->second.setResource(value);
+			if(it == map.end()) map[name].setValue(value);
+			else it->second.setValue(value);
 		}
 
-		ResourceReference<T> get(std::string const &name) {
+		Ref<T> get(std::string const &name) {
 			auto it = map.find(name);
 			if(it == map.end()) set(name, generator());
 			else return it->second.createReference();
@@ -40,7 +40,7 @@ namespace Akila {
 		}
 
 		template<class SubT>
-		ResourceReference<SubT> get(std::string const &name) {
+		Ref<SubT> get(std::string const &name) {
 			auto it = map.find(name);
 			if(it == map.end()) set(name, generator());
 			else return it->second.createReference<SubT>();
@@ -76,7 +76,8 @@ namespace Akila {
 		ResourceMap<Material> materials;
 
 		ResourcePool();
-
+		void load(nlohmann::json &file, std::function<void()> const &callback);
+		void load(std::string const &path, std::function<void()> const &callback);
 		void clearAll(bool force = false);
 	};
 }

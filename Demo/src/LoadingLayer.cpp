@@ -1,20 +1,21 @@
 #include "Demo/LoadingLayer.hpp"
 
-#include <Akila/files/ResourceFileLoader.hpp>
 #include <Akila/graphics/MeshPrimitives.hpp>
 #include "Demo/GameLayer.hpp"
 
-LoadingLayer::LoadingLayer(): Akila::Layer{} {
-	Akila::ResourceFileLoader::fillResourcePool(Akila::Core::resourcePool.get(), "resources.json", [&]() {
+using namespace Akila;
+
+LoadingLayer::LoadingLayer(): Layer{} {
+	Core::resourcePool->load("resources.json", [&]() {
 		LOG("WOW")
-		Akila::Core::layerManager->add(new GameLayer{});
-		Akila::Core::layerManager->remove(this);
+		Core::layerManager->add(new GameLayer{});
+		Core::layerManager->remove(this);
 	});
 
-	Akila::Core::resourcePool->meshs.set("screenTriangle", Akila::MeshPrimitives::screenTriangle());
+	Core::resourcePool->meshs.set("screenTriangle", MeshPrimitives::screenTriangle());
 
-	shader = Akila::Core::resourcePool->shaders.get("loadingAnimation");
-	triangle = Akila::Core::resourcePool->meshs.get("screenTriangle");
+	shader = Core::resourcePool->shaders.get("loadingAnimation");
+	triangle = Core::resourcePool->meshs.get("screenTriangle");
 }
 
 void LoadingLayer::update() {
@@ -22,10 +23,9 @@ void LoadingLayer::update() {
 }
 
 void LoadingLayer::draw() {
-	Akila::Core::renderer->useDefaultFrameBuffer();
+	Core::renderer->useDefaultFrameBuffer();
 
-	Akila::Core::renderer->disable(Akila::Renderer::Capability::DEPTH_TEST);
-	//Akila::Core::renderer->disable(Akila::Renderer::Capability::CULL_FACE);
+	Core::renderer->disable(Renderer::Capability::DEPTH_TEST);
 
 	shader->bind();
 	//shader->send("color", {1.f, 0.f, 1.f});

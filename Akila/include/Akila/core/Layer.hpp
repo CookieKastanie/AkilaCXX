@@ -1,6 +1,6 @@
 #pragma once
 
-#include <memory>
+#include "Akila/core/Memory.hpp"
 #include <vector>
 #include <iostream>
 
@@ -33,12 +33,12 @@ namespace Akila {
 
 	class LayerManager {
 	private:
-		std::vector<std::shared_ptr<Layer>> layers;
+		std::vector<Ptr<Layer>> layers;
 
 	public:
 		LayerManager();
 
-		void add(const std::shared_ptr<Layer> &layer,
+		void add(const Ptr<Layer> &layer,
 			Layer::PreferredDepth depth = Layer::PreferredDepth::MIDDLE);
 		void add(Layer *layer,
 			Layer::PreferredDepth depth = Layer::PreferredDepth::MIDDLE);

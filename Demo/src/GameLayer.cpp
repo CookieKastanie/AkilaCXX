@@ -1,20 +1,20 @@
 #include "Demo/GameLayer.hpp"
 #include "Demo/MouseCamera.hpp"
-#include <Akila/files/ResourceFileLoader.hpp>
 #include <nlohmann/json.hpp>
 #include <imgui/imgui.h>
 
+using namespace Akila;
 using nlohmann::json;
 
 GameLayer::GameLayer() {
-	sword = Akila::Core::resourcePool->meshs.get("sword");
-	swordMaterial = Akila::Core::resourcePool->materials.get("sword");
+	sword = Core::resourcePool->meshs.get("sword");
+	swordMaterial = Core::resourcePool->materials.get("sword");
 
-	Akila::Core::renderer->setSharedCamera(std::make_shared<MouseCamera>(Akila::Core::display->getMouse()));
-	Akila::Core::renderer->setClearColor(0, 0, 0);
+	Core::renderer->setCamera(createPtr<MouseCamera>(Core::display->getMouse()));
+	Core::renderer->setClearColor(0, 0, 0);
 
-	Akila::Core::display->getKeybord()->onKeyPress([](Akila::Keyboard::Key key) {
-		if(key == Akila::Keyboard::Key::SPACE) {
+	Core::display->getKeybord()->onKeyPress([](Keyboard::Key key) {
+		if(key == Keyboard::Key::SPACE) {
 			json file = {
 				{"shaders", {
 					{
@@ -39,7 +39,7 @@ GameLayer::GameLayer() {
 				}}
 			};
 
-			Akila::ResourceFileLoader::fillResourcePool(Akila::Core::resourcePool.get(), file, []() {
+			Core::resourcePool->load(file, []() {
 				LOG("pbr shader reloaded");
 			});
 		}
@@ -51,14 +51,14 @@ void GameLayer::update() {
 }
 
 void GameLayer::draw() {
-	Akila::Core::renderer->useDefaultFrameBuffer();
+	Core::renderer->useDefaultFrameBuffer();
 
-	//Akila::Core::renderer->depthFunc(Akila::Renderer::DepthFunc::LESS);
-	//Akila::Core::renderer->disable(Akila::Renderer::Capability::CULL_FACE);
-	Akila::Core::renderer->enable(Akila::Renderer::Capability::DEPTH_TEST);
-	Akila::Core::renderer->clear();
+	//Core::renderer->depthFunc(Akila::Renderer::DepthFunc::LESS);
+	//Core::renderer->disable(Akila::Renderer::Capability::CULL_FACE);
+	Core::renderer->enable(Akila::Renderer::Capability::DEPTH_TEST);
+	Core::renderer->clear();
 
-	Akila::Core::renderer->render(swordMaterial.raw(), sword.raw());
+	Core::renderer->render(swordMaterial.raw(), sword.raw());
 }
 
 void GameLayer::drawImGui() {

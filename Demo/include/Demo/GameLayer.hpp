@@ -4,8 +4,8 @@
 
 class GameLayer : public Akila::Layer {
 private:
-	Akila::ResourceReference<Akila::Mesh> sword;
-	Akila::ResourceReference<Akila::Material> swordMaterial;
+	Akila::Ref<Akila::Mesh> sword;
+	Akila::Ref<Akila::Material> swordMaterial;
 
 public:
 	GameLayer();

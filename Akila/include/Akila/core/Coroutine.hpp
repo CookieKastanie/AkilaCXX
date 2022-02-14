@@ -1,6 +1,6 @@
 #pragma once
 
-#include <memory>
+#include "Akila/core/Memory.hpp"
 #include <queue>
 #include "Akila/core/ThreadPool.hpp"
 
@@ -70,7 +70,7 @@ namespace Akila {
 		friend class Core;
 
 	private:
-		typedef std::shared_ptr<CoroutineBase> QData;
+		typedef Ptr<CoroutineBase> QData;
 
 		std::queue<QData> atFrameStart;
 		std::queue<QData> afterFixedUpdate;
@@ -89,15 +89,15 @@ namespace Akila {
 
 	public:
 		template<typename T>
-		std::shared_ptr<Coroutine<T>> create(T const &state) {
-			return std::shared_ptr<Coroutine<T>>(new Coroutine(state));
+		Ptr<Coroutine<T>> create(T const &state) {
+			return createPtr(new Coroutine(state));
 		}
 
 		template<typename T>
-		std::shared_ptr<Coroutine<T>> create() {
+		Ptr<Coroutine<T>> create() {
 			return create({});
 		}
 
-		void start(std::shared_ptr<CoroutineBase> coroutine);
+		void start(Ptr<CoroutineBase> coroutine);
 	};
 }

@@ -43,7 +43,7 @@ void CoroutineManager::process(QData c) {
 	}
 }
 
-void CoroutineManager::start(std::shared_ptr<CoroutineBase> coroutine) {
+void CoroutineManager::start(Ptr<CoroutineBase> coroutine) {
 	coroutine->reset();
 	process(coroutine);
 }

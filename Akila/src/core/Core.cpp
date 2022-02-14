@@ -2,11 +2,11 @@
 
 using namespace Akila;
 
-std::shared_ptr<Display> Core::display = nullptr;
-std::shared_ptr<LayerManager> Core::layerManager = nullptr;
-std::shared_ptr<CoroutineManager> Core::coroutines = nullptr;
-std::shared_ptr<Renderer> Core::renderer = nullptr;
-std::shared_ptr<ResourcePool> Core::resourcePool = nullptr;
+Ptr<Display> Core::display = nullptr;
+Ptr<LayerManager> Core::layerManager = nullptr;
+Ptr<CoroutineManager> Core::coroutines = nullptr;
+Ptr<Renderer> Core::renderer = nullptr;
+Ptr<ResourcePool> Core::resourcePool = nullptr;
 
 Core::Core() {}
 
@@ -54,10 +54,10 @@ int Core::run(int argc, char *argv[], void (*init)(void)) {
 
 	Shader::funcInit();
 
-	layerManager = std::make_shared<LayerManager>();
-	coroutines = std::shared_ptr<CoroutineManager>(new CoroutineManager());
-	renderer = std::make_shared<Renderer>(display);
-	resourcePool = std::make_shared<ResourcePool>();
+	layerManager = createPtr<LayerManager>();
+	coroutines = createPtr<CoroutineManager>(new CoroutineManager());
+	renderer = createPtr<Renderer>(display);
+	resourcePool = createPtr<ResourcePool>();
 
 	init();
 

@@ -5,8 +5,8 @@
 
 class LoadingLayer: public Akila::Layer {
 private:
-	Akila::ResourceReference<Akila::Shader> shader;
-	Akila::ResourceReference<Akila::Mesh> triangle;
+	Akila::Ref<Akila::Shader> shader;
+	Akila::Ref<Akila::Mesh> triangle;
 
 public:
 	LoadingLayer();

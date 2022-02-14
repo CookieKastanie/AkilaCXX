@@ -1,5 +1,7 @@
 #include "Akila/core/ResourcePool.hpp"
+
 #include "Akila/graphics/ShaderBuilder.hpp"
+#include "Akila/files/ResourceFileLoader.hpp"
 
 using namespace Akila;
 
@@ -31,4 +33,12 @@ void ResourcePool::clearAll(bool force) {
 	cubeMaps.clear(force);
 	textures.clear(force);
 	shaders.clear(force);
+}
+
+void ResourcePool::load(nlohmann::json &file, std::function<void()> const &callback) {
+	ResourceFileLoader::fillResourcePool(this, file, callback);
+}
+
+void ResourcePool::load(std::string const &path, std::function<void()> const &callback) {
+	ResourceFileLoader::fillResourcePool(this, path, callback);
 }
