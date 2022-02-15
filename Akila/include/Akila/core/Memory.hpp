@@ -64,6 +64,7 @@ namespace Akila {
 		T *operator->() const { return u_ra.ra->resource; }
 
 		T *raw() const { return u_ra.ra->resource; }
+		operator T*() const { return u_ra.ra->resource; }
 	};
 
 	template<class T>

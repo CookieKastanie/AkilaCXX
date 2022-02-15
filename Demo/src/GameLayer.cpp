@@ -58,7 +58,7 @@ void GameLayer::draw() {
 	Core::renderer->enable(Akila::Renderer::Capability::DEPTH_TEST);
 	Core::renderer->clear();
 
-	Core::renderer->render(swordMaterial.raw(), sword.raw());
+	Core::renderer->render(swordMaterial, sword);
 }
 
 void GameLayer::drawImGui() {
