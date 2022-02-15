@@ -63,8 +63,8 @@ namespace Akila {
 		T &operator*() const { return *u_ra.ra->resource; }
 		T *operator->() const { return u_ra.ra->resource; }
 
-		T *raw() const { return u_ra.ra->resource; }
-		operator T*() const { return u_ra.ra->resource; }
+		T* const raw() const { return u_ra.ra->resource; }
+		operator T* const () const { return u_ra.ra->resource; }
 	};
 
 	template<class T>
@@ -108,6 +108,6 @@ namespace Akila {
 			return {u_ra};
 		}
 
-		bool haveReferences() { return refCount != 0; }
+		bool haveReferences() const { return refCount != 0; }
 	};
 }
