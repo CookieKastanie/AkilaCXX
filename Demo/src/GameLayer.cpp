@@ -53,8 +53,8 @@ void GameLayer::update() {
 void GameLayer::draw() {
 	Core::renderer->useDefaultFrameBuffer();
 
-	//Core::renderer->depthFunc(Akila::Renderer::DepthFunc::LESS);
-	//Core::renderer->disable(Akila::Renderer::Capability::CULL_FACE);
+	//Core::renderer->depthFunc(Renderer::DepthFunc::LESS);
+	//Core::renderer->disable(Renderer::Capability::CULL_FACE);
 	Core::renderer->enable(Akila::Renderer::Capability::DEPTH_TEST);
 	Core::renderer->clear();
 

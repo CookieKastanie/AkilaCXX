@@ -142,24 +142,24 @@ void MeshLoader::obj(Mesh *mesh, std::string const &path, std::function<void()> 
 		auto &tangent = state.tangent;
 		auto &uv = state.uv;
 
-		auto vertexVBO = std::make_shared<VBO>(3, ShaderBuilder::Attributes::A_POSITION);
+		auto vertexVBO = createPtr<VBO>(3, ShaderBuilder::Attributes::A_POSITION);
 		vertexVBO->setData(vertex);
 		mesh->addVBO(vertexVBO);
 
 		if(uv.size() > 0) {
-			auto uvVBO = std::make_shared<VBO>(2, ShaderBuilder::Attributes::A_UV);
+			auto uvVBO = createPtr<VBO>(2, ShaderBuilder::Attributes::A_UV);
 			uvVBO->setData(uv);
 			mesh->addVBO(uvVBO);
 		}
 
 		if(normal.size() > 0) {
-			auto normalVBO = std::make_shared<VBO>(3, ShaderBuilder::Attributes::A_NORMAL);
+			auto normalVBO = createPtr<VBO>(3, ShaderBuilder::Attributes::A_NORMAL);
 			normalVBO->setData(normal);
 			mesh->addVBO(normalVBO);
 		}
 
 		if(tangent.size() > 0) {
-			auto tangentVBO = std::make_shared<VBO>(3, ShaderBuilder::Attributes::A_TANGENT);
+			auto tangentVBO = createPtr<VBO>(3, ShaderBuilder::Attributes::A_TANGENT);
 			tangentVBO->setData(tangent);
 			mesh->addVBO(tangentVBO);
 		}

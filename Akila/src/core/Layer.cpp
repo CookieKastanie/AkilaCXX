@@ -51,7 +51,7 @@ void LayerManager::add(const Ptr<Layer> &layer, Layer::PreferredDepth depth) {
 }
 
 void LayerManager::add(Layer *layer, Layer::PreferredDepth depth) {
-	add(createPtr(layer), depth);
+	add(Ptr<Layer>{layer}, depth);
 }
 
 void LayerManager::remove(Layer *layer) {

@@ -4,22 +4,10 @@
 
 namespace Akila {
 	template<typename T>
-	using UniquePtr = std::unique_ptr<T>;
-	template<typename T, typename ... Args>
-	constexpr UniquePtr<T> createUniquePtr(Args&& ... args) {
-		return std::make_unique<T>(std::forward<Args>(args)...);
-	}
-
-	template<typename T>
 	using Ptr = std::shared_ptr<T>;
 	template<typename T, typename ... Args>
 	constexpr Ptr<T> createPtr(Args&& ... args) {
 		return std::make_shared<T>(std::forward<Args>(args)...);
-	}
-
-	template<typename T>
-	constexpr Ptr<T> createPtr(T* obj) {
-		return std::shared_ptr<T>(obj);
 	}
 
 	///////////////////////////////////////////////////////

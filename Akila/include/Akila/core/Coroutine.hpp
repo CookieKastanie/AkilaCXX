@@ -90,7 +90,7 @@ namespace Akila {
 	public:
 		template<typename T>
 		Ptr<Coroutine<T>> create(T const &state) {
-			return createPtr(new Coroutine(state));
+			return Ptr<Coroutine<T>>{new Coroutine(state)};
 		}
 
 		template<typename T>

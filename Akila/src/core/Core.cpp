@@ -55,7 +55,7 @@ int Core::run(int argc, char *argv[], void (*init)(void)) {
 	Shader::funcInit();
 
 	layerManager = createPtr<LayerManager>();
-	coroutines = createPtr<CoroutineManager>(new CoroutineManager());
+	coroutines = Ptr<CoroutineManager>{new CoroutineManager()};
 	renderer = createPtr<Renderer>(display);
 	resourcePool = createPtr<ResourcePool>();
 
