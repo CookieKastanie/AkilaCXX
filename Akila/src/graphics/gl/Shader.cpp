@@ -173,6 +173,10 @@ void Shader::send(const std::string &name, const float &value) const {
     glUniform1f(uniformCache.find(name)->second, value);
 }
 
+void Shader::send(const std::string &name, const std::vector<float> &values) const {
+    glUniform1fv(uniformCache.find(name)->second, (GLsizei)values.size(), (GLfloat *)values.data());
+}
+
 void Shader::send(const std::string &name, const glm::vec2 &value) const {
     glUniform2fv(uniformCache.find(name)->second, 1, &value[0]);
 }

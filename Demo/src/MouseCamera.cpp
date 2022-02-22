@@ -10,6 +10,10 @@ MouseCamera::MouseCamera(Akila::Mouse *mouse):
 
 }
 
+void MouseCamera::setCenter(glm::vec3 const &c) {
+	center = c;
+}
+
 void MouseCamera::onPrepare() {
 	glm::vec3 &eye = uniforms.position;
 

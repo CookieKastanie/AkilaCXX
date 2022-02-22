@@ -66,15 +66,23 @@ std::vector<Material::UniformValue> readUniform(Shader *shader, json &unifFile, 
 	return uvs;
 }
 
-int ResourceFileLoader::count = 0;
-std::function<void()> ResourceFileLoader::callback = []() {};
-std::function<void()> ResourceFileLoader::countCB = []() {
+ResourceFileLoader::LoadingInstance::LoadingInstance(std::function<void()> const &callback):
+	count{0}, callback{callback} {}
+
+void ResourceFileLoader::LoadingInstance::countUp() {
+	++count;
+}
+
+void ResourceFileLoader::LoadingInstance::countDown() {
 	if(--count <= 0) callback();
-};
+}
+
+bool ResourceFileLoader::LoadingInstance::isFinished() {
+	return count <= 0;
+}
 
 void ResourceFileLoader::fillResourcePool(ResourcePool *rp, nlohmann::json &file, std::function<void()> const &cb) {
-	count = 0;
-	callback = cb;
+	auto loading = createPtr<LoadingInstance>(cb);
 	
 	//// Shaders
 	if(file["shaders"].is_array()) for(json &shaderFile : file["shaders"]) {
@@ -97,8 +105,8 @@ void ResourceFileLoader::fillResourcePool(ResourcePool *rp, nlohmann::json &file
 		if(!meshFile["name"].is_string() || !meshFile["src"].is_string()) continue;
 		
 		Mesh *mesh = new Mesh{};
-		++count;
-		MeshLoader::obj(mesh, meshFile["src"], countCB);
+		loading->countUp();
+		MeshLoader::obj(mesh, meshFile["src"], [=]() { loading->countDown(); });
 		rp->meshs.set(meshFile["name"], mesh);
 	}
 	
@@ -133,10 +141,10 @@ void ResourceFileLoader::fillResourcePool(ResourcePool *rp, nlohmann::json &file
 		bool mips = false;
 		if(textureFile["mips"].is_boolean()) mips = textureFile["mips"];
 
-		++count;
+		loading->countUp();
 		TextureLoader::color(texture, textureFile["src"], [=]() {
 			if(mips) texture->generateMipmap();
-			countCB();
+			loading->countDown();
 		});
 		rp->textures.set(textureFile["name"], texture);
 	}
@@ -179,7 +187,7 @@ void ResourceFileLoader::fillResourcePool(ResourcePool *rp, nlohmann::json &file
 		}
 	}
 
-	if(count <= 0) callback();
+	if(loading->isFinished()) loading->callback();
 }
 
 void ResourceFileLoader::fillResourcePool(ResourcePool *rp, std::string const &path, std::function<void()> const &callback) {

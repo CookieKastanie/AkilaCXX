@@ -19,5 +19,6 @@ private:
 public:
 	MouseCamera(Akila::Mouse *mouse);
 
+	void setCenter(glm::vec3 const &c);
 	void onPrepare() override;
 };

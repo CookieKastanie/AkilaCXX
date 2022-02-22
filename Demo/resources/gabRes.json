@@ -1,0 +1,23 @@
+{
+    "shaders": [
+        {
+            "name": "flatPBR",
+            "src": "gab/flatPBR.glsl"
+        },
+        {
+            "name": "simple",
+            "src": "gab/simple.glsl"
+        }
+    ],
+
+    "meshs": [
+        {
+            "name": "cube",
+            "src": "gab/cube.ob"
+        },
+        {
+            "name": "model",
+            "src": "gab/model.ob"
+        }
+    ]
+}

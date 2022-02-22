@@ -2,6 +2,7 @@
 #include "Demo/MouseCamera.hpp"
 #include <nlohmann/json.hpp>
 #include <imgui/imgui.h>
+#include <Akila/core/Metrics.hpp>
 
 using namespace Akila;
 using nlohmann::json;
@@ -51,6 +52,8 @@ void GameLayer::update() {
 }
 
 void GameLayer::draw() {
+	FUNC_TIME_METRIC();
+	
 	Core::renderer->useDefaultFrameBuffer();
 
 	//Core::renderer->depthFunc(Renderer::DepthFunc::LESS);

@@ -76,8 +76,8 @@ namespace Akila {
 		ResourceMap<Material> materials;
 
 		ResourcePool();
-		void load(nlohmann::json &file, std::function<void()> const &callback);
-		void load(std::string const &path, std::function<void()> const &callback);
+		void load(nlohmann::json &file, std::function<void()> const &callback = []() -> void {});
+		void load(std::string const &path, std::function<void()> const &callback = []() -> void {});
 		void clearAll(bool force = false);
 	};
 }

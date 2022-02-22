@@ -30,7 +30,7 @@ namespace Akila {
 		u_RA_void u_ra;
 
 	public:
-		Ref(u_RA_void u_ra): u_ra{u_ra} {}
+		Ref(u_RA_void const &u_ra): u_ra{u_ra} {}
 		Ref(): u_ra{nullptr} {}
 
 		//deplacement
@@ -60,11 +60,11 @@ namespace Akila {
 			if(u_ra.ra != nullptr) --u_ra.ra->refCount;
 		}
 
-		T &operator*() const { return *u_ra.ra->resource; }
-		T *operator->() const { return u_ra.ra->resource; }
+		constexpr T &operator*() const { return *u_ra.ra->resource; }
+		constexpr T *operator->() const { return u_ra.ra->resource; }
 
-		T* const raw() const { return u_ra.ra->resource; }
-		operator T* const () const { return u_ra.ra->resource; }
+		constexpr T* const raw() const { return u_ra.ra->resource; }
+		constexpr operator T* const () const { return u_ra.ra->resource; }
 	};
 
 	template<class T>

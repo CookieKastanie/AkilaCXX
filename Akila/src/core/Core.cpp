@@ -1,4 +1,5 @@
 #include "Akila/core/Core.hpp"
+#include "Akila/core/Metrics.hpp"
 
 using namespace Akila;
 
@@ -12,7 +13,7 @@ Core::Core() {}
 
 int Core::run(int argc, char *argv[], void (*init)(void)) {
 	glfwInit();
-	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 	//glfwWindowHint(GLFW_SAMPLES, 0);
@@ -91,6 +92,7 @@ int Core::run(int argc, char *argv[], void (*init)(void)) {
 		ImGui_ImplGlfw_NewFrame();
 		ImGui::NewFrame();
 		layerManager->drawImGui();
+		TimeMetric::flushAndDrawImGui();
 		ImGui::Render();
 		ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 

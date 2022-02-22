@@ -8,9 +8,18 @@
 namespace Akila {
 	class ResourceFileLoader {
 	private:
-		static int count;
-		static std::function<void()> countCB; 
-		static std::function<void()> callback;
+		struct LoadingInstance {
+		private:
+			int count;
+
+		public:
+			LoadingInstance(std::function<void()> const &callback);
+
+			std::function<void()> callback;
+			void countUp();
+			void countDown();
+			bool isFinished();
+		};
 
 	public:
 		static void fillResourcePool(ResourcePool *rp, nlohmann::json &file, std::function<void()> const &callback);

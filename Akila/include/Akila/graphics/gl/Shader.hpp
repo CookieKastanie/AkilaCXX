@@ -47,6 +47,7 @@ namespace Akila {
 
 			void send(const std::string &name, const int &value) const;
 			void send(const std::string &name, const float &value) const;
+			void send(const std::string &name, const std::vector<float> &values) const;
 			void send(const std::string &name, const glm::vec2 &value) const;
 			void send(const std::string &name, const glm::vec3 &value) const;
 			void send(const std::string &name, const std::vector<glm::vec3> &values) const;

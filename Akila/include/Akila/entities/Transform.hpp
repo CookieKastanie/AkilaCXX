@@ -10,9 +10,11 @@ namespace Akila {
     private:
         glm::vec3 prevPosition;
         glm::quat prevRotation;
+        glm::vec3 prevScale;
 
         glm::vec3 position;
         glm::quat rotation;
+        glm::vec3 scale;
 
         glm::mat4 matrix;
 
@@ -21,6 +23,7 @@ namespace Akila {
 
         void translate(float dx, float dy, float dz);
         void setPosition(float x, float y, float z);
+        void setPosition(glm::vec3 const &vec);
 
         glm::vec3 &getPosition();
 
@@ -30,6 +33,10 @@ namespace Akila {
 
         void setRotationZYX(float ax, float ay, float az);
         glm::quat &getRotation();
+
+        void setScale(float x, float y, float z);
+        void setScale(float s);
+
         glm::mat4 &toMatrix();
         glm::mat4 &toMatrixFromOrigin(const glm::mat4 &o);
 
