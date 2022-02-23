@@ -65,6 +65,8 @@ void GameLayer::draw() {
 }
 
 void GameLayer::drawImGui() {
+	FUNC_TIME_METRIC();
+
 	ImGui::Begin("Test");
 	ImGui::End();
 

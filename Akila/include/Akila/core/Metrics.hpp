@@ -38,7 +38,7 @@ namespace Akila {
 		struct TimerData {
 			TimerData();
 			unsigned int count;
-			std::chrono::milliseconds msTotal;
+			std::chrono::microseconds msTotal;
 		};
 
 		static std::map<std::string, TimerData> timers;
@@ -59,13 +59,5 @@ namespace Akila {
 	};
 }
 
-#define S1(x) #x
-#define S2(x) S1(x)
-
-
-//#define TIMER_NAME file_name(__FILE__) "::" S2(__FUNCTION_NAME__)
-//#define TIMER_NAME file_name(__FILE__ "::" S2(__func__))
-//#define TIMER_NAME file_name(__FILE__ "::" S2(__func__))
-#define TIMER_NAME __func__
-//#define FUNC_TIME_METRIC() Akila::TimeMetric::Timer tmpTimer = Akila::TimeMetric::scope(file_name(__FILE__##__FUNCTION_NAME__));
+#define TIMER_NAME std::string(file_name(__FILE__)) +"::"+ std::string(__func__)
 #define FUNC_TIME_METRIC() Akila::TimeMetric::Timer akilaTmpFuncTimer = Akila::TimeMetric::scope(TIMER_NAME);

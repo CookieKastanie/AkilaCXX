@@ -20,7 +20,7 @@ TimeMetric::Timer::Timer(std::string const &name): name{name} {
 
 TimeMetric::Timer::~Timer() {
 	std::chrono::steady_clock::time_point end = std::chrono::steady_clock::now();
-	TimeMetric::timers[name].msTotal += std::chrono::duration_cast<std::chrono::milliseconds>(end - begin);
+	TimeMetric::timers[name].msTotal += std::chrono::duration_cast<std::chrono::microseconds>(end - begin);
 }
 
 void TimeMetric::flushAndDrawImGui() {
@@ -28,7 +28,7 @@ void TimeMetric::flushAndDrawImGui() {
 
 	for(auto &t: timers) {
 		std::string text{t.first + " : " +
-			std::to_string(t.second.msTotal.count()) + "ms (" +
+			std::to_string(t.second.msTotal.count() / 1000.) + "ms (" +
 			std::to_string(t.second.count) + ")"};
 		ImGui::Text(text.c_str());
 
