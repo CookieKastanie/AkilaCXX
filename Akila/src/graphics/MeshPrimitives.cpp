@@ -98,7 +98,7 @@ Mesh *MeshPrimitives::cube() {
 	}));
 
 	auto normal = createPtr<VBO>(3, ShaderBuilder::Attributes::A_NORMAL);
-	vertex->setData(std::vector<glm::vec3>({
+	normal->setData(std::vector<glm::vec3>({
 		{0, 1, 0}, {0, 1, 0}, {0, 1, 0},
 		{0, 0, 1}, {0, 0, 1}, {0, 0, 1},
 		{-1, 0, 0}, {-1, 0, 0}, {-1, 0, 0},
@@ -114,7 +114,7 @@ Mesh *MeshPrimitives::cube() {
 	}));
 
 	auto tangent = createPtr<VBO>(3, ShaderBuilder::Attributes::A_TANGENT);
-	vertex->setData(std::vector<glm::vec3>({
+	tangent->setData(std::vector<glm::vec3>({
 		{-1, 0, 0}, {-1, 0, 0}, {-1, 0, 0},
 		{-0, 1, 0}, {0, 1, 0}, {0, 1, 0},
 		{0, 1, -0}, {0, 1, 0}, {0, 1, 0},
@@ -142,7 +142,7 @@ Mesh *MeshPrimitives::cube() {
 Mesh *MeshPrimitives::invertedCube() {
 	Mesh *mesh = new Mesh{};
 
-	auto vertex = createPtr<VBO>(2, ShaderBuilder::Attributes::A_POSITION);
+	auto vertex = createPtr<VBO>(3, ShaderBuilder::Attributes::A_POSITION);
 	vertex->setData(std::vector<glm::vec3>({
 		{1, 1, 1}, {-1, 1, -1}, {1, 1, -1},
 		{-1, -1, 1}, {1, 1, 1}, {1, -1, 1},
@@ -175,7 +175,7 @@ Mesh *MeshPrimitives::invertedCube() {
 	}));
 
 	auto normal = createPtr<VBO>(3, ShaderBuilder::Attributes::A_NORMAL);
-	vertex->setData(std::vector<glm::vec3>({
+	normal->setData(std::vector<glm::vec3>({
 		{0, -1, 0}, {0, -1, 0}, {0, -1, 0},
 		{0, 0, -1}, {0, 0, -1}, {0, 0, -1},
 		{1, 0, 0}, {1, 0, 0}, {1, 0, 0},
@@ -191,7 +191,7 @@ Mesh *MeshPrimitives::invertedCube() {
 	}));
 
 	auto tangent = createPtr<VBO>(3, ShaderBuilder::Attributes::A_TANGENT);
-	vertex->setData(std::vector<glm::vec3>({
+	tangent->setData(std::vector<glm::vec3>({
 		{-1, 0, -0}, {-1, 0, -0}, {-1, 0, -0},
 		{-0, 1, 0}, {-0, 1, 0}, {0, 1, 0},
 		{-0, 1, -0}, {-0, 1, -0}, {-0, 1, 0},
