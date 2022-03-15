@@ -39,15 +39,6 @@ namespace Akila {
 			return get(name);
 		}
 
-		template<class SubT>
-		Ref<SubT> get(std::string const &name) {
-			auto it = map.find(name);
-			if(it == map.end()) set(name, generator());
-			else return it->second.createReference<SubT>();
-
-			return get<SubT>(name);
-		}
-
 		bool remove(std::string const &name, bool force = false) {
 			auto it = map.find(name);
 

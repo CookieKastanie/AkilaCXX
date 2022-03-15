@@ -31,8 +31,8 @@ glm::vec3 calcTangent(glm::vec3 &n, glm::vec3 &p1, glm::vec3 &p2, glm::vec3 &p3,
 	tangent.y = f * (deltaUV2.y * edge1.y - deltaUV1.y * edge2.y);
 	tangent.z = f * (deltaUV2.y * edge1.z - deltaUV1.y * edge2.z);
 
-	return tangent;
-	//return glm::normalize(tangent - glm::dot(tangent, n) * n);
+	//return tangent;
+	return glm::normalize(tangent - glm::dot(tangent, n) * n);
 }
 
 void MeshLoader::obj(Mesh *mesh, std::string const &path, std::function<void()> const &callback) {

@@ -13,17 +13,17 @@ FrameBuffer::~FrameBuffer() {
     glDeleteFramebuffers(1, &id);
 }
 
-void FrameBuffer::setTexture(const std::shared_ptr<Texture> &texture, int unit) {
+void FrameBuffer::setTexture(Ref<Texture> const &texture, int unit) {
     textures[unit] = texture;
     changeAttachment(unit, GL_TEXTURE_2D);
 }
 
-void FrameBuffer::setTexture(const std::shared_ptr<CubeMapTexture> &texture, int unit) {
+void FrameBuffer::setTexture(Ref<CubeMapTexture> const &texture, int unit) {
     textures[unit] = texture;
     changeAttachment(unit, GL_TEXTURE_CUBE_MAP_POSITIVE_X);
 }
 
-std::shared_ptr<TextureBuffer> FrameBuffer::getTexture(int unit) {
+Ref<TextureBuffer> &FrameBuffer::getTexture(int unit) {
     return textures[unit];
 }
 
@@ -31,12 +31,12 @@ void FrameBuffer::changeAttachment(int unit, GLenum attachment, unsigned int mip
     glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0 + unit, attachment, textures[unit]->getId(), mip);
 }
 
-void FrameBuffer::setDepthTexture(const std::shared_ptr<DepthTexture> &texture) {
+void FrameBuffer::setDepthTexture(Ref<DepthTexture> const &texture) {
     depthTexture = texture;
     glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, texture->getId(), 0);
 }
 
-std::shared_ptr<TextureBuffer> FrameBuffer::getDepthTexture() {
+Ref<TextureBuffer> &FrameBuffer::getDepthTexture() {
     return depthTexture;
 }
 
@@ -45,7 +45,7 @@ void FrameBuffer::prepare() {
 
     int count = 0;
     for(int i = 0; i < MAX_ATTACHMENT_COUNT; ++i) {
-        if(textures[i].get() != nullptr) {
+        if(textures[i].isValid() && textures[i].raw() != nullptr) {
             buffs[count++] = GL_COLOR_ATTACHMENT0 + i;
         }
     }
@@ -73,7 +73,7 @@ void FrameBuffer::prepare() {
 
 void FrameBuffer::bind(int unit) {
     glBindFramebuffer(GL_FRAMEBUFFER, id);
-    TextureBuffer *t = textures[unit].get();
+    TextureBuffer *t = textures[unit];
     glViewport(0, 0, t->getWidth(), t->getHeight());
 }
 
@@ -91,7 +91,7 @@ void FrameBuffer::blitToDisplay(int unit, Display *display, TextureBuffer::Filte
     glBindFramebuffer(GL_READ_FRAMEBUFFER, id);
     glReadBuffer(GL_COLOR_ATTACHMENT0 + unit);
 
-    TextureBuffer *t = textures[unit].get();
+    TextureBuffer *t = textures[unit];
     glBlitFramebuffer(0, 0,
         t->getWidth(), t->getHeight(),
         0, 0,
@@ -105,8 +105,8 @@ void FrameBuffer::blitTo(int seflUnit, FrameBuffer *fb, TextureBuffer::FilterMod
     glBindFramebuffer(GL_READ_FRAMEBUFFER, id);
     glReadBuffer(GL_COLOR_ATTACHMENT0 + seflUnit);
 
-    TextureBuffer *selfTex = textures[seflUnit].get();
-    TextureBuffer *otherTex = fb->textures[0].get();
+    TextureBuffer *selfTex = textures[seflUnit];
+    TextureBuffer *otherTex = fb->textures[0];
     glBlitFramebuffer(
         0, 0,
         selfTex->getWidth(), selfTex->getHeight(),
@@ -117,12 +117,12 @@ void FrameBuffer::blitTo(int seflUnit, FrameBuffer *fb, TextureBuffer::FilterMod
 
 void FrameBuffer::resizeAll(int width, int height) {
     for(int i = 0; i < MAX_ATTACHMENT_COUNT; ++i) {
-        if(textures[i].get() != nullptr) {
+        if(textures[i].raw() != nullptr) {
             textures[i]->setSize(width, height);
         }
     }
 
-    if(depthTexture.get() != nullptr) {
+    if(depthTexture.raw() != nullptr) {
         depthTexture->setSize(width, height);
     }
 }

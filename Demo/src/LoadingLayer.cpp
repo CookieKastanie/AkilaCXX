@@ -2,14 +2,20 @@
 
 #include <Akila/graphics/MeshPrimitives.hpp>
 #include "Demo/GameLayer.hpp"
+#include <Akila/graphics/pbr/Environment.hpp>
 
 using namespace Akila;
 
 LoadingLayer::LoadingLayer(): Layer{} {
 	Core::resourcePool->load("resources.json", [&]() {
-		LOG("WOW")
-		Core::layerManager->add(new GameLayer{});
-		Core::layerManager->remove(this);
+		LOG("WOW");
+
+		Environment::createBRDFLUT("brdfLUT");
+		Environment::createIBL(Core::resourcePool->textures.get("env"), "skybox", "irradiance", "prefilter", [&]() {
+			LOG("ALED");
+			Core::layerManager->add(new GameLayer{});
+			Core::layerManager->remove(this);
+		});
 	});
 
 	Core::resourcePool->meshs.set("screenTriangle", MeshPrimitives::screenTriangle());

@@ -8,5 +8,6 @@ namespace Akila {
 		static Mesh *screenTriangle();
 		static Mesh *quad();
 		static Mesh *cube();
+		static Mesh *invertedCube();
 	};
 }

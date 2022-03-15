@@ -171,7 +171,7 @@ void ResourceFileLoader::fillResourcePool(ResourcePool *rp, nlohmann::json &file
 		if(materialFile["texture"].is_object()) for(auto &item : materialFile["texture"].items()) {
 			if(item.value().is_number_integer()) {
 				Material::TextureBinding tb;
-				tb.textureBuffer = rp->textures.get<TextureBuffer>(item.key());
+				tb.textureBuffer = rp->textures.get(item.key());
 				tb.unit = item.value();
 				material->addTextureBinding(tb);
 			}
@@ -180,7 +180,7 @@ void ResourceFileLoader::fillResourcePool(ResourcePool *rp, nlohmann::json &file
 		if(materialFile["cubemap"].is_object()) for(auto &item : materialFile["cubemap"].items()) {
 			if(item.value().is_number_integer()) {
 				Material::TextureBinding tb;
-				tb.textureBuffer = rp->cubeMaps.get<TextureBuffer>(item.key());
+				tb.textureBuffer = rp->cubeMaps.get(item.key());
 				tb.unit = item.value();
 				material->addTextureBinding(tb);
 			}

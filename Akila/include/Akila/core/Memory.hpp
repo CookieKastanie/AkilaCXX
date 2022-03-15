@@ -17,54 +17,59 @@ namespace Akila {
 
 	template<class T>
 	class Ref {
-	public:
-		union u_RA_void
-		{
-			RefAnchor<T> *ra;
-			void *ptr;
-		};
-
 	private:
 		friend class RefAnchor<T>;
 
-		u_RA_void u_ra;
+		RefAnchor<T> *ra;
 
 	public:
-		Ref(u_RA_void const &u_ra): u_ra{u_ra} {}
-		Ref(): u_ra{nullptr} {}
+		Ref(RefAnchor<T> *ra): ra{ra} {++ra->refCount;}
+		Ref(void *ra): ra{static_cast<RefAnchor<T>*>(ra)} {++this->ra->refCount;}
+		Ref(): ra{nullptr} {}
 
 		//deplacement
 		Ref(Ref &&other) {
-			u_ra = other.u_ra;
-			other.u_ra.ptr = nullptr;
+			ra = other.ra;
 		}
+
 		Ref &operator=(Ref &&other) noexcept {
-			u_ra = other.u_ra;
-			other.u_ra.ptr = nullptr;
+			if(ra       != nullptr) --ra->refCount;
+			if(other.ra != nullptr) ++other.ra->refCount;
+
+			ra = other.ra;
 
 			return *this;
 		}
 
 		// copie
 		Ref(Ref const &other) {
-			u_ra = other.u_ra;
-			++u_ra.ra->refCount;
+			ra = other.ra;
+			++ra->refCount;
 		}
-		Ref operator=(Ref const &other) {
-			u_ra = other.u_ra;
-			++u_ra.ra->refCount;
+
+		Ref &operator=(Ref const &other) {
+			if(ra       != nullptr) --ra->refCount;
+			if(other.ra != nullptr) ++other.ra->refCount;
+
+			ra = other.ra;
+
 			return *this;
 		}
 
 		~Ref() {
-			if(u_ra.ra != nullptr) --u_ra.ra->refCount;
+			if(ra != nullptr) --ra->refCount;
 		}
 
-		constexpr T &operator*() const { return *u_ra.ra->resource; }
-		constexpr T *operator->() const { return u_ra.ra->resource; }
+		constexpr T &operator*() const { return *ra->resource; }
+		constexpr T *operator->() const { return ra->resource; }
 
-		constexpr T* const raw() const { return u_ra.ra->resource; }
-		constexpr operator T* const () const { return u_ra.ra->resource; }
+		constexpr T* const raw() const { return ra->resource; }
+		constexpr operator T* const () const { return ra->resource; }
+
+		template<class C>
+		constexpr operator Ref<C> const () const { return {ra}; }
+
+		bool isValid() { return ra != nullptr; }
 	};
 
 	template<class T>
@@ -80,7 +85,7 @@ namespace Akila {
 		RefAnchor(RefAnchor const &) = delete;
 		RefAnchor(RefAnchor &&) = delete;
 		~RefAnchor() {
-			if(haveReferences()) std::cout << "RefAnchor deleted with " << refCount << " refs !\n";
+			if(haveReferences()) std::cerr << "RefAnchor deleted with " << refCount << " refs !\n";
 			if(resource != nullptr) delete resource;
 		}
 
@@ -90,24 +95,10 @@ namespace Akila {
 		}
 
 		Ref<T> createReference() {
-			++refCount;
-
-			Ref<T>::u_RA_void u_ra;
-			u_ra.ptr = this;
-
-			return {u_ra};
-		}
-
-		template<class SubT>
-		Ref<SubT> createReference() {
-			++refCount;
-
-			Ref<SubT>::u_RA_void u_ra;
-			u_ra.ptr = this;
-
-			return {u_ra};
+			return {this};
 		}
 
 		bool haveReferences() const { return refCount != 0; }
 	};
 }
+
