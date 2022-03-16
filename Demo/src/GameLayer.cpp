@@ -3,13 +3,17 @@
 #include <nlohmann/json.hpp>
 #include <imgui/imgui.h>
 #include <Akila/core/Metrics.hpp>
+#include <Akila/graphics/MeshPrimitives.hpp>
 
 using namespace Akila;
 using nlohmann::json;
 
 GameLayer::GameLayer() {
+	//Core::resourcePool->meshs.set("sword", MeshPrimitives::invertedCube());
+	swordMaterial = Core::resourcePool->materials.get("redColor");
+
 	sword = Core::resourcePool->meshs.get("sword");
-	swordMaterial = Core::resourcePool->materials.get("sword");
+	//swordMaterial = Core::resourcePool->materials.get("sword");
 
 	Core::renderer->setCamera(createPtr<MouseCamera>(Core::display->getMouse()));
 	Core::renderer->setClearColor(0, 0, 0);

@@ -158,12 +158,12 @@ void ResourceFileLoader::fillResourcePool(ResourcePool *rp, nlohmann::json &file
 
 		material->setShader(rp->shaders.get(materialFile["shader"]));
 
-		if(materialFile["uniforms-i"].is_array()) for(json &unifFile : materialFile["uniforms-i"]) {
+		if(materialFile["uniforms-i"].is_object()) {
 			auto uvis = readUniform(material->getShader(), materialFile["uniforms-i"], true);
 			for(auto &uvi : uvis) material->addUniformValue(uvi, true);
 		}
 
-		if(materialFile["uniforms-f"].is_array()) for(json &unifFile : materialFile["uniforms-f"]) {
+		if(materialFile["uniforms-f"].is_object()) {
 			auto uvfs = readUniform(material->getShader(), materialFile["uniforms-f"], false);
 			for(auto &uvf : uvfs) material->addUniformValue(uvf, false);
 		}

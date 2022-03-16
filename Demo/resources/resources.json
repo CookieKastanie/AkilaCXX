@@ -5,6 +5,13 @@
 			"src": "shaders/lightSource.glsl"
 		},
 		{
+			"name": "color",
+			"src": "shaders/color.glsl",
+			"uniforms-f": {
+				"color": [ 0, 1, 0 ]
+			}
+		},
+		{
 			"name": "loadingAnimation",
 			"src": "shaders/loadingAnimation.glsl",
 			"uniforms-f": {
@@ -53,7 +60,7 @@
 			"name": "netShader",
 			"src": "shaders/netShader.glsl",
 			"uniforms-f": {
-				"color": [1, 0, 0]
+				"color": [ 1, 0, 0 ]
 			}
 		}
 	],
@@ -172,6 +179,13 @@
 		{
 			"name": "red",
 			"shader": "lightSource",
+			"uniforms-f": {
+				"color": [ 1, 0, 0 ]
+			}
+		},
+		{
+			"name": "redColor",
+			"shader": "color",
 			"uniforms-f": {
 				"color": [ 1, 0, 0 ]
 			}
