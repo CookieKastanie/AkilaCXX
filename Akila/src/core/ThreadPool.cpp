@@ -12,6 +12,8 @@ ThreadPool::ThreadPool(unsigned int count): exit{false} {
 
             while(!exit) {
                 Job job;
+                job.task = []() {};
+                job.join = []() {};
 
                 {
                     std::unique_lock<std::mutex> condLock(conditionMutex);

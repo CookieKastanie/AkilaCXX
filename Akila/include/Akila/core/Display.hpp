@@ -25,6 +25,7 @@ namespace Akila {
 			friend class Renderer;
 
 			std::function<void()> rendererResizeCallback;
+			std::function<void()> resizeCallback;
 
 		public:
 			static int const DONT_CARE = GLFW_DONT_CARE;
@@ -55,6 +56,8 @@ namespace Akila {
 			Mouse *getMouse();
 
 			void beforePollEvent();
+
+			void onResize(std::function<void()> const &cb);
 
 		private:
 			void setRendererResizeCallback(const std::function<void()> &cb);

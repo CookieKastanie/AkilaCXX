@@ -22,16 +22,16 @@ void Material::setShader(Ref<Shader> const &shader) {
 }
 
 void Material::addUniformValue(const UniformValue &uv, bool isInts) {
-	if(isInts) uniformsInts.push_back(uv);
+	if(isInts) uniformsInt.push_back(uv);
 	else uniformsFloat.push_back(uv);
 }
 
 void Material::sendUniforms() const {
-	for(auto uv : uniformsFloat) {
+	for(auto const &uv : uniformsFloat) {
 		shader->sendRawFloat(uv.uid, uv.values.data(), (int)uv.values.size());
 	}
 
-	for(auto uv : uniformsInts) {
+	for(auto const &uv : uniformsInt) {
 		shader->sendRawInt(uv.uid, uv.values.data(), (int)uv.values.size());
 	}
 }
@@ -43,5 +43,40 @@ void Material::addTextureBinding(TextureBinding const &tb) {
 void Material::bindTextures() const {
 	for(auto &tex : textures) {
 		tex.textureBuffer->bind(tex.unit);
+	}
+}
+
+void Material::copyFrom(Material const *mat) {
+	shader = mat->shader;
+
+	uniformsFloat.clear();
+	for(UniformValue const &uv : mat->uniformsFloat) {
+		UniformValue uvCopy;
+
+		uvCopy.uid = uv.uid;
+		uvCopy.values.reserve(uv.values.size());
+		for(UniformValueType const &v : uv.values) {
+			uvCopy.values.push_back(v);
+		}
+
+		addUniformValue(uvCopy);
+	}
+
+	uniformsInt.clear();
+	for(UniformValue const &uv : mat->uniformsInt) {
+		UniformValue uvCopy;
+
+		uvCopy.uid = uv.uid;
+		uvCopy.values.reserve(uv.values.size());
+		for(UniformValueType const &v : uv.values) {
+			uvCopy.values.push_back(v);
+		}
+
+		addUniformValue(uvCopy, true);
+	}
+
+	textures.clear();
+	for(TextureBinding const &tb : mat->textures) {
+		addTextureBinding({tb.unit, tb.textureBuffer});
 	}
 }

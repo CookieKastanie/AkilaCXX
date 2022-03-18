@@ -8,7 +8,7 @@
 namespace Akila {
 	class FrameBuffer {
 	private:
-		static int const MAX_ATTACHMENT_COUNT = 6;
+		static int const MAX_ATTACHMENT_COUNT = 8;
 
 		GLuint id;
 		Ref<TextureBuffer> textures[MAX_ATTACHMENT_COUNT];
@@ -22,7 +22,7 @@ namespace Akila {
 		void setTexture(Ref<CubeMapTexture> const &texture, int unit = 0);
 		Ref<TextureBuffer> &getTexture(int unit);
 
-		void setDepthTexture(Ref<DepthTexture> const &texture);
+		void setDepthTexture(Ref<TextureBuffer> const &texture);
 
 		Ref<TextureBuffer> &getDepthTexture();
 

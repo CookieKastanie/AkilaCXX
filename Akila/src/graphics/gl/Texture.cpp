@@ -8,6 +8,7 @@ TextureBuffer::TextureBuffer(unsigned int kind, Format internalFormat):
 	internalFormat{static_cast<GLenum>(internalFormat)},
 	width{0}, height{0} {
 	glGenTextures(1, &id);
+	setParameters({});
 }
 
 TextureBuffer::~TextureBuffer() {
@@ -25,9 +26,16 @@ void TextureBuffer::bind(const unsigned int &unit) const {
 
 void TextureBuffer::setSize(int width, int height) {
 	bind();
+	//glTexImage2D(
+	//	kind, 0, internalFormat, width, height, 0,
+	//	static_cast<GLenum>(Format::RGB), static_cast<GLenum>(Type::UNSIGNED_BYTE), nullptr
+	//);
+
 	glTexImage2D(
 		kind, 0, internalFormat, width, height, 0,
-		static_cast<GLenum>(Format::RGB), static_cast<GLenum>(Type::UNSIGNED_BYTE), nullptr
+		internalFormat == GL_DEPTH_COMPONENT ?
+		GL_DEPTH_COMPONENT : static_cast<GLenum>(Format::RGB),
+		static_cast<GLenum>(Type::UNSIGNED_BYTE), nullptr
 	);
 
 	this->width = width;

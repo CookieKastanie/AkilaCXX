@@ -30,7 +30,7 @@ namespace Akila {
 		Ref<Shader> shader;
 
 		std::vector<UniformValue> uniformsFloat;
-		std::vector<UniformValue> uniformsInts;
+		std::vector<UniformValue> uniformsInt;
 
 		std::vector<TextureBinding> textures;
 
@@ -49,5 +49,7 @@ namespace Akila {
 
 		void addTextureBinding(TextureBinding const &tb);
 		void bindTextures() const;
+
+		void copyFrom(Material const *mat);
 	};
 }

@@ -34,6 +34,7 @@ Display::Display() {
 		if(self->height <= 0) self->height = 1;
 
 		self->rendererResizeCallback();
+		self->resizeCallback();
 	});
 
 	glfwSetKeyCallback(window, [](GLFWwindow *window, int key, int scancode, int action, int mods) -> void {
@@ -168,6 +169,10 @@ void Display::beforePollEvent() {
 
 void Display::setRendererResizeCallback(const std::function<void()> &cb) {
 	rendererResizeCallback = cb;
+}
+
+void Display::onResize(std::function<void()> const &cb) {
+	resizeCallback = cb;
 }
 
 Display::~Display() {

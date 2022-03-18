@@ -31,7 +31,7 @@ void FrameBuffer::changeAttachment(int unit, GLenum attachment, unsigned int mip
     glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0 + unit, attachment, textures[unit]->getId(), mip);
 }
 
-void FrameBuffer::setDepthTexture(Ref<DepthTexture> const &texture) {
+void FrameBuffer::setDepthTexture(Ref<TextureBuffer> const &texture) {
     depthTexture = texture;
     glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, texture->getId(), 0);
 }
@@ -50,6 +50,7 @@ void FrameBuffer::prepare() {
         }
     }
 
+    glBindFramebuffer(GL_FRAMEBUFFER, id);
     glDrawBuffers(count, buffs);
 
     int status = glCheckFramebufferStatus(GL_FRAMEBUFFER);
@@ -117,12 +118,12 @@ void FrameBuffer::blitTo(int seflUnit, FrameBuffer *fb, TextureBuffer::FilterMod
 
 void FrameBuffer::resizeAll(int width, int height) {
     for(int i = 0; i < MAX_ATTACHMENT_COUNT; ++i) {
-        if(textures[i].raw() != nullptr) {
+        if(textures[i].isValid() && textures[i].raw() != nullptr) {
             textures[i]->setSize(width, height);
         }
     }
 
-    if(depthTexture.raw() != nullptr) {
+    if(depthTexture.isValid() && depthTexture.raw() != nullptr) {
         depthTexture->setSize(width, height);
     }
 }

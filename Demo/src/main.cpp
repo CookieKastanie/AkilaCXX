@@ -1,6 +1,7 @@
 #include "Akila/core/Core.hpp"
 #include "Demo/LoadingLayer.hpp"
 #include "Demo/GabLayer.hpp"
+#include "Demo/GabLayer2.hpp"
 
 /*
 static int objectCount{0};
@@ -36,6 +37,6 @@ int main(int argc, char *argv[]) {
 	return Akila::Core::run(argc, argv, []() {
 		Akila::FileSystem::setResourceFolder("resources");
 		Akila::Core::display->setTitle(u8"Akila (°-° )");
-		Akila::Core::layerManager->add(new LoadingLayer{});
+		Akila::Core::layerManager->add(new GabLayer2{});
 	});
 }

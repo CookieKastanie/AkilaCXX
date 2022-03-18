@@ -112,13 +112,13 @@ void ResourceFileLoader::fillResourcePool(ResourcePool *rp, nlohmann::json &file
 	
 	//// Textures
 	if(file["textures"].is_array()) for(json &textureFile : file["textures"]) {
-		if(!textureFile["name"].is_string() || !textureFile["src"].is_string()) continue;
+		if(!textureFile["name"].is_string()) continue;
 
 		Texture *texture;
 		if(textureFile["format"].is_string())
 			texture = new Texture{TextureLoader::stringToFormat(textureFile["format"])};
-		
-		texture = new Texture{};
+		else
+			texture = new Texture{};
 
 		Texture::Parameters params{};
 		if(textureFile["wrapS"].is_string())
@@ -141,11 +141,14 @@ void ResourceFileLoader::fillResourcePool(ResourcePool *rp, nlohmann::json &file
 		bool mips = false;
 		if(textureFile["mips"].is_boolean()) mips = textureFile["mips"];
 
-		loading->countUp();
-		TextureLoader::color(texture, textureFile["src"], [=]() {
-			if(mips) texture->generateMipmap();
-			loading->countDown();
-		});
+		if(textureFile["src"].is_string()) {
+			loading->countUp();
+			TextureLoader::color(texture, textureFile["src"], [=]() {
+				if(mips) texture->generateMipmap();
+				loading->countDown();
+			});
+		}
+		
 		rp->textures.set(textureFile["name"], texture);
 	}
 
