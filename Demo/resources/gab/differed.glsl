@@ -27,6 +27,8 @@ struct Light {
 };
 //uniform Light light;
 
+uniform bool applySSAO;
+
 void main()
 {
     Light light;
@@ -43,7 +45,11 @@ void main()
     float AmbientOcclusion = texture(ssao, TexCoords).r;
     
     // then calculate lighting as usual
-    vec3 ambient = vec3(0.3 * Diffuse * AmbientOcclusion);
+    //vec3 ambient = vec3(0.3 * Diffuse * AmbientOcclusion);
+    vec3 ambient;
+    if(applySSAO) ambient = vec3(0.3 * Diffuse * AmbientOcclusion);
+    else ambient = vec3(0.3 * Diffuse);
+
     vec3 lighting  = ambient; 
     vec3 viewDir  = normalize(-FragPos); // viewpos is (0.0.0)
     // diffuse

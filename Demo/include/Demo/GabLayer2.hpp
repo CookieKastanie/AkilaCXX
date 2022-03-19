@@ -24,6 +24,13 @@ private:
 
 	Ref<Texture> noiseTex;
 
+	///
+
+	bool applySSAO;
+	int kernelSize;
+	float radius;
+	float bias;
+
 public:
 	GabLayer2();
 

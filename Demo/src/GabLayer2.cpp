@@ -11,7 +11,37 @@ float lerp(float a, float b, float f) {
 	return a + f * (b - a);
 }
 
-GabLayer2::GabLayer2() {
+bool sliderFloatDefault(const char *label, float *v, float v_min, float v_max, float v_default, const char *display_format = "%.3f") {
+	bool ret = ImGui::SliderFloat(label, v, v_min, v_max, display_format);
+
+	if(ImGui::BeginPopupContextItem(label)) {
+		char buf[64];
+		std::sprintf(buf, "Reset to %.3f", v_default);
+
+		if(ImGui::MenuItem(buf)) *v = v_default;
+		ImGui::MenuItem("Close");
+		ImGui::EndPopup();
+	}
+
+	return ret;
+}
+
+bool sliderIntDefault(const char *label, int *v, int v_min, int v_max, int v_default, const char *display_format = "%.3f") {
+	bool ret = ImGui::SliderInt(label, v, v_min, v_max, display_format);
+
+	if(ImGui::BeginPopupContextItem(label)) {
+		char buf[64];
+		std::sprintf(buf, "Reset to %d", v_default);
+
+		if(ImGui::MenuItem(buf)) *v = v_default;
+		ImGui::MenuItem("Close");
+		ImGui::EndPopup();
+	}
+
+	return ret;
+}
+
+GabLayer2::GabLayer2(): applySSAO{true}, kernelSize{64}, radius{.5}, bias{.025} {
 	Core::resourcePool->load("gabRes.json");
 
 	auto cam = createPtr<MouseCamera>(Core::display->getMouse());
@@ -116,25 +146,31 @@ void GabLayer2::draw() {
 	FUNC_TIME_METRIC();
 
 	gFbo->bind();
+	gShader->bind();
 	Core::renderer->clear();
 
 	Transform modelTransform;
-
-	gShader->bind();
 	gShader->send("model", modelTransform.toMatrix());
 	gShader->send("color", glm::vec3(0.8, 0.6, 0.0));
-
 	model->draw();
 
 	modelTransform.setScale(5);
 	gShader->send("model", modelTransform.toMatrix());
 	gShader->send("color", glm::vec3(0.0, 0.6, 0.8));
 	invertedCube->draw();
-
+	
 	///
+
+	Core::renderer->disable(Renderer::Capability::DEPTH_TEST);
+	Core::renderer->disable(Renderer::Capability::BLEND);
+	Core::renderer->disable(Renderer::Capability::CULL_FACE);
 
 	ssaoFbo->bind();
 	ssaoShader->bind();
+	ssaoShader->send("kernelSize", kernelSize);
+	ssaoShader->send("radius", radius);
+	ssaoShader->send("bias", bias);
+
 	gFbo->getTexture(1)->bind(0);
 	gFbo->getTexture(2)->bind(1);
 	noiseTex->bind(2);
@@ -150,13 +186,17 @@ void GabLayer2::draw() {
 	///
 
 	Core::renderer->useDefaultFrameBuffer();
-	Core::renderer->disable(Renderer::Capability::DEPTH_TEST);
 	differedShader->bind();
+	differedShader->send("applySSAO", applySSAO);
+
 	gFbo->getTexture(0)->bind(0);
 	gFbo->getTexture(1)->bind(1);
 	gFbo->getTexture(2)->bind(2);
 	ssaoBlurFbo->getTexture(0)->bind(3);
 	screenTriangle->draw();
+
+	Core::renderer->enable(Renderer::Capability::CULL_FACE);
+	Core::renderer->enable(Renderer::Capability::BLEND);
 	Core::renderer->enable(Renderer::Capability::DEPTH_TEST);
 }
 
@@ -170,8 +210,15 @@ void GabLayer2::drawImGui() {
 	ImGui::Image((ImTextureID)gFbo->getTexture(2)->getId(), ImVec2(w, h), ImVec2(0, 1), ImVec2(1, 0));
 	ImGui::End();
 
-	ImGui::Begin("Ssaomg");
+	ImGui::Begin("SSAO");
 	ImGui::Image((ImTextureID)ssaoFbo->getTexture(0)->getId(), ImVec2(w, h), ImVec2(0, 1), ImVec2(1, 0));
 	ImGui::Image((ImTextureID)ssaoBlurFbo->getTexture(0)->getId(), ImVec2(w, h), ImVec2(0, 1), ImVec2(1, 0));
+	ImGui::End();
+
+	ImGui::Begin("Options");
+	ImGui::Checkbox("Apply SSAO", &applySSAO);
+	sliderIntDefault("Kernel size", &kernelSize, 0, 64, 64);
+	sliderFloatDefault("Radius", &radius, 0, 4, .5);
+	sliderFloatDefault("Bias", &bias, 0, 1, .025);
 	ImGui::End();
 }
