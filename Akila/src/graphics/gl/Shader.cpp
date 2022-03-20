@@ -166,35 +166,35 @@ void Shader::send(const unsigned int &uid, const bool &value) const {
 /////////////////////////////////
 
 void Shader::send(const std::string &name, const int &value) const {
-    glUniform1i(uniformCache.find(name)->second, value);
+    glUniform1i(uniformCache.at(name), value);
 }
 
 void Shader::send(const std::string &name, const float &value) const {
-    glUniform1f(uniformCache.find(name)->second, value);
+    glUniform1f(uniformCache.at(name), value);
 }
 
 void Shader::send(const std::string &name, const std::vector<float> &values) const {
-    glUniform1fv(uniformCache.find(name)->second, (GLsizei)values.size(), (GLfloat *)values.data());
+    glUniform1fv(uniformCache.at(name), (GLsizei)values.size(), (GLfloat *)values.data());
 }
 
 void Shader::send(const std::string &name, const glm::vec2 &value) const {
-    glUniform2fv(uniformCache.find(name)->second, 1, &value[0]);
+    glUniform2fv(uniformCache.at(name), 1, &value[0]);
 }
 
 void Shader::send(const std::string &name, const glm::vec3 &value) const {
-    glUniform3fv(uniformCache.find(name)->second, 1, &value[0]);
+    glUniform3fv(uniformCache.at(name), 1, &value[0]);
 }
 
 void Shader::send(const std::string &name, const std::vector<glm::vec3> &values) const {
-    glUniform3fv(uniformCache.find(name)->second, (GLsizei)values.size(), (GLfloat *)values.data());
+    glUniform3fv(uniformCache.at(name), (GLsizei)values.size(), (GLfloat *)values.data());
 }
 
 void Shader::send(const std::string &name, const glm::mat4 &mat) const {
-    glUniformMatrix4fv(uniformCache.find(name)->second, 1, GL_FALSE, &mat[0][0]);
+    glUniformMatrix4fv(uniformCache.at(name), 1, GL_FALSE, &mat[0][0]);
 }
 
 void Shader::send(const std::string &name, const bool &value) const {
-    glUniform1i(uniformCache.find(name)->second, value);
+    glUniform1i(uniformCache.at(name), value);
 }
 
 /////////////////////////////////
