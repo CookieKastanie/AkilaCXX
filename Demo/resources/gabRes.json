@@ -21,8 +21,12 @@
             "src": "gab/ssaoBlur.glsl"
         },
         {
-            "name": "differed",
-            "src": "gab/differed.glsl"
+            "name": "deferred",
+            "src": "gab/deferred.glsl"
+        },
+        {
+            "name": "fxaa",
+            "src": "gab/fxaa.glsl"
         }
     ],
 
@@ -100,6 +104,15 @@
             "wrapT": "CLAMP_TO_EDGE",
             "minFilter": "LINEAR",
             "magFilter": "LINEAR"
+        },
+        {
+            "name": "deferedRenderTarget",
+            "format": "RGB",
+
+            "wrapS": "CLAMP_TO_EDGE",
+            "wrapT": "CLAMP_TO_EDGE",
+            "minFilter": "NEAREST",
+            "magFilter": "NEAREST"
         }
     ]
 }

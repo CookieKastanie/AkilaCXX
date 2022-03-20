@@ -12,7 +12,8 @@ private:
 	Ref<Shader> gShader;
 	Ref<Shader> ssaoShader;
 	Ref<Shader> ssaoBlurShader;
-	Ref<Shader> differedShader;
+	Ref<Shader> deferredShader;
+	Ref<Shader> fxaaShader;
 
 	Ref<Mesh> model;
 	Ref<Mesh> invertedCube;
@@ -21,6 +22,7 @@ private:
 	Ptr<FrameBuffer> gFbo;
 	Ptr<FrameBuffer> ssaoFbo;
 	Ptr<FrameBuffer> ssaoBlurFbo;
+	Ptr<FrameBuffer> deferredFbo;
 
 	Ref<Texture> noiseTex;
 
@@ -30,6 +32,11 @@ private:
 	int kernelSize;
 	float radius;
 	float bias;
+
+	bool useFXAA;
+
+	float textureScale;
+	std::function<void()> resizeFunction;
 
 public:
 	GabLayer2();
