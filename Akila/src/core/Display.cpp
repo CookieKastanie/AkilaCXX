@@ -7,7 +7,7 @@
 
 using namespace Akila;
 
-Display::Display() {
+Display::Display(): resizeCallback{[]() {}} {
 	window = glfwCreateWindow(1, 1, "", NULL, NULL);
 
 	if(window == NULL) {

@@ -10,10 +10,11 @@ using nlohmann::json;
 
 GameLayer::GameLayer() {
 	//Core::resourcePool->meshs.set("sword", MeshPrimitives::invertedCube());
-	swordMaterial = Core::resourcePool->materials.get("redColor");
+	//swordMaterial = Core::resourcePool->materials.get("redColor");
+	//sword = Core::resourcePool->meshs.get("glbCube");
 
 	sword = Core::resourcePool->meshs.get("sword");
-	//swordMaterial = Core::resourcePool->materials.get("sword");
+	swordMaterial = Core::resourcePool->materials.get("sword");
 
 	Core::renderer->setCamera(createPtr<MouseCamera>(Core::display->getMouse()));
 	Core::renderer->setClearColor(0, 0, 0);

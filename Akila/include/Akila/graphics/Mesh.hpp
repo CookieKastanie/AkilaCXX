@@ -12,11 +12,13 @@ namespace Akila {
 
 		Ptr<VAO> vao;
 		std::vector<Ptr<VBO>> vbos;
+		Ptr<IBO> ibo;
 
 	public:
 		Mesh();
 
 		void addVBO(const Ptr<VBO> &vbo);
+		void setIBO(const Ptr<IBO> &ibo);
 		void prepare();
 
 		void draw() const;

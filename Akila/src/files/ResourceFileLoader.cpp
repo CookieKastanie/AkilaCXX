@@ -105,8 +105,15 @@ void ResourceFileLoader::fillResourcePool(ResourcePool *rp, nlohmann::json &file
 		if(!meshFile["name"].is_string() || !meshFile["src"].is_string()) continue;
 		
 		Mesh *mesh = new Mesh{};
+
 		loading->countUp();
-		MeshLoader::obj(mesh, meshFile["src"], [=]() { loading->countDown(); });
+		std::string src = meshFile["src"];
+		if(src.size() > 3 && !src.substr(src.size() - 3).compare("glb")) {
+			MeshLoader::glb(mesh, src, [=]() { loading->countDown(); });
+		} else {
+			MeshLoader::obj(mesh, src, [=]() { loading->countDown(); });
+		}
+			
 		rp->meshs.set(meshFile["name"], mesh);
 	}
 	

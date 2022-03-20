@@ -164,7 +164,7 @@
 	"meshs": [
 		{
 			"name": "sword",
-			"src": "meshs/sword.ob"
+			"src": "meshs/sword.glb"
 		},
 		{
 			"name": "invertedCube",
@@ -172,7 +172,11 @@
 		},
 		{
 			"name": "terrain",
-			"src": "meshs/terrain.ob"
+			"src": "meshs/terrain.glb"
+		},
+		{
+			"name": "glbCube",
+			"src": "meshs/cube.glb"
 		}
 	],
 	"materials": [

@@ -15,10 +15,14 @@ void Buffer::bind() const {
 	glBindBuffer(kind, id);
 }
 
-void Buffer::setRawData(const void *data, int size, int offset) {
+void Buffer::setRawData(const void *data, int size, int offset, int typeSize) {
 	bind();
-	if(length == -1) glBufferData(kind, size, data, usage);
-	else glBufferSubData(kind, offset, size, data);
+	if(length == -1) {
+		glBufferData(kind, size, data, usage);
+		length = size / typeSize;
+	} else {
+		glBufferSubData(kind, offset, size, data);
+	}
 }
 
 int Buffer::getLength() const {

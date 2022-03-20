@@ -173,3 +173,184 @@ void MeshLoader::obj(Mesh *mesh, std::string const &path, std::function<void()> 
 
 	Core::coroutines->start(coro);
 }
+
+
+#include "nlohmann/json.hpp"
+
+struct BufferLocator {
+	std::size_t byteLength = 0;
+	std::size_t byteOffset = 0;
+};
+void affectBL(BufferLocator &bl, nlohmann::json &views, std::size_t index) {
+	if(index != -1) {
+		bl.byteLength = views[index]["byteLength"];
+		bl.byteOffset = views[index]["byteOffset"];
+	}
+};
+
+void MeshLoader::glb(Mesh *mesh, std::string const &path, std::function<void()> const &callback) {
+	struct _ {
+		Mesh *mesh;
+		std::string const path;
+		std::function<void()> const callback;
+
+		std::vector<std::uint8_t> raw;
+
+		BufferLocator vertex;
+		BufferLocator normal;
+		BufferLocator tangent;
+		BufferLocator uv;
+		BufferLocator index;
+	};
+	auto coro = Core::coroutines->create<>(_{mesh, path, callback});
+
+	coro->pushInThread(Trigger::AT_FRAME_START, [](_ &state) {
+		std::ifstream file(FileSystem::path(state.path), std::ios::binary);
+		if(!file.good()) std::cerr << "Mesh loading error : can't read " << state.path << std::endl;
+
+		{
+			std::uint32_t val;
+
+			file.read(reinterpret_cast<char *>(&val), sizeof(val));
+			if(val != 0x46546C67) return 1; // "glTF"
+
+			file.read(reinterpret_cast<char *>(&val), sizeof(val));
+			// verifier la version ?
+			//std::cout << "version : " << val << std::endl;
+
+			file.read(reinterpret_cast<char *>(&val), sizeof(val));
+			// verifier la longueur a la fin ?
+			//std::cout << "length : " << val << std::endl;
+		}
+		
+		nlohmann::json json;
+		{ // le premier block doit etre de type JSON
+			std::uint32_t chunkLength;
+			file.read(reinterpret_cast<char *>(&chunkLength), sizeof(chunkLength));
+			std::uint32_t chunkType;
+			file.read(reinterpret_cast<char *>(&chunkType), sizeof(chunkType));
+
+			if(chunkType != 0x4E4F534A) return 1; // "JSON"
+
+			std::string jsonText;
+			jsonText.resize(chunkLength);
+			file.read(jsonText.data(), chunkLength);
+			json = nlohmann::json::parse(jsonText);
+		}
+
+		{ // le second de type BIN
+			std::uint32_t chunkLength;
+			file.read(reinterpret_cast<char *>(&chunkLength), sizeof(chunkLength));
+			std::uint32_t chunkType;
+			file.read(reinterpret_cast<char *>(&chunkType), sizeof(chunkType));
+
+			if(chunkType != 0x004E4942) return 1; // "BIN"
+
+			state.raw.resize(chunkLength);
+			file.read(reinterpret_cast<char *>(state.raw.data()), chunkLength);
+		}
+
+		//std::cout << json.dump(4) << std::endl;
+
+		if(!json["meshes"].is_array() ||
+		   !json["accessors"].is_array() ||
+		   !json["bufferViews"].is_array())
+			return 1;
+		
+		std::size_t vertexBufferIndex = -1;
+		std::size_t normalBufferIndex = -1;
+		std::size_t tangentBufferIndex = -1;
+		std::size_t uvBufferIndex = -1;
+		std::size_t indicesBufferIndex = -1;
+		{
+			nlohmann::json &jsonAttrs = json["meshes"][0]["primitives"][0]["attributes"];
+
+			if(jsonAttrs["POSITION"].is_number_integer()) vertexBufferIndex = jsonAttrs["POSITION"];
+			if(jsonAttrs["NORMAL"].is_number_integer()) normalBufferIndex = jsonAttrs["NORMAL"];
+			if(jsonAttrs["TANGENT"].is_number_integer()) tangentBufferIndex = jsonAttrs["TANGENT"];
+			if(jsonAttrs["TEXCOORD_0"].is_number_integer()) uvBufferIndex = jsonAttrs["TEXCOORD_0"];
+
+			nlohmann::json &jsonIndices = json["meshes"][0]["primitives"][0]["indices"];
+			if(jsonIndices.is_number_integer()) indicesBufferIndex = jsonIndices;
+		}
+		
+		{
+			nlohmann::json &views = json["bufferViews"];
+
+			affectBL(state.vertex, views, vertexBufferIndex);
+			affectBL(state.normal, views, normalBufferIndex);
+			affectBL(state.tangent, views, tangentBufferIndex);
+			affectBL(state.uv, views, uvBufferIndex);
+			affectBL(state.index, views, indicesBufferIndex);
+		}
+
+		return 1;
+	});
+
+	coro->push(Trigger::AT_FRAME_START, [](_ &state) {
+
+		if(state.vertex.byteLength) {
+			auto vertexVBO = createPtr<VBO>(3, ShaderBuilder::Attributes::A_POSITION);
+			vertexVBO->setRawData(
+				state.raw.data() + state.vertex.byteOffset,
+				state.vertex.byteLength,
+				0, sizeof(float) * 3
+			);
+			state.mesh->addVBO(vertexVBO);
+		}
+
+		if(state.normal.byteLength) {
+			auto normalVBO = createPtr<VBO>(3, ShaderBuilder::Attributes::A_NORMAL);
+			normalVBO->setRawData(
+				state.raw.data() + state.normal.byteOffset,
+				state.normal.byteLength,
+				0, sizeof(float) * 3
+			);
+			state.mesh->addVBO(normalVBO);
+		}
+
+		if(state.tangent.byteLength) {
+			auto tangentVBO = createPtr<VBO>(3, ShaderBuilder::Attributes::A_TANGENT);
+
+			std::vector<glm::vec3> tangents;
+			tangents.reserve(state.tangent.byteLength / 3);
+
+			std::uint8_t *start = state.raw.data() + state.tangent.byteOffset;
+			std::uint8_t *end = start + state.tangent.byteLength;
+			for(std::uint8_t *i = start; i < end; i += (4 * sizeof(float))) {
+				tangents.push_back(reinterpret_cast<glm::vec3&>(*i));
+			}
+
+			tangentVBO->setData(tangents);
+			state.mesh->addVBO(tangentVBO);
+		}
+
+		if(state.uv.byteLength) {
+			auto uvVBO = createPtr<VBO>(2, ShaderBuilder::Attributes::A_UV);
+			uvVBO->setRawData(
+				state.raw.data() + state.uv.byteOffset,
+				state.uv.byteLength,
+				0, sizeof(float) * 2
+			);
+			state.mesh->addVBO(uvVBO);
+		}
+
+		if(state.index.byteLength) {
+			auto ibo = createPtr<IBO>();
+			ibo->setRawData(
+				state.raw.data() + state.index.byteOffset,
+				state.index.byteLength,
+				0, sizeof(unsigned short)
+			);
+			state.mesh->setIBO(ibo);
+		}
+
+		state.mesh->prepare();
+
+		state.callback();
+
+		return 1;
+	});
+
+	Core::coroutines->start(coro);
+}
