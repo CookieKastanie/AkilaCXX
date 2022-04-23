@@ -1,5 +1,7 @@
 #include "Akila/core/Core.hpp"
 #include "Demo/LoadingLayer.hpp"
+#include "Demo/GabLayer.hpp"
+#include "Demo/GabLayer2.hpp"
 
 /*
 static int objectCount{0};
@@ -31,15 +33,11 @@ void *operator new(std::size_t size, const char *file, int line) {
 #define new new(__FILE__, __LINE__)
 //*/
 
-#include "Akila/files/ResourceFile.hpp"
-
 int main(int argc, char *argv[]) {
-	return Akila::Core::run(argc, argv, [](void) {
-		Akila::FileSystem::setResourceFolder("resources"); // path relative to the executable
-		Akila::Core::layerManager->add(new LoadingLayer{});
-		//Akila::Core::display->setFullscreen(true);
-
-		Akila::ResourceFile res;
-		res.unserializeFrom("main.res");
+	return Akila::Core::run(argc, argv, []() {
+		Akila::FileSystem::setResourceFolder("resources");
+		Akila::Core::display->setTitle(u8"Akila (°-° )");
+		//Akila::Core::layerManager->add(new LoadingLayer{});
+		Akila::Core::layerManager->add(new GabLayer2{});
 	});
 }

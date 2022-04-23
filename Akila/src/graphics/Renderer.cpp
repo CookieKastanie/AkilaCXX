@@ -4,11 +4,11 @@
 
 using namespace Akila;
 
-Renderer::Renderer(std::shared_ptr<Display> &display): display{display} {
-	camera = std::make_shared<Camera>();
-	cameraUBO = std::make_shared<UBO>(sizeof(camera->getUniforms()));
+Renderer::Renderer(Ptr<Display> &display): display{display} {
+	camera = createPtr<Camera>();
+	cameraUBO = createPtr<UBO>(sizeof(camera->getUniforms()));
 
-	timeUBO = std::make_shared<UBO>(sizeof(float));
+	timeUBO = createPtr<UBO>(sizeof(float));
 
 	display->setRendererResizeCallback([this]() -> void {
 		camera->onResize(this->display->getWidth(), this->display->getHeight());
@@ -24,6 +24,8 @@ Renderer::Renderer(std::shared_ptr<Display> &display): display{display} {
 }
 
 void Renderer::prepare() {
+	camera->onPrepare();
+
 	cameraUBO->setData(&camera->getUniforms());
 	timeUBO->setData(&Time::now);
 }
@@ -37,12 +39,12 @@ void Renderer::useDefaultFrameBuffer() {
 	glViewport(0, 0, display->getWidth(), display->getHeight());
 }
 
-void Renderer::setSharedCamera(const std::shared_ptr<Camera> &cam) {
+void Renderer::setCamera(const Ptr<Camera> &cam) {
 	camera = cam;
 	camera->onResize(display->getWidth(), display->getHeight());
 }
 
-std::shared_ptr<Camera> &Renderer::getSharedCamera() {
+Ptr<Camera> &Renderer::getCamera() {
 	return camera;
 }
 

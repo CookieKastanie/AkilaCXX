@@ -3,31 +3,80 @@
 #include "Akila/core/Core.hpp"
 #include "Akila/graphics/gl/FrameBuffer.hpp"
 #include "Akila/graphics/ShaderBuilder.hpp"
+#include "Akila/graphics/MeshPrimitives.hpp"
 
 using namespace Akila;
 
-struct SharedData {
-	std::shared_ptr<FrameBuffer> fbo;
-	glm::mat4 captureProjection;
-	glm::mat4 captureViews[6];
+void Environment::createBRDFLUT(std::string const &name) {
+	TextureBuffer::Parameters brdfTexOpts;
+	brdfTexOpts.wrapS = TextureBuffer::WrapMode::CLAMP_TO_EDGE;
+	brdfTexOpts.wrapT = TextureBuffer::WrapMode::CLAMP_TO_EDGE;
+	brdfTexOpts.minFilter = TextureBuffer::FilterMode::LINEAR;
+	brdfTexOpts.magFilter = TextureBuffer::FilterMode::LINEAR;
 
-	std::shared_ptr<Texture> input;
-	std::shared_ptr<CubeMapTexture> skybox;
-	std::shared_ptr<CubeMapTexture> irradiance;
-	std::shared_ptr<CubeMapTexture> prefilter;
-	std::shared_ptr<Mesh> invertedCube;
-};
+	Core::resourcePool->textures.set(name, new Texture{TextureBuffer::Format::RGB});
+	Ref<Texture> brdfLUT = Core::resourcePool->textures.get(name);
+	brdfLUT->setSize(512, 512);
+	brdfLUT->setParameters(brdfTexOpts);
 
-class SkyboxTask: public Task {
-private:
-	std::shared_ptr<SharedData> data;
+	FrameBuffer fbo{};
 
-public:
-	SkyboxTask(const std::shared_ptr<SharedData> &data): data{data} {
+	fbo.setTexture(brdfLUT, 0);
+	fbo.prepare();
 
-	}
+	auto triangleVAO = Ptr<Mesh>{MeshPrimitives::screenTriangle()};
+	auto brdfShader = Ptr<Shader>{ShaderBuilder::build(BRDF_SHADER)};
 
-	void onMain() override {
+	fbo.bind();
+	brdfShader->bind();
+	triangleVAO->draw();
+	fbo.unbind();
+}
+
+void Environment::createIBL(
+	Ref<Texture> input,
+	std::string const &skyboxName,
+	std::string const &irradianceName,
+	std::string const &prefilterName,
+	std::function<void()> const &callback
+) {
+	Core::resourcePool->cubeMaps.set(skyboxName, new CubeMapTexture{TextureBuffer::Format::RGB16F});
+	Core::resourcePool->cubeMaps.set(irradianceName, new CubeMapTexture{TextureBuffer::Format::RGB16F});
+	Core::resourcePool->cubeMaps.set(prefilterName, new CubeMapTexture{TextureBuffer::Format::RGB16F});
+
+	struct _ {
+		Ptr<FrameBuffer> fbo;
+		Ptr<Mesh> invertedCube;
+		Ref<Texture> input;
+		Ref<CubeMapTexture> skybox;
+		Ref<CubeMapTexture> irradiance;
+		Ref<CubeMapTexture> prefilter;
+
+		glm::mat4 captureProjection;
+		glm::mat4 captureViews[6];
+
+		std::function<void()> callback;
+	};
+
+	auto coro = Core::coroutines->create(_{
+		createPtr<FrameBuffer>(), Ptr<Mesh>{MeshPrimitives::invertedCube()}, input,
+		Core::resourcePool->cubeMaps.get(skyboxName),
+		Core::resourcePool->cubeMaps.get(irradianceName),
+		Core::resourcePool->cubeMaps.get(prefilterName),
+		glm::perspective(glm::radians(90.0f), 1.0f, 0.1f, 10.0f),
+		{
+			glm::lookAt(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(1.0f, 0.0f, 0.0f), glm::vec3(0.0f, -1.0f, 0.0f)),
+			glm::lookAt(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(-1.0f, 0.0f, 0.0f), glm::vec3(0.0f, -1.0f, 0.0f)),
+			glm::lookAt(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f), glm::vec3(0.0f, 0.0f, 1.0f)),
+			glm::lookAt(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, -1.0f, 0.0f), glm::vec3(0.0f, 0.0f, -1.0f)),
+			glm::lookAt(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 1.0f), glm::vec3(0.0f, -1.0f, 0.0f)),
+			glm::lookAt(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, -1.0f), glm::vec3(0.0f, -1.0f, 0.0f))
+		},
+		callback
+	});
+
+	// skybox
+	coro->push(Trigger::BEFORE_DRAW, [](_ &state) {
 		TextureBuffer::Parameters cubmapOpts;
 		cubmapOpts.magFilter = TextureBuffer::FilterMode::LINEAR;
 		cubmapOpts.minFilter = TextureBuffer::FilterMode::LINEAR_MIPMAP_LINEAR;
@@ -35,45 +84,36 @@ public:
 		cubmapOpts.wrapS = TextureBuffer::WrapMode::CLAMP_TO_EDGE;
 		cubmapOpts.wrapT = TextureBuffer::WrapMode::CLAMP_TO_EDGE;
 
-		if(data->skybox->getWidth() <= 0 || data->skybox->getHeight() <= 0) {
-			data->skybox->setSize(1024, 1024);
-		}
-		data->skybox->setParameters(cubmapOpts);
+		state.skybox->setSize(1024, 1024);
+		state.skybox->setParameters(cubmapOpts);
 
-		data->fbo->setTexture(data->skybox, 0);
-		data->fbo->prepare();
+		state.fbo->setTexture(state.skybox, 0);
+		state.fbo->prepare();
 
-		auto shader = ShaderBuilder::build(EQUI_TO_CUBE_SHADER);
+		auto shader = Ptr<Shader>{ShaderBuilder::build(EQUI_TO_CUBE_SHADER)};
 		shader->bind();
-		data->fbo->bind();
+		state.fbo->bind();
 
-		shader->send(shader->getUniformId("projection"), data->captureProjection);
-		shader->send(shader->getUniformId("equirectangularMap"), 0);
-		data->input->bind();
+		shader->send("projection", state.captureProjection);
+		shader->send("equirectangularMap", 0);
+		state.input->bind();
 
 		for(unsigned int i = 0; i < 6; ++i) {
-			shader->send(shader->getUniformId("view"), data->captureViews[i]);
-			data->fbo->changeAttachment(0, GL_TEXTURE_CUBE_MAP_POSITIVE_X + i);
+			shader->send("view", state.captureViews[i]);
+			state.fbo->changeAttachment(0, GL_TEXTURE_CUBE_MAP_POSITIVE_X + i);
 
-			data->invertedCube->draw();
+			state.invertedCube->draw();
 		}
 
-		data->skybox->generateMipmap();
+		state.skybox->generateMipmap();
 
-		data->fbo->unbind();
-	}
-};
+		state.fbo->unbind();
 
-class IrradianceTask: public Task {
-private:
-	std::shared_ptr<SharedData> data;
+		return 1;
+	});
 
-public:
-	IrradianceTask(const std::shared_ptr<SharedData> &data): data{data} {
-
-	}
-
-	void onMain() override {
+	// irradiance
+	coro->push(Trigger::BEFORE_DRAW, [](_ &state) {
 		TextureBuffer::Parameters cubmapOpts;
 		cubmapOpts.magFilter = TextureBuffer::FilterMode::LINEAR;
 		cubmapOpts.minFilter = TextureBuffer::FilterMode::LINEAR;
@@ -81,42 +121,33 @@ public:
 		cubmapOpts.wrapS = TextureBuffer::WrapMode::CLAMP_TO_EDGE;
 		cubmapOpts.wrapT = TextureBuffer::WrapMode::CLAMP_TO_EDGE;
 
-		if(data->irradiance->getWidth() <= 0 || data->irradiance->getHeight() <= 0) {
-			data->irradiance->setSize(32, 32);
-		}
-		data->irradiance->setParameters(cubmapOpts);
-		data->fbo->setTexture(data->irradiance, 0);
-		data->fbo->prepare();
+		state.irradiance->setSize(32, 32);
+		state.irradiance->setParameters(cubmapOpts);
+		state.fbo->setTexture(state.irradiance, 0);
+		state.fbo->prepare();
 
-		auto irShader = ShaderBuilder::build(IRRADIANCE_SHADER);
+		auto irShader = Ptr<Shader>{ShaderBuilder::build(IRRADIANCE_SHADER)};
 
 		irShader->bind();
-		data->fbo->bind();
-		irShader->send(irShader->getUniformId("projection"), data->captureProjection);
-		irShader->send(irShader->getUniformId("environmentMap"), 0);
-		data->skybox->bind();
+		state.fbo->bind();
+		irShader->send("projection", state.captureProjection);
+		irShader->send("environmentMap", 0);
+		state.skybox->bind();
 
 		for(unsigned int i = 0; i < 6; ++i) {
-			irShader->send(irShader->getUniformId("view"), data->captureViews[i]);
-			data->fbo->changeAttachment(0, GL_TEXTURE_CUBE_MAP_POSITIVE_X + i);
+			irShader->send("view", state.captureViews[i]);
+			state.fbo->changeAttachment(0, GL_TEXTURE_CUBE_MAP_POSITIVE_X + i);
 
-			data->invertedCube->draw();
+			state.invertedCube->draw();
 		}
 
-		data->fbo->unbind();
-	}
-};
+		state.fbo->unbind();
 
-class PrefilterTask: public Task {
-private:
-	std::shared_ptr<SharedData> data;
+		return 1;
+	});
 
-public:
-	PrefilterTask(const std::shared_ptr<SharedData> &data): data{data} {
-
-	}
-
-	void onMain() override {
+	// prefilter
+	coro->push(Trigger::BEFORE_DRAW, [](_ &state) {
 		TextureBuffer::Parameters cubmapOpts;
 		cubmapOpts.magFilter = TextureBuffer::FilterMode::LINEAR;
 		cubmapOpts.minFilter = TextureBuffer::FilterMode::LINEAR_MIPMAP_LINEAR;
@@ -124,102 +155,46 @@ public:
 		cubmapOpts.wrapS = TextureBuffer::WrapMode::CLAMP_TO_EDGE;
 		cubmapOpts.wrapT = TextureBuffer::WrapMode::CLAMP_TO_EDGE;
 
-		if(data->prefilter->getWidth() <= 0 || data->prefilter->getHeight() <= 0) {
-			data->prefilter->setSize(128, 128);
-		}
-		data->prefilter->setParameters(cubmapOpts);
-		data->prefilter->generateMipmap();
+		state.prefilter->setSize(128, 128);
+		state.prefilter->setParameters(cubmapOpts);
+		state.prefilter->generateMipmap();
 
-		data->fbo->setTexture(data->prefilter, 0);
-		data->fbo->prepare();
+		state.fbo->setTexture(state.prefilter, 0);
+		state.fbo->prepare();
 
-		auto prefilterShader = ShaderBuilder::build(PREFILTER_SHADER);
+		auto prefilterShader = Ptr<Shader>{ShaderBuilder::build(PREFILTER_SHADER)};
 		prefilterShader->bind();
-		prefilterShader->send(prefilterShader->getUniformId("projection"), data->captureProjection);
-		prefilterShader->send(prefilterShader->getUniformId("environmentMap"), 0);
-		prefilterShader->send(prefilterShader->getUniformId("resolution"), (float)data->skybox->getWidth());
-		data->skybox->bind();
+		prefilterShader->send("projection", state.captureProjection);
+		prefilterShader->send("environmentMap", 0);
+		prefilterShader->send("resolution", (float)state.skybox->getWidth());
+		state.skybox->bind();
 
 		unsigned int maxMipLevels = 5;
 		for(unsigned int mip = 0; mip < maxMipLevels; ++mip) {
 			// reisze framebuffer according to mip-level size.
-			unsigned int mipWidth = data->prefilter->getWidth() * std::pow(0.5, mip);
-			unsigned int mipHeight = data->prefilter->getHeight() * std::pow(0.5, mip);
-			data->fbo->bindWithSize(mipWidth, mipHeight);
+			unsigned int mipWidth = state.prefilter->getWidth() * std::pow(0.5, mip);
+			unsigned int mipHeight = state.prefilter->getHeight() * std::pow(0.5, mip);
+			state.fbo->bindWithSize(mipWidth, mipHeight);
 
 			float roughness = (float)mip / (float)(maxMipLevels - 1);
-			prefilterShader->send(prefilterShader->getUniformId("roughness"), roughness);
+			prefilterShader->send("roughness", roughness);
 			for(unsigned int i = 0; i < 6; ++i) {
-				prefilterShader->send(prefilterShader->getUniformId("view"), data->captureViews[i]);
-				data->fbo->changeAttachment(0, GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, mip);
+				prefilterShader->send("view", state.captureViews[i]);
+				state.fbo->changeAttachment(0, GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, mip);
 
-				data->invertedCube->draw();
+				state.invertedCube->draw();
 			}
 		}
 
-		data->fbo->unbind();
-	}
-};
+		state.fbo->unbind();
 
-void Environment::createIBL(const std::shared_ptr<Texture> &input,
-							std::shared_ptr<CubeMapTexture> &skybox,
-							std::shared_ptr<CubeMapTexture> &irradiance,
-							std::shared_ptr<CubeMapTexture> &prefilter,
-							std::shared_ptr<Mesh> &invertedCube) {
+		return 1;
+	});
 
-	auto data = std::make_shared<SharedData>();
+	coro->push(Trigger::AT_FRAME_START, [](_ &state) {
+		state.callback();
+		return 1;
+	});
 
-	data->fbo = std::make_shared<FrameBuffer>();
-
-	data->captureProjection = glm::perspective(glm::radians(90.0f), 1.0f, 0.1f, 10.0f);
-
-	data->captureViews[0] = glm::lookAt(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(1.0f, 0.0f, 0.0f), glm::vec3(0.0f, -1.0f, 0.0f));
-	data->captureViews[1] = glm::lookAt(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(-1.0f, 0.0f, 0.0f), glm::vec3(0.0f, -1.0f, 0.0f));
-	data->captureViews[2] = glm::lookAt(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f), glm::vec3(0.0f, 0.0f, 1.0f));
-	data->captureViews[3] = glm::lookAt(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, -1.0f, 0.0f), glm::vec3(0.0f, 0.0f, -1.0f));
-	data->captureViews[4] = glm::lookAt(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 1.0f), glm::vec3(0.0f, -1.0f, 0.0f));
-	data->captureViews[5] = glm::lookAt(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, -1.0f), glm::vec3(0.0f, -1.0f, 0.0f));
-
-	data->input = input;
-	data->skybox = skybox;
-	data->irradiance = irradiance;
-	data->prefilter = prefilter;
-	data->invertedCube = invertedCube;
-
-
-	Core::taskManager->submitSync(new SkyboxTask{data}); 
-	Core::taskManager->submitSync(new IrradianceTask{data});
-	Core::taskManager->submitSync(new PrefilterTask{data});
-}
-
-std::shared_ptr<Texture> Environment::createBRDFLUT() {
-	////////////////////////////////////////////////////////////////////////////////
-	// Creation de brdfLUT
-
-	TextureBuffer::Parameters brdfTexOpts;
-	brdfTexOpts.wrapS = TextureBuffer::WrapMode::CLAMP_TO_EDGE;
-	brdfTexOpts.wrapT = TextureBuffer::WrapMode::CLAMP_TO_EDGE;
-	brdfTexOpts.minFilter = TextureBuffer::FilterMode::LINEAR;
-    brdfTexOpts.magFilter = TextureBuffer::FilterMode::LINEAR;
-
-	auto brdfLUT = std::make_shared<Texture>(TextureBuffer::Format::RGB);
-	brdfLUT->setSize(512, 512);
-    brdfLUT->setParameters(brdfTexOpts);
-
-    FrameBuffer fbo{};
-
-	fbo.setTexture(brdfLUT, 0);
-	fbo.prepare();
-
-    
-	auto triangleVAO = Core::resourcePool->getMesh("akila_triangle");
-
-	auto brdfShader = ShaderBuilder::build(BRDF_SHADER);
-
-	fbo.bind();
-	brdfShader->bind();
-	triangleVAO->draw();
-	fbo.unbind();
-
-	return brdfLUT;
+	Core::coroutines->start(coro);
 }

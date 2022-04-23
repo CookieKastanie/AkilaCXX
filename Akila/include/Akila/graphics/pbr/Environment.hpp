@@ -1,20 +1,20 @@
 #pragma once
 
 #include "Akila/graphics/gl/Texture.hpp"
-#include "Akila/graphics/Mesh.hpp"
-#include <memory>
+#include "Akila/core/Memory.hpp"
+#include <functional>
 
 namespace Akila {
 	class Environment {
-	private:
 	public:
-		static std::shared_ptr<Texture> createBRDFLUT();
-		static void createIBL(
-			const std::shared_ptr<Texture> &input,
-			std::shared_ptr<CubeMapTexture> &skybox,
-			std::shared_ptr<CubeMapTexture> &irradiance,
-			std::shared_ptr<CubeMapTexture> &prefilter,
-			std::shared_ptr<Mesh> &invertedCube);
+        static void createBRDFLUT(std::string const &name);
+        static void createIBL(
+            Ref<Texture> input,
+            std::string const &skyboxName,
+            std::string const &irradianceName,
+            std::string const &prefilterName,
+            std::function<void()> const &callback
+        );
 	};
 }
 

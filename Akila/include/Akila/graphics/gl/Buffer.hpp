@@ -31,7 +31,7 @@ namespace Akila {
             Buffer(unsigned int kind, Usage usage);
             virtual ~Buffer();
             virtual void bind() const;
-            virtual void setRawData(const void *data, int size, int offset = 0);
+            virtual void setRawData(const void *data, int size, int offset = 0, int typeSize = sizeof(char));
             virtual int getLength() const;
 
             void setDataType(Type type);

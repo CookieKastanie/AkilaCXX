@@ -1,13 +1,13 @@
 #include "Demo/Net.hpp"
 
-Net::Point::Point(float x, float y, float z): position{ x, y, z }, prevPosition{ x, y, z }, isLocked{ false } {}
+Net::Point::Point(float x, float y, float z): position{x, y, z}, prevPosition{x, y, z}, isLocked{false} {}
 
-Net::Stick::Stick(Point &a, Point &b): pointA{a}, pointB{b} {
-	length = glm::length(a.position - b.position);
-	halfLength = length / 2.;
+Net::Stick::Stick(Point &a, Point &b) : pointA{a}, pointB{b} {
+    length = glm::length(a.position - b.position);
+    halfLength = length / 2.;
 }
 
-Net::Net(): gpuDatas{
+Net::Net() : gpuDatas{
     {},
     {},
     {3, 0, Akila::Buffer::Usage::DYNAMIC},
@@ -51,7 +51,7 @@ void Net::update() {
 }
 
 void Net::draw() {
-    auto &&shader = Akila::Core::resourcePool->getShader("netShader");
+    auto const &shader = Akila::Core::resourcePool->shaders.get("netShader");
 
     int i = 0;
     for(auto &p : points) {
@@ -88,7 +88,7 @@ void Net::fillGrid(Net &net, int size) {
             if(x == 0 && y == 0) p.isLocked = true;
             //else if(x == (int)(size / 2) && y == 0) p.isLocked = true;
             else if(x == size - 1 && y == 0) p.isLocked = true;
-            
+
             net.points.push_back(p);
         }
     }
@@ -102,19 +102,19 @@ void Net::fillGrid(Net &net, int size) {
         for(int x = 0; x < size; ++x) {
             if(x < size - 1) {
                 net.sticks.push_back({
-                    net.points[coordToIndex(x, y)], 
+                    net.points[coordToIndex(x, y)],
                     net.points[coordToIndex(x + 1, y)]
-                });
+                                     });
 
                 indices.push_back(coordToIndex(x, y));
                 indices.push_back(coordToIndex(x + 1, y));
             }
-            
+
             if(y < size - 1) {
                 net.sticks.push_back({
-                    net.points[coordToIndex(x, y)], 
+                    net.points[coordToIndex(x, y)],
                     net.points[coordToIndex(x, y + 1)]
-                });
+                                     });
 
                 indices.push_back(coordToIndex(x, y));
                 indices.push_back(coordToIndex(x, y + 1));

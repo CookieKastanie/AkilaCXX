@@ -1,30 +1,30 @@
 #pragma once
 
 #include "glad/glad.h"
-#include <memory>
+#include "Akila/core/Memory.hpp"
 #include "Akila/graphics/gl/Texture.hpp"
 #include "Akila/core/Display.hpp"
 
 namespace Akila {
 	class FrameBuffer {
 	private:
-		static int const MAX_ATTACHMENT_COUNT = 6;
+		static int const MAX_ATTACHMENT_COUNT = 8;
 
 		GLuint id;
-		std::shared_ptr<TextureBuffer> textures[MAX_ATTACHMENT_COUNT];
-		std::shared_ptr<TextureBuffer> depthTexture;
+		Ref<TextureBuffer> textures[MAX_ATTACHMENT_COUNT];
+		Ref<TextureBuffer> depthTexture;
 
 	public:
 		FrameBuffer();
 		~FrameBuffer();
 
-		void setTexture(const std::shared_ptr<Texture> &texture, int unit = 0);
-		void setTexture(const std::shared_ptr<CubeMapTexture> &texture, int unit = 0);
-		std::shared_ptr<TextureBuffer> getTexture(int unit);
+		void setTexture(Ref<Texture> const &texture, int unit = 0);
+		void setTexture(Ref<CubeMapTexture> const &texture, int unit = 0);
+		Ref<TextureBuffer> &getTexture(int unit);
 
-		void setDepthTexture(const std::shared_ptr<DepthTexture> &texture);
+		void setDepthTexture(Ref<TextureBuffer> const &texture);
 
-		std::shared_ptr<TextureBuffer> getDepthTexture();
+		Ref<TextureBuffer> &getDepthTexture();
 
 		void changeAttachment(int unit, GLenum attachment, unsigned int mipLevel = 0);
 

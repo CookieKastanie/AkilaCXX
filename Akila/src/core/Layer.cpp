@@ -18,7 +18,7 @@ void Layer::drawImGui() {}
 
 LayerManager::LayerManager() {}
 
-void LayerManager::add(const std::shared_ptr<Layer> &layer, Layer::PreferredDepth depth) {
+void LayerManager::add(const Ptr<Layer> &layer, Layer::PreferredDepth depth) {
 	if(layer->index != -1) {
 		std::cerr << "Layer is already assigned to a manager" << std::endl;
 		return;
@@ -51,7 +51,7 @@ void LayerManager::add(const std::shared_ptr<Layer> &layer, Layer::PreferredDept
 }
 
 void LayerManager::add(Layer *layer, Layer::PreferredDepth depth) {
-	add(std::shared_ptr<Layer>(layer), depth);
+	add(Ptr<Layer>{layer}, depth);
 }
 
 void LayerManager::remove(Layer *layer) {

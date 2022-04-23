@@ -1,18 +1,19 @@
 #include "Akila/core/Core.hpp"
+#include "Akila/core/Metrics.hpp"
 
 using namespace Akila;
 
-std::shared_ptr<Display> Core::display = nullptr;
-std::shared_ptr<LayerManager> Core::layerManager = nullptr;
-std::shared_ptr<TaskManager> Core::taskManager = nullptr;
-std::shared_ptr<Renderer> Core::renderer = nullptr;
-std::shared_ptr<ResourcePool> Core::resourcePool = nullptr;
+Ptr<Display> Core::display = nullptr;
+Ptr<LayerManager> Core::layerManager = nullptr;
+Ptr<CoroutineManager> Core::coroutines = nullptr;
+Ptr<Renderer> Core::renderer = nullptr;
+Ptr<ResourcePool> Core::resourcePool = nullptr;
 
 Core::Core() {}
 
 int Core::run(int argc, char *argv[], void (*init)(void)) {
 	glfwInit();
-	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 	//glfwWindowHint(GLFW_SAMPLES, 0);
@@ -29,19 +30,35 @@ int Core::run(int argc, char *argv[], void (*init)(void)) {
 #ifdef IMGUI
 	IMGUI_CHECKVERSION();
 	ImGui::CreateContext();
+
+	ImGuiIO &io = ImGui::GetIO(); (void)io;
+	//io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;     // Enable Keyboard Controls
+	//io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;      // Enable Gamepad Controls
+	io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;           // Enable Docking
+	io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;         // Enable Multi-Viewport / Platform Windows
+	//io.ConfigViewportsNoAutoMerge = true;
+	//io.ConfigViewportsNoTaskBarIcon = true;
+
+	ImGui::StyleColorsClassic();
+
+	ImGuiStyle &style = ImGui::GetStyle();
+	if(io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable) {
+		style.WindowRounding = 0.0f;
+		style.Colors[ImGuiCol_WindowBg].w = 1.0f;
+	}
+
 	ImGui_ImplGlfw_InitForOpenGL(display->window, true);
 	ImGui_ImplOpenGL3_Init("#version 130");
-	ImGui::StyleColorsClassic();
 #endif
 
 	glGetError(); // bruh
 
 	Shader::funcInit();
 
-	layerManager = std::make_shared<LayerManager>();
-	taskManager = std::make_shared<TaskManager>();
-	renderer = std::make_shared<Renderer>(display);
-	resourcePool = std::make_shared<ResourcePool>(renderer);
+	layerManager = createPtr<LayerManager>();
+	coroutines = Ptr<CoroutineManager>{new CoroutineManager()};
+	renderer = createPtr<Renderer>(display);
+	resourcePool = createPtr<ResourcePool>();
 
 	init();
 
@@ -50,7 +67,7 @@ int Core::run(int argc, char *argv[], void (*init)(void)) {
 
 	while(!display->shouldClose()) {
 		Time::update();
-		taskManager->flushOne();
+		coroutines->flushAtFrameStart();
 
 		accumulator += Time::delta;
 
@@ -59,12 +76,14 @@ int Core::run(int argc, char *argv[], void (*init)(void)) {
 
 		while(accumulator >= Time::fixedDelta) {
 			layerManager->update();
+			coroutines->flushAfterFixedUpdate();
 			accumulator -= Time::fixedDelta;
 		}
 
 		Time::mix = accumulator / Time::fixedDelta;
 
 		renderer->prepare();
+		coroutines->flushBeforeDraw();
 		layerManager->draw();
 		renderer->finish();
 
@@ -73,12 +92,28 @@ int Core::run(int argc, char *argv[], void (*init)(void)) {
 		ImGui_ImplGlfw_NewFrame();
 		ImGui::NewFrame();
 		layerManager->drawImGui();
+		TimeMetric::flushAndDrawImGui();
 		ImGui::Render();
 		ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+
+		if(io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable) {
+			GLFWwindow *backup_current_context = glfwGetCurrentContext();
+			ImGui::UpdatePlatformWindows();
+			ImGui::RenderPlatformWindowsDefault();
+			glfwMakeContextCurrent(backup_current_context);
+		}
 #endif
 
 		display->swapBuffers();
 	}
+
+	layerManager.reset();
+
+#ifdef IMGUI
+	ImGui_ImplOpenGL3_Shutdown();
+	ImGui_ImplGlfw_Shutdown();
+	ImGui::DestroyContext();
+#endif
 
 	return EXIT_SUCCESS;
 }

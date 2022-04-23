@@ -5,13 +5,13 @@
 
 #include "Akila/core/Display.hpp"
 #include "Akila/core/Layer.hpp"
-#include "Akila/core/Task.hpp"
+#include "Akila/core/Coroutine.hpp"
 #include "Akila/core/Time.hpp"
 #include "Akila/graphics/Renderer.hpp"
 #include "Akila/files/FileSystem.hpp"
 #include "Akila/core/ResourcePool.hpp"
 
-#include <memory>
+#include "Akila/core/Memory.hpp"
 #include <iostream>
 
 #ifdef IMGUI
@@ -28,11 +28,11 @@ namespace Akila {
 			Core();
 
 		public:
-			static std::shared_ptr<Display> display;
-			static std::shared_ptr<LayerManager> layerManager;
-			static std::shared_ptr<TaskManager> taskManager;
-			static std::shared_ptr<Renderer> renderer;
-			static std::shared_ptr<ResourcePool> resourcePool;
+			static Ptr<Display> display;
+			static Ptr<LayerManager> layerManager;
+			static Ptr<CoroutineManager> coroutines;
+			static Ptr<Renderer> renderer;
+			static Ptr<ResourcePool> resourcePool;
 
 			static int run(int argc, char *argv[], void (*init)(void));
 	};

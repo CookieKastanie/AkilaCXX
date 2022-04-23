@@ -25,6 +25,6 @@ namespace Akila {
 				A_COLOR = 4
 			};
 
-			static std::shared_ptr<Shader> build(const std::string &source);
+			static Shader *build(const std::string &source);
 	};
 }

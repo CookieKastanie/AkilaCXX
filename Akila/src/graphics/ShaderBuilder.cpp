@@ -53,7 +53,7 @@ const std::string ShaderBuilder::vertDelimiter = "#AKILA_VERTEX";
 const std::string ShaderBuilder::fragDelimiter = "#AKILA_FRAGMENT";
 const std::string ShaderBuilder::geoDelimiter = "#AKILA_GEOMETRY";
 
-std::shared_ptr<Shader> ShaderBuilder::build(const std::string &source) {
+Shader *ShaderBuilder::build(const std::string &source) {
 	std::istringstream iss(source);
 
 	std::string vert;
@@ -77,5 +77,5 @@ std::shared_ptr<Shader> ShaderBuilder::build(const std::string &source) {
 	frag = vuf + frag;
 	if(!geo.empty()) geo = vuf + geo;
 
-	return std::make_shared<Shader>(vert, frag, geo);
+	return new Shader(vert, frag, geo);
 }

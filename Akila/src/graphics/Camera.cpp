@@ -16,7 +16,7 @@ void Camera::onResize(int width, int height) {
 	uniforms.ratio = (float)width / (float)height;
 }
 
-void Camera::update() {}
+void Camera::onPrepare() {}
 
 void Camera::setPosition(const glm::vec3 &pos) {
 	uniforms.position = pos;
@@ -37,7 +37,7 @@ void PerspectiveCamera::onResize(int width, int height) {
 	uniforms.projection = glm::perspective(70.f, uniforms.ratio, 0.01f, 1000.f);
 }
 
-void PerspectiveCamera::update() {
+void PerspectiveCamera::onPrepare() {
 	uniforms.view = glm::lookAt(uniforms.position, {0.f, 0.f, 0.f}, {0.f, 1.f, 0.f});
 	uniforms.pv = uniforms.projection * uniforms.view;
 }

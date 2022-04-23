@@ -4,13 +4,17 @@ MouseCamera::MouseCamera(Akila::Mouse *mouse):
 	mouse{mouse},
 	up{0., 0., 0.},
 	center{0., 0., 0.},
-	angles{0., 0., 0.},
+	angles{0., HALF_PI, 0.},
 	movement{0., 0., 0.},
 	distance{3.} {
 
 }
 
-void MouseCamera::update() {
+void MouseCamera::setCenter(glm::vec3 const &c) {
+	center = c;
+}
+
+void MouseCamera::onPrepare() {
 	glm::vec3 &eye = uniforms.position;
 
 	if(mouse->isPressed(Akila::Mouse::Key::LEFT)) {

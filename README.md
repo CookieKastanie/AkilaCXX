@@ -8,7 +8,7 @@
 #include "Akila/core/Core.hpp"
 
 int main(int argc, char *argv[]) {
-	return Akila::Core::run(argc, argv, [](void) {
+	return Akila::Core::run(argc, argv, []() {
 		Akila::FileSystem::setResourceFolder("resources"); // path relative to the executable
 		Akila::Core::layerManager->add(new MyLayer{}); // custom class who extend Akila::Layer
 	});
@@ -80,45 +80,74 @@ void main() {
 
 Objects :
 
-```css
-shader {
-	name: "string"
-	src: "string"
+```json
+{
+	"shaders": [
+		{
+			"name": "string",
+			"src": "string",
 
-	uniform: "name" = [floats, ...]
-	uniform: "name" = i[ints, ...]
-}
+			"uniforms-i": {
+				"name1": [ints, ...]
+				"name2": int
+			},
 
-texture {
-	name: "string"
-	src: "string"
+			"uniforms-f": {
+				"name3": [floats, ...]
+				"name4": float
+			}
+		}
+	],
 
-	format: "stored texture format"
+	"textures": [
+		{
+			"name": "string",
+			"src": "string",
 
-	minFilter: "filter texture mode"
-	magFilter: "filter texture mode"
+			"format": "stored texture format"
 
-	wrapS: "wrap texture mode"
-	wrapT: "wrap texture mode"
-	wrapR: "wrap texture mode"
+			"minFilter": "filter texture mode"
+			"magFilter": "filter texture mode"
 
-	mips: "boolean"
-}
+			"wrapS": "wrap texture mode"
+			"wrapT": "wrap texture mode"
+			"wrapR": "wrap texture mode"
 
-mesh {
-	name: "string"
-	src: "string"
-}
+			"mips": "boolean"
+		},
+	],
 
-material {
-	name: "string"
-	shader: "string"
+	"meshs": [
+		{
+			"name": "string",
+			"src": "string"
+		}
+	],
 
-	uniform: "name" = [floats, ...]
-	uniform: "name" = i[ints, ...]
+	"materials": [
+		{
+			"name": "string",
+			"shader": "string",
 
-	texture: "texture name" = "texture index"
-	cubemap: "cubemap name" = "texture index"
+			"texture": {
+				"textName": unit
+			},
+
+			"cubemap": {
+				"cubemapName": unit
+			},
+
+			"uniforms-i": {
+				"name1": [ints, ...]
+				"name2": int
+			},
+
+			"uniforms-f": {
+				"name3": [floats, ...]
+				"name4": float
+			}
+		}
+	]
 }
 ```
 
@@ -160,7 +189,7 @@ REPEAT
 ## Load a resource file
 
 ```cpp
-Akila::Core::resourcePool->loadResourceFile("myResourceFile.res", []() -> void {
+Akila::Core::resourcePool->load("myResourceFile.json", []() {
 	std::cout << "Done !" << std::endl;
 });
 ```
