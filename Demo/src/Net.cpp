@@ -51,7 +51,7 @@ void Net::update() {
 }
 
 void Net::draw() {
-    auto &&shader = Akila::Core::resourcePool->getShader("netShader");
+    auto const &shader = Akila::Core::resourcePool->shaders.get("netShader");
 
     int i = 0;
     for(auto &p : points) {
