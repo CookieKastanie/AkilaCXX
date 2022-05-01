@@ -49,11 +49,11 @@ public:
 	}
 }
 
-...
+//...
 
 ECS::registerSystem<MySystem>();
 
-...
+//...
 
 MySystem *system = ECS::getSystem<MySystem>();
 ```
@@ -69,12 +69,13 @@ public:
 	void onEntry(json &const j) {}
 }
 Resources::registerType<MyResource, MyLoader>();
-...
+
+//...
 
 Ref<MyResource> r1 = Resources::create<MyResource>("name1");
 Ref<MyResource> r2 = Resources::create<MyResource>("name2", ConstructorArgs...);
 
-...
+//...
 
 Ref<MyResource> r = Resources::get<MyResource>("name1");
 ```
