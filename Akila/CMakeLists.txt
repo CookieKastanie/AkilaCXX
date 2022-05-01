@@ -1,49 +1,14 @@
-﻿cmake_minimum_required(VERSION 3.1.0)
-project("Akila")
+cmake_minimum_required(VERSION 3.9)
+project(akila VERSION 0.0.1 DESCRIPTION "Development kit for graphics applications.")
 
-set(CMAKE_CXX_STANDARD 17)
+add_library(akila STATIC "include/akila/akila.hpp" "src/akila.cpp" "include/akila/math/math.hpp" "include/akila/core/core.hpp" "src/core/core.cpp" "include/akila/ecs/ecs.hpp" "include/akila/ecs/entity.hpp"  "include/akila/ecs/signature.hpp" "include/akila/ecs/componentmanager.hpp" "include/akila/ecs/coordinator.hpp" "include/akila/ecs/entitymanager.hpp" "include/akila/ecs/system.hpp" "include/akila/ecs/systemmanager.hpp" "src/ecs/coordinator.cpp" "include/akila/ecs/typename.hpp" "include/akila/ecs/entityid.hpp")
 
-set(RESOURCES_DIRECTORY "${PROJECT_SOURCE_DIR}/resources")
-set(SRC_DIR "${PROJECT_SOURCE_DIR}/src")
-set(INC_DIR "${PROJECT_SOURCE_DIR}/include")
+#set_target_properties(akila PROPERTIES PUBLIC_HEADER "include/akila/akila.hpp")
 
-option(USE_IMGUI "Enable imgui" OFF)
+target_include_directories(akila PRIVATE "include")
+#target_include_directories(akila PRIVATE "src")
 
-if(USE_IMGUI)
-    add_compile_definitions(IMGUI)
-endif(USE_IMGUI)
+target_compile_features(akila PRIVATE cxx_std_17)
 
-## Files
-file(GLOB_RECURSE SRC CONFIGURE_DEPENDS "${SRC_DIR}/*.cpp")
-file(GLOB_RECURSE HEADER CONFIGURE_DEPENDS "${SRC_DIR}/${PROJECT_NAME}/*.hpp")
-
-set(RESOURCE_FILES)
-
-add_library(${PROJECT_NAME} ${SRC} ${HEADER} ${RESOURCE_FILES})
-target_include_directories(${PROJECT_NAME} PUBLIC ${INC_DIR})
-
-####################################################
-
-## Libs dependency
-find_package(OpenGL REQUIRED)
-target_link_libraries(${PROJECT_NAME} PUBLIC ${OPENGL_LIBRARY})
-
-add_subdirectory(libs/stbimage)
-target_link_libraries(${PROJECT_NAME} PUBLIC stbimage)
-
-add_subdirectory(libs/glad)
-target_link_libraries(${PROJECT_NAME} PUBLIC glad)
-
-add_subdirectory(libs/glfw-3.3.2)
-target_link_libraries(${PROJECT_NAME} PUBLIC glfw)
-
-add_subdirectory(libs/glm-0.9.9.9/glm)
-target_link_libraries(${PROJECT_NAME} PUBLIC glm)
-
-if(USE_IMGUI)
-    add_subdirectory(libs/imgui-docking)
-    target_link_libraries(${PROJECT_NAME} PUBLIC imgui)
-endif(USE_IMGUI)
-
-add_subdirectory(libs/json-develop)
-target_link_libraries(${PROJECT_NAME} PUBLIC nlohmann_json)
+add_subdirectory(libs/glm)
+target_link_libraries(akila PUBLIC glm)

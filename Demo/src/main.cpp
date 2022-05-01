@@ -1,43 +1,46 @@
-#include "Akila/core/Core.hpp"
-#include "Demo/LoadingLayer.hpp"
-#include "Demo/GabLayer.hpp"
-#include "Demo/GabLayer2.hpp"
+#define _CRTDBG_MAP_ALLOC
+#include <crtdbg.h>
 
-/*
-static int objectCount{0};
-static std::size_t memory{0};
+#include <iostream>
+#include <akila/akila.hpp>
 
-void *operator new(std::size_t size) {
-	memory += size;
-	printf("new : %d objets (%zu octets)\n", ++objectCount, memory);
-	size_t *ptr = (size_t *)std::malloc(size + sizeof(std::size_t));
-	*ptr = size;
-	return ptr + 1;
-}
+using namespace akila;
 
-void operator delete(void *basePtr) noexcept {
-	size_t *ptr = ((size_t *)basePtr) - 1;
-	memory -= *ptr;
-	printf("del : %d objets (%zu octets)\n", --objectCount, memory);
-	std::free(ptr);
-}
-//*/
+class ShowSystem: public System {
+public:
+	void update() {
+		for(Entity e : entities) {
+			int &val = e.getComponent<int>();
+			std::cout << val << std::endl;
+		}
+	}
+};
 
-/*
+int main() {
+	_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
 
-void *operator new(std::size_t size, const char *file, int line) {
-	printf("new -> %s : %d\n", file, line);
-	return std::malloc(size);
-}
+	ECS::registerComponent<double>();
+	ECS::registerComponent<int>();
 
-#define new new(__FILE__, __LINE__)
-//*/
+	Signature signature = ECS::createSignature<int>();
+	ShowSystem *showSystem = ECS::createSystem<ShowSystem>(signature);
 
-int main(int argc, char *argv[]) {
-	return Akila::Core::run(argc, argv, []() {
-		Akila::FileSystem::setResourceFolder("resources");
-		Akila::Core::display->setTitle(u8"Akila (°-° )");
-		//Akila::Core::layerManager->add(new LoadingLayer{});
-		Akila::Core::layerManager->add(new GabLayer2{});
-	});
+	Entity e0 = ECS::createEntity(ECS::createSignature<int, double>());
+	e0.getComponent<double>() = 5.2;
+	e0.getComponent<int>() = 11;
+
+	Entity e1 = ECS::createEntity();
+	e1.addComponent<int>(7);
+
+	showSystem->update();
+
+	std::cout << "--------" << std::endl;
+
+	//ECS::eraseEntity(e0);
+	ECS::addToEraseQueue(e0);
+	ECS::flushEraseQueue();
+
+	showSystem->update();
+
+	return 0;
 }

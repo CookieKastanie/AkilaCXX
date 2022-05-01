@@ -1,195 +1,107 @@
-Ôªø# AkilaCTK
-
-üç™ CookieKastanie üç™
-
-## Starting code
-
+# Akila
+## Code de dÈpart
 ```cpp
-#include "Akila/core/Core.hpp"
+#include <akila/akila.hpp>
+using namespace akila;
 
-int main(int argc, char *argv[]) {
-	return Akila::Core::run(argc, argv, []() {
-		Akila::FileSystem::setResourceFolder("resources"); // path relative to the executable
-		Akila::Core::layerManager->add(new MyLayer{}); // custom class who extend Akila::Layer
-	});
+int main() {
+	return Core::run(???);
 }
 ```
+## ECS
+### CrÈation d'un composant
+```cpp
+struct MyStruct {...};
 
-## Shaders
-
-Integrated vertex attributes :
-
-```glsl
-vec4 a_position;
-vec4 a_uv;
-vec4 a_normal;
-vec4 a_tangent;
-vec4 a_color;
+ECS::registerComponent<MyStruct>();
 ```
-
-Integrated common structs :
-
-```glsl
-struct akila_camera {
-	mat4 projection;
-	mat4 view;
-	mat4 pv;
-	vec3 position;
-	float ratio;
-};
-	
-struct akila_lights {
-	vec3 directionalLight;
-	vec3 directionalColor;
-	vec3 pointsPositions[AKILA_POINT_LIGHT_COUNT];
-	vec3 pointsColors[AKILA_POINT_LIGHT_COUNT];
-};
+### CrÈation d'un entitÈ
+#### Basic
+```cpp
+Entity e = ECS::createEntity();
+e.addComponent<MyStruct>();
+e.addComponent<MyOtherStruct>({"Value"});
 ```
-
-Integrated uniforms :
-
-```glsl
-akila_camera u_camera;
-float u_time;
-akila_lights u_lights;
+#### Par signature (plus performant)
+```cpp
+Signature s = ECS::createSignature<MyStruct, MyOtherStruct>();
+Entity e = ECS::createEntity(s);
+e.getComponent<MyOtherStruct>() = {"Value"};
 ```
+### CrÈation d'un systËme
+L'attribut `entities` est hÈritÈ de la classe System. Il est automatiquement agrÈmentÈ des entitÈs compatibles avec la signature du systËme.
+```cpp
+class MySystem: public System {
+public:
+	MySystem(): System{ECS::createSignature<MyStruct>()} {};
 
-Basic template :
+	void myMethode() {
+		for(Entity e : entities) {
+			auto &... = e.getComponent<...>();
+			// logic here
 
-```glsl
-#AKILA_VERTEX
-	
-out vec2 uv;
-	
-void main() {
-	gl_Position = a_position;
-	uv = a_uv.xy;
-}
-
-#AKILA_FRAGMENT
-	
-in vec2 uv;
-out vec4 fragColor;
-	
-void main() {
-	fragColor = vec4(uv, 0.0, 1.0);
-}
-```
-
-## Resource files
-
-Objects :
-
-```json
-{
-	"shaders": [
-		{
-			"name": "string",
-			"src": "string",
-
-			"uniforms-i": {
-				"name1": [ints, ...]
-				"name2": int
-			},
-
-			"uniforms-f": {
-				"name3": [floats, ...]
-				"name4": float
+			if(...) {
+				ECS::addToEraseQueue(e);
 			}
 		}
-	],
 
-	"textures": [
-		{
-			"name": "string",
-			"src": "string",
-
-			"format": "stored texture format"
-
-			"minFilter": "filter texture mode"
-			"magFilter": "filter texture mode"
-
-			"wrapS": "wrap texture mode"
-			"wrapT": "wrap texture mode"
-			"wrapR": "wrap texture mode"
-
-			"mips": "boolean"
-		},
-	],
-
-	"meshs": [
-		{
-			"name": "string",
-			"src": "string"
-		}
-	],
-
-	"materials": [
-		{
-			"name": "string",
-			"shader": "string",
-
-			"texture": {
-				"textName": unit
-			},
-
-			"cubemap": {
-				"cubemapName": unit
-			},
-
-			"uniforms-i": {
-				"name1": [ints, ...]
-				"name2": int
-			},
-
-			"uniforms-f": {
-				"name3": [floats, ...]
-				"name4": float
-			}
-		}
-	]
+		ECS::flushEraseQueue();
+	}
 }
+
+...
+
+ECS::registerSystem<MySystem>();
+
+...
+
+MySystem *system = ECS::getSystem<MySystem>();
 ```
 
-Texture formats :
-
-```css
-RED
-RG
-RGB
-RGBA
-SRGB
-SRGB_ALPHA
-RGB16F
-RGBA16F
-DEPTH_COMPONENT
-DEPTH_STENCIL
-```
-
-Texture filters :
-
-```css
-NEAREST
-LINEAR
-NEAREST_MIPMAP_NEAREST
-LINEAR_MIPMAP_NEAREST
-NEAREST_MIPMAP_LINEAR
-LINEAR_MIPMAP_LINEAR
-```
-
-Texture wraps :
-
-```css
-CLAMP_TO_EDGE
-CLAMP_TO_BORDER
-MIRRORED_REPEAT
-REPEAT
-```
-
-## Load a resource file
-
+### Gestion des ressources
 ```cpp
-Akila::Core::resourcePool->load("myResourceFile.json", []() {
-	std::cout << "Done !" << std::endl;
+Resources::registerType<MyResource>();
+
+// Loader pour chager depuis un JSON
+class MyLoader: public Loader {
+public:
+	MyLoader(): Loader{"json_list_name"} {}
+	void onEntry(json &const j) {}
+}
+Resources::registerType<MyResource, MyLoader>();
+...
+
+Ref<MyResource> r1 = Resources::create<MyResource>("name1");
+Ref<MyResource> r2 = Resources::create<MyResource>("name2", ConstructorArgs...);
+
+...
+
+Ref<MyResource> r = Resources::get<MyResource>("name1");
+```
+#### Ressources depuis un JSON
+```cpp
+Resources::load("path/file.json", []() {
+	// callback
 });
+
+Resources::load({"path/file1.json", "path/file2.json"}, []() {
+	// callback
+});
+```
+### FenÍtre principale
+```cpp
+Window::setTitle("Title");
+Window::setSize(1280, 720);
+```
+```cpp
+
+```
+```cpp
+
+```
+```cpp
+
+```
+```cpp
+
 ```
