@@ -122,7 +122,7 @@ namespace akila {
 
 		template<class T>
 		static void addToSignature(Signature &signature) {
-			TypeName name = typeid(T).hash_code();
+			TypeName name = GET_TYPE_NAME(T);
 			ComponentType type = componentManager->componentVectors[name]->getType();
 			signature[type] = true;
 		}

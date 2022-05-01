@@ -24,6 +24,7 @@ namespace akila {
 
 		virtual void erase(EntityId entityId) = 0;
 		virtual void pushEmpty(EntityId entityId) = 0;
+		virtual bool componentIndexIsNull(Entity entityId) = 0;
 
 	public:
 		inline ComponentType getType() {
@@ -47,7 +48,7 @@ namespace akila {
 			for(auto &v : entityIdToComponentIndex) v = NULL_COMPONENT_INDEX;
 		}
 
-		inline T &getDataWithEntityId(EntityId entityId) {
+		inline T &getDataByEntityId(EntityId entityId) {
 			return data[entityIdToComponentIndex[entityId]];
 		}
 
@@ -74,6 +75,8 @@ namespace akila {
 				return;
 			}
 
+			// copie le dernier element a l'emplacement de l'element a supprimer,
+			// puis pop la liste
 			ComponentIndex lastComponentIndex = data.size() - 1;
 
 			data[componentIndex] = data[lastComponentIndex];
@@ -106,14 +109,14 @@ namespace akila {
 				return;
 			}
 
-			TypeName name = typeid(T).hash_code();
+			TypeName name = GET_TYPE_NAME(T);
 			componentVectors[name] = std::unique_ptr<ComponentVector<T>>(new ComponentVector<T>{type});
 			componentTypeToName[type] = name;
 		}
 
 		template<typename T>
 		ComponentType addComponent(EntityId entityId, T const &data) {
-			TypeName name = typeid(T).hash_code();
+			TypeName name = GET_TYPE_NAME(T);
 
 			IComponentVector *vector = componentVectors.at(name).get();
 			static_cast<ComponentVector<T> *>(vector)->push(entityId, data);
@@ -127,11 +130,16 @@ namespace akila {
 			return vector->getType();
 		}
 
+		//template<typename T>
+		//bool hasComponent(EntityId entityId) {
+
+		//}
+
 		template<typename T>
 		T &getComponent(EntityId entityId) {
-			TypeName name = typeid(T).hash_code();
+			TypeName name = GET_TYPE_NAME(T);
 			IComponentVector *vector = componentVectors.at(name).get();
-			return static_cast<ComponentVector<T>*>(vector)->getDataWithEntityId(entityId);
+			return static_cast<ComponentVector<T>*>(vector)->getDataByEntityId(entityId);
 		}
 
 		ComponentType removeComponent(EntityId entityId, ComponentType type) {
