@@ -83,6 +83,11 @@ namespace akila {
 		}
 
 		template<typename T>
+		static inline bool entityHasComponent(EntityId id) {
+			return componentManager->hasComponent<T>(id);
+		}
+
+		template<typename T>
 		static void removeComponentFromEntity(EntityId id) {
 			ComponentType type = componentManager->removeComponent<T>(id);
 			Signature &signature = entityManager->getSignature(id);

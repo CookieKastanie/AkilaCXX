@@ -32,6 +32,10 @@ int main() {
 	Entity e1 = ECS::createEntity();
 	e1.addComponent<int>(7);
 
+	std::cout << "e1 has int " << e1.hasComponent<int>() << std::endl;
+	std::cout << "e1 has float " << e1.hasComponent<float>() << std::endl;
+	std::cout << "e1 has double " << e1.hasComponent<double>() << std::endl << std::endl;
+
 	showSystem->update();
 
 	std::cout << "--------" << std::endl;

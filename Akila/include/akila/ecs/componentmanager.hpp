@@ -19,12 +19,20 @@ namespace akila {
 	protected:
 		friend class ComponentManager;
 
+		std::vector<EntityId> componentIndexToEntityId;
+		std::array<ComponentIndex, MAX_ENTITY_COUNT> entityIdToComponentIndex;
+
 		ComponentType type;
-		IComponentVector(ComponentType type): type{type} {}
+		IComponentVector(ComponentType type): type{type}, entityIdToComponentIndex{} {
+			for(auto &v : entityIdToComponentIndex) v = NULL_COMPONENT_INDEX;
+		}
 
 		virtual void erase(EntityId entityId) = 0;
 		virtual void pushEmpty(EntityId entityId) = 0;
-		virtual bool componentIndexIsNull(Entity entityId) = 0;
+		
+		bool entityHasComponent(EntityId entityId) {
+			return entityIdToComponentIndex[entityId] != NULL_COMPONENT_INDEX;
+		}
 
 	public:
 		inline ComponentType getType() {
@@ -40,13 +48,8 @@ namespace akila {
 		friend class ComponentManager;
 
 		std::vector<T> data;
-		std::vector<EntityId> componentIndexToEntityId;
-		std::array<ComponentIndex, MAX_ENTITY_COUNT> entityIdToComponentIndex;
 
-		ComponentVector(ComponentType type): IComponentVector{type},
-			entityIdToComponentIndex{} {
-			for(auto &v : entityIdToComponentIndex) v = NULL_COMPONENT_INDEX;
-		}
+		ComponentVector(ComponentType type): IComponentVector{type} {}
 
 		inline T &getDataByEntityId(EntityId entityId) {
 			return data[entityIdToComponentIndex[entityId]];
@@ -130,10 +133,15 @@ namespace akila {
 			return vector->getType();
 		}
 
-		//template<typename T>
-		//bool hasComponent(EntityId entityId) {
+		template<typename T>
+		bool hasComponent(EntityId entityId) {
+			TypeName name = GET_TYPE_NAME(T);
 
-		//}
+			auto &it = componentVectors.find(name);
+			if(it == componentVectors.end()) return false;
+
+			return it->second->entityHasComponent(entityId);
+		}
 
 		template<typename T>
 		T &getComponent(EntityId entityId) {

@@ -25,6 +25,11 @@ namespace akila {
 		//	Coordinator::addEntityToEraseQueue(id);
 		//}
 
+		template<typename T>
+		inline bool hasComponent() {
+			return Coordinator::entityHasComponent<T>(id);
+		}
+
 		constexpr inline operator EntityId() const {
 			return id;
 		}
