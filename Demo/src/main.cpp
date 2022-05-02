@@ -19,9 +19,6 @@ public:
 int main() {
 	_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
 
-	ECS::registerComponent<double>();
-	ECS::registerComponent<int>();
-
 	Signature signature = ECS::createSignature<int>();
 	ShowSystem *showSystem = ECS::createSystem<ShowSystem>(signature);
 
@@ -31,6 +28,10 @@ int main() {
 
 	Entity e1 = ECS::createEntity();
 	e1.addComponent<int>(7);
+
+	std::cout << "e0 has int " << e0.hasComponent<int>() << std::endl;
+	std::cout << "e0 has float " << e0.hasComponent<float>() << std::endl;
+	std::cout << "e0 has double " << e0.hasComponent<double>() << std::endl << std::endl;
 
 	std::cout << "e1 has int " << e1.hasComponent<int>() << std::endl;
 	std::cout << "e1 has float " << e1.hasComponent<float>() << std::endl;

@@ -65,13 +65,9 @@ namespace akila {
 		//---
 
 		template<typename T>
-		static inline void registerComponent() {
-			componentManager->createComponent<T>();
-		}
-
-		template<typename T>
 		static void addComponentToEntity(EntityId id, T const &data) {
-			ComponentType type = componentManager->addComponent<T>(id, data);
+			//auto create si le type de component n'existe pas
+			ComponentType type = componentManager->createIfNeededAndAddComponent<T>(id, data);
 			Signature &signature = entityManager->getSignature(id);
 			signature[type] = true;
 
@@ -128,8 +124,8 @@ namespace akila {
 
 		template<class T>
 		static void addToSignature(Signature &signature) {
-			TypeName name = GET_TYPE_NAME(T);
-			ComponentType type = componentManager->componentVectors[name]->getType();
+			//auto create si le type de component n'existe pas
+			ComponentType type = componentManager->createIfNeededAndGetComponentType<T>();
 			signature[type] = true;
 		}
 

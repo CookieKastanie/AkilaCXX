@@ -105,24 +105,52 @@ namespace akila {
 		std::unordered_map<ComponentType, TypeName> componentTypeToName;
 
 		template<typename T>
-		void createComponent() {
+		ComponentVector<T> *createComponent() {
 			ComponentType type = nextType++;
 			if(nextType >= MAX_COMPONENT_TYPES) {
 				std::cerr << "Too many component types !!!" << std::endl;
-				return;
+				return nullptr;
 			}
 
 			TypeName name = GET_TYPE_NAME(T);
-			componentVectors[name] = std::unique_ptr<ComponentVector<T>>(new ComponentVector<T>{type});
+
+			ComponentVector<T> *vector = new ComponentVector<T>{type};
+			componentVectors[name] = std::unique_ptr<ComponentVector<T>>(vector);
 			componentTypeToName[type] = name;
+
+			return vector;
 		}
 
 		template<typename T>
-		ComponentType addComponent(EntityId entityId, T const &data) {
+		ComponentType createIfNeededAndAddComponent(EntityId entityId, T const &data) {
 			TypeName name = GET_TYPE_NAME(T);
 
-			IComponentVector *vector = componentVectors.at(name).get();
-			static_cast<ComponentVector<T> *>(vector)->push(entityId, data);
+			ComponentVector<T> *vector = nullptr;
+
+			auto &it = componentVectors.find(name);
+			if(it == componentVectors.end()) {
+				vector = createComponent<T>();
+			} else {
+				vector = static_cast<ComponentVector<T> *>(it->second.get());
+			}
+
+			vector->push(entityId, data);
+
+			return vector->getType();
+		}
+
+		template<typename T>
+		ComponentType createIfNeededAndGetComponentType() {
+			TypeName name = GET_TYPE_NAME(T);
+
+			ComponentVector<T> *vector = nullptr;
+
+			auto &it = componentVectors.find(name);
+			if(it == componentVectors.end()) {
+				vector = createComponent<T>();
+			} else {
+				vector = static_cast<ComponentVector<T> *>(it->second.get());
+			}
 
 			return vector->getType();
 		}

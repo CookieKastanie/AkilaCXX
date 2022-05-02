@@ -9,12 +9,6 @@ int main() {
 }
 ```
 ## ECS
-### Création d'un composant
-```cpp
-struct MyStruct {...};
-
-ECS::registerComponent<MyStruct>();
-```
 ### Création d'un entité
 #### Basic
 ```cpp

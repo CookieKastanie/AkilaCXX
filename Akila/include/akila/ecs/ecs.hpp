@@ -29,11 +29,6 @@ namespace akila {
 		}
 
 		template<typename T>
-		static inline void registerComponent() {
-			Coordinator::registerComponent<T>();
-		}
-
-		template<typename T>
 		static inline T *createSystem(Signature const &signature) {
 			return Coordinator::createSystem<T>(signature);
 		}
