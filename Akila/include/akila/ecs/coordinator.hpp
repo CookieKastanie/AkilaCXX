@@ -59,6 +59,7 @@ namespace akila {
 
 		static inline void flushEntityEraseQueue() {
 			for(EntityId entityId : entityEraseQueue) eraseEntity(entityId);
+			entityEraseQueue.clear();
 		}
 
 		//---
