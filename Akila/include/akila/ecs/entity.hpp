@@ -21,12 +21,8 @@ namespace akila {
 			Coordinator::removeComponentFromEntity<T>(id);
 		}
 
-		//inline void addToEraseQueue() {
-		//	Coordinator::addEntityToEraseQueue(id);
-		//}
-
 		template<typename T>
-		inline bool hasComponent() {
+		inline bool hasComponent() const {
 			return Coordinator::entityHasComponent<T>(id);
 		}
 

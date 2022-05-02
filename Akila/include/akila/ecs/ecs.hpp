@@ -16,11 +16,11 @@ namespace akila {
 			return Coordinator::createEntity(signature);
 		}
 
-		static void addToEraseQueue(Entity entity) {
+		static inline void addToEraseQueue(Entity entity) {
 			Coordinator::addEntityToEraseQueue(entity);
 		}
 
-		static void flushEraseQueue() {
+		static inline void flushEraseQueue() {
 			Coordinator::flushEntityEraseQueue();
 		}
 
