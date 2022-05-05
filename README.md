@@ -51,7 +51,24 @@ ECS::registerSystem<MySystem>();
 
 MySystem *system = ECS::getSystem<MySystem>();
 ```
+### Événements
+```cpp
+Events::emit<>()
+```
+### Machine à états
+```cpp
+StateMachine m<MyStruct>{};
+m.addState(Triggers::FRAME_START, 0, [](Index i, MyStruct &s){
+	// logic
+	return i + 1;
+});
+m.addStateThread(Triggers::FRAME_START, 1, [](Index i, MyStruct &s){
+	// logic
+	return i + 1;
+});
 
+if(!m.running()) m.start(0);
+```
 ### Gestion des ressources
 ```cpp
 Resources::registerType<MyResource>();
