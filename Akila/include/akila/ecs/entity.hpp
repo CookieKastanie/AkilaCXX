@@ -4,38 +4,42 @@
 #include "akila/ecs/coordinator.hpp"
 
 namespace akila {
+	namespace internal {
+		class Coordinator;
+	}
+
 	class Entity {
 	public:
 		template<typename T>
 		inline void addComponent(T const &data = T{}) {
-			Coordinator::addComponentToEntity<T>(id, data);
+			internal::Coordinator::addComponentToEntity<T>(id, data);
 		}
 
 		template<typename T>
 		inline T &getComponent() {
-			return Coordinator::getEntityComponent<T>(id);
+			return internal::Coordinator::getEntityComponent<T>(id);
 		}
 
 		template<typename T>
 		inline void removeComponent() {
-			Coordinator::removeComponentFromEntity<T>(id);
+			internal::Coordinator::removeComponentFromEntity<T>(id);
 		}
 
 		template<typename T>
 		inline bool hasComponent() const {
-			return Coordinator::entityHasComponent<T>(id);
+			return internal::Coordinator::entityHasComponent<T>(id);
 		}
 
-		constexpr inline operator EntityId() const {
+		constexpr inline operator internal::EntityId() const {
 			return id;
 		}
 
 	private:
 		friend class ECS;
-		friend class Coordinator;
+		friend class internal::Coordinator;
 		friend class System;
 
-		EntityId id;
-		inline Entity(EntityId id): id{id} {}
+		internal::EntityId id;
+		inline Entity(internal::EntityId id): id{id} {}
 	};
 }

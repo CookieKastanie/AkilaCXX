@@ -8,7 +8,7 @@
 #include "akila/ecs/entity.hpp"
 #include "akila/common/type_infos.hpp"
 
-namespace akila {
+namespace akila::internal {
 	using ComponentIndex = EntityId; // il ne peut pas y avoir plus d'index de component que d'entity
 	const ComponentIndex NULL_COMPONENT_INDEX = -1;
 

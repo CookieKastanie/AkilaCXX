@@ -5,6 +5,11 @@
 #include "akila/ecs/entity.hpp"
 
 namespace akila {
+	namespace internal {
+		class SystemManager;
+		class Coordinator;
+	}
+
 	class System {
 	public:
 		System() = default;
@@ -14,8 +19,8 @@ namespace akila {
 		std::set<Entity> entities;
 
 	private:
-		friend class SystemManager;
-		friend class Coordinator;
+		friend class internal::SystemManager;
+		friend class internal::Coordinator;
 
 		Signature signature;
 
@@ -27,17 +32,17 @@ namespace akila {
 			signature = s;
 		}
 
-		void eraseEntity(EntityId entityId) {
+		void eraseEntity(internal::EntityId entityId) {
 			entities.erase(entityId);
 		}
 
-		void addIfCompatible(EntityId entityId, Signature const &s) {
+		void addIfCompatible(internal::EntityId entityId, Signature const &s) {
 			if(isCompatible(s)) {
 				entities.insert(entityId);
 			}
 		}
 
-		void eraseIfNotCompatible(EntityId entityId, Signature const &s) {
+		void eraseIfNotCompatible(internal::EntityId entityId, Signature const &s) {
 			if(!isCompatible(s)) {
 				eraseEntity(entityId);
 			}

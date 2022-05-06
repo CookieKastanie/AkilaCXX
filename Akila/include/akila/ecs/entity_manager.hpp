@@ -8,7 +8,7 @@
 #include <set>
 #include <iostream>
 
-namespace akila {
+namespace akila::internal {
 	class EntityManager {
 	private:
 		friend class Coordinator;

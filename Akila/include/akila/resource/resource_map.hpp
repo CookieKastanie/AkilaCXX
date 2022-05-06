@@ -4,7 +4,7 @@
 #include <string>
 #include <unordered_map>
 
-namespace akila {
+namespace akila::internal {
 	class IResourceMap {
 	public:
 		IResourceMap() = default;

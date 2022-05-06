@@ -9,43 +9,43 @@ namespace akila {
 	class ECS {
 	public:
 		static inline Entity createEntity() {
-			return Coordinator::createEntity();
+			return internal::Coordinator::createEntity();
 		}
 
 		static inline Entity createEntity(Signature const &signature) {
-			return Coordinator::createEntity(signature);
+			return internal::Coordinator::createEntity(signature);
 		}
 
 		static inline void addToEraseQueue(Entity entity) {
-			Coordinator::addEntityToEraseQueue(entity);
+			internal::Coordinator::addEntityToEraseQueue(entity);
 		}
 
 		static inline void flushEraseQueue() {
-			Coordinator::flushEntityEraseQueue();
+			internal::Coordinator::flushEntityEraseQueue();
 		}
 
 		static inline void eraseEntity(Entity const &entity) {
-			return Coordinator::eraseEntity(entity);
+			return internal::Coordinator::eraseEntity(entity);
 		}
 
 		template<typename T>
 		static inline T *createSystem(Signature const &signature) {
-			return Coordinator::createSystem<T>(signature);
+			return internal::Coordinator::createSystem<T>(signature);
 		}
 
 		template<typename T>
 		static inline T *getSystem() {
-			return Coordinator::getSystem<T>();
+			return internal::Coordinator::getSystem<T>();
 		}
 
 		template<typename T>
 		static inline void eraseSystem() {
-			Coordinator::eraseSystem<T>();
+			internal::Coordinator::eraseSystem<T>();
 		}
 
 		template<typename ...Ts>
 		static inline Signature createSignature() {
-			return Coordinator::createSignature<Ts...>();
+			return internal::Coordinator::createSignature<Ts...>();
 		}
 	};
 }

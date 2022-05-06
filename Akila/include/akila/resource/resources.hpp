@@ -16,7 +16,7 @@ namespace akila {
 			// ajout auto d'un nouveau type
 			if(maps.find(id) == maps.end()) registerType<T>();
 
-			ResourceMap<T> *map = static_cast<ResourceMap<T>*>(maps.at(id).get());
+			internal::ResourceMap<T> *map = static_cast<internal::ResourceMap<T>*>(maps.at(id).get());
 			map->set(name, new T{args...});
 			return map->get(name);
 		}
@@ -24,17 +24,17 @@ namespace akila {
 		template<typename T>
 		static Ref<T> get(std::string const &name) {
 			TypeId id = getTypeId<T>();
-			ResourceMap<T> *map = static_cast<ResourceMap<T>*>(maps.at(id).get());
+			internal::ResourceMap<T> *map = static_cast<internal::ResourceMap<T>*>(maps.at(id).get());
 			return map->get(name);
 		}
 
 	private:
-		static std::unordered_map<TypeId, std::unique_ptr<IResourceMap>> maps;
+		static std::unordered_map<TypeId, std::unique_ptr<internal::IResourceMap>> maps;
 
 		template<typename T>
 		static void registerType() {
 			TypeId id = getTypeId<T>();
-			maps[id] = std::unique_ptr<IResourceMap>(new ResourceMap<T>{});
+			maps[id] = std::unique_ptr<internal::IResourceMap>(new internal::ResourceMap<T>{});
 		}
 	};
 }

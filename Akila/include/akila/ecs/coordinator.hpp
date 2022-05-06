@@ -7,7 +7,7 @@
 #include <memory>
 #include <set>
 
-namespace akila {
+namespace akila::internal {
 	class Coordinator {
 	private:
 		friend class ECS;

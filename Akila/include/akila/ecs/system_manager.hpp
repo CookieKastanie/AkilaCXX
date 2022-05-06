@@ -7,7 +7,7 @@
 #include <type_traits>
 #include <iostream>
 
-namespace akila {
+namespace akila::internal {
 	class SystemManager {
 	private:
 		friend class Coordinator;
