@@ -49,8 +49,6 @@ int main() {
 
 	std::cout << "=======" << std::endl;
 
-	Resources::registerType<float>();
-
 	Ref<float> r = Resources::create<float>("number", 1.2f);
 
 	std::cout << "ref : " << *r << std::endl;

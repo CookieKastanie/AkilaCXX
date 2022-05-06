@@ -45,7 +45,7 @@ public:
 
 //...
 
-ECS::registerSystem<MySystem>();
+ECS::createSystem<MySystem>();
 
 //...
 
@@ -71,15 +71,13 @@ if(!m.running()) m.start(0);
 ```
 ### Gestion des ressources
 ```cpp
-Resources::registerType<MyResource>();
-
 // Loader pour chager depuis un JSON
 class MyLoader: public Loader {
 public:
 	MyLoader(): Loader{"json_list_name"} {}
 	void onEntry(json &const j) {}
 }
-Resources::registerType<MyResource, MyLoader>();
+Resources::setLoader<MyResource, MyLoader>();
 
 //...
 
