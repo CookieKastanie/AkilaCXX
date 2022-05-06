@@ -47,5 +47,17 @@ int main() {
 
 	showSystem->update();
 
+	std::cout << "=======" << std::endl;
+
+	Resources::registerType<float>();
+
+	Ref<float> r = Resources::create<float>("number", 1.2f);
+
+	std::cout << "ref : " << *r << std::endl;
+	std::cout << "ref : " << *Resources::get<float>("number") << std::endl;
+
+	*r = 1.8;
+	std::cout << "ref : " << *r << std::endl;
+
 	return 0;
 }

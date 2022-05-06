@@ -6,7 +6,7 @@
 #include <memory>
 
 #include "akila/ecs/entity.hpp"
-#include "akila/ecs/typename.hpp"
+#include "akila/common/typename.hpp"
 
 namespace akila {
 	using ComponentIndex = EntityId; // il ne peut pas y avoir plus d'index de component que d'entity
@@ -112,7 +112,7 @@ namespace akila {
 				return nullptr;
 			}
 
-			TypeName name = GET_TYPE_NAME(T);
+			TypeName name = getTypeName<T>();
 
 			ComponentVector<T> *vector = new ComponentVector<T>{type};
 			componentVectors[name] = std::unique_ptr<ComponentVector<T>>(vector);
@@ -123,7 +123,7 @@ namespace akila {
 
 		template<typename T>
 		ComponentType createIfNeededAndAddComponent(EntityId entityId, T const &data) {
-			TypeName name = GET_TYPE_NAME(T);
+			TypeName name = getTypeName<T>();
 
 			ComponentVector<T> *vector = nullptr;
 
@@ -141,7 +141,7 @@ namespace akila {
 
 		template<typename T>
 		ComponentType createIfNeededAndGetComponentType() {
-			TypeName name = GET_TYPE_NAME(T);
+			TypeName name = getTypeName<T>();
 
 			ComponentVector<T> *vector = nullptr;
 
@@ -163,7 +163,7 @@ namespace akila {
 
 		template<typename T>
 		bool hasComponent(EntityId entityId) {
-			TypeName name = GET_TYPE_NAME(T);
+			TypeName name = getTypeName<T>();
 
 			auto &it = componentVectors.find(name);
 			if(it == componentVectors.end()) return false;
@@ -173,7 +173,7 @@ namespace akila {
 
 		template<typename T>
 		T &getComponent(EntityId entityId) {
-			TypeName name = GET_TYPE_NAME(T);
+			TypeName name = getTypeName<T>();
 			IComponentVector *vector = componentVectors.at(name).get();
 			return static_cast<ComponentVector<T>*>(vector)->getDataByEntityId(entityId);
 		}

@@ -6,11 +6,6 @@ namespace akila {
 
 	template<class T>
 	class Ref {
-	private:
-		friend class RefAnchor<T>;
-
-		RefAnchor<T> *ra;
-
 	public:
 		Ref(RefAnchor<T> *ra): ra{ra} { ++ra->refCount; }
 		Ref(void *ra): ra{static_cast<RefAnchor<T>*>(ra)} { ++this->ra->refCount; }
@@ -59,16 +54,15 @@ namespace akila {
 		constexpr operator Ref<C> const () const { return {ra}; }
 
 		bool isValid() { return ra != nullptr; }
+
+	private:
+		friend class RefAnchor<T>;
+
+		RefAnchor<T> *ra;
 	};
 
 	template<class T>
 	class RefAnchor {
-	private:
-		friend class Ref<T>;
-
-		T *resource;
-		unsigned int refCount;
-
 	public:
 		RefAnchor(): resource{nullptr}, refCount{0} {}
 		RefAnchor(RefAnchor const &) = delete;
@@ -88,5 +82,11 @@ namespace akila {
 		}
 
 		bool haveReferences() const { return refCount != 0; }
+
+	private:
+		friend class Ref<T>;
+
+		T *resource;
+		unsigned int refCount;
 	};
 }

@@ -21,7 +21,7 @@ namespace akila {
 				return nullptr;
 			}
 
-			TypeName name = GET_TYPE_NAME(T);
+			TypeName name = getTypeName<T>();
 			systems[name] = std::make_unique<T>();
 			systems[name]->setSignature(signature);
 
@@ -31,14 +31,14 @@ namespace akila {
 
 		template<typename T>
 		T *getSystem() {
-			TypeName name = GET_TYPE_NAME(T);
+			TypeName name = getTypeName<T>();
 			System *system = systems.at(name).get();
 			return static_cast<T *>(system);
 		}
 
 		template<typename T>
 		void eraseSystem() {
-			TypeName name = GET_TYPE_NAME(T);
+			TypeName name = getTypeName<T>();
 			systems.erase(name);
 		}
 

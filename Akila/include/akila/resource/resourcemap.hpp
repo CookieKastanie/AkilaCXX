@@ -13,17 +13,8 @@ namespace akila {
 
 	template<class T>
 	class ResourceMap: public IResourceMap {
-	private:
-		typedef T *(*G)();
-		G generator;
-		std::unordered_map<std::string, RefAnchor<T>> map;
-
 	public:
-		ResourceMap(): generator{[]() -> T * { return nullptr; }} {};
-
-		void setGenerator(G const &generator) {
-			this->generator = generator;
-		};
+		ResourceMap() = default;
 
 		void set(std::string const &name, T *value) {
 			auto it = map.find(name);
@@ -33,7 +24,7 @@ namespace akila {
 
 		Ref<T> get(std::string const &name) {
 			auto it = map.find(name);
-			if(it == map.end()) set(name, generator());
+			if(it == map.end()) set(name, new T{});
 			else return it->second.createReference();
 
 			return get(name);
@@ -56,5 +47,8 @@ namespace akila {
 				else it++;
 			}
 		}
+
+	private:
+		std::unordered_map<std::string, RefAnchor<T>> map;
 	};
 }
