@@ -2,6 +2,7 @@
 
 #include <glm/glm.hpp>
 #include <glm/gtx/quaternion.hpp>
+#include <iostream>
 
 namespace akila {
 	using Vec1 = glm::vec1;
@@ -45,3 +46,26 @@ namespace akila {
 	using glm::angleAxis;
 	using glm::cross;
 }
+
+std::ostream &operator<<(std::ostream &os, akila::Vec1 const &v);
+std::ostream &operator<<(std::ostream &os, akila::IVec1 const &v);
+
+std::ostream &operator<<(std::ostream &os, akila::Vec2 const &v);
+std::ostream &operator<<(std::ostream &os, akila::IVec2 const &v);
+
+std::ostream &operator<<(std::ostream &os, akila::Vec3 const &v);
+std::ostream &operator<<(std::ostream &os, akila::IVec3 const &v);
+
+std::ostream &operator<<(std::ostream &os, akila::Vec4 const &v);
+std::ostream &operator<<(std::ostream &os, akila::IVec4 const &v);
+
+std::ostream &operator<<(std::ostream &os, akila::Mat2 const &v);
+std::ostream &operator<<(std::ostream &os, akila::IMat2 const &v);
+
+std::ostream &operator<<(std::ostream &os, akila::Mat3 const &v);
+std::ostream &operator<<(std::ostream &os, akila::IMat3 const &v);
+
+std::ostream &operator<<(std::ostream &os, akila::Mat4 const &v);
+std::ostream &operator<<(std::ostream &os, akila::IMat4 const &v);
+
+std::ostream &operator<<(std::ostream &os, akila::Quat const &v);

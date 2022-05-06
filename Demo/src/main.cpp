@@ -19,6 +19,12 @@ public:
 int main() {
 	_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
 
+	Vec3 vec{4, 1.6, -5.3};
+	std::cout << vec << std::endl;
+	std::cout << vec + Vec3{1, 0, 0} << std::endl;
+
+	std::cout << "=======" << std::endl;
+
 	Signature signature = ECS::createSignature<int>();
 	ShowSystem *showSystem = ECS::createSystem<ShowSystem>(signature);
 
@@ -54,7 +60,7 @@ int main() {
 	std::cout << "ref : " << *r << std::endl;
 	std::cout << "ref : " << *Resources::get<float>("number") << std::endl;
 
-	*r = 1.8;
+	*r = 1.8f;
 	std::cout << "ref : " << *r << std::endl;
 
 	return 0;

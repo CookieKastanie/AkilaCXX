@@ -61,7 +61,7 @@ namespace akila {
 				return;
 			}
 
-			ComponentIndex componentIndex = data.size();
+			ComponentIndex componentIndex = static_cast<ComponentIndex>(data.size());
 			data.push_back(value);
 			componentIndexToEntityId.push_back(entityId);
 			entityIdToComponentIndex[entityId] = componentIndex;
@@ -80,7 +80,7 @@ namespace akila {
 
 			// copie le dernier element a l'emplacement de l'element a supprimer,
 			// puis pop la liste
-			ComponentIndex lastComponentIndex = data.size() - 1;
+			ComponentIndex lastComponentIndex = static_cast<ComponentIndex>(data.size() - 1);
 
 			data[componentIndex] = data[lastComponentIndex];
 
