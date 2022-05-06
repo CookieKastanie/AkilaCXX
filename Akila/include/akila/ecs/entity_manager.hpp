@@ -1,6 +1,6 @@
 #pragma once
 
-#include "akila/ecs/entityId.hpp"
+#include "akila/ecs/entity_id.hpp"
 #include "akila/ecs/signature.hpp"
 
 #include <array>

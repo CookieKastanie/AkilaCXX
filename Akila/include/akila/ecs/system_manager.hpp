@@ -12,34 +12,34 @@ namespace akila {
 	private:
 		friend class Coordinator;
 
-		std::unordered_map<TypeName, std::unique_ptr<System>> systems;
+		std::unordered_map<TypeId, std::unique_ptr<System>> systems;
 
 		template<typename T>
 		T *createSystem(Signature const &signature) {
 			if(!std::is_base_of<System, T>()) {
-				std::cerr << typeid(T).name() << " must inherit from System" << std::endl;
+				std::cerr << getTypeName<T>() << " must inherit from System" << std::endl;
 				return nullptr;
 			}
 
-			TypeName name = getTypeName<T>();
-			systems[name] = std::make_unique<T>();
-			systems[name]->setSignature(signature);
+			TypeId id = getTypeId<T>();
+			systems[id] = std::make_unique<T>();
+			systems[id]->setSignature(signature);
 
-			System *system = systems.at(name).get();
+			System *system = systems.at(id).get();
 			return static_cast<T *>(system);
 		}
 
 		template<typename T>
 		T *getSystem() {
-			TypeName name = getTypeName<T>();
-			System *system = systems.at(name).get();
+			TypeId id = getTypeId<T>();
+			System *system = systems.at(id).get();
 			return static_cast<T *>(system);
 		}
 
 		template<typename T>
 		void eraseSystem() {
-			TypeName name = getTypeName<T>();
-			systems.erase(name);
+			TypeId id = getTypeId<T>();
+			systems.erase(id);
 		}
 
 		void addIfCompatible(EntityId entityId, Signature const &s) {

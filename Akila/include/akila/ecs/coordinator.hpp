@@ -1,8 +1,8 @@
 #pragma once
 
-#include "akila/ecs/entitymanager.hpp"
-#include "akila/ecs/componentmanager.hpp"
-#include "akila/ecs/systemmanager.hpp"
+#include "akila/ecs/entity_manager.hpp"
+#include "akila/ecs/component_manager.hpp"
+#include "akila/ecs/system_manager.hpp"
 
 #include <memory>
 #include <set>

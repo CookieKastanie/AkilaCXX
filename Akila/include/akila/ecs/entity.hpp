@@ -1,6 +1,6 @@
 #pragma once
 
-#include "akila/ecs/entityid.hpp"
+#include "akila/ecs/entity_id.hpp"
 #include "akila/ecs/coordinator.hpp"
 
 namespace akila {

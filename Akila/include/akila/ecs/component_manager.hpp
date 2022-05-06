@@ -6,7 +6,7 @@
 #include <memory>
 
 #include "akila/ecs/entity.hpp"
-#include "akila/common/typename.hpp"
+#include "akila/common/type_infos.hpp"
 
 namespace akila {
 	using ComponentIndex = EntityId; // il ne peut pas y avoir plus d'index de component que d'entity
@@ -101,8 +101,8 @@ namespace akila {
 
 		ComponentType nextType = 0;
 
-		std::unordered_map<TypeName, std::unique_ptr<IComponentVector>> componentVectors;
-		std::unordered_map<ComponentType, TypeName> componentTypeToName;
+		std::unordered_map<TypeId, std::unique_ptr<IComponentVector>> componentVectors;
+		std::unordered_map<ComponentType, TypeId> componentTypeToId;
 
 		template<typename T>
 		ComponentVector<T> *createComponent() {
@@ -112,22 +112,22 @@ namespace akila {
 				return nullptr;
 			}
 
-			TypeName name = getTypeName<T>();
+			TypeId id = getTypeId<T>();
 
 			ComponentVector<T> *vector = new ComponentVector<T>{type};
-			componentVectors[name] = std::unique_ptr<ComponentVector<T>>(vector);
-			componentTypeToName[type] = name;
+			componentVectors[id] = std::unique_ptr<ComponentVector<T>>(vector);
+			componentTypeToId[type] = id;
 
 			return vector;
 		}
 
 		template<typename T>
 		ComponentType createIfNeededAndAddComponent(EntityId entityId, T const &data) {
-			TypeName name = getTypeName<T>();
+			TypeId id = getTypeId<T>();
 
 			ComponentVector<T> *vector = nullptr;
 
-			auto &it = componentVectors.find(name);
+			auto &it = componentVectors.find(id);
 			if(it == componentVectors.end()) {
 				vector = createComponent<T>();
 			} else {
@@ -141,11 +141,11 @@ namespace akila {
 
 		template<typename T>
 		ComponentType createIfNeededAndGetComponentType() {
-			TypeName name = getTypeName<T>();
+			TypeId id = getTypeId<T>();
 
 			ComponentVector<T> *vector = nullptr;
 
-			auto &it = componentVectors.find(name);
+			auto &it = componentVectors.find(id);
 			if(it == componentVectors.end()) {
 				vector = createComponent<T>();
 			} else {
@@ -156,16 +156,16 @@ namespace akila {
 		}
 
 		ComponentType addComponent(EntityId entityId, ComponentType type) {
-			IComponentVector *vector = componentVectors.at(componentTypeToName[type]).get();
+			IComponentVector *vector = componentVectors.at(componentTypeToId[type]).get();
 			vector->pushEmpty(entityId);
 			return vector->getType();
 		}
 
 		template<typename T>
 		bool hasComponent(EntityId entityId) {
-			TypeName name = getTypeName<T>();
+			TypeId id = getTypeId<T>();
 
-			auto &it = componentVectors.find(name);
+			auto &it = componentVectors.find(id);
 			if(it == componentVectors.end()) return false;
 
 			return it->second->entityHasComponent(entityId);
@@ -173,13 +173,13 @@ namespace akila {
 
 		template<typename T>
 		T &getComponent(EntityId entityId) {
-			TypeName name = getTypeName<T>();
-			IComponentVector *vector = componentVectors.at(name).get();
+			TypeId id = getTypeId<T>();
+			IComponentVector *vector = componentVectors.at(id).get();
 			return static_cast<ComponentVector<T>*>(vector)->getDataByEntityId(entityId);
 		}
 
 		ComponentType removeComponent(EntityId entityId, ComponentType type) {
-			TypeName name = componentTypeToName[type];
+			TypeId name = componentTypeToId[type];
 
 			IComponentVector *vector = componentVectors.at(name).get();
 			vector->erase(entityId);
