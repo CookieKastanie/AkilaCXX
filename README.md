@@ -4,8 +4,18 @@
 #include <akila/akila.hpp>
 using namespace akila;
 
+class MyLayer: public Layer {
+public:
+	void update() override {}
+	void draw() override {}
+	void drawImGui() override {}
+}
+
 int main() {
-	return Core::run(???);
+	return Core::run([]() {
+		FileSystem::setResourceFolder("resources");
+		Layers::add<MyLayer>();
+	});
 }
 ```
 ## ECS
@@ -69,6 +79,10 @@ m.addStateThread(Triggers::FRAME_START, 1, [](Index i, MyStruct &s){
 
 if(!m.running()) m.start(0);
 ```
+### Animateur
+```cpp
+Animator::
+```
 ### Gestion des ressources
 ```cpp
 // Loader pour chager depuis un JSON
@@ -102,9 +116,6 @@ Resources::load({"path/file1.json", "path/file2.json"}, []() {
 ```cpp
 Window::setTitle("Title");
 Window::setSize(1280, 720);
-```
-```cpp
-
 ```
 ```cpp
 

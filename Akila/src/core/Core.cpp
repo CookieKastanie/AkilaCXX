@@ -30,7 +30,7 @@ int Core::run(void (*init)(void)) {
 			Time::mix = accumulator / Time::fixedDelta;
 
 			Layers::draw();
-			Layers::drawImGui();
+			//Layers::drawImGui();
 			Window::swapBuffers();
 		}
 
