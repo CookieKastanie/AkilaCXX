@@ -16,10 +16,7 @@ namespace akila::internal {
 
 		template<typename T>
 		T *createSystem(Signature const &signature) {
-			if(!std::is_base_of<System, T>()) {
-				std::cerr << getTypeName<T>() << " must inherit from System" << std::endl;
-				return nullptr;
-			}
+			static_assert(std::is_base_of<System, T>::value, "T must derive from akila::System");
 
 			TypeId id = getTypeId<T>();
 			systems[id] = std::make_unique<T>();

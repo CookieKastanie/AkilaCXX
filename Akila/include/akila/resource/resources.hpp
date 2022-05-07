@@ -9,8 +9,8 @@
 namespace akila {
 	class Resources {
 	public:
-		template<typename T, typename ... Args>
-		static Ref<T> create(std::string const &name, Args&& ... args) {
+		template<typename T, typename ...Args>
+		static Ref<T> create(std::string const &name, Args&& ...args) {
 			TypeId id = getTypeId<T>();
 
 			// ajout auto d'un nouveau type

@@ -1,5 +1,6 @@
 #include "akila/core/core.hpp"
 #include "akila/window/window.hpp"
+#include "akila/layer/layers.hpp"
 #include <iostream>
 
 #include <glm/gtx/string_cast.hpp>
@@ -35,6 +36,9 @@ int Core::run(void (*init)(void)) {
 		init();
 		while(!stop) {
 			test();
+			Layers::update();
+			Layers::draw();
+			Layers::drawImGui();
 			Window::swapBuffers();
 		}
 
