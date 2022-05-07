@@ -18,7 +18,7 @@ public:
 
 int main() {
 	_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
-
+	
 	Vec3 vec{4, 1.6, -5.3};
 	std::cout << vec << std::endl;
 	std::cout << vec + Vec3{1, 0, 0} << std::endl;
