@@ -6,6 +6,7 @@
 #include "akila/resource/resources.hpp"
 #include "akila/window/window.hpp"
 #include "akila/layer/layers.hpp"
+#include "akila/time/time.hpp"
 
 namespace akila {
 

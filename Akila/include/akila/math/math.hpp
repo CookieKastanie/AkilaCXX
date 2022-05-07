@@ -2,6 +2,7 @@
 
 #include <glm/glm.hpp>
 #include <glm/gtx/quaternion.hpp>
+#include <glm/gtx/string_cast.hpp>
 #include <iostream>
 
 namespace akila {
@@ -45,6 +46,8 @@ namespace akila {
 	using glm::scale;
 	using glm::angleAxis;
 	using glm::cross;
+
+	using glm::to_string;
 }
 
 std::ostream &operator<<(std::ostream &os, akila::Vec1 const &v);

@@ -57,7 +57,7 @@ TestLayer::TestLayer(): Layer{} {
 	*r = 1.8f;
 	std::cout << "ref : " << *r << std::endl;
 
-	a = 300;
+	a = 600;
 }
 
 void TestLayer::update() {
@@ -67,7 +67,21 @@ void TestLayer::update() {
 }
 
 void TestLayer::draw() {
-	std::cout << "draw " << a << std::endl;
+	IVec2 s = Window::getSize();
+	glViewport(0, 0, s.x, s.y);
+
+	glDisable(GL_SCISSOR_TEST);
+	glClearColor(.5f, .2f, .8f, 1.f);
+	glClear(GL_COLOR_BUFFER_BIT);
+
+	glEnable(GL_SCISSOR_TEST);
+	glScissor(0, 0, 100, 100);
+	long t = (long)(Time::now * 255);
+	glClearColor((float)(t % 255) / 255.f, .5f, .2f, 1.f);
+	glClear(GL_COLOR_BUFFER_BIT);
+
+	IVec2 p = Window::getPosition();
+	Window::setTitle(to_string(p));
 }
 
 void TestLayer::drawImGui() {

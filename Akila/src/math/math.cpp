@@ -1,5 +1,4 @@
 #include "akila/math/math.hpp"
-#include <glm/gtx/string_cast.hpp>
 
 using namespace akila;
 
