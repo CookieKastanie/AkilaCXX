@@ -63,5 +63,8 @@ int main() {
 	*r = 1.8f;
 	std::cout << "ref : " << *r << std::endl;
 
-	return 0;
+	return Core::run([]() {
+		std::cout << "Running" << std::endl;
+		Window::setTitle("Akila !");
+	});
 }

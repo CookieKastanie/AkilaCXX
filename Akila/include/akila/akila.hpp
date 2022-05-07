@@ -4,6 +4,7 @@
 #include "akila/core/core.hpp"
 #include "akila/ecs/ecs.hpp"
 #include "akila/resource/resources.hpp"
+#include "akila/window/window.hpp"
 
 namespace akila {
 

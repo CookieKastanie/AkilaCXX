@@ -1,7 +1,8 @@
 #pragma once
 
 namespace akila {
-	namespace Core {
-		int run();
-	}
+	class Core {
+	public:
+		static int run(void (*init)(void));
+	};
 }
