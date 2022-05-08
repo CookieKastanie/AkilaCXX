@@ -7,6 +7,7 @@
 #include "akila/window/window.hpp"
 #include "akila/layer/layers.hpp"
 #include "akila/time/time.hpp"
+#include "akila/event/events.hpp"
 
 namespace akila {
 
