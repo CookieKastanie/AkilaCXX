@@ -127,7 +127,7 @@ namespace akila::internal {
 
 			ComponentVector<T> *vector = nullptr;
 
-			auto &it = componentVectors.find(id);
+			auto it = componentVectors.find(id);
 			if(it == componentVectors.end()) {
 				vector = createComponent<T>();
 			} else {
@@ -145,7 +145,7 @@ namespace akila::internal {
 
 			ComponentVector<T> *vector = nullptr;
 
-			auto &it = componentVectors.find(id);
+			auto it = componentVectors.find(id);
 			if(it == componentVectors.end()) {
 				vector = createComponent<T>();
 			} else {
@@ -165,7 +165,7 @@ namespace akila::internal {
 		bool hasComponent(EntityId entityId) {
 			TypeId id = getTypeId<T>();
 
-			auto &it = componentVectors.find(id);
+			auto it = componentVectors.find(id);
 			if(it == componentVectors.end()) return false;
 
 			return it->second->entityHasComponent(entityId);

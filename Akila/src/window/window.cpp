@@ -52,6 +52,10 @@ IVec2 Window::getSize() {
 	return size;
 }
 
+void Window::setPosition(IVec2 const &pos) {
+	glfwSetWindowPos(window, pos.x, pos.y);
+}
+
 IVec2 Window::getPosition() {
 	IVec2 pos;
 	glfwGetWindowPos(window, &pos.x, &pos.y);

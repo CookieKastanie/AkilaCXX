@@ -18,7 +18,7 @@ namespace akila {
 			layer->depth = depth;
 			layer->typeId = getTypeId<T>();
 
-			for(auto &it = layers.begin(); it != layers.end(); ++it) {
+			for(auto it = layers.begin(); it != layers.end(); ++it) {
 				if(it->get()->depth > depth) {
 					layers.emplace(it, layer);
 					return;

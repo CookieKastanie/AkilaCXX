@@ -13,6 +13,7 @@ namespace akila {
 		static void setSize(IVec2 const &size);
 		static IVec2 getSize();
 
+		static void setPosition(IVec2 const &pos);
 		static IVec2 getPosition();
 
 		static void setLimits(IVec2 const &minSize, IVec2 const &maxSize);

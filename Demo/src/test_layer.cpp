@@ -57,7 +57,7 @@ TestLayer::TestLayer(): Layer{} {
 	*r = 1.8f;
 	std::cout << "ref : " << *r << std::endl;
 
-	a = 600;
+	a = 2000;
 }
 
 void TestLayer::update() {
@@ -79,6 +79,9 @@ void TestLayer::draw() {
 	long t = (long)(Time::now * 255);
 	glClearColor((float)(t % 255) / 255.f, .5f, .2f, 1.f);
 	glClear(GL_COLOR_BUFFER_BIT);
+
+	//IVec2 p{sin(Time::now * 4.f) * 420.f + (1600 / 3), 100};
+	//Window::setPosition(p);
 
 	IVec2 p = Window::getPosition();
 	Window::setTitle(to_string(p));
