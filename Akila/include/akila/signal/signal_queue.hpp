@@ -1,18 +1,18 @@
 #pragma once
 
-#include "akila/event/listener.hpp"
-#include "akila/event/event_listener.hpp"
-#include "akila/event/event_callback.hpp"
+#include "akila/signal/listener.hpp"
+#include "akila/signal/signal_listener.hpp"
+#include "akila/signal/signal_callback.hpp"
 #include "akila/common/type_infos.hpp"
 #include <vector>
 
 namespace akila {
-	class IEventQueue {
+	class ISignalQueue {
 	public:
-		virtual ~IEventQueue() = default;
+		virtual ~ISignalQueue() = default;
 
 	protected:
-		friend class Events;
+		friend class Signals;
 
 		inline ListenerId getListenerId(Listener const &l) {
 			return l.id;
@@ -27,12 +27,12 @@ namespace akila {
 	};
 
 	template<typename T>
-	class EventQueue: public IEventQueue {
+	class SignalQueue: public ISignalQueue {
 	public:
-		EventQueue(TypeId typeId): typeId{typeId}, dipatchers{}, dispatchersIndex{0} {}
+		SignalQueue(TypeId typeId): typeId{typeId}, dipatchers{}, dispatchersIndex{0} {}
 		
-		Listener addListener(EventCallback<T> const &callback) {
-			EventListener<T> el{callback};
+		Listener addListener(SignalCallback<T> const &callback) {
+			SignalListener<T> el{callback};
 			listeners.push_back(el);
 			return createListener(typeId, el.getId());
 		}
@@ -48,14 +48,14 @@ namespace akila {
 
 		template<typename ...Args>
 		void inline enqueue(Args&& ... args) {
-			dipatchers[dispatchersIndex].push_back(EventDispatcher<T>{std::forward<Args>(args)...});
+			dipatchers[dispatchersIndex].push_back(SignalDispatcher<T>{std::forward<Args>(args)...});
 		}
 
 		void flush() override {
 			auto &dispatcher = dipatchers[dispatchersIndex];
 			dispatchersIndex = !dispatchersIndex;
 
-			for(EventDispatcher<T> &d : dispatcher) {
+			for(SignalDispatcher<T> &d : dispatcher) {
 				d.dispatch(listeners);
 			}
 
@@ -65,8 +65,8 @@ namespace akila {
 	private:
 		TypeId typeId;
 
-		std::vector<EventListener<T>> listeners;
-		std::vector<EventDispatcher<T>> dipatchers[2];
+		std::vector<SignalListener<T>> listeners;
+		std::vector<SignalDispatcher<T>> dipatchers[2];
 		char dispatchersIndex;
 	};
 }

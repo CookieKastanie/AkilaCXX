@@ -1,5 +1,5 @@
-#include "akila/event/listener.hpp"
-#include "akila/event/events.hpp"
+#include "akila/signal/listener.hpp"
+#include "akila/signal/signals.hpp"
 
 using namespace akila;
 
@@ -28,5 +28,5 @@ Listener &Listener::operator=(Listener &&l) noexcept {
 };
 
 Listener::~Listener() {
-	if(type != 0) Events::removeListener(*this);
+	if(type != 0) Signals::removeListener(*this);
 };

@@ -1,13 +1,13 @@
 #pragma once
 
-#include "akila/event/listener.hpp"
-#include "akila/event/event_dispatcher.hpp"
-#include "akila/event/event_queue.hpp"
+#include "akila/signal/listener.hpp"
+#include "akila/signal/signal_dispatcher.hpp"
+#include "akila/signal/signal_queue.hpp"
 #include "akila/common/type_infos.hpp"
 #include <unordered_map>
 
 namespace akila {
-	class Events {
+	class Signals {
 	public:
 		enum class Stack: char {
 			FRAME_START = 0,
@@ -25,21 +25,21 @@ namespace akila {
 				return;
 			}
 
-			IEventQueue *eventQueue = new EventQueue<T>{typeId};
+			ISignalQueue *eventQueue = new SignalQueue<T>{typeId};
 
 			queues[static_cast<char>(stack)].push_back(eventQueue);
 
 			std::size_t index = allQueues.size();
-			allQueues.push_back(std::unique_ptr<IEventQueue>(eventQueue));
+			allQueues.push_back(std::unique_ptr<ISignalQueue>(eventQueue));
 			typeToIndex[typeId] = index;
 		}
 
 		template<typename T>
-		static Listener listen(EventCallback<T> const &callback) {
+		static Listener listen(SignalCallback<T> const &callback) {
 			TypeId typeId = getTypeId<T>();
 			
 			std::size_t index = typeToIndex[typeId];
-			EventQueue<T> *q = static_cast<EventQueue<T>*>(allQueues[index].get());
+			SignalQueue<T> *q = static_cast<SignalQueue<T>*>(allQueues[index].get());
 			return q->addListener(callback);
 		}
 
@@ -48,7 +48,7 @@ namespace akila {
 			TypeId typeId = getTypeId<T>();
 			std::size_t index = typeToIndex[typeId];
 
-			EventQueue<T> *q = static_cast<EventQueue<T>*>(allQueues[index].get());
+			SignalQueue<T> *q = static_cast<SignalQueue<T>*>(allQueues[index].get());
 			q->enqueue(std::forward<Args>(args)...);
 		}
 
@@ -58,7 +58,7 @@ namespace akila {
 		}
 
 		static void flush(Stack stack) {
-			for(IEventQueue *q : queues[static_cast<char>(stack)]) {
+			for(ISignalQueue *q : queues[static_cast<char>(stack)]) {
 				q->flush();
 			}
 		}
@@ -67,8 +67,8 @@ namespace akila {
 		friend class Listener;
 		friend class Core;
 
-		static std::vector<std::unique_ptr<IEventQueue>> allQueues;
-		static std::vector<IEventQueue*> queues[3];
+		static std::vector<std::unique_ptr<ISignalQueue>> allQueues;
+		static std::vector<ISignalQueue*> queues[3];
 		static std::unordered_map<TypeId, std::size_t> typeToIndex;
 	};
 }

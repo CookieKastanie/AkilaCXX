@@ -4,5 +4,5 @@
 
 namespace akila {
 	template<typename T>
-	using EventCallback = std::function<void(T const &)>;
+	using SignalCallback = std::function<void(T const &)>;
 }

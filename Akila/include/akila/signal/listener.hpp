@@ -18,8 +18,8 @@ namespace akila {
 		~Listener();
 
 	private:
-		friend class Events;
-		friend class IEventQueue;
+		friend class Signals;
+		friend class ISignalQueue;
 
 		TypeId type;
 		ListenerId id;

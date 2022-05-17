@@ -9,35 +9,35 @@ using namespace akila;
 int main() {
 	_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
 
-	Events::registerType<int>(Events::Stack::FRAME_START);
+	Signals::registerType<int>(Signals::Stack::FRAME_START);
 
 	Listener l;
 
 	//*/
 	{
-	l = Events::listen<int>([](int const &e) {
+	l = Signals::listen<int>([](int const &e) {
 		std::cout << "read " << e << std::endl;
-		if(e > 0) Events::emit<int>(e - 1);
+		if(e > 0) Signals::emit<int>(e - 1);
 	});
 
-	Listener l2 = Events::listen<int>([](int const &e) {
+	Listener l2 = Signals::listen<int>([](int const &e) {
 		std::cout << "aaa " << e << std::endl;
 	});
 
-	Events::emit<int>(5);
+	Signals::emit<int>(5);
 
-	Events::flush(Events::Stack::FRAME_START);
-	Events::flush(Events::Stack::FRAME_START);
+	Signals::flush(Signals::Stack::FRAME_START);
+	Signals::flush(Signals::Stack::FRAME_START);
 	
 	}
-	Events::emit<int>(2);
-	Events::flush(Events::Stack::FRAME_START);
-	Events::flush(Events::Stack::FRAME_START);
+	Signals::emit<int>(2);
+	Signals::flush(Signals::Stack::FRAME_START);
+	Signals::flush(Signals::Stack::FRAME_START);
 
-	Events::flush(Events::Stack::FRAME_START);
+	Signals::flush(Signals::Stack::FRAME_START);
 
-	Events::flush(Events::Stack::FRAME_START);
-	Events::flush(Events::Stack::FRAME_START);
+	Signals::flush(Signals::Stack::FRAME_START);
+	Signals::flush(Signals::Stack::FRAME_START);
 
 	//*/
 
