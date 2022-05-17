@@ -7,10 +7,13 @@ namespace akila {
 
 	class Listener {
 	public:
+		Listener();
+
 		Listener(Listener const &) = delete;
 		Listener &operator=(Listener const &) = delete;
-		Listener(Listener&&) = delete;
-		Listener &operator=(Listener &&) = delete;
+
+		Listener(Listener &&l) noexcept;
+		Listener &operator=(Listener &&l) noexcept;
 
 		~Listener();
 

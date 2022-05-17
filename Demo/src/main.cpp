@@ -11,11 +11,17 @@ int main() {
 
 	Events::registerType<int>(Events::Stack::FRAME_START);
 
+	Listener l;
+
 	//*/
 	{
-	Listener l = Events::listen<int>([](int const &e) {
+	l = Events::listen<int>([](int const &e) {
 		std::cout << "read " << e << std::endl;
 		if(e > 0) Events::emit<int>(e - 1);
+	});
+
+	Listener l2 = Events::listen<int>([](int const &e) {
+		std::cout << "aaa " << e << std::endl;
 	});
 
 	Events::emit<int>(5);
@@ -34,6 +40,7 @@ int main() {
 	Events::flush(Events::Stack::FRAME_START);
 
 	//*/
+
 
 	/*/
 	return Core::run([]() {
