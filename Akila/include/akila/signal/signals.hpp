@@ -37,9 +37,14 @@ namespace akila {
 		template<typename T>
 		static Listener listen(SignalCallback<T> const &callback) {
 			TypeId typeId = getTypeId<T>();
-			
-			std::size_t index = typeToIndex[typeId];
-			SignalQueue<T> *q = static_cast<SignalQueue<T>*>(allQueues[index].get());
+
+			auto indexIt = typeToIndex.find(typeId);
+			if(indexIt == typeToIndex.end()) {
+				std::cerr << "Can't listen to type : " << getTypeName<T>() << std::endl;
+				return {};
+			}
+
+			SignalQueue<T> *q = static_cast<SignalQueue<T>*>(allQueues[indexIt->second].get());
 			return q->addListener(callback);
 		}
 
@@ -52,6 +57,10 @@ namespace akila {
 			q->enqueue(std::forward<Args>(args)...);
 		}
 
+	private:
+		friend class Listener;
+		friend class Core;
+
 		static void removeListener(Listener const &listener) {
 			std::size_t index = typeToIndex[listener.type];
 			allQueues[index]->removeListener(listener);
@@ -62,10 +71,6 @@ namespace akila {
 				q->flush();
 			}
 		}
-
-	private:
-		friend class Listener;
-		friend class Core;
 
 		static std::vector<std::unique_ptr<ISignalQueue>> allQueues;
 		static std::vector<ISignalQueue*> queues[3];

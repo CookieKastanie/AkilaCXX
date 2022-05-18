@@ -58,6 +58,11 @@ TestLayer::TestLayer(): Layer{} {
 	std::cout << "ref : " << *r << std::endl;
 
 	a = 2000;
+
+	l = Signals::listen<int>([](int const &e) {
+		std::cout << "read " << e << std::endl;
+		if(e > 0) Signals::emit<int>(e - 1);
+	});
 }
 
 void TestLayer::update() {

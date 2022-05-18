@@ -56,5 +56,9 @@ namespace akila {
 		static inline void Layers::drawImGui() {
 			for(auto const &layer : layers) layer->drawImGui();
 		}
+
+		static void removeAll() {
+			layers.clear();
+		}
 	};
 }
