@@ -3,6 +3,7 @@
 #include "akila/layer/layers.hpp"
 #include "akila/time/time.hpp"
 #include "akila/signal/signals.hpp"
+#include "akila/ecs/ecs.hpp"
 #include <thread>
 
 using namespace akila;
@@ -48,6 +49,7 @@ int Core::run(void (*init)(void)) {
 	stop = true;
 
 	Layers::removeAll();
+	ECS::resetAll();
 
 	glfwPostEmptyEvent();
 	while(!threadFinished) glfwWaitEvents();

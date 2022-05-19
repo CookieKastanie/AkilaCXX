@@ -62,6 +62,14 @@ namespace akila::internal {
 			entityEraseQueue.clear();
 		}
 
+		static void eraseAllEntities() {
+			for(EntityId entityId : entityManager->createdEntityIds) {
+				addEntityToEraseQueue(entityId);
+			}
+
+			flushEntityEraseQueue();
+		}
+
 		//---
 
 		template<typename T>
@@ -118,6 +126,10 @@ namespace akila::internal {
 		template<typename T>
 		static inline void eraseSystem() {
 			return systemManager->eraseSystem<T>();
+		}
+
+		static inline void eraseAllSystem() {
+			systemManager->eraseAll();
 		}
 
 		//---

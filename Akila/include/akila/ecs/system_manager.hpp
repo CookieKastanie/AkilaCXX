@@ -58,5 +58,9 @@ namespace akila::internal {
 					it->second->eraseIfNotCompatible(entityId, newSignature);
 			}
 		}
+
+		void eraseAll() {
+			systems.clear();
+		}
 	};
 }
