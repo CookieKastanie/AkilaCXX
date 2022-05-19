@@ -3,6 +3,10 @@
 #include "akila/common/type_infos.hpp"
 
 namespace akila {
+	namespace internal {
+		class ISignalQueue;
+	}
+
 	using ListenerId = std::size_t;
 
 	class Listener {
@@ -19,7 +23,7 @@ namespace akila {
 
 	private:
 		friend class Signals;
-		friend class ISignalQueue;
+		friend class internal::ISignalQueue;
 
 		TypeId type;
 		ListenerId id;

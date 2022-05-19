@@ -2,7 +2,7 @@
 
 #include "akila/signal/signal_listener.hpp"
 
-namespace akila {
+namespace akila::internal {
 	template<typename T>
 	class SignalDispatcher {
 	public:

@@ -3,7 +3,7 @@
 #include "akila/signal/signal_callback.hpp"
 #include "akila/signal/listener.hpp"
 
-namespace akila {
+namespace akila::internal {
 	class SignalListenerIds {
 	public:
 		static ListenerId nextListenerId;

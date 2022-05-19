@@ -6,7 +6,7 @@
 #include "akila/common/type_infos.hpp"
 #include <vector>
 
-namespace akila {
+namespace akila::internal {
 	class ISignalQueue {
 	public:
 		virtual ~ISignalQueue() = default;

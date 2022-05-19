@@ -25,12 +25,12 @@ namespace akila {
 				return;
 			}
 
-			ISignalQueue *eventQueue = new SignalQueue<T>{typeId};
+			internal::ISignalQueue *eventQueue = new internal::SignalQueue<T>{typeId};
 
 			queues[static_cast<char>(stack)].push_back(eventQueue);
 
 			std::size_t index = allQueues.size();
-			allQueues.push_back(std::unique_ptr<ISignalQueue>(eventQueue));
+			allQueues.push_back(std::unique_ptr<internal::ISignalQueue>(eventQueue));
 			typeToIndex[typeId] = index;
 		}
 
@@ -44,7 +44,7 @@ namespace akila {
 				return {};
 			}
 
-			SignalQueue<T> *q = static_cast<SignalQueue<T>*>(allQueues[indexIt->second].get());
+			internal::SignalQueue<T> *q = static_cast<internal::SignalQueue<T>*>(allQueues[indexIt->second].get());
 			return q->addListener(callback);
 		}
 
@@ -53,7 +53,7 @@ namespace akila {
 			TypeId typeId = getTypeId<T>();
 			std::size_t index = typeToIndex[typeId];
 
-			SignalQueue<T> *q = static_cast<SignalQueue<T>*>(allQueues[index].get());
+			internal::SignalQueue<T> *q = static_cast<internal::SignalQueue<T>*>(allQueues[index].get());
 			q->enqueue(std::forward<Args>(args)...);
 		}
 
@@ -67,13 +67,13 @@ namespace akila {
 		}
 
 		static void flush(Stack stack) {
-			for(ISignalQueue *q : queues[static_cast<char>(stack)]) {
+			for(internal::ISignalQueue *q : queues[static_cast<char>(stack)]) {
 				q->flush();
 			}
 		}
 
-		static std::vector<std::unique_ptr<ISignalQueue>> allQueues;
-		static std::vector<ISignalQueue*> queues[3];
+		static std::vector<std::unique_ptr<internal::ISignalQueue>> allQueues;
+		static std::vector<internal::ISignalQueue*> queues[3];
 		static std::unordered_map<TypeId, std::size_t> typeToIndex;
 	};
 }

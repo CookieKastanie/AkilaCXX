@@ -2,4 +2,4 @@
 
 using namespace akila;
 
-ListenerId SignalListenerIds::nextListenerId = 0;
+ListenerId internal::SignalListenerIds::nextListenerId = 0;

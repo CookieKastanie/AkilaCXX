@@ -1,3 +1,4 @@
+
 # Akila
 ## Sommaire
  - [Code de départ](#code-de-départ)
@@ -5,7 +6,7 @@
  - [ECS](#ecs)
 	 - [Création d’une entité](#création-d’une-entité)
 	 - [Création d'un système](#création-d'un-système)
- - [Événements](#événements)
+ - [Signaux](#signaux)
 	 - [Utilisation](#utilisation)
 	 - [Les Stacks](#les-stacks)
  - [Gestion des ressources](#gestion-des-ressources)
@@ -83,27 +84,26 @@ ECS::createSystem<MySystem>();
 
 MySystem *system = ECS::getSystem<MySystem>();
 ```
-## Événements
+## Signaux
 ### Utilisation
 ```cpp
-// création d'un nouveau type d'évent
-// indiquer dans quelle pile sera ajouté l'event
-Events::registerType<MyEventType>(Stack::FRAME_START);
+// création d'un nouveau type de signal
+// indiquer dans quelle pile sera ajouté les signaux
+Signals::registerType<MySignalType>(Signals::Stack::FRAME_START);
 
-// un abonnement à l'event
-Listener listener = Events::listen<MyEventType>([] (MyEventType &e){
+// écoute d'un type de signal
+Listener listener = Signals::listen<MySignalType>([] (MySignalType const &e){
 	//code
 });
 
-// emission d'un event
-Events::emit<MyEventType>(Args...);
+// emission d'un signal
+Signals::emit<MySignalType>(Args...);
 ```
 ### Les Stacks
 ```
 FRAME_START
 BEFORE_UPDATE
 BEFORE_DRAW
-INSTANT
 ```
 ## Gestion des ressources
 ### Création de ressources
@@ -135,6 +135,11 @@ Resources::load({"path/file1.json", "path/file2.json"}, []() {
 	// callback
 });
 ```
+
+----------------
+----------------
+----------------
+----------------
 ## Machine à états
 ```cpp
 StateMachine m<MyStruct>{};
