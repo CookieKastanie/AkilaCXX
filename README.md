@@ -3,15 +3,15 @@
  - [Code de départ](#code-de-départ)
  - [Fenêtre principale](#fenêtre-principale)
  - [ECS](#ecs)
-	 - [Création d’une entité](#création-d’une-entité)
+	 - [Création d'une entité](#création-d'une-entité)
 	 - [Création d'un système](#création-d'un-système)
  - [Signaux](#signaux)
 	 - [Utilisation](#utilisation)
 	 - [Les Stacks](#les-stacks)
-	 - [Signaux intégrés](#signaux-integres)
+	 - [Signaux intégrés](#signaux-intégrés)
  - [Gestion des ressources](#gestion-des-ressources)
 	 - [Création de ressources](#création-de-ressources)
-	 - [Charger des ressources depuis un JSON](#charger-des-ressources-depuis-un-JSON)
+	 - [Charger des ressources depuis un JSON](#charger-des-ressources-depuis-un-json)
 ## Code de départ
 ```cpp
 #include <akila/akila.hpp>
