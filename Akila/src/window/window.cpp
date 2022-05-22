@@ -29,7 +29,7 @@ void Window::initWindow() {
 	internal::WindowEvents::init();
 }
 
-void Window::iniGraphicContext() {
+void Window::initGraphicContext() {
 	glfwMakeContextCurrent(window);
 	if(!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) {
 	    std::cerr << "Failed to retrieve OpenGL functions" << std::endl;

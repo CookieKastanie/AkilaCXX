@@ -7,6 +7,10 @@
 #include "akila/window/window_events.hpp"
 
 namespace akila {
+	namespace internal {
+		class ImGuiHandler;
+	}
+
 	class Window {
 	public:
 		static void close();
@@ -29,12 +33,13 @@ namespace akila {
 
 	private:
 		friend class Core;
+		friend class internal::ImGuiHandler;
 
 		static GLFWwindow *window;
 		static bool vSync;
 
 		static void initWindow();
-		static void iniGraphicContext();
+		static void initGraphicContext();
 		static void makeCurrent();
 		static bool shouldClose();
 		static void swapBuffers();

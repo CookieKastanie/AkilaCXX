@@ -8,6 +8,7 @@
 #include "akila/layer/layers.hpp"
 #include "akila/time/time.hpp"
 #include "akila/signal/signals.hpp"
+#include <imgui/imgui.h>
 
 namespace akila {
 

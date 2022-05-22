@@ -5,9 +5,11 @@
 #include "akila/time/time.hpp"
 #include "akila/signal/signals.hpp"
 #include "akila/ecs/ecs.hpp"
+#include "akila/window/imgui_handler.hpp"
 #include <thread>
 
 using namespace akila;
+using namespace akila::internal;
 
 int Core::run(void (*init)(void)) {
 	Window::initWindow();
@@ -15,8 +17,9 @@ int Core::run(void (*init)(void)) {
 	volatile bool stop = false;
 	volatile bool threadFinished = false;
 	std::thread thread{[&]() {
-		Window::iniGraphicContext();
-		
+		Window::initGraphicContext();
+		ImGuiHandler::init();
+
 		init();
 
 		Time::update();
@@ -25,7 +28,7 @@ int Core::run(void (*init)(void)) {
 			Time::update();
 			accumulator += Time::delta;
 
-			internal::WindowEvents::emitSignals();
+			WindowEvents::emitSignals();
 
 			while(accumulator >= Time::fixedDelta) {
 				Signals::flush(Signals::Stack::BEFORE_UPDATE);
@@ -37,7 +40,11 @@ int Core::run(void (*init)(void)) {
 
 			Signals::flush(Signals::Stack::BEFORE_DRAW);
 			Layers::draw();
-			//Layers::drawImGui();
+
+			ImGuiHandler::beginFrame();
+			Layers::drawImGui();
+			ImGuiHandler::endFrame();
+
 			Window::swapBuffers();
 		}
 
@@ -55,6 +62,7 @@ int Core::run(void (*init)(void)) {
 	while(!threadFinished) glfwWaitEvents();
 	thread.join();
 
+	ImGuiHandler::terminate();
 	Window::terminate();
 
 	return EXIT_SUCCESS;

@@ -113,5 +113,11 @@ void TestLayer::draw() {
 }
 
 void TestLayer::drawImGui() {
+	ImGui::Begin("Test");
+	ImGui::SliderFloat("Value", &x, 0, 1000);
+	ImGui::End();
 
+	ImGui::Begin("Test2");
+	ImGui::InputFloat("Same Value", &x);
+	ImGui::End();
 }
