@@ -89,7 +89,7 @@ MySystem *system = ECS::getSystem<MySystem>();
 ```cpp
 // création d'un nouveau type de signal
 // indiquer dans quelle pile sera ajouté les signaux
-Signals::registerType<MySignalType>(Signals::Stack::FRAME_START);
+Signals::registerType<MySignalType>(Signals::Stack::BEFORE_UPDATE);
 
 // écoute d'un type de signal
 Listener listener = Signals::listen<MySignalType>([] (MySignalType const &e){
