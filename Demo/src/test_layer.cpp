@@ -63,11 +63,30 @@ TestLayer::TestLayer(): Layer{} {
 		std::cout << "read " << e << std::endl;
 		if(e > 0) Signals::emit<int>(e - 1);
 	});
+
+	keyPressListener = Signals::listen<KeyPressSignal>([](KeyPressSignal const s) {
+		std::cout << "key press: " << static_cast<int>(s.key) << std::endl;
+	});
+
+	x = 0;
+	oldX = 0;
+
+	//Time::fixedDelta = 1.f / 10.f;
+	Time::fixedDelta = 1.f / 70.f;
 }
 
 void TestLayer::update() {
+	oldX = x;
 	if(--a == 0) {
-		Layers::remove<TestLayer>();
+		//Layers::remove<TestLayer>();
+	}
+
+	if(Inputs::isPressed(Inputs::Key::RIGHT)) {
+		x += 1000 * Time::fixedDelta;
+	}
+
+	if(Inputs::isPressed(Inputs::Key::LEFT)) {
+		x -= 1000 * Time::fixedDelta;
 	}
 }
 
@@ -80,7 +99,8 @@ void TestLayer::draw() {
 	glClear(GL_COLOR_BUFFER_BIT);
 
 	glEnable(GL_SCISSOR_TEST);
-	glScissor(0, 0, 100, 100);
+	glScissor((1.f - Time::mix) * oldX + Time::mix * x, 0, 100, 100);
+	//glScissor(x, 0, 100, 100);
 	long t = (long)(Time::now * 255);
 	glClearColor((float)(t % 255) / 255.f, .5f, .2f, 1.f);
 	glClear(GL_COLOR_BUFFER_BIT);

@@ -4,6 +4,7 @@
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 #include "akila/math/math.hpp"
+#include "akila/window/window_events.hpp"
 
 namespace akila {
 	class Window {

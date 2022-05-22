@@ -1,4 +1,3 @@
-
 # Akila
 ## Sommaire
  - [Code de départ](#code-de-départ)
@@ -9,6 +8,7 @@
  - [Signaux](#signaux)
 	 - [Utilisation](#utilisation)
 	 - [Les Stacks](#les-stacks)
+	 - [Signaux intégrés](#signaux-integres)
  - [Gestion des ressources](#gestion-des-ressources)
 	 - [Création de ressources](#création-de-ressources)
 	 - [Charger des ressources depuis un JSON](#charger-des-ressources-depuis-un-JSON)
@@ -101,9 +101,13 @@ Signals::emit<MySignalType>(Args...);
 ```
 ### Les Stacks
 ```
-FRAME_START
 BEFORE_UPDATE
 BEFORE_DRAW
+```
+### Signaux intégrés
+```
+KeyPressSignal
+KeyReleaseSignal
 ```
 ## Gestion des ressources
 ### Création de ressources
@@ -135,7 +139,22 @@ Resources::load({"path/file1.json", "path/file2.json"}, []() {
 	// callback
 });
 ```
+## Inputs
+```cpp
+if(Inputs::isPressed(Inputs::Key::A) {
+	//...
+}
 
+Listener l = Signals::listen<KeyPressSignal>(KeyPressSignal const &s) {
+	if(s.key == Inputs::Key::A) {
+		//...
+	}
+}
+
+
+IVec2 pos = Inputs::getMousePosition();
+Vec2 pos = Inputs::getMouseViewportPosition();
+```
 ----------------
 ----------------
 ----------------

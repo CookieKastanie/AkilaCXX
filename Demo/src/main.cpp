@@ -13,7 +13,7 @@ int main() {
 	return Core::run([]() {
 		std::cout << "Running" << std::endl;
 
-		Signals::registerType<int>(Signals::Stack::FRAME_START);
+		Signals::registerType<int>(Signals::Stack::BEFORE_UPDATE);
 
 		Window::setTitle("Akila !");
 		Layers::add<TestLayer>();

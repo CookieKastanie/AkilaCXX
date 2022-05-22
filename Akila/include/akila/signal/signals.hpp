@@ -10,10 +10,9 @@ namespace akila {
 	class Signals {
 	public:
 		enum class Stack: char {
-			FRAME_START = 0,
-			BEFORE_UPDATE = 1,
-			BEFORE_DRAW = 2
-			//INSTANT = 3
+			BEFORE_UPDATE = 0,
+			BEFORE_DRAW = 1
+			//INSTANT = 2
 		};
 		
 		template<typename T>
@@ -73,7 +72,7 @@ namespace akila {
 		}
 
 		static std::vector<std::unique_ptr<internal::ISignalQueue>> allQueues;
-		static std::vector<internal::ISignalQueue*> queues[3];
+		static std::vector<internal::ISignalQueue*> queues[2];
 		static std::unordered_map<TypeId, std::size_t> typeToIndex;
 	};
 }

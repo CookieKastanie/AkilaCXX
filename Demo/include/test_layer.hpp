@@ -5,8 +5,11 @@
 class TestLayer: public akila::Layer {
 public:
 	int a;
+	float x;
+	float oldX;
 
 	akila::Listener l;
+	akila::Listener keyPressListener;
 
 	TestLayer();
 

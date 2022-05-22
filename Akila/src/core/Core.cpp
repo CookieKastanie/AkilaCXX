@@ -1,5 +1,6 @@
 #include "akila/core/core.hpp"
 #include "akila/window/window.hpp"
+#include "akila/window/window_events.hpp"
 #include "akila/layer/layers.hpp"
 #include "akila/time/time.hpp"
 #include "akila/signal/signals.hpp"
@@ -22,10 +23,9 @@ int Core::run(void (*init)(void)) {
 		float accumulator = 0;
 		while(!stop) {
 			Time::update();
-
-			Signals::flush(Signals::Stack::FRAME_START);
-
 			accumulator += Time::delta;
+
+			internal::WindowEvents::emitSignals();
 
 			while(accumulator >= Time::fixedDelta) {
 				Signals::flush(Signals::Stack::BEFORE_UPDATE);

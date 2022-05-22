@@ -1,5 +1,4 @@
 #include "akila/window/window.hpp"
-//#include <glad/glad.h>
 #include <iostream>
 
 using namespace akila;
@@ -22,16 +21,12 @@ void Window::initWindow() {
 		std::exit(EXIT_FAILURE);
     }
 
-    //glfwSetKeyCallback(window, key_callback);
-
-    //glfwMakeContextCurrent(window);
-    //if(!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) {
-    //    std::cerr << "Failed to retrieve OpenGL functions" << std::endl;
-    //    std::exit(EXIT_FAILURE);
-    //}
+    glfwSetKeyCallback(window, internal::WindowEvents::keyCallback);
     
 	setVerticalSync(true);
 	glfwShowWindow(window);
+
+	internal::WindowEvents::init();
 }
 
 void Window::iniGraphicContext() {
