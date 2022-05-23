@@ -15,7 +15,7 @@ void WindowEvents::init() {
 }
 
 void WindowEvents::keyCallback(GLFWwindow *window, int key, int scancode, int action, int mods) {
-	std::lock_guard<std::mutex> lock(mux);
+	std::scoped_lock<std::mutex> lock(mux);
 
 	//std::cout << "key: " << key << "(" << static_cast<char>(key) << ")" << " | "
 	//	<< scancode << " | " << action << " | " << mods << std::endl;
@@ -35,7 +35,7 @@ void WindowEvents::keyCallback(GLFWwindow *window, int key, int scancode, int ac
 }
 
 void WindowEvents::emitSignals() {
-	std::lock_guard<std::mutex> lock(mux);
+	std::scoped_lock<std::mutex> lock(mux);
 
 	for(KeyPressSignal const &signal : keyPressed) {
 		Inputs::setInputState(signal.key, true);
