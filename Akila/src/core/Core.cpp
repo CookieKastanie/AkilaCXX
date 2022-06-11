@@ -6,6 +6,7 @@
 #include "akila/signal/signals.hpp"
 #include "akila/ecs/ecs.hpp"
 #include "akila/window/imgui_handler.hpp"
+#include "akila/threadpool/threadpool.hpp"
 #include <thread>
 #include <atomic>
 
@@ -14,6 +15,7 @@ using namespace akila::internal;
 
 int Core::run(void (*init)(void)) {
 	Window::initWindow();
+	Threadpool::init();
 
 	std::atomic<bool> stop = false;
 	std::atomic<bool> threadReady = false;
@@ -33,6 +35,8 @@ int Core::run(void (*init)(void)) {
 			accumulator += Time::delta;
 
 			WindowEvents::process(accumulator / Time::fixedDelta);
+
+			Threadpool::flush();
 
 			while(accumulator >= Time::fixedDelta) {
 				WindowEvents::beforeUpdate();
@@ -70,6 +74,7 @@ int Core::run(void (*init)(void)) {
 	while(!threadFinished) glfwWaitEvents();
 	thread.join();
 
+	Threadpool::terminate();
 	ImGuiHandler::terminate();
 	Window::terminate();
 
