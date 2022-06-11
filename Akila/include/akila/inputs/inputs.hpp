@@ -3,6 +3,7 @@
 #include <GLFW/glfw3.h>
 #include <array>
 #include <string>
+#include "akila/math/math.hpp"
 
 namespace akila {
 	namespace internal {
@@ -52,16 +53,34 @@ namespace akila {
 			DOWN = GLFW_KEY_DOWN,
 			RIGHT = GLFW_KEY_RIGHT,
 			LEFT = GLFW_KEY_LEFT,
+
+			///////////////////////////////////
+
+			LEFT_CLICK = GLFW_MOUSE_BUTTON_1,
+			RIGHT_CLICK = GLFW_MOUSE_BUTTON_2,
+			MIDDLE_CLICK = GLFW_MOUSE_BUTTON_3,
 		};
 
 		static bool isPressed(Key key);
-		//static bool isPressed(std::string const &name);
+		//static bool isPressed(std::string const &name); pour du key mapping
+
+		static Vec2 getMousePosition();
+		static Vec2 getMouseVelocity();
+		static Vec2 getMouseScrollVelocity();
 
 	private:
 		friend class internal::WindowEvents;
 
 		static std::array<bool, 512> keysState;
+		static Vec2 mousePosition;
+		static Vec2 mouseVelocity;
+		static Vec2 mouseScrollVelocity;
+
+		static void init();
 
 		static void setInputState(Key key, bool state);
+		static void setMousePosition(Vec2 const &pos);
+		static void setMouseVelocity(Vec2 const &vel);
+		static void setMouseScrollVelocity(Vec2 const &scrollVel);
 	};
 }

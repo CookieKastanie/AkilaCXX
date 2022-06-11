@@ -7,6 +7,7 @@
 #include "akila/ecs/ecs.hpp"
 #include "akila/window/imgui_handler.hpp"
 #include <thread>
+#include <atomic>
 
 using namespace akila;
 using namespace akila::internal;
@@ -14,11 +15,14 @@ using namespace akila::internal;
 int Core::run(void (*init)(void)) {
 	Window::initWindow();
 
-	volatile bool stop = false;
-	volatile bool threadFinished = false;
+	std::atomic<bool> stop = false;
+	std::atomic<bool> threadReady = false;
+	std::atomic<bool> threadFinished = false;
 	std::thread thread{[&]() {
 		Window::initGraphicContext();
 		ImGuiHandler::init();
+
+		threadReady = true;
 
 		init();
 
@@ -28,9 +32,10 @@ int Core::run(void (*init)(void)) {
 			Time::update();
 			accumulator += Time::delta;
 
-			WindowEvents::emitSignals();
+			WindowEvents::process(accumulator / Time::fixedDelta);
 
 			while(accumulator >= Time::fixedDelta) {
+				WindowEvents::beforeUpdate();
 				Signals::flush(Signals::Stack::BEFORE_UPDATE);
 				Layers::update();
 				accumulator -= Time::fixedDelta;
@@ -38,6 +43,7 @@ int Core::run(void (*init)(void)) {
 
 			Time::mix = accumulator / Time::fixedDelta;
 
+			WindowEvents::beforeDraw();
 			Signals::flush(Signals::Stack::BEFORE_DRAW);
 			Layers::draw();
 
@@ -51,6 +57,8 @@ int Core::run(void (*init)(void)) {
 		threadFinished = true;
 		glfwPostEmptyEvent();
 	}};
+
+	while(!threadReady); // attente active mais c'est bon ca va hein me faites pas chier ca dure moins de 1ms
 
 	while(!Window::shouldClose()) {glfwWaitEvents();}
 	stop = true;

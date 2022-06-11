@@ -5,7 +5,7 @@ using namespace akila;
 
 float Time::now = 0.f;
 float Time::delta = 0.f;
-float Time::fixedDelta = 1.f / 60.f;
+float Time::fixedDelta = 1.f / 70.f;
 float Time::mix = 0.f;
 
 double Time::dPrev = 0.;

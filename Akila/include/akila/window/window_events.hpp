@@ -31,8 +31,29 @@ namespace akila::internal {
 
 		static void init();
 
+		//glfwSetWindowSizeCallback(window, [](GLFWwindow *window, int width, int height)
 		static void keyCallback(GLFWwindow *window, int key, int scancode, int action, int mods);
+		static void mouseButtonCallback(GLFWwindow *window, int button, int action, int mods);
+		static void cursorPosCallback(GLFWwindow *window, double xpos, double ypos);
+		static void scrollCallback(GLFWwindow *window, double xoffset, double yoffset);
 
-		static void emitSignals();
+
+		struct MouseData {
+			Vec2 lastPosition;
+			Vec2 position;
+			Vec2 velocity;
+			Vec2 scrollVelocity;
+
+			void resetVels();
+		};
+
+		static MouseData accumulatedMouse;
+		static MouseData frameMouse;
+		static MouseData interpoledMouse;
+
+		static void process(unsigned int updateCount);
+
+		static void beforeUpdate();
+		static void beforeDraw();
 	};
 }

@@ -70,9 +70,6 @@ TestLayer::TestLayer(): Layer{} {
 
 	x = 0;
 	oldX = 0;
-
-	//Time::fixedDelta = 1.f / 10.f;
-	Time::fixedDelta = 1.f / 70.f;
 }
 
 void TestLayer::update() {

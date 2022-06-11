@@ -22,6 +22,9 @@ void Window::initWindow() {
     }
 
     glfwSetKeyCallback(window, internal::WindowEvents::keyCallback);
+	glfwSetMouseButtonCallback(window, internal::WindowEvents::mouseButtonCallback);
+	glfwSetCursorPosCallback(window, internal::WindowEvents::cursorPosCallback);
+	glfwSetScrollCallback(window, internal::WindowEvents::scrollCallback);
     
 	setVerticalSync(true);
 	glfwShowWindow(window);

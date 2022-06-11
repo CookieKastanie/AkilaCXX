@@ -6,6 +6,7 @@ namespace akila::internal {
 	class ImGuiHandler {
 		private:
 			friend class Core;
+			friend class WindowEvents;
 
 			static ImGuiIO *io;
 
@@ -13,6 +14,8 @@ namespace akila::internal {
 
 			static void beginFrame();
 			static void endFrame();
+
+			static bool wantCaptureMouse();
 
 			static void terminate();
 	};

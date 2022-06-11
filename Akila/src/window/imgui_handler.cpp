@@ -50,6 +50,10 @@ void ImGuiHandler::endFrame() {
 	}
 }
 
+bool ImGuiHandler::wantCaptureMouse() {
+	return ImGui::GetIO().WantCaptureMouse;
+}
+
 void ImGuiHandler::terminate() {
 	ImGui_ImplOpenGL3_Shutdown();
 	ImGui_ImplGlfw_Shutdown();
