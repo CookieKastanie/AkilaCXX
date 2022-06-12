@@ -1,0 +1,19 @@
+{
+    "nameA": [
+        {
+            "value": 3
+        },
+        {
+            "value": 4
+        }
+    ],
+
+    "nameB": [
+        {
+            "data": "oui"
+        },
+        {
+            "data": "non"
+        }
+    ]
+}

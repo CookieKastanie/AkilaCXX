@@ -5,8 +5,14 @@
 #include <unordered_map>
 #include "akila/resource/resource_map.hpp"
 #include "akila/common/type_infos.hpp"
+#include "akila/resource/loader.hpp"
+#include "akila/resource/loading_instance.hpp"
 
 namespace akila {
+	namespace internal {
+		class LoadingInstance;
+	}
+
 	class Resources {
 	public:
 		template<typename T, typename ...Args>
@@ -28,8 +34,30 @@ namespace akila {
 			return map->get(name);
 		}
 
+
+		// l'instance doit automatiquement se retirer de la liste une fois les chargements finis
+		static void load(std::string const &path, std::function<void()> const &callback) {
+			loadingInstances.push_back(internal::LoadingInstance{path, callback});
+			loadingInstances.back().start();
+		}
+
+		static void load(std::initializer_list<std::string> const &paths, std::function<void()> const &callback) {
+			loadingInstances.push_back(internal::LoadingInstance{paths, callback});
+			loadingInstances.back().start();
+		}
+
+		template<typename T>
+		static void registerLoader() {
+			Loader *loader = new T();
+			loaders[loader->getListName()] = std::unique_ptr<Loader>(loader);
+		}
+
 	private:
 		static std::unordered_map<TypeId, std::unique_ptr<internal::IResourceMap>> maps;
+
+		friend class internal::LoadingInstance;
+		static std::unordered_map<std::string, std::unique_ptr<Loader>> loaders;
+		static std::vector<internal::LoadingInstance> loadingInstances;
 
 		template<typename T>
 		static void registerType() {

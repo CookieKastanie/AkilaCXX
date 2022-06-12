@@ -7,6 +7,7 @@
 #include "akila/ecs/ecs.hpp"
 #include "akila/window/imgui_handler.hpp"
 #include "akila/threadpool/threadpool.hpp"
+#include "akila/resource/file_system.hpp"
 #include <thread>
 #include <atomic>
 
@@ -15,6 +16,7 @@ using namespace akila::internal;
 
 int Core::run(void (*init)(void)) {
 	Window::initWindow();
+	FileSystem::init();
 	Threadpool::init();
 
 	std::atomic<bool> stop = false;

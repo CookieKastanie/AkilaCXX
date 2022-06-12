@@ -12,6 +12,7 @@
  - [Gestion des ressources](#gestion-des-ressources)
 	 - [Création de ressources](#création-de-ressources)
 	 - [Charger des ressources depuis un JSON](#charger-des-ressources-depuis-un-json)
+- [Threadpool](#threadpool)
 ## Code de départ
 ```cpp
 #include <akila/akila.hpp>
@@ -26,7 +27,7 @@ public:
 
 int main() {
 	return Core::run([]() {
-		FileSystem::setResourceFolder("resources");
+		FileSystem::setRootFolder("resources");
 		Layers::add<MyLayer>();
 	});
 }
@@ -116,9 +117,13 @@ KeyReleaseSignal
 class MyLoader: public Loader {
 public:
 	MyLoader(): Loader{"json_list_name"} {}
-	void onEntry(json &const j) {}
+	void onEntry(JSON json, LoaderCallback cb) override {
+		// utilisation du json...
+
+		cb.success();
+	}
 }
-Resources::setLoader<MyResource, MyLoader>();
+Resources::registerLoader<MyLoader>();
 
 //...
 
@@ -152,8 +157,16 @@ Listener l = Signals::listen<KeyPressSignal>(KeyPressSignal const &s) {
 }
 
 
-IVec2 pos = Inputs::getMousePosition();
-Vec2 pos = Inputs::getMouseViewportPosition();
+Vec2 pos = Inputs::getMousePosition();
+Vec2 vel = Inputs::getMouseVelocity();
+```
+## Threadpool
+```cpp
+Threadpool::submit([]() {
+	// execution dans un thread
+}, ()[] {
+	// execution dans le thread principal
+});
 ```
 ----------------
 ----------------

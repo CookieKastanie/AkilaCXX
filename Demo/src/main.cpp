@@ -13,6 +13,8 @@ int main() {
 	return Core::run([]() {
 		std::cout << "Running" << std::endl;
 
+		FileSystem::setRootFolder("resources");
+
 		Signals::registerType<int>(Signals::Stack::BEFORE_UPDATE);
 
 		Window::setTitle("Akila !");

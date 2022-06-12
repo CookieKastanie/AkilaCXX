@@ -12,6 +12,19 @@ public:
 	}
 };
 
+
+class LoaderTest: public Loader {
+public:
+	LoaderTest(): Loader{"nameA"} {};
+
+	void onEntry(JSON json, LoaderCallback cb) override {
+		std::cout << json << std::endl;
+
+		cb.success();
+	}
+};
+
+
 TestLayer::TestLayer(): Layer{} {
 	Vec3 vec{4, 1.6, -5.3};
 	std::cout << vec << std::endl;
@@ -70,6 +83,12 @@ TestLayer::TestLayer(): Layer{} {
 
 	x = 0;
 	oldX = 0;
+
+	Resources::registerLoader<LoaderTest>();
+
+	Resources::load({"a.json", "b.json"}, []() {
+		std::cout << "Loaded" << std::endl;
+	});
 }
 
 void TestLayer::update() {
