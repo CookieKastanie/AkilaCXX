@@ -113,7 +113,16 @@ KeyReleaseSignal
 ## Gestion des ressources
 ### Création de ressources
 ```cpp
-// Loader pour chager depuis un JSON
+Ref<MyResource> r1 = Resources::create<MyResource>("name1");
+Ref<MyResource> r2 = Resources::create<MyResource>("name2", ConstructorArgs...);
+
+//...
+
+Ref<MyResource> r = Resources::get<MyResource>("name1");
+```
+### Charger des ressources depuis un JSON
+```cpp
+// Définition d'un Loader
 class MyLoader: public Loader {
 public:
 	MyLoader(): Loader{"json_list_name"} {}
@@ -127,15 +136,6 @@ Resources::registerLoader<MyLoader>();
 
 //...
 
-Ref<MyResource> r1 = Resources::create<MyResource>("name1");
-Ref<MyResource> r2 = Resources::create<MyResource>("name2", ConstructorArgs...);
-
-//...
-
-Ref<MyResource> r = Resources::get<MyResource>("name1");
-```
-### Charger des ressources depuis un JSON
-```cpp
 Resources::load("path/file.json", []() {
 	// callback
 });
