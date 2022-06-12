@@ -132,6 +132,7 @@ public:
 		cb.success();
 	}
 }
+
 Resources::registerLoader<MyLoader>();
 
 //...
