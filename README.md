@@ -13,6 +13,12 @@
 	 - [Création de ressources](#création-de-ressources)
 	 - [Charger des ressources depuis un JSON](#charger-des-ressources-depuis-un-json)
 - [Threadpool](#threadpool)
+- [Rendu](#rendu)
+	- [Renderer](#renderer)
+	- [Buffers](#buffers)
+	- [Textures](#textures)
+	- [Shaders](#shaders)
+	- [FrameBuffers](#framebuffers)
 ## Code de départ
 ```cpp
 #include <akila/akila.hpp>
@@ -168,6 +174,30 @@ Threadpool::submit([]() {
 }, ()[] {
 	// execution dans le thread principal
 });
+```
+## Rendu
+### Renderer
+```cpp
+Renderer::useDefaultFrameBuffer();
+Renderer::setClearColor(1., .5, .2, 1.);
+Renderer::enable(Renderer::Capability::DEPTH_TEST);
+Renderer::clear();
+```
+### Buffers
+```cpp
+
+```
+### Textures
+```cpp
+
+```
+### Shaders
+```cpp
+
+```
+### FrameBuffers
+```cpp
+
 ```
 ----------------
 ----------------

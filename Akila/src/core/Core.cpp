@@ -8,6 +8,8 @@
 #include "akila/window/imgui_handler.hpp"
 #include "akila/threadpool/threadpool.hpp"
 #include "akila/resource/file_system.hpp"
+#include "akila/renderer/renderer.hpp"
+
 #include <thread>
 #include <atomic>
 
@@ -24,6 +26,7 @@ int Core::run(void (*init)(void)) {
 	std::atomic<bool> threadFinished = false;
 	std::thread thread{[&]() {
 		Window::initGraphicContext();
+		Renderer::init();
 		ImGuiHandler::init();
 
 		threadReady = true;

@@ -107,19 +107,17 @@ void TestLayer::update() {
 }
 
 void TestLayer::draw() {
-	IVec2 s = Window::getSize();
-	glViewport(0, 0, s.x, s.y);
+	Renderer::useDefaultFrameBuffer();
 
-	glDisable(GL_SCISSOR_TEST);
-	glClearColor(.5f, .2f, .8f, 1.f);
-	glClear(GL_COLOR_BUFFER_BIT);
+	Renderer::disable(Renderer::Capability::SCISSOR_TEST);
+	Renderer::setClearColor(.5f, .2f, .8f);
+	Renderer::clearColor();
 
-	glEnable(GL_SCISSOR_TEST);
-	glScissor((1.f - Time::mix) * oldX + Time::mix * x, 0, 100, 100);
-	//glScissor(x, 0, 100, 100);
-	long t = (long)(Time::now * 255);
-	glClearColor((float)(t % 255) / 255.f, .5f, .2f, 1.f);
-	glClear(GL_COLOR_BUFFER_BIT);
+	Renderer::enable(Renderer::Capability::SCISSOR_TEST);
+	Renderer::scissor((1.f - Time::mix) * oldX + Time::mix * x, 0, 100, 100);
+	long t = Time::now * 255;
+	Renderer::setClearColor(static_cast<float>(t % 255) / 255.f, .5f, .2f);
+	Renderer::clearColor();
 
 	//IVec2 p{sin(Time::now * 4.f) * 420.f + (1600 / 3), 100};
 	//Window::setPosition(p);

@@ -11,6 +11,7 @@
 #include "akila/signal/signals.hpp"
 #include "akila/threadpool/threadpool.hpp"
 #include "akila/resource/file_system.hpp"
+#include "akila/renderer/renderer.hpp"
 
 #include <imgui/imgui.h>
 
