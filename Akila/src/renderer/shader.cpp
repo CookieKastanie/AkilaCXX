@@ -3,6 +3,32 @@
 
 using namespace akila;
 
+void glTypeToSizeAndBaseType(GLenum glType, int &size, UniformBaseType &baseType) {
+    switch(glType) {
+        case GL_FLOAT: size = 1; baseType = UniformBaseType::FLOAT; break;
+        case GL_FLOAT_VEC2: size = 2; baseType = UniformBaseType::FLOAT; break;
+        case GL_FLOAT_VEC3: size = 3; baseType = UniformBaseType::FLOAT; break;
+        case GL_FLOAT_VEC4: size = 4; baseType = UniformBaseType::FLOAT; break;
+
+        case GL_INT: size = 1; baseType = UniformBaseType::INT; break;
+        case GL_INT_VEC2: size = 2; baseType = UniformBaseType::INT; break;
+        case GL_INT_VEC3: size = 3; baseType = UniformBaseType::INT; break;
+        case GL_INT_VEC4: size = 4; baseType = UniformBaseType::INT; break;
+
+        case GL_UNSIGNED_INT: size = 1; baseType = UniformBaseType::UINT; break;
+        case GL_UNSIGNED_INT_VEC2: size = 2; baseType = UniformBaseType::UINT; break;
+        case GL_UNSIGNED_INT_VEC3: size = 3; baseType = UniformBaseType::UINT; break;
+        case GL_UNSIGNED_INT_VEC4: size = 4; baseType = UniformBaseType::UINT; break;
+
+        case GL_BOOL: size = 1; baseType = UniformBaseType::BOOL; break;
+        case GL_BOOL_VEC2: size = 2; baseType = UniformBaseType::BOOL; break;
+        case GL_BOOL_VEC3: size = 3; baseType = UniformBaseType::BOOL; break;
+        case GL_BOOL_VEC4: size = 4; baseType = UniformBaseType::BOOL; break;
+
+        default: size = 1; baseType = UniformBaseType::INT; break;
+    }
+}
+
 bool checkErrors(GLuint shader, std::string type) {
     GLint success;
     GLchar infoLog[1024];
@@ -109,31 +135,5 @@ void Shader::cacheUniformsLocations() {
                 size
             };
         }
-    }
-}
-
-void glTypeToSizeAndBaseType(GLenum glType, int &size, UniformBaseType &baseType) {
-    switch(glType) {
-        case GL_FLOAT: size = 1; baseType = UniformBaseType::FLOAT; break;
-        case GL_FLOAT_VEC2: size = 2; baseType = UniformBaseType::FLOAT; break;
-        case GL_FLOAT_VEC3: size = 3; baseType = UniformBaseType::FLOAT; break;
-        case GL_FLOAT_VEC4: size = 4; baseType = UniformBaseType::FLOAT; break;
-
-        case GL_INT: size = 1; baseType = UniformBaseType::INT; break;
-        case GL_INT_VEC2: size = 2; baseType = UniformBaseType::INT; break;
-        case GL_INT_VEC3: size = 3; baseType = UniformBaseType::INT; break;
-        case GL_INT_VEC4: size = 4; baseType = UniformBaseType::INT; break;
-
-        case GL_UNSIGNED_INT: size = 1; baseType = UniformBaseType::UINT; break;
-        case GL_UNSIGNED_INT_VEC2: size = 2; baseType = UniformBaseType::UINT; break;
-        case GL_UNSIGNED_INT_VEC3: size = 3; baseType = UniformBaseType::UINT; break;
-        case GL_UNSIGNED_INT_VEC4: size = 4; baseType = UniformBaseType::UINT; break;
-
-        case GL_BOOL: size = 1; baseType = UniformBaseType::BOOL; break;
-        case GL_BOOL_VEC2: size = 2; baseType = UniformBaseType::BOOL; break;
-        case GL_BOOL_VEC3: size = 3; baseType = UniformBaseType::BOOL; break;
-        case GL_BOOL_VEC4: size = 4; baseType = UniformBaseType::BOOL; break;
-
-        default: size = 1; baseType = UniformBaseType::INT; break;
     }
 }
