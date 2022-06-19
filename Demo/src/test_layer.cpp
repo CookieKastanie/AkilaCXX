@@ -16,6 +16,67 @@ struct Player {
 	int id;
 };
 
+struct EditorData {
+	bool hasPLayer = false;
+	bool hasPosition = false;
+	bool hasRectangle = false;
+};
+
+class EditorSystem: public System {
+public:
+	void init() {
+		for(Entity e : entities) {
+			EditorData ed;
+
+			ed.hasPLayer = e.hasComponent<Player>();
+			ed.hasPosition = e.hasComponent<Position>();
+			ed.hasRectangle = e.hasComponent<Rectangle>();
+
+			e.addComponent<EditorData>(ed);
+		}
+	}
+
+	void renderUI() {
+		ImGui::Begin("Entities");
+
+		int i = 0;
+		for(Entity e : entities) {
+			std::string name = "Entity " + std::to_string(i++);
+			ImGui::Text(name.c_str());
+
+			auto& ed = e.getComponent<EditorData>();
+
+			bool hasPlayer = e.hasComponent<Player>();
+			std::string cbLabel = "Player###" + std::to_string(i);
+			ImGui::Checkbox(cbLabel.c_str(), &ed.hasPLayer);
+			if(ed.hasPLayer != hasPlayer) {
+				if(ed.hasPLayer) e.addComponent<Player>();
+				else e.removeComponent<Player>();
+			}
+			/*
+			bool hasPosition = e.hasComponent<Position>();
+			if(hasPosition) {
+				ImGui::Text("Is a player");
+			}
+			*/
+
+			ImGui::Separator();
+		}
+
+		ImGui::End();
+	}
+};
+
+class PositionSystem : public System {
+public:
+	void update() {
+		for(Entity e : entities) {
+			Position& pos = e.getComponent<Position>();
+			pos.old = pos.current;
+		}
+	}
+};
+
 class RenderRectangleSystem: public System {
 public:
 	void render() {
@@ -37,7 +98,6 @@ public:
 	void update() {
 		for(Entity e : entities) {
 			Position &pos = e.getComponent<Position>();
-			pos.old = pos.current;
 
 			if(Inputs::isPressed(Inputs::Key::RIGHT)) {
 				pos.current.x += 1000 * Time::fixedDelta;
@@ -50,17 +110,18 @@ public:
 	}
 
 	void renderImGui() {
-		for(Entity e : entities) {
-			Position &pos = e.getComponent<Position>();
-			
-			ImGui::Begin("Test");
-			ImGui::SliderFloat("Value", &pos.current.x, 0, 1000);
-			ImGui::End();
+		if(entities.empty()) return;
 
-			ImGui::Begin("Test2");
-			ImGui::InputFloat("Same Value", &pos.current.x);
-			ImGui::End();
-		}
+		Entity e = *entities.begin();
+		Position &pos = e.getComponent<Position>();
+			
+		ImGui::Begin("Test");
+		ImGui::SliderFloat("Value", &pos.current.x, 0, 1000);
+		ImGui::End();
+
+		ImGui::Begin("Test2");
+		ImGui::InputFloat("Same Value", &pos.current.x);
+		ImGui::End();
 	}
 };
 
@@ -77,6 +138,7 @@ public:
 };
 
 TestLayer::TestLayer(): Layer{} {
+	ECS::createSystem<PositionSystem>(ECS::createSignature<Position>());
 	ECS::createSystem<PlayerSystem>(ECS::createSignature<Player, Position>());
 	ECS::createSystem<RenderRectangleSystem>(ECS::createSignature<Rectangle, Position>());
 
@@ -113,9 +175,12 @@ TestLayer::TestLayer(): Layer{} {
 	Resources::load({"a.json", "b.json"}, []() {
 		std::cout << "Loaded" << std::endl;
 	});
+
+	ECS::createSystem<EditorSystem>(ECS::createSignature<>())->init();
 }
 
 void TestLayer::update() {
+	ECS::getSystem<PositionSystem>()->update();
 	ECS::getSystem<PlayerSystem>()->update();
 }
 
@@ -138,4 +203,5 @@ void TestLayer::draw() {
 
 void TestLayer::drawImGui() {
 	ECS::getSystem<PlayerSystem>()->renderImGui();
+	ECS::getSystem<EditorSystem>()->renderUI();
 }

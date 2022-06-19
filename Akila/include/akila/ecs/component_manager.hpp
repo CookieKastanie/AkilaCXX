@@ -178,10 +178,20 @@ namespace akila::internal {
 			return static_cast<ComponentVector<T>*>(vector)->getDataByEntityId(entityId);
 		}
 
-		ComponentType removeComponent(EntityId entityId, ComponentType type) {
-			TypeId name = componentTypeToId[type];
+		template<typename T>
+		ComponentType removeComponent(EntityId entityId) {
+			TypeId id = getTypeId<T>();
 
-			IComponentVector *vector = componentVectors.at(name).get();
+			IComponentVector* vector = componentVectors.at(id).get();
+			vector->erase(entityId);
+
+			return vector->getType();
+		}
+
+		ComponentType removeComponent(EntityId entityId, ComponentType type) {
+			TypeId id = componentTypeToId[type];
+
+			IComponentVector *vector = componentVectors.at(id).get();
 			vector->erase(entityId);
 
 			return vector->getType();
