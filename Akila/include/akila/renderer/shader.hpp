@@ -5,6 +5,21 @@
 #include <unordered_map>
 
 namespace akila {
+	class Shader;
+
+	namespace internal {
+		class GL_FUNC_ARRAY {
+		private:
+			friend class Window;
+			friend class Shader;
+
+			static void(*funifFuncs[5])(GLint, GLsizei, GLfloat*);
+			static void(*iunifFuncs[5])(GLint, GLsizei, GLint*);
+
+			static void init();
+		};
+	}
+
 	enum class UniformBaseType: unsigned int {
 		FLOAT = 0,
 		INT = 1,
@@ -12,14 +27,10 @@ namespace akila {
 		BOOL = 3
 	};
 
-	class Shader;
-
-	struct Uniform {
-		Shader *shader;
-		std::string name;
+	struct UniformBinding {
 		unsigned int location;
 		UniformBaseType baseType;
-		int vec;
+		int size; // vec1 vec2 vec3
 		int count;
 	};
 
@@ -30,9 +41,12 @@ namespace akila {
 
 		void bind() const;
 
+		void sendRawFloats(unsigned int uid, int size, int count, void *values);
+		void sendRawInts(unsigned int uid, int size, int count, void *values);
+
 	private:
 		GLuint id;
-		std::unordered_map<std::string, Uniform> uniforms;
+		std::unordered_map<std::string, UniformBinding> uniformBindings;
 
 		void cacheUniformsLocations();
 	};

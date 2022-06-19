@@ -3,6 +3,21 @@
 
 using namespace akila;
 
+void(*internal::GL_FUNC_ARRAY::funifFuncs[5])(GLint, GLsizei, GLfloat*);
+void(*internal::GL_FUNC_ARRAY::iunifFuncs[5])(GLint, GLsizei, GLint*);
+
+void internal::GL_FUNC_ARRAY::init() {
+    funifFuncs[1] = (void(*)(GLint, GLsizei, GLfloat*))glUniform1fv;
+    funifFuncs[2] = (void(*)(GLint, GLsizei, GLfloat*))glUniform2fv;
+    funifFuncs[3] = (void(*)(GLint, GLsizei, GLfloat*))glUniform3fv;
+    funifFuncs[4] = (void(*)(GLint, GLsizei, GLfloat*))glUniform4fv;
+
+    iunifFuncs[1] = (void(*)(GLint, GLsizei, GLint*))glUniform1iv;
+    iunifFuncs[2] = (void(*)(GLint, GLsizei, GLint*))glUniform2iv;
+    iunifFuncs[3] = (void(*)(GLint, GLsizei, GLint*))glUniform3iv;
+    iunifFuncs[4] = (void(*)(GLint, GLsizei, GLint*))glUniform4iv;
+}
+
 void glTypeToSizeAndBaseType(GLenum glType, int &size, UniformBaseType &baseType) {
     switch(glType) {
         case GL_FLOAT: size = 1; baseType = UniformBaseType::FLOAT; break;
@@ -115,7 +130,7 @@ void Shader::cacheUniformsLocations() {
     GLint count;
     glGetProgramiv(id, GL_ACTIVE_UNIFORMS, &count);
 
-    for(GLuint i = 0; i < count; ++i) {
+    for(GLuint i = 0; i < static_cast<GLuint>(count); ++i) {
         glGetActiveUniform(id, i, bufSize, &length, &size, &type, name);
 
         unsigned int location = glGetUniformLocation(id, name); // a cause de la suppression des uniforms inutilises,
@@ -126,9 +141,7 @@ void Shader::cacheUniformsLocations() {
 
             glTypeToSizeAndBaseType(type, vecSize, baseType);
 
-            uniforms[name] = Uniform{
-                this,
-                name,
+            uniformBindings[name] = UniformBinding{
                 location,
                 baseType,
                 vecSize,
@@ -136,4 +149,12 @@ void Shader::cacheUniformsLocations() {
             };
         }
     }
+}
+
+void Shader::sendRawFloats(unsigned int uid, int size, int count, void* values) {
+    internal::GL_FUNC_ARRAY::funifFuncs[size](uid, count, static_cast<GLfloat*>(values));
+}
+
+void Shader::sendRawInts(unsigned int uid, int size, int count, void* values) {
+    internal::GL_FUNC_ARRAY::iunifFuncs[size](uid, count, static_cast<GLint*>(values));
 }

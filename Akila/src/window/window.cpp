@@ -1,4 +1,5 @@
 #include "akila/window/window.hpp"
+#include "akila/renderer/shader.hpp"
 #include <iostream>
 
 using namespace akila;
@@ -38,6 +39,8 @@ void Window::initGraphicContext() {
 	    std::cerr << "Failed to retrieve OpenGL functions" << std::endl;
 	    std::exit(EXIT_FAILURE);
 	}
+
+	internal::GL_FUNC_ARRAY::init();
 }
 
 void Window::setSize(IVec2 const &size) {

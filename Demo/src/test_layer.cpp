@@ -106,6 +106,14 @@ public:
 			if(Inputs::isPressed(Inputs::Key::LEFT)) {
 				pos.current.x -= 1000 * Time::fixedDelta;
 			}
+
+			if(Inputs::isPressed(Inputs::Key::UP)) {
+				pos.current.y += 1000 * Time::fixedDelta;
+			}
+
+			if(Inputs::isPressed(Inputs::Key::DOWN)) {
+				pos.current.y -= 1000 * Time::fixedDelta;
+			}
 		}
 	}
 
