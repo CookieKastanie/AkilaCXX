@@ -2,12 +2,64 @@
 
 using namespace akila;
 
-class ShowSystem: public System {
+struct Rectangle {
+	Vec2 size;
+	Vec3 color;
+};
+
+struct Position {
+	Vec3 current;
+	Vec3 old;
+};
+
+struct Player {
+	int id;
+};
+
+class RenderRectangleSystem: public System {
+public:
+	void render() {
+		for(Entity e : entities) {
+			Rectangle &rect = e.getComponent<Rectangle>();
+			Position &pos = e.getComponent<Position>();
+
+			Vec3 mixedPos = (1.f - Time::mix) * pos.old + Time::mix * pos.current;
+
+			Renderer::scissor(mixedPos.x, mixedPos.y, rect.size.x, rect.size.y);
+			Renderer::setClearColor(rect.color.x, rect.color.z, rect.color.z);
+			Renderer::clearColor();
+		}
+	}
+};
+
+class PlayerSystem: public System {
 public:
 	void update() {
 		for(Entity e : entities) {
-			int &val = e.getComponent<int>();
-			std::cout << val << std::endl;
+			Position &pos = e.getComponent<Position>();
+			pos.old = pos.current;
+
+			if(Inputs::isPressed(Inputs::Key::RIGHT)) {
+				pos.current.x += 1000 * Time::fixedDelta;
+			}
+
+			if(Inputs::isPressed(Inputs::Key::LEFT)) {
+				pos.current.x -= 1000 * Time::fixedDelta;
+			}
+		}
+	}
+
+	void renderImGui() {
+		for(Entity e : entities) {
+			Position &pos = e.getComponent<Position>();
+			
+			ImGui::Begin("Test");
+			ImGui::SliderFloat("Value", &pos.current.x, 0, 1000);
+			ImGui::End();
+
+			ImGui::Begin("Test2");
+			ImGui::InputFloat("Same Value", &pos.current.x);
+			ImGui::End();
 		}
 	}
 };
@@ -24,53 +76,27 @@ public:
 	}
 };
 
-
 TestLayer::TestLayer(): Layer{} {
-	Vec3 vec{4, 1.6, -5.3};
-	std::cout << vec << std::endl;
-	std::cout << vec + Vec3{1, 0, 0} << std::endl;
+	ECS::createSystem<PlayerSystem>(ECS::createSignature<Player, Position>());
+	ECS::createSystem<RenderRectangleSystem>(ECS::createSignature<Rectangle, Position>());
 
-	std::cout << "=======" << std::endl;
 
-	Signature signature = ECS::createSignature<int>();
-	ShowSystem *showSystem = ECS::createSystem<ShowSystem>(signature);
+	Entity e0 = ECS::createEntity(ECS::createSignature<Player, Position, Rectangle>());
+	e0.getComponent<Rectangle>().size = {100, 100};
+	e0.getComponent<Rectangle>().color = {1, .5, .2};
 
-	Entity e0 = ECS::createEntity(ECS::createSignature<int, double>());
-	e0.getComponent<double>() = 5.2;
-	e0.getComponent<int>() = 11;
 
-	Entity e1 = ECS::createEntity();
-	e1.addComponent<int>(7);
+	Signature rectSign = ECS::createSignature<Position, Rectangle>();
+	for(int i = 0; i < 5; ++i) {
+		Entity e = ECS::createEntity(rectSign);
+		Vec3 pos = {Random::getFloat(0, 600), Random::getFloat(0, 600), 0};
+		e.getComponent<Position>().current = pos;
+		e.getComponent<Position>().old = pos;
+		e.getComponent<Rectangle>().size = {100, 100};
+		e.getComponent<Rectangle>().color = {Random::getFloat(), Random::getFloat(), Random::getFloat()};
+	}
 
-	std::cout << "e0 has int " << e0.hasComponent<int>() << std::endl;
-	std::cout << "e0 has float " << e0.hasComponent<float>() << std::endl;
-	std::cout << "e0 has double " << e0.hasComponent<double>() << std::endl << std::endl;
 
-	std::cout << "e1 has int " << e1.hasComponent<int>() << std::endl;
-	std::cout << "e1 has float " << e1.hasComponent<float>() << std::endl;
-	std::cout << "e1 has double " << e1.hasComponent<double>() << std::endl << std::endl;
-
-	showSystem->update();
-
-	std::cout << "--------" << std::endl;
-
-	//ECS::eraseEntity(e0);
-	ECS::addToEraseQueue(e0);
-	ECS::flushEraseQueue();
-
-	showSystem->update();
-
-	std::cout << "=======" << std::endl;
-
-	Ref<float> r = Resources::create<float>("number", 1.2f);
-
-	std::cout << "ref : " << *r << std::endl;
-	std::cout << "ref : " << *Resources::get<float>("number") << std::endl;
-
-	*r = 1.8f;
-	std::cout << "ref : " << *r << std::endl;
-
-	a = 2000;
 
 	l = Signals::listen<int>([](int const &e) {
 		std::cout << "read " << e << std::endl;
@@ -81,8 +107,6 @@ TestLayer::TestLayer(): Layer{} {
 		std::cout << "key press: " << static_cast<int>(s.key) << std::endl;
 	});
 
-	x = 0;
-	oldX = 0;
 
 	Resources::registerLoader<LoaderTest>();
 
@@ -92,18 +116,7 @@ TestLayer::TestLayer(): Layer{} {
 }
 
 void TestLayer::update() {
-	oldX = x;
-	if(--a == 0) {
-		//Layers::remove<TestLayer>();
-	}
-
-	if(Inputs::isPressed(Inputs::Key::RIGHT)) {
-		x += 1000 * Time::fixedDelta;
-	}
-
-	if(Inputs::isPressed(Inputs::Key::LEFT)) {
-		x -= 1000 * Time::fixedDelta;
-	}
+	ECS::getSystem<PlayerSystem>()->update();
 }
 
 void TestLayer::draw() {
@@ -114,10 +127,7 @@ void TestLayer::draw() {
 	Renderer::clearColor();
 
 	Renderer::enable(Renderer::Capability::SCISSOR_TEST);
-	Renderer::scissor((1.f - Time::mix) * oldX + Time::mix * x, 0, 100, 100);
-	long t = Time::now * 255;
-	Renderer::setClearColor(static_cast<float>(t % 255) / 255.f, .5f, .2f);
-	Renderer::clearColor();
+	ECS::getSystem<RenderRectangleSystem>()->render();
 
 	//IVec2 p{sin(Time::now * 4.f) * 420.f + (1600 / 3), 100};
 	//Window::setPosition(p);
@@ -127,11 +137,5 @@ void TestLayer::draw() {
 }
 
 void TestLayer::drawImGui() {
-	ImGui::Begin("Test");
-	ImGui::SliderFloat("Value", &x, 0, 1000);
-	ImGui::End();
-
-	ImGui::Begin("Test2");
-	ImGui::InputFloat("Same Value", &x);
-	ImGui::End();
+	ECS::getSystem<PlayerSystem>()->renderImGui();
 }

@@ -12,6 +12,7 @@
 #include "akila/threadpool/threadpool.hpp"
 #include "akila/resource/file_system.hpp"
 #include "akila/renderer/renderer.hpp"
+#include "akila/random/random.hpp"
 
 #include <imgui/imgui.h>
 

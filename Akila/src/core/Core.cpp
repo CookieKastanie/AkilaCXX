@@ -9,6 +9,7 @@
 #include "akila/threadpool/threadpool.hpp"
 #include "akila/resource/file_system.hpp"
 #include "akila/renderer/renderer.hpp"
+#include "akila/random/random.hpp"
 
 #include <thread>
 #include <atomic>
@@ -17,6 +18,7 @@ using namespace akila;
 using namespace akila::internal;
 
 int Core::run(void (*init)(void)) {
+	Random::init();
 	Window::initWindow();
 	FileSystem::init();
 	Threadpool::init();
@@ -63,6 +65,10 @@ int Core::run(void (*init)(void)) {
 			Window::swapBuffers();
 		}
 
+		// ???
+		Layers::removeAll();
+		ECS::resetAll();
+
 		threadFinished = true;
 		glfwPostEmptyEvent();
 	}};
@@ -72,8 +78,9 @@ int Core::run(void (*init)(void)) {
 	while(!Window::shouldClose()) {glfwWaitEvents();}
 	stop = true;
 
-	Layers::removeAll();
-	ECS::resetAll();
+	// ???
+	//Layers::removeAll();
+	//ECS::resetAll();
 
 	glfwPostEmptyEvent();
 	while(!threadFinished) glfwWaitEvents();

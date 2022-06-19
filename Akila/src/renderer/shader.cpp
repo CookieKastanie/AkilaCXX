@@ -108,15 +108,15 @@ void Shader::cacheUniformsLocations() {
     GLint size; // size of the variable (array length)
     GLenum type; // (float, vec3 or mat4, etc)
 
-    const GLsizei bufSize = 64;
+    GLsizei const bufSize = 128; //GL_UNIFORM_NAME_LENGTH stupidement trop grand
     GLchar name[bufSize];
     GLsizei length;
 
     GLint count;
     glGetProgramiv(id, GL_ACTIVE_UNIFORMS, &count);
 
-    for(GLint i = 0; i < count; ++i) {
-        glGetActiveUniform(id, (GLuint)i, bufSize, &length, &size, &type, name);
+    for(GLuint i = 0; i < count; ++i) {
+        glGetActiveUniform(id, i, bufSize, &length, &size, &type, name);
 
         unsigned int location = glGetUniformLocation(id, name); // a cause de la suppression des uniforms inutilises,
                                                                 // il faut query le shader pour avoir la vraie location
