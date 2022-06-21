@@ -12,11 +12,14 @@ namespace akila {
 
 	class System {
 	public:
-		System() = default;
+		System(Signature signature): signature{signature} {};
 		virtual ~System() = default;
 
 	protected:
 		std::set<Entity> entities;
+
+		virtual void onAdd(Entity entity) {};
+		virtual void onRemove(Entity entity) {};
 
 	private:
 		friend class internal::SystemManager;
@@ -28,17 +31,15 @@ namespace akila {
 			return (signature & s) == signature;
 		}
 
-		void setSignature(Signature const &s) {
-			signature = s;
-		}
-
 		void eraseEntity(internal::EntityId entityId) {
-			entities.erase(entityId);
+			if(entities.erase(entityId))
+				onRemove(entityId);
 		}
 
 		void addIfCompatible(internal::EntityId entityId, Signature const &s) {
 			if(isCompatible(s)) {
-				entities.insert(entityId);
+				if(entities.insert(entityId).second)
+					onAdd(entityId);
 			}
 		}
 

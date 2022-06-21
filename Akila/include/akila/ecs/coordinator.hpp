@@ -106,8 +106,8 @@ namespace akila::internal {
 		//---
 
 		template<typename T>
-		static T *createSystem(Signature const &signature) {
-			T *system = systemManager->createSystem<T>(signature);
+		static T *createSystem() {
+			T *system = systemManager->createSystem<T>();
 
 			// regarde toutes les entities existante pour ajouter
 			// celles compatibles au nouveau system

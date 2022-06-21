@@ -15,12 +15,11 @@ namespace akila::internal {
 		std::unordered_map<TypeId, std::unique_ptr<System>> systems;
 
 		template<typename T>
-		T *createSystem(Signature const &signature) {
+		T *createSystem() {
 			static_assert(std::is_base_of<System, T>::value, "T must derive from akila::System");
 
 			TypeId id = getTypeId<T>();
 			systems[id] = std::make_unique<T>();
-			systems[id]->setSignature(signature);
 
 			System *system = systems.at(id).get();
 			return static_cast<T *>(system);

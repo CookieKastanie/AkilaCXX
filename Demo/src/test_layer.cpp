@@ -24,16 +24,18 @@ struct EditorData {
 
 class EditorSystem: public System {
 public:
-	void init() {
-		for(Entity e : entities) {
-			EditorData ed;
+	EditorSystem(): System{ECS::createSignature<>()} {};
 
-			ed.hasPLayer = e.hasComponent<Player>();
-			ed.hasPosition = e.hasComponent<Position>();
-			ed.hasRectangle = e.hasComponent<Rectangle>();
+	void onAdd(Entity e) override {
+		std::cout << "add " << e << std::endl;
 
-			e.addComponent<EditorData>(ed);
-		}
+		EditorData ed;
+
+		ed.hasPLayer = e.hasComponent<Player>();
+		ed.hasPosition = e.hasComponent<Position>();
+		ed.hasRectangle = e.hasComponent<Rectangle>();
+
+		e.addComponent<EditorData>(ed);
 	}
 
 	void renderUI() {
@@ -69,6 +71,8 @@ public:
 
 class PositionSystem : public System {
 public:
+	PositionSystem(): System{ECS::createSignature<Position>()} {};
+
 	void update() {
 		for(Entity e : entities) {
 			Position& pos = e.getComponent<Position>();
@@ -79,6 +83,8 @@ public:
 
 class RenderRectangleSystem: public System {
 public:
+	RenderRectangleSystem(): System{ECS::createSignature<Rectangle, Position>()} {};
+
 	void render() {
 		for(Entity e : entities) {
 			Rectangle &rect = e.getComponent<Rectangle>();
@@ -95,6 +101,8 @@ public:
 
 class PlayerSystem: public System {
 public:
+	PlayerSystem(): System{ECS::createSignature<Player, Position>()} {};
+
 	void update() {
 		for(Entity e : entities) {
 			Position &pos = e.getComponent<Position>();
@@ -146,9 +154,10 @@ public:
 };
 
 TestLayer::TestLayer(): Layer{} {
-	ECS::createSystem<PositionSystem>(ECS::createSignature<Position>());
-	ECS::createSystem<PlayerSystem>(ECS::createSignature<Player, Position>());
-	ECS::createSystem<RenderRectangleSystem>(ECS::createSignature<Rectangle, Position>());
+	ECS::createSystem<EditorSystem>();
+	ECS::createSystem<PositionSystem>();
+	ECS::createSystem<PlayerSystem>();
+	ECS::createSystem<RenderRectangleSystem>();
 
 
 	Entity e0 = ECS::createEntity(ECS::createSignature<Player, Position, Rectangle>());
@@ -183,8 +192,6 @@ TestLayer::TestLayer(): Layer{} {
 	Resources::load({"a.json", "b.json"}, []() {
 		std::cout << "Loaded" << std::endl;
 	});
-
-	ECS::createSystem<EditorSystem>(ECS::createSignature<>())->init();
 }
 
 void TestLayer::update() {

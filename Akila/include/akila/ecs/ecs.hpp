@@ -29,8 +29,8 @@ namespace akila {
 		}
 
 		template<typename T>
-		static inline T *createSystem(Signature const &signature) {
-			return internal::Coordinator::createSystem<T>(signature);
+		static inline T *createSystem() {
+			return internal::Coordinator::createSystem<T>();
 		}
 
 		template<typename T>

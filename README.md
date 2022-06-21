@@ -81,6 +81,14 @@ public:
 
 		ECS::flushEraseQueue();
 	}
+
+	void onAdd(Entity entity) override {
+		//...
+	}
+
+	void onRemove(Entity entity) override {
+		//...
+	}
 }
 
 //...
