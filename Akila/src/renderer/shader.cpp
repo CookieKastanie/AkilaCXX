@@ -64,9 +64,15 @@ bool checkErrors(GLuint shader, std::string type) {
     return !success;
 }
 
-Shader::Shader(std::string const &vertexTxt, std::string const &fragmentTxt, std::string const &geometryTxt) {
-    id = glCreateProgram();
+Shader::Shader(): id{0} {}
 
+void Shader::build(std::string const &vertexTxt, std::string const &fragmentTxt, std::string const &geometryTxt) {
+    if(id == 0) {
+        std::cerr << "Shader already built !" << std::endl;
+    }
+
+    id = glCreateProgram();
+    
     unsigned int vertex, fragment, geometry = 0;
     // vertex shader
     {

@@ -1,5 +1,7 @@
 #pragma once
 
+#include <iostream>
+
 namespace akila {
 	template<class T>
 	class RefAnchor;
@@ -66,7 +68,10 @@ namespace akila {
 	public:
 		RefAnchor(): resource{nullptr}, refCount{0} {}
 		RefAnchor(RefAnchor const &) = delete;
+		RefAnchor &operator=(RefAnchor const &) = delete;
 		RefAnchor(RefAnchor &&) = delete;
+		RefAnchor &operator=(RefAnchor &&) = delete;
+
 		~RefAnchor() {
 			if(haveReferences()) std::cerr << "RefAnchor deleted with " << refCount << " refs !\n";
 			if(resource != nullptr) delete resource;

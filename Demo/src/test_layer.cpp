@@ -27,8 +27,6 @@ public:
 	EditorSystem(): System{ECS::createSignature<>()} {};
 
 	void onAdd(Entity e) override {
-		std::cout << "add " << e << std::endl;
-
 		EditorData ed;
 
 		ed.hasPLayer = e.hasComponent<Player>();
@@ -175,17 +173,7 @@ TestLayer::TestLayer(): Layer{} {
 		e.getComponent<Rectangle>().color = {Random::getFloat(), Random::getFloat(), Random::getFloat()};
 	}
 
-
-
-	l = Signals::listen<int>([](int const &e) {
-		std::cout << "read " << e << std::endl;
-		if(e > 0) Signals::emit<int>(e - 1);
-	});
-
-	keyPressListener = Signals::listen<KeyPressSignal>([](KeyPressSignal const s) {
-		std::cout << "key press: " << static_cast<int>(s.key) << std::endl;
-	});
-
+	///////
 
 	Resources::registerLoader<LoaderTest>();
 

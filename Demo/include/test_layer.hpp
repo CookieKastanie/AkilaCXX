@@ -4,9 +4,6 @@
 
 class TestLayer: public akila::Layer {
 public:
-	akila::Listener l;
-	akila::Listener keyPressListener;
-
 	TestLayer();
 
 	void update() override;
