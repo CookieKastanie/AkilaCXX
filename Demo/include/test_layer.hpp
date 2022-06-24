@@ -9,4 +9,8 @@ public:
 	void update() override;
 	void draw() override;
 	void drawImGui() override;
+
+private:
+	akila::Listener keyListener;
+	akila::Ref<akila::Material> simpleMat;
 };

@@ -1,19 +1,8 @@
 {
-    "nameA": [
+    "material": [
         {
-            "value": 3
-        },
-        {
-            "value": 4
-        }
-    ],
-
-    "nameB": [
-        {
-            "data": "oui"
-        },
-        {
-            "data": "non"
+            "name": "simple",
+            "shader":  "shaders/simple.glsl"
         }
     ]
 }

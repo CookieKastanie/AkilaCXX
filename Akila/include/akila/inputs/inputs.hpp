@@ -54,6 +54,8 @@ namespace akila {
 			RIGHT = GLFW_KEY_RIGHT,
 			LEFT = GLFW_KEY_LEFT,
 
+			GRAVE_ACCENT = GLFW_KEY_GRAVE_ACCENT,
+
 			///////////////////////////////////
 
 			LEFT_CLICK = GLFW_MOUSE_BUTTON_1,

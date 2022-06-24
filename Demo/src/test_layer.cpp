@@ -175,11 +175,32 @@ TestLayer::TestLayer(): Layer{} {
 
 	///////
 
+	keyListener = Signals::listen<KeyPressSignal>([](KeyPressSignal const &keySignal) {
+		switch(keySignal.key) {
+			case Inputs::Key::ESC:
+				Window::close();
+				break;
+
+			case Inputs::Key::TAB:
+				Window::setFullscreen(!Window::isFullscreen());
+				break;
+		}
+	});
+
+	///////
+
 	Resources::registerLoader<LoaderTest>();
+
+	Renderer::disable(Renderer::Capability::DEPTH_TEST);
+	Renderer::disable(Renderer::Capability::CULL_FACE);
+	Renderer::enable(Renderer::Capability::SCISSOR_TEST);
 
 	Resources::load({"a.json", "b.json"}, []() {
 		std::cout << "Loaded" << std::endl;
 	});
+	
+
+	simpleMat = Resources::get<Material>("simple");
 }
 
 void TestLayer::update() {
@@ -190,9 +211,13 @@ void TestLayer::update() {
 void TestLayer::draw() {
 	Renderer::useDefaultFrameBuffer();
 
+	Renderer::disable(Renderer::Capability::DEPTH_TEST);
+	Renderer::disable(Renderer::Capability::CULL_FACE);
 	Renderer::disable(Renderer::Capability::SCISSOR_TEST);
 	Renderer::setClearColor(.5f, .2f, .8f);
 	Renderer::clearColor();
+	simpleMat->render();
+
 
 	Renderer::enable(Renderer::Capability::SCISSOR_TEST);
 	ECS::getSystem<RenderRectangleSystem>()->render();

@@ -38,6 +38,9 @@ namespace akila {
 		static GLFWwindow *window;
 		static bool vSync;
 
+		static IVec2 sizeBeforeFS;
+		static IVec2 positionBeforeFS;
+
 		static void initWindow();
 		static void initGraphicContext();
 		static void makeCurrent();

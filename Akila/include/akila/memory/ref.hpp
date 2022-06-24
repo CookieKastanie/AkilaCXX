@@ -63,10 +63,28 @@ namespace akila {
 		RefAnchor<T> *ra;
 	};
 
-	template<class T>
-	class RefAnchor {
+
+	class IRefAnchor {
 	public:
-		RefAnchor(): resource{nullptr}, refCount{0} {}
+		IRefAnchor(): refCount{0} {}
+		IRefAnchor(IRefAnchor const &) = delete;
+		IRefAnchor &operator=(IRefAnchor const &) = delete;
+		IRefAnchor(IRefAnchor &&) = delete;
+		IRefAnchor &operator=(IRefAnchor &&) = delete;
+
+		virtual ~IRefAnchor() = default;
+
+		unsigned int getRefCount() const { return refCount; }
+		bool haveReferences() const { return refCount != 0; }
+
+	protected:
+		unsigned int refCount;
+	};
+
+	template<class T>
+	class RefAnchor: public IRefAnchor {
+	public:
+		RefAnchor(): IRefAnchor{}, resource{nullptr} {}
 		RefAnchor(RefAnchor const &) = delete;
 		RefAnchor &operator=(RefAnchor const &) = delete;
 		RefAnchor(RefAnchor &&) = delete;
@@ -75,7 +93,7 @@ namespace akila {
 		~RefAnchor() {
 			if(haveReferences()) std::cerr << "RefAnchor deleted with " << refCount << " refs !\n";
 			if(resource != nullptr) delete resource;
-		}
+		};
 
 		void setValue(T *res) {
 			if(resource != nullptr) delete resource;
@@ -86,12 +104,9 @@ namespace akila {
 			return {this};
 		}
 
-		bool haveReferences() const { return refCount != 0; }
-
 	private:
 		friend class Ref<T>;
 
 		T *resource;
-		unsigned int refCount;
 	};
 }

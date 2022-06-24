@@ -1,18 +1,16 @@
 #include "akila/renderer/material.hpp"
+#include "akila/renderer/shader_preproc.hpp"
 
 using namespace akila;
 
-MaterialInstance::MaterialInstance(Material *material): material{material} {
+MaterialInstance::MaterialInstance(Ref<Material> material): material{material} {
 
 }
 
 /////////////////////////////
 
 Material::Material(std::string const &shaderTxt) {
-	//shader preproc...
-	//shader.build(vert, frag, geo);
-}
-
-void Material::createInstance() {
-	
+	ShaderPreProc::ShaderSources sources;
+	ShaderPreProc::process(shaderTxt, sources);
+	shader.build(sources.vertexShader, sources.fragmentShader, sources.geometryShader);
 }

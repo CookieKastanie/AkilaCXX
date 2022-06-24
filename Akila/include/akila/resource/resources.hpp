@@ -52,8 +52,17 @@ namespace akila {
 			loaders[loader->getListName()] = std::unique_ptr<Loader>(loader);
 		}
 
+		static std::unordered_map<TypeId, std::string> const &listing() {
+			return mapNames;
+		}
+
+		static std::unordered_map<std::string, IRefAnchor&> const &listing(TypeId typeId) {
+			return maps.at(typeId)->listing();
+		}
+
 	private:
 		static std::unordered_map<TypeId, std::unique_ptr<internal::IResourceMap>> maps;
+		static std::unordered_map<TypeId, std::string> mapNames;
 
 		friend class internal::LoadingInstance;
 		static std::unordered_map<std::string, std::unique_ptr<Loader>> loaders;
@@ -63,6 +72,7 @@ namespace akila {
 		static void registerType() {
 			TypeId id = getTypeId<T>();
 			maps[id] = std::unique_ptr<internal::IResourceMap>(new internal::ResourceMap<T>{});
+			mapNames[id] = getTypeName<T>();
 		}
 	};
 }

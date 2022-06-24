@@ -7,6 +7,9 @@ using namespace akila;
 GLFWwindow *Window::window = nullptr;
 bool Window::vSync = false;
 
+IVec2 Window::sizeBeforeFS = {100, 100};
+IVec2 Window::positionBeforeFS = {0, 0};
+
 void Window::initWindow() {
     //glfwSetErrorCallback(error_callback);
     
@@ -15,6 +18,7 @@ void Window::initWindow() {
 
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
     window = glfwCreateWindow(640, 480, "", NULL, NULL);
     if(!window) {
@@ -104,13 +108,18 @@ void Window::setFullscreen(bool fullscreen) {
 	if(isFullscreen() == fullscreen) return;
 
 	if(fullscreen) {
+		sizeBeforeFS = Window::getSize();
+		positionBeforeFS = Window::getPosition();
+
 		GLFWmonitor *monitor = glfwGetPrimaryMonitor();
 		GLFWvidmode const *mode = glfwGetVideoMode(monitor);
-		glfwSetWindowMonitor(window, monitor, 0, 0, mode->width, mode->height, 0);
+		glfwSetWindowMonitor(window, monitor, 0, 0, mode->width, mode->height, GLFW_DONT_CARE);
 	} else {
-		IVec2 winSize = getSize();
-		IVec2 winPos = getPosition();
-		glfwSetWindowMonitor(window, nullptr, winPos.x, winPos.y, winSize.x, winSize.y, 0);
+		glfwSetWindowMonitor(
+			window, nullptr,
+			positionBeforeFS.x, positionBeforeFS.y,
+			sizeBeforeFS.x, sizeBeforeFS.y, GLFW_DONT_CARE
+		);
 	}
 
 	glfwSwapInterval(vSync);
