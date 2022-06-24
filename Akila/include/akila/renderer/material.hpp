@@ -11,12 +11,15 @@ namespace akila {
 
 		void render() {
 			shader.bind();
-			//glBindBuffer(GL_ARRAY_BUFFER, 0);
-			//glDrawArrays(GL_TRIANGLES, 0, 3);
+			glBindVertexArray(vb);
+			glDrawArrays(GL_TRIANGLES, 0, 3);
+			glBindVertexArray(0);
 		}
 
 	private:
 		Shader shader;
+
+		GLuint vb;
 	};
 
 	class MaterialInstance {

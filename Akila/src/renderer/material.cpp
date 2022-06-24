@@ -13,4 +13,6 @@ Material::Material(std::string const &shaderTxt) {
 	ShaderPreProc::ShaderSources sources;
 	ShaderPreProc::process(shaderTxt, sources);
 	shader.build(sources.vertexShader, sources.fragmentShader, sources.geometryShader);
+
+	glGenVertexArrays(1, &vb);
 }
