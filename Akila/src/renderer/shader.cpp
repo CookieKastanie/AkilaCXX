@@ -140,6 +140,8 @@ void Shader::cacheUniformsLocations() {
     GLint count;
     glGetProgramiv(id, GL_ACTIVE_UNIFORMS, &count);
 
+    uniformBindings.reserve(count);
+
     for(GLuint i = 0; i < static_cast<GLuint>(count); ++i) {
         glGetActiveUniform(id, i, bufSize, &length, &size, &type, name);
 
@@ -151,7 +153,7 @@ void Shader::cacheUniformsLocations() {
 
             glTypeToSizeAndBaseType(type, vecSize, baseType);
 
-            uniformBindings[name] = UniformBinding{
+            uniformBindings[name] = UniformInfos{
                 location,
                 baseType,
                 vecSize,

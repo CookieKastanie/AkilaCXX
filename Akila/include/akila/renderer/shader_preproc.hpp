@@ -13,8 +13,6 @@ namespace akila {
 
 		static std::string version;
 
-		static void readShaderSource(std::string const path);
 		static void process(std::string const &source, ShaderSources &sources, std::string const &currentPath = "");
-
 	};
 }

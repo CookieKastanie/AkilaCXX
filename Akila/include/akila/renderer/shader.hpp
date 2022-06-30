@@ -27,7 +27,7 @@ namespace akila {
 		BOOL = 3
 	};
 
-	struct UniformBinding {
+	struct UniformInfos {
 		unsigned int location;
 		UniformBaseType baseType;
 		int size; // vec1 vec2 vec3
@@ -48,7 +48,7 @@ namespace akila {
 
 	private:
 		GLuint id;
-		std::unordered_map<std::string, UniformBinding> uniformBindings;
+		std::unordered_map<std::string, UniformInfos> uniformBindings;
 
 		void cacheUniformsLocations();
 	};
