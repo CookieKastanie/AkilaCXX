@@ -133,68 +133,68 @@ void GLAPIENTRY messageCallback(GLenum source, GLenum type, GLuint id,
 
 
 DebugLayer::DebugLayer(): show{true}, tabIndex { 0 } {
-	keyListener = Signals::listen<KeyPressSignal>([&](KeyPressSignal const &s) {
-		if(s.key == Inputs::Key::GRAVE_ACCENT) show = !show;
-	});
+    keyListener = Signals::listen<KeyPressSignal>([&](KeyPressSignal const &s) {
+        if(s.key == Inputs::Key::GRAVE_ACCENT) show = !show;
+    });
 
-	//glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, GL_TRUE);
-	glEnable(GL_DEBUG_OUTPUT);
-	glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS);
-	glDebugMessageCallback(messageCallback, 0);
+    //glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, GL_TRUE);
+    glEnable(GL_DEBUG_OUTPUT);
+    glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS);
+    glDebugMessageCallback(messageCallback, 0);
 }
 
 int DebugLayer::updateMeanFPS() {
-	if(fpsQueue.size() == 64) fpsQueue.pop_front();
-	fpsQueue.push_back(1.f / Time::delta);
+    if(fpsQueue.size() == 64) fpsQueue.pop_front();
+    fpsQueue.push_back(1.f / Time::delta);
 
-	float mean = 0;
-	for(auto v : fpsQueue) mean += v;
+    float mean = 0;
+    for(auto v : fpsQueue) mean += v;
 
-	mean /= fpsQueue.size();
+    mean /= fpsQueue.size();
 
-	return static_cast<int>(std::floor(mean));
+    return static_cast<int>(std::floor(mean));
 }
 
 void DebugLayer::drawImGui() {
-	if(!show) return;
+    if(!show) return;
 
-	ImGui::Begin("Debug");
+    ImGui::Begin("Debug");
 
-	ImGui::TextColored({1., 1., 0., 1.}, "Infos:");
-	std::string fps = "FPS: " + std::to_string(updateMeanFPS());
-	ImGui::Text(fps.c_str());
+    ImGui::TextColored({1., 1., 0., 1.}, "Infos:");
+    std::string fps = "FPS: " + std::to_string(updateMeanFPS());
+    ImGui::Text(fps.c_str());
 
-	ImGui::Separator();
+    ImGui::Separator();
 
-	ImGui::TextColored({1., 1., 0., 1.}, "Resources:");
-	ImGui::BeginTabBar("Resources");
-	for(auto const &type : Resources::listing()) {
-		if(ImGui::BeginTabItem(type.second.c_str())) {
-			ImGui::BeginTable(("t" + type.second).c_str(), 2);
+    ImGui::TextColored({1., 1., 0., 1.}, "Resources:");
+    ImGui::BeginTabBar("Resources");
+    for(auto const &type : Resources::listing()) {
+        if(ImGui::BeginTabItem(type.second.c_str())) {
+            ImGui::BeginTable(("t" + type.second).c_str(), 2);
 
-			ImGui::TableSetupColumn("Name");
-			ImGui::TableSetupColumn("Refs");
-			ImGui::TableHeadersRow();
-			for(auto &value : Resources::listing(type.first)) {
-				ImGui::TableNextRow();
+            ImGui::TableSetupColumn("Name");
+            ImGui::TableSetupColumn("Refs");
+            ImGui::TableHeadersRow();
+            for(auto &value : Resources::listing(type.first)) {
+                ImGui::TableNextRow();
 
-				ImGui::TableSetColumnIndex(0);
-				ImGui::Text(value.first.c_str());
+                ImGui::TableSetColumnIndex(0);
+                ImGui::Text(value.first.c_str());
 
-				ImGui::TableSetColumnIndex(1);
-				ImGui::Text(std::to_string(value.second.getRefCount()).c_str());
-			}
+                ImGui::TableSetColumnIndex(1);
+                ImGui::Text(std::to_string(value.second.getRefCount()).c_str());
+            }
 
-			ImGui::EndTable();
-			ImGui::EndTabItem();
-		}
-	}
-	ImGui::EndTabBar();
+            ImGui::EndTable();
+            ImGui::EndTabItem();
+        }
+    }
+    ImGui::EndTabBar();
 
     ImGui::Separator();
 
     ImGui::TextColored({1., 1., 0., 1.}, "GL Logs:");
     glLogger.draw();
 
-	ImGui::End();
+    ImGui::End();
 }

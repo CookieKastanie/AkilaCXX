@@ -31,6 +31,9 @@ namespace akila {
 		static bool isFullscreen();
 		static void setFullscreen(bool fullscreen);
 
+		static bool isMouseGrabbed();
+		static void setMouseGrab(bool grab);
+
 	private:
 		friend class Core;
 		friend class internal::ImGuiHandler;
@@ -40,6 +43,8 @@ namespace akila {
 
 		static IVec2 sizeBeforeFS;
 		static IVec2 positionBeforeFS;
+
+		static bool mouseGrab;
 
 		static void initWindow();
 		static void initGraphicContext();

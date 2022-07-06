@@ -7,6 +7,10 @@ MaterialInstance::MaterialInstance(Ref<Material> material): material{material} {
 
 }
 
+void akila::MaterialInstance::write(std::string const &name, int data) {
+	writeRaw<int>(material->uniforms[name].offset, &data, 1);
+}
+
 /////////////////////////////
 
 Material::Material(std::string const &shaderTxt) {

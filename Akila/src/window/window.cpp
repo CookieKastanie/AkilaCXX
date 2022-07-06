@@ -10,27 +10,29 @@ bool Window::vSync = false;
 IVec2 Window::sizeBeforeFS = {100, 100};
 IVec2 Window::positionBeforeFS = {0, 0};
 
-void Window::initWindow() {
-    //glfwSetErrorCallback(error_callback);
-    
-    if(!glfwInit())
-        std::exit(EXIT_FAILURE);
+bool Window::mouseGrab = false;
 
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+void Window::initWindow() {
+	//glfwSetErrorCallback(error_callback);
+	
+	if(!glfwInit())
+		std::exit(EXIT_FAILURE);
+
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
-    window = glfwCreateWindow(640, 480, "", NULL, NULL);
-    if(!window) {
-        glfwTerminate();
+	window = glfwCreateWindow(640, 480, "", NULL, NULL);
+	if(!window) {
+		glfwTerminate();
 		std::exit(EXIT_FAILURE);
-    }
+	}
 
-    glfwSetKeyCallback(window, internal::WindowEvents::keyCallback);
+	glfwSetKeyCallback(window, internal::WindowEvents::keyCallback);
 	glfwSetMouseButtonCallback(window, internal::WindowEvents::mouseButtonCallback);
 	glfwSetCursorPosCallback(window, internal::WindowEvents::cursorPosCallback);
 	glfwSetScrollCallback(window, internal::WindowEvents::scrollCallback);
-    
+	
 	setVerticalSync(true);
 	glfwShowWindow(window);
 
@@ -40,8 +42,8 @@ void Window::initWindow() {
 void Window::initGraphicContext() {
 	glfwMakeContextCurrent(window);
 	if(!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) {
-	    std::cerr << "Failed to retrieve OpenGL functions" << std::endl;
-	    std::exit(EXIT_FAILURE);
+		std::cerr << "Failed to retrieve OpenGL functions" << std::endl;
+		std::exit(EXIT_FAILURE);
 	}
 
 	internal::GL_FUNC_ARRAY::init();
@@ -123,6 +125,22 @@ void Window::setFullscreen(bool fullscreen) {
 	}
 
 	glfwSwapInterval(vSync);
+}
+
+bool Window::isMouseGrabbed() {
+	return mouseGrab;
+}
+
+void Window::setMouseGrab(bool grab) {
+	if(mouseGrab == grab) return;
+
+	glfwSetInputMode(
+		window,
+		GLFW_CURSOR,
+		grab ? GLFW_CURSOR_DISABLED : GLFW_CURSOR_NORMAL
+	);
+	
+	mouseGrab = grab;
 }
 
 void Window::terminate() {
