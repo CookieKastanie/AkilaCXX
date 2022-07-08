@@ -196,5 +196,9 @@ void DebugLayer::drawImGui() {
 	ImGui::TextColored({1., 1., 0., 1.}, "GL Logs:");
 	glLogger.draw();
 
+	ImGui::Separator();
+
+	if(ImGui::Button("Quit /!\\")) Window::close();
+
 	ImGui::End();
 }

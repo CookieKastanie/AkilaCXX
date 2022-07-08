@@ -16,6 +16,18 @@ in vec2 texCoord;
 
 out vec4 fragColor;
 
+struct test {
+	float varFloat;
+	sampler2D varSampler;
+};
+
+uniform float blue;
+
+uniform test varTest;
+
+uniform test arrFloat[5];
+
+
 void main() {
-	fragColor = vec4(texCoord, 0.0, 1.0);
+	fragColor = vec4(texCoord, blue + arrFloat[3].varFloat * varTest.varFloat, 1.0);
 }

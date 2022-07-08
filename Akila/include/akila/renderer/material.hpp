@@ -17,17 +17,16 @@ namespace akila {
 			glBindVertexArray(0);
 		}
 
-	private:
+	//private:
 		friend class MaterialInstance;
 
 		Shader shader;
 
 		GLuint vb;
 
-
 		struct UniformDataRef {
 			unsigned int shaderLocation;
-			UniformBaseType baseType;
+			UniformUnderlyingType baseType;
 
 			std::size_t offset;
 			int size; // vec1 vec2 vec3

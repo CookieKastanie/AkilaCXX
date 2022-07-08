@@ -216,6 +216,12 @@ void TestLayer::draw() {
 	Renderer::disable(Renderer::Capability::SCISSOR_TEST);
 	Renderer::setClearColor(.5f, .2f, .8f);
 	Renderer::clearColor();
+
+
+	simpleMat->shader.bind();
+	float t = sin(Time::now) * .5 + .5;
+	simpleMat->shader.sendRaw(simpleMat->shader.uniformBindings["blue"], &t);
+
 	simpleMat->render();
 
 
