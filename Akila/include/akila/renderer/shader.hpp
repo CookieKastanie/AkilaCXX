@@ -38,6 +38,7 @@ namespace akila {
 		void bind() const;
 
 		void sendRaw(UniformInfos const &infos, void *data);
+		void sendRaw(std::string const &name, void *data);
 
 	//private:
 		GLuint id;

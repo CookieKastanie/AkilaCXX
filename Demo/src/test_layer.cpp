@@ -220,7 +220,7 @@ void TestLayer::draw() {
 
 	simpleMat->shader.bind();
 	float t = sin(Time::now) * .5 + .5;
-	simpleMat->shader.sendRaw(simpleMat->shader.uniformBindings["blue"], &t);
+	simpleMat->shader.sendRaw("blue", &t);
 
 	simpleMat->render();
 

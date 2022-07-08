@@ -165,10 +165,7 @@ void Shader::sendRaw(UniformInfos const &infos, void *data) {
 	infos.sendFunctionPointer(infos.location, infos.length, data);
 }
 
-//void Shader::sendRawFloats(unsigned int uid, int size, int count, void* values) {
-//	internal::GL_FUNC_ARRAY::funifFuncs[size](uid, count, static_cast<GLfloat*>(values));
-//}
-
-//void Shader::sendRawInts(unsigned int uid, int size, int count, void* values) {
-//	internal::GL_FUNC_ARRAY::iunifFuncs[size](uid, count, static_cast<GLint*>(values));
-//}
+void Shader::sendRaw(std::string const &name, void *data) {
+	UniformInfos &infos = uniformBindings.at(name);
+	infos.sendFunctionPointer(infos.location, infos.length, data);
+}
