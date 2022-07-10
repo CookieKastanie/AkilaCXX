@@ -32,10 +32,9 @@ namespace akila {
 	class Shader {
 	public:
 		Shader();
+		Shader(std::string const &vertexTxt, std::string const &fragmentTxt, std::string const &geometryTxt = "");
+		Shader(std::string const &shaderTxt);
 		~Shader();
-
-		void build(std::string const &vertexTxt, std::string const &fragmentTxt, std::string const &geometryTxt = "");
-		void build(std::string const &shaderTxt);
 
 		void bind() const;
 		bool isBinded() const;
@@ -56,6 +55,7 @@ namespace akila {
 		std::unordered_map<std::string, UniformInfos> uniformBindings;
 		std::size_t totalByteCount;
 
+		void build(std::string const &vertexTxt, std::string const &fragmentTxt, std::string const &geometryTxt = "");
 		void cacheUniformsLocations();
 	};
 }

@@ -4,8 +4,6 @@
 
 using namespace akila;
 
-GLuint Shader::bindedId = -1;
-
 void inline override_glUniformMatrix2fv(GLint l, GLsizei s, void *d) {
 	glUniformMatrix2fv(l, s, false, (GLfloat *)d);
 }
@@ -76,7 +74,44 @@ bool checkErrors(GLuint shader, std::string type) {
 	return !success;
 }
 
-Shader::Shader(): id{0} {}
+/////////////////////////////////////////
+
+GLuint Shader::bindedId = -1;
+
+Shader::Shader(): id{0}, totalByteCount{0} {
+	std::string prog = R"---(
+		#akila_vertex
+		out vec2 texCoord;
+		void main() {
+			texCoord.x = (gl_VertexID == 1) ? 2.0 : 0.0;
+			texCoord.y = (gl_VertexID == 2) ? 2.0 : 0.0;
+			gl_Position = vec4(texCoord * vec2(2.0) + vec2(-1.0), 1.0, 1.0);
+		}
+		#akila_fragment
+		in vec2 texCoord;
+		out vec4 fragColor;
+		void main() {
+			fragColor = vec4(texCoord, 0.0, 1.0);
+		}
+	)---";
+
+	ShaderPreProc::ShaderSources sources;
+	ShaderPreProc::process(prog, sources);
+	build(sources.vertexShader, sources.fragmentShader, sources.geometryShader);
+}
+
+Shader::Shader(std::string const &vertexTxt, std::string const &fragmentTxt, std::string const &geometryTxt):
+	id{0}, totalByteCount{0} {
+	build(vertexTxt, fragmentTxt, geometryTxt);
+}
+
+Shader::Shader(std::string const &shaderTxt):
+	id{0}, totalByteCount{0} {
+
+	ShaderPreProc::ShaderSources sources;
+	ShaderPreProc::process(shaderTxt, sources);
+	build(sources.vertexShader, sources.fragmentShader, sources.geometryShader);
+}
 
 void Shader::build(std::string const &vertexTxt, std::string const &fragmentTxt, std::string const &geometryTxt) {
 	if(id != 0) {
@@ -125,12 +160,6 @@ void Shader::build(std::string const &vertexTxt, std::string const &fragmentTxt,
 	if(!geometryTxt.empty()) glDeleteShader(geometry);
 
 	cacheUniformsLocations();
-}
-
-void Shader::build(std::string const &shaderTxt) {
-	ShaderPreProc::ShaderSources sources;
-	ShaderPreProc::process(shaderTxt, sources);
-	build(sources.vertexShader, sources.fragmentShader, sources.geometryShader);
 }
 
 Shader::~Shader() {

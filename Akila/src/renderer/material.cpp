@@ -8,25 +8,25 @@ Material::Material(Ref<Shader> shader): shader{shader} {
 }
 
 Material::Material(std::string const &shaderTxt) {
-	shader = Resources::create<Shader>("simpleShader");
-	shader->build(shaderTxt);
-
+	shader = Resources::create<Shader>("simpleShader", shaderTxt);
 	uniformData.resize(shader->getTotalByteCount(), 0);
 }
 
-void Material::use(std::string const &name) {
+bool Material::use(std::string const &name) {
 	if(!shader->uniformExist(name)) {
 		std::cerr << "uniform : " << name << " is not present in shader" << std::endl;
-		return;
+		return false;
 	}
 
 	usedUniforms.push_back(&shader->getUniforminfos(name));
 	uniforms[name] = &shader->getUniforminfos(name);
 
-	// tri pour avoir une lecture sequenciel dans la methode send
+	// tri pour avoir une lecture sequentiel dans la methode send
 	std::sort(usedUniforms.begin(), usedUniforms.end(), [](UniformInfos *i1, UniformInfos *i2) {
 		return i1->byteOffset < i2->byteOffset;
 	});
+
+	return true;
 }
 
 void Material::write(std::string const &name, int data) {

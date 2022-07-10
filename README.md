@@ -1,16 +1,16 @@
 # Akila
 ## Sommaire
- - [Code de départ](#code-de-départ)
- - [Fenêtre principale](#fenêtre-principale)
+ - [Code de dÃ©part](#code-de-dÃ©part)
+ - [FenÃªtre principale](#fenÃªtre-principale)
  - [ECS](#ecs)
-	 - [Création d'une entité](#création-dune-entité)
-	 - [Création d'un système](#création-dun-système)
+	 - [CrÃ©ation d'une entitÃ©](#crÃ©ation-dune-entitÃ©)
+	 - [CrÃ©ation d'un systÃ¨me](#crÃ©ation-dun-systÃ¨me)
  - [Signaux](#signaux)
 	 - [Utilisation](#utilisation)
 	 - [Les Stacks](#les-stacks)
-	 - [Signaux intégrés](#signaux-intégrés)
+	 - [Signaux intÃ©grÃ©s](#signaux-intÃ©grÃ©s)
  - [Gestion des ressources](#gestion-des-ressources)
-	 - [Création de ressources](#création-de-ressources)
+	 - [CrÃ©ation de ressources](#crÃ©ation-de-ressources)
 	 - [Charger des ressources depuis un JSON](#charger-des-ressources-depuis-un-json)
 - [Threadpool](#threadpool)
 - [Rendu](#rendu)
@@ -18,8 +18,9 @@
 	- [Buffers](#buffers)
 	- [Textures](#textures)
 	- [Shaders](#shaders)
+	- [Materiaux](#Materiaux)
 	- [FrameBuffers](#framebuffers)
-## Code de départ
+## Code de dÃ©part
 ```cpp
 #include <akila/akila.hpp>
 using namespace akila;
@@ -38,18 +39,18 @@ int main() {
 	});
 }
 ```
-## Fenêtre principale
+## FenÃªtre principale
 ```cpp
 Window::setTitle("Title");
 
 Window::setSize(IVec2{1280, 720});
 IVec2 size = Window::getSize();
 
-// ferme la fenêtre, et par extension, l'application
+// ferme la fenÃªtre, et par extension, l'application
 Window::close();
 ```
 ## ECS
-### Création d'une entité
+### CrÃ©ation d'une entitÃ©
 #### Basic
 ```cpp
 Entity e = ECS::createEntity();
@@ -62,8 +63,8 @@ Signature s = ECS::createSignature<MyStruct, MyOtherStruct>();
 Entity e = ECS::createEntity(s);
 e.getComponent<MyOtherStruct>() = {"Value"};
 ```
-### Création d'un système
-L'attribut `entities` est hérité de la classe System. Il est automatiquement agrémenté des entités compatibles avec la signature du système.
+### CrÃ©ation d'un systÃ¨me
+L'attribut `entities` est hÃ©ritÃ© de la classe System. Il est automatiquement agrÃ©mentÃ© des entitÃ©s compatibles avec la signature du systÃ¨me.
 ```cpp
 class MySystem: public System {
 public:
@@ -102,11 +103,11 @@ MySystem *system = ECS::getSystem<MySystem>();
 ## Signaux
 ### Utilisation
 ```cpp
-// création d'un nouveau type de signal
-// indiquer dans quelle pile sera ajouté les signaux
+// crÃ©ation d'un nouveau type de signal
+// indiquer dans quelle pile sera ajoutï¿½ les signaux
 Signals::registerType<MySignalType>(Signals::Stack::BEFORE_UPDATE);
 
-// écoute d'un type de signal
+// Ã©coute d'un type de signal
 Listener listener = Signals::listen<MySignalType>([] (MySignalType const &e){
 	//code
 });
@@ -119,13 +120,13 @@ Signals::emit<MySignalType>(Args...);
 BEFORE_UPDATE
 BEFORE_DRAW
 ```
-### Signaux intégrés
+### Signaux intÃ©grÃ©s
 ```
 KeyPressSignal
 KeyReleaseSignal
 ```
 ## Gestion des ressources
-### Création de ressources
+### CrÃ©ation de ressources
 ```cpp
 Ref<MyResource> r1 = Resources::create<MyResource>("name1");
 Ref<MyResource> r2 = Resources::create<MyResource>("name2", ConstructorArgs...);
@@ -136,7 +137,7 @@ Ref<MyResource> r = Resources::get<MyResource>("name1");
 ```
 ### Charger des ressources depuis un JSON
 ```cpp
-// Définition d'un Loader
+// DÃ©finition d'un Loader
 class MyLoader: public Loader {
 public:
 	MyLoader(): Loader{"json_list_name"} {}
@@ -200,8 +201,49 @@ Renderer::clear();
 
 ```
 ### Shaders
+#### Instancier un shader
 ```cpp
+// les shaders ont une bonne place dans resources (mais ce n'est pas obligatoire)
+Ref<Shader> shader = Rersources::create<Shader>("#full_shader_code"); // passe par un preproc basique
+// ou
+Ref<Shader> shader = Rersources::create<Shader>("#vertex_shader", "#fragment_shader", "#geometry_shader");
+```
+#### Exemple de shader qui passe au preproc
+```glsl
+#akila_vertex
 
+out vec2 texCoord;
+void main() {
+	texCoord.x = (gl_VertexID == 1) ? 2.0 : 0.0;
+	texCoord.y = (gl_VertexID == 2) ? 2.0 : 0.0;
+
+	gl_Position = vec4(texCoord * vec2(2.0) + vec2(-1.0), 1.0, 1.0);
+}
+
+#akila_fragment
+
+// inclusion d'un autre fichier (n'est pas rÃ©cursif cependant)
+#akila_file path/myFile.glsl
+
+in vec2 texCoord;
+
+out vec4 fragColor;
+
+void main() {
+	fragColor = vec4(texCoord, 0.0, 1.0);
+}
+```
+### Materiaux
+```cpp
+Material mat{shader}; // shader est de type Ref<Shader>
+
+bool valid = mat.use("myUniform"); // indiquer que ce material utilisera "myUniform"
+// la valeur de retour indique si cet uniform existe effectivement
+// c'est chiant de devoir "dÃ©clarer" les uniforms que le material utilisera, mais l'objectif est de limiter la communication CPU/GPU
+
+mat.write("myUniform", data); // Ã©crit dans la mÃ©moire du material
+
+mat.send(); // envoi au shader les data enregistrÃ©s dans le material
 ```
 ### FrameBuffers
 ```cpp
@@ -211,7 +253,22 @@ Renderer::clear();
 ----------------
 ----------------
 ----------------
-## Machine à états
+----------------
+----------------
+----------------
+----------------
+----------------
+----------------
+----------------
+----------------
+----------------
+----------------
+----------------
+----------------
+----------------
+----------------
+IdÃ©es :
+## Machine Ã  Ã©tats
 ```cpp
 StateMachine m<MyStruct>{};
 m.addState(Triggers::FRAME_START, 0, [](Index i, MyStruct &s){
@@ -228,13 +285,4 @@ if(!m.running()) m.start(0);
 ## Animateur
 ```cpp
 Animator::???
-```
-```cpp
-
-```
-```cpp
-
-```
-```cpp
-
 ```

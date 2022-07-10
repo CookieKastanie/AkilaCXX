@@ -25,7 +25,7 @@ add_library(akila STATIC
 	"src/renderer/shader.cpp" 
 	"src/random/random.cpp"
 	"src/renderer/material.cpp"
- "src/renderer/shader_preproc.cpp" "src/default/loaders/material_loader.cpp" "src/default/layers/debug_layer.cpp")
+ "src/renderer/shader_preproc.cpp" "src/default/loaders/material_loader.cpp" "src/default/layers/debug_layer.cpp" )
 
 target_include_directories(akila PRIVATE "include")
 

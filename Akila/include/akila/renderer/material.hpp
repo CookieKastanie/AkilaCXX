@@ -12,7 +12,7 @@ namespace akila {
 		Material(std::string const &shaderTxt);
 
 		/* Indique quel uniform le materiau utilisera */
-		void use(std::string const &name);
+		bool use(std::string const &name);
 
 		void write(std::string const &name, int data);
 		void write(std::string const &name, float data);
@@ -37,7 +37,7 @@ namespace akila {
 		std::vector<UniformInfos *> usedUniforms;
 		std::unordered_map<std::string, UniformInfos *> uniforms;
 
-		std::vector<unsigned char> uniformData;
+		std::vector<std::uint8_t> uniformData;
 		
 		template<typename T>
 		inline void writeRaw(UniformInfos *infos, T const *data, std::size_t count) {
