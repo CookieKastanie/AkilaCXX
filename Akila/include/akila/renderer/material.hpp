@@ -8,37 +8,11 @@ namespace akila {
 	class Material {
 	public:
 		Material() = default;
-		Material(std::string const &shader);
+		Material(Ref<Shader> shader);
+		Material(std::string const &shaderTxt);
 
-		void render() {
-			shader.bind();
-			glBindVertexArray(vb);
-			glDrawArrays(GL_TRIANGLES, 0, 3);
-			glBindVertexArray(0);
-		}
-
-	//private:
-		friend class MaterialInstance;
-
-		Shader shader;
-
-		GLuint vb;
-
-		struct UniformDataRef {
-			unsigned int shaderLocation;
-			UniformUnderlyingType baseType;
-
-			std::size_t offset;
-			int size; // vec1 vec2 vec3
-			int count;
-		};
-
-		std::unordered_map<std::string, UniformDataRef> uniforms;
-	};
-
-	class MaterialInstance {
-	public:
-		MaterialInstance(Ref<Material> material);
+		/* Indique quel uniform le materiau utilisera */
+		void use(std::string const &name);
 
 		void write(std::string const &name, int data);
 		void write(std::string const &name, float data);
@@ -55,14 +29,19 @@ namespace akila {
 		void write(std::string const &name, Mat4 const &data);
 		void write(std::string const &name, std::vector<Mat4> const &data);
 
-	private:
-		Ref<Material> material;
-		
-		std::vector<unsigned char> uniformData;
+		void send();
 
+	private:
+		Ref<Shader> shader;
+
+		std::vector<UniformInfos *> usedUniforms;
+		std::unordered_map<std::string, UniformInfos *> uniforms;
+
+		std::vector<unsigned char> uniformData;
+		
 		template<typename T>
-		inline void writeRaw(std::size_t offset, T *data, std::size_t count) {
-			std::memcpy(uniformData.data() + offset, data, count * sizeof(T));
+		inline void writeRaw(UniformInfos *infos, T const *data, std::size_t count) {
+			std::memcpy(uniformData.data() + infos->byteOffset, data, count * sizeof(T));
 		}
 	};
 }

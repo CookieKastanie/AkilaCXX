@@ -25,6 +25,7 @@ namespace akila {
 		int blockSize; // 1, 2, 3, ..., 16 pour scalair, vecteur, matrice
 		int length; // nombre d'element dans l'array
 		std::size_t byteCount; // nombre total d'octets
+		std::size_t byteOffset; // position dans la memoire
 		SendFunction sendFunctionPointer; // adresse de la fonction opengl correspondante
 	};
 
@@ -34,16 +35,26 @@ namespace akila {
 		~Shader();
 
 		void build(std::string const &vertexTxt, std::string const &fragmentTxt, std::string const &geometryTxt = "");
+		void build(std::string const &shaderTxt);
 
 		void bind() const;
+		bool isBinded() const;
+
+		bool uniformExist(std::string const &name);
+		UniformInfos &getUniforminfos(std::string const &name);
+
+		std::size_t getTotalByteCount();
 
 		void sendRaw(UniformInfos const &infos, void *data);
 		void sendRaw(std::string const &name, void *data);
 
-	//private:
+	private:
+		static GLuint bindedId;
+
 		GLuint id;
 
 		std::unordered_map<std::string, UniformInfos> uniformBindings;
+		std::size_t totalByteCount;
 
 		void cacheUniformsLocations();
 	};

@@ -1,7 +1,10 @@
 #include "akila/renderer/shader.hpp"
+#include "akila/renderer/shader_preproc.hpp"
 #include <iostream>
 
 using namespace akila;
+
+GLuint Shader::bindedId = -1;
 
 void inline override_glUniformMatrix2fv(GLint l, GLsizei s, void *d) {
 	glUniformMatrix2fv(l, s, false, (GLfloat *)d);
@@ -124,12 +127,23 @@ void Shader::build(std::string const &vertexTxt, std::string const &fragmentTxt,
 	cacheUniformsLocations();
 }
 
+void Shader::build(std::string const &shaderTxt) {
+	ShaderPreProc::ShaderSources sources;
+	ShaderPreProc::process(shaderTxt, sources);
+	build(sources.vertexShader, sources.fragmentShader, sources.geometryShader);
+}
+
 Shader::~Shader() {
 	glDeleteProgram(id);
 }
 
 void Shader::bind() const {
 	glUseProgram(id);
+	bindedId = id;
+}
+
+bool Shader::isBinded() const {
+	return bindedId == id;
 }
 
 void Shader::cacheUniformsLocations() {
@@ -147,6 +161,7 @@ void Shader::cacheUniformsLocations() {
 
 	uniformBindings.reserve(count);
 
+	std::size_t byteOffset = 0;
 	for(GLuint i = 0; i < static_cast<GLuint>(count); ++i) {
 		glGetActiveUniform(id, i, bufSize, &length, &size, &type, name);
 
@@ -154,11 +169,28 @@ void Shader::cacheUniformsLocations() {
 																// il faut query le shader pour avoir la vraie location
 		if(location != -1) {
 			UniformInfos &infos = uniformBindings[name];
+
 			infos.location = location;
 			infos.length = size;
 			setUniformInfos(type, infos);
+			infos.byteOffset = byteOffset;
+			byteOffset += infos.byteCount;
 		}
 	}
+
+	totalByteCount = byteOffset;
+}
+
+bool Shader::uniformExist(std::string const &name) {
+	return uniformBindings.find(name) != uniformBindings.end();
+}
+
+UniformInfos &Shader::getUniforminfos(std::string const &name) {
+	return uniformBindings.at(name);
+}
+
+std::size_t Shader::getTotalByteCount() {
+	return totalByteCount;
 }
 
 void Shader::sendRaw(UniformInfos const &infos, void *data) {

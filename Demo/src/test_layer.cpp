@@ -2,6 +2,8 @@
 
 using namespace akila;
 
+GLuint vb;
+
 struct Rectangle {
 	Vec2 size;
 	Vec3 color;
@@ -201,6 +203,9 @@ TestLayer::TestLayer(): Layer{} {
 	
 
 	simpleMat = Resources::get<Material>("simple");
+	simpleMat->use("blue");
+
+	glGenVertexArrays(1, &vb);
 }
 
 void TestLayer::update() {
@@ -218,11 +223,13 @@ void TestLayer::draw() {
 	Renderer::clearColor();
 
 
-	simpleMat->shader.bind();
 	float t = sin(Time::now) * .5 + .5;
-	simpleMat->shader.sendRaw("blue", &t);
+	simpleMat->write("blue", t);
+	simpleMat->send();
 
-	simpleMat->render();
+	glBindVertexArray(vb);
+	glDrawArrays(GL_TRIANGLES, 0, 3);
+	glBindVertexArray(0);
 
 
 	Renderer::enable(Renderer::Capability::SCISSOR_TEST);
