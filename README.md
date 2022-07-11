@@ -104,7 +104,7 @@ MySystem *system = ECS::getSystem<MySystem>();
 ### Utilisation
 ```cpp
 // création d'un nouveau type de signal
-// indiquer dans quelle pile sera ajout� les signaux
+// indiquer dans quelle pile sera ajoutés les signaux
 Signals::registerType<MySignalType>(Signals::Stack::BEFORE_UPDATE);
 
 // écoute d'un type de signal
@@ -188,7 +188,7 @@ Threadpool::submit([]() {
 ### Renderer
 ```cpp
 Renderer::useDefaultFrameBuffer();
-Renderer::setClearColor(1., .5, .2, 1.);
+Renderer::setClearColor(1.0f, 0.5f, 0.2f, 1.0f);
 Renderer::enable(Renderer::Capability::DEPTH_TEST);
 Renderer::clear();
 ```
@@ -239,9 +239,13 @@ Material mat{shader}; // shader est de type Ref<Shader>
 
 bool valid = mat.use("myUniform"); // indiquer que ce material utilisera "myUniform"
 // la valeur de retour indique si cet uniform existe effectivement
-// c'est chiant de devoir "déclarer" les uniforms que le material utilisera, mais l'objectif est de limiter la communication CPU/GPU
+// c'est chiant de devoir "déclarer" les uniforms que le material utilisera,
+// mais l'objectif est de limiter la communication CPU/GPU
 
 mat.write("myUniform", data); // écrit dans la mémoire du material
+
+mat.affect("mySampler2D", Resources::get<Texture>("myTexture")); // ajoute une paire uniform / texture
+// dans ce cas dans la shader, l'uniform doit être un sampler2D
 
 mat.send(); // envoi au shader les data enregistrés dans le material
 ```
