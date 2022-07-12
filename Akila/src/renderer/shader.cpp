@@ -230,3 +230,15 @@ void Shader::sendRaw(std::string const &name, void *data) {
 	UniformInfos &infos = uniformBindings.at(name);
 	infos.sendFunctionPointer(infos.location, infos.length, data);
 }
+
+bool Shader::readInt(std::string const &name, int *value) {
+	auto it = uniformBindings.find(name);
+	if(it == uniformBindings.end()) return false;
+
+	UniformInfos &infos = it->second;
+	if(infos.baseType != UniformUnderlyingType::INT
+		&& infos.baseType != UniformUnderlyingType::SAMPLER) return false;
+
+	glGetUniformiv(id, infos.location, value);
+	return true;
+}

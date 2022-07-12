@@ -21,7 +21,9 @@
 #include "akila/threadpool/threadpool.hpp"
 
 #include "akila/renderer/renderer.hpp"
+#include "akila/renderer/shader.hpp"
 #include "akila/renderer/material.hpp"
+#include "akila/renderer/texture.hpp"
 
 #include "akila/random/random.hpp"
 

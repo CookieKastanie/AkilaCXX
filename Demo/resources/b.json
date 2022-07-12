@@ -2,7 +2,14 @@
     "material": [
         {
             "name": "simple",
-            "shader":  "shaders/simple.glsl"
+            "shader": "shaders/simple.glsl"
+        }
+    ],
+
+    "texture2d": [
+        {
+            "name":  "link",
+            "path": "textures/link_sunglass.png"
         }
     ]
 }

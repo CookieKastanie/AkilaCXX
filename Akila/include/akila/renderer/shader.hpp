@@ -47,6 +47,8 @@ namespace akila {
 		void sendRaw(UniformInfos const &infos, void *data);
 		void sendRaw(std::string const &name, void *data);
 
+		bool readInt(std::string const &name, int *value);
+
 	private:
 		static GLuint bindedId;
 

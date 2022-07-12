@@ -245,4 +245,8 @@ void TestLayer::draw() {
 void TestLayer::drawImGui() {
 	ECS::getSystem<PlayerSystem>()->renderImGui();
 	ECS::getSystem<EditorSystem>()->renderUI();
+
+	ImGui::Begin("Texture");
+	ImGui::Image((ImTextureID)Resources::get<Texture2D>("link")->getId(), {460, 460}, {0, 1}, {1, 0});
+	ImGui::End();
 }

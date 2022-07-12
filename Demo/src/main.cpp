@@ -17,6 +17,7 @@ int main() {
 		Window::setTitle("Akila !");
 
 		Resources::registerLoader<MaterialLoader>();
+		Resources::registerLoader<Texture2DLoader>();
 
 		Layers::add<TestLayer>();
 		Layers::add<DebugLayer>();
