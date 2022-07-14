@@ -5,13 +5,13 @@ using namespace akila;
 
 LoaderCallback::LoaderCallback(internal::LoadingInstance *li): li{li}, used{false} {};
 
-void LoaderCallback::success() {
+void LoaderCallback::success() const {
 	if(used) return;
 	li->countDown();
 	used = true;
 }
 
-void LoaderCallback::fail() {
+void LoaderCallback::fail() const {
 	if(used) return;
 	li->countDown();
 	used = true;

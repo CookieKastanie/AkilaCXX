@@ -10,14 +10,14 @@ namespace akila {
 
 	class LoaderCallback {
 	public:
-		void success();
-		void fail();
+		void success() const;
+		void fail() const;
 
 	private:
 		friend class internal::LoadingInstance;
 
 		internal::LoadingInstance *li;
-		bool used;
+		mutable bool used;
 
 		LoaderCallback(internal::LoadingInstance *li);
 	};

@@ -20,9 +20,7 @@ TextureBuffer::Format stringToFormat(std::string const &str) {
 }
 
 
-Texture2DLoader::Texture2DLoader(): Loader{"texture2d"} {
-	Resources::registerType<Texture2D>();
-}
+Texture2DLoader::Texture2DLoader(): Loader{"texture2d"} {}
 
 void Texture2DLoader::onEntry(JSON json, LoaderCallback cb) {
 	if(!json["name"].is_string()) {
@@ -39,51 +37,48 @@ void Texture2DLoader::onEntry(JSON json, LoaderCallback cb) {
 		texture = new Texture2D{};
 
 	if(json["path"].is_string()) {
+		struct _ {
+			std::string path;
+			int textureNrChannels = 3;
+			int fwidth = 1;
+			int fheight = 1;
+			void *data = nullptr;
+			TextureBuffer::Format fileFormat = TextureBuffer::Format::RGB;
+			TextureBuffer::Type dataType = TextureBuffer::Type::UNSIGNED_BYTE;
+		};
+		
+		Ptr<_> p = createPtr<_>();
+		p->path = json["path"];
 
-		std::string path = json["path"];
-
-		std::cout << path << std::endl;
-		std::cout << FileSystem::path(path) << std::endl;
-		int textureNrChannels = 3;
-		int fwidth = 1;
-		int fheight = 1;
-		void *data = nullptr;
-		TextureBuffer::Format fileFormat = TextureBuffer::Format::RGB;
-		TextureBuffer::Type dataType = TextureBuffer::Type::UNSIGNED_BYTE;
-
-
-		// bruh
-		//Threadpool::submit([&]() {
-			std::cout << path << std::endl;
-
+		Threadpool::submit([=]() {
 			stbi_set_flip_vertically_on_load(true);
 			if(texture->getInternalFormat() == TextureBuffer::Format::RGB16F || texture->getInternalFormat() == TextureBuffer::Format::RGBA16F) {// <- pas fou
-				data = stbi_loadf(FileSystem::path(path).c_str(), &fwidth, &fheight, &textureNrChannels, 0);
-				dataType = TextureBuffer::Type::FLOAT;
+				p->data = stbi_loadf(FileSystem::path(p->path).c_str(), &p->fwidth, &p->fheight, &p->textureNrChannels, 0);
+				p->dataType = TextureBuffer::Type::FLOAT;
 			} else {
-				data = stbi_load(FileSystem::path(path).c_str(), &fwidth, &fheight, &textureNrChannels, 0);
+				p->data = stbi_load(FileSystem::path(p->path).c_str(), &p->fwidth, &p->fheight, &p->textureNrChannels, 0);
 			}
 
-			switch(textureNrChannels) {
-				case 1: fileFormat = TextureBuffer::Format::RED; break;
-				case 3: fileFormat = TextureBuffer::Format::RGB; break;
-				case 4: fileFormat = TextureBuffer::Format::RGBA; break;
+			switch(p->textureNrChannels) {
+				case 1: p->fileFormat = TextureBuffer::Format::RED; break;
+				case 3: p->fileFormat = TextureBuffer::Format::RGB; break;
+				case 4: p->fileFormat = TextureBuffer::Format::RGBA; break;
 			}
-		//}, [&]() {
-			if(data != nullptr) {
-				texture->setSize(fwidth, fheight);
-				texture->setData(data, fileFormat, dataType);
+		}, [=]() {
+			if(p->data != nullptr) {
+				texture->setSize(p->fwidth, p->fheight);
+				texture->setData(p->data, p->fileFormat, p->dataType);
 
-				stbi_image_free(data);
+				stbi_image_free(p->data);
 
 				Resources::set<Texture2D>(name, texture);
 				cb.success();
 			} else {
-				std::cerr << "Texture loading error : can't read " << path << std::endl;
+				std::cerr << "Texture loading error : can't read " << p->path << std::endl;
 				Resources::set<Texture2D>(name, texture);
 				cb.fail();
 			}
-		//});
+		});
 	} else {
 		Resources::set<Texture2D>(name, texture);
 		cb.success();

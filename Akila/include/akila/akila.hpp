@@ -2,6 +2,9 @@
 
 #include "akila/math/math.hpp"
 
+#include "akila/memory/ptr.hpp"
+#include "akila/memory/ref.hpp"
+
 #include "akila/core/core.hpp"
 
 #include "akila/ecs/ecs.hpp"

@@ -42,7 +42,15 @@ namespace akila {
 		template<typename T>
 		static Ref<T> get(std::string const &name) {
 			TypeId id = getTypeId<T>();
-			internal::ResourceMap<T> *map = static_cast<internal::ResourceMap<T>*>(maps.at(id).get());
+
+			// ajout auto d'un nouveau type
+			auto it = maps.find(id);
+			if(it == maps.end()) {
+				registerType<T>();
+				it = maps.find(id);
+			}
+
+			internal::ResourceMap<T> *map = static_cast<internal::ResourceMap<T>*>(it->second.get());
 			return map->get(name);
 		}
 
@@ -71,6 +79,14 @@ namespace akila {
 			return maps.at(typeId)->listing();
 		}
 
+	private:
+		static std::unordered_map<TypeId, std::unique_ptr<internal::IResourceMap>> maps;
+		static std::unordered_map<TypeId, std::string> mapNames;
+
+		friend class internal::LoadingInstance;
+		static std::unordered_map<std::string, std::unique_ptr<Loader>> loaders;
+		static std::vector<internal::LoadingInstance> loadingInstances;
+
 		template<typename T>
 		static void registerType() {
 			TypeId id = getTypeId<T>();
@@ -80,13 +96,5 @@ namespace akila {
 			maps[id] = std::unique_ptr<internal::IResourceMap>(new internal::ResourceMap<T>{});
 			mapNames[id] = getTypeName<T>();
 		}
-
-	private:
-		static std::unordered_map<TypeId, std::unique_ptr<internal::IResourceMap>> maps;
-		static std::unordered_map<TypeId, std::string> mapNames;
-
-		friend class internal::LoadingInstance;
-		static std::unordered_map<std::string, std::unique_ptr<Loader>> loaders;
-		static std::vector<internal::LoadingInstance> loadingInstances;
 	};
 }
