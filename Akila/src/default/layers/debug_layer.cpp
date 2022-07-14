@@ -152,7 +152,7 @@ int DebugLayer::updateMeanFPS() {
 
 	mean /= fpsQueue.size();
 
-	return static_cast<int>(std::floor(mean));
+	return static_cast<int>(std::round(mean));
 }
 
 void DebugLayer::drawImGui() {

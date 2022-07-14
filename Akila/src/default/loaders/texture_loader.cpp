@@ -19,6 +19,26 @@ TextureBuffer::Format stringToFormat(std::string const &str) {
 	return TextureBuffer::Format::RGB;
 }
 
+TextureBuffer::WrapMode stringToWrapMode(std::string const &str) {
+	if(!str.compare("CLAMP_TO_EDGE")) return TextureBuffer::WrapMode::CLAMP_TO_EDGE;
+	if(!str.compare("CLAMP_TO_BORDER")) return TextureBuffer::WrapMode::CLAMP_TO_BORDER;
+	if(!str.compare("MIRRORED_REPEAT")) return TextureBuffer::WrapMode::MIRRORED_REPEAT;
+
+	//default
+	return TextureBuffer::WrapMode::REPEAT;
+}
+
+TextureBuffer::FilterMode stringToFilterMode(std::string const &str) {
+	if(!str.compare("NEAREST")) return TextureBuffer::FilterMode::NEAREST;
+	if(!str.compare("NEAREST_MIPMAP_NEAREST")) return TextureBuffer::FilterMode::NEAREST_MIPMAP_NEAREST;
+	if(!str.compare("LINEAR_MIPMAP_NEAREST")) return TextureBuffer::FilterMode::LINEAR_MIPMAP_NEAREST;
+	if(!str.compare("NEAREST_MIPMAP_LINEAR")) return TextureBuffer::FilterMode::NEAREST_MIPMAP_LINEAR;
+	if(!str.compare("LINEAR_MIPMAP_LINEAR")) return TextureBuffer::FilterMode::LINEAR_MIPMAP_LINEAR;
+
+	// default
+	return TextureBuffer::FilterMode::LINEAR;
+}
+
 
 Texture2DLoader::Texture2DLoader(): Loader{"texture2d"} {}
 
@@ -35,6 +55,29 @@ void Texture2DLoader::onEntry(JSON json, LoaderCallback cb) {
 		texture = new Texture2D{stringToFormat(json["format"])};
 	else
 		texture = new Texture2D{};
+
+	TextureBuffer::Parameters params{};
+	if(json["wrapS"].is_string())
+		params.wrapS = stringToWrapMode(json["wrapS"]);
+
+	if(json["wrapT"].is_string())
+		params.wrapT = stringToWrapMode(json["wrapT"]);
+
+	if(json["wrapR"].is_string())
+		params.wrapR = stringToWrapMode(json["wrapR"]);
+
+	if(json["magFilter"].is_string())
+		params.magFilter = stringToFilterMode(json["magFilter"]);
+
+	if(json["minFilter"].is_string())
+		params.minFilter = stringToFilterMode(json["minFilter"]);
+
+	texture->setParameters(params);
+
+	bool mips = false;
+	if(json["mips"].is_boolean()) mips = json["mips"];
+
+	Resources::set<Texture2D>(name, texture);
 
 	if(json["path"].is_string()) {
 		struct _ {
@@ -71,16 +114,15 @@ void Texture2DLoader::onEntry(JSON json, LoaderCallback cb) {
 
 				stbi_image_free(p->data);
 
-				Resources::set<Texture2D>(name, texture);
+				if(mips) texture->generateMipmap();
+
 				cb.success();
 			} else {
 				std::cerr << "Texture loading error : can't read " << p->path << std::endl;
-				Resources::set<Texture2D>(name, texture);
 				cb.fail();
 			}
 		});
 	} else {
-		Resources::set<Texture2D>(name, texture);
 		cb.success();
 	}
 }

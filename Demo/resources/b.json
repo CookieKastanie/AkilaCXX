@@ -8,8 +8,12 @@
 
     "texture2d": [
         {
-            "name":  "link",
-            "path": "textures/link_sunglass.png"
+            "name": "link",
+            "path": "textures/link_sunglass.png",
+            "format": "RGB",
+            "mips": true,
+            "minFilter": "LINEAR_MIPMAP_LINEAR",
+            "magFilter": "LINEAR"
         }
     ]
 }
