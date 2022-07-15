@@ -11,8 +11,12 @@ namespace akila {
 		Material(Ref<Shader> shader);
 		Material(std::string const &shaderTxt);
 
+		Ref<Shader> getShaderRef() const;
+
 		/* Indique quel uniform le materiau utilisera */
 		bool use(std::string const &name);
+
+		void writeRaw(UniformInfos const *infos, void const *data, std::size_t byteCount);
 
 		void write(std::string const &name, int data);
 		void write(std::string const &name, float data);
@@ -38,10 +42,5 @@ namespace akila {
 		std::unordered_map<std::string, UniformInfos const *> uniforms;
 
 		std::vector<std::uint8_t> uniformData;
-		
-		template<typename T>
-		inline void writeRaw(UniformInfos const *infos, T const *data, std::size_t count) {
-			std::memcpy(uniformData.data() + infos->byteOffset, data, count * sizeof(T));
-		}
 	};
 }

@@ -25,7 +25,14 @@ add_library(akila STATIC
 	"src/renderer/shader.cpp" 
 	"src/random/random.cpp"
 	"src/renderer/material.cpp"
- "src/renderer/shader_preproc.cpp" "src/default/loaders/material_loader.cpp" "src/default/layers/debug_layer.cpp"  "src/renderer/texture.cpp" "src/default/loaders/texture_loader.cpp")
+	"src/renderer/shader_preproc.cpp"
+	"src/default/loaders/material_loader.cpp"
+	"src/default/layers/debug_layer.cpp"
+	"src/renderer/texture.cpp"
+	"src/default/loaders/texture_loader.cpp"
+	"src/default/loaders/uniform_parser.cpp"
+	"src/renderer/buffer_object.cpp"
+	"src/renderer/vao.cpp")
 
 target_include_directories(akila PRIVATE "include")
 

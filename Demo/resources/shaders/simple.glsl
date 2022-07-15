@@ -22,6 +22,7 @@ struct test {
 };
 
 uniform float blue;
+uniform float green;
 
 uniform test varTest;
 
@@ -29,5 +30,5 @@ uniform test arrFloat[5];
 
 
 void main() {
-	fragColor = vec4(texCoord, blue + arrFloat[3].varFloat * varTest.varFloat, 1.0);
+	fragColor = vec4(texCoord.x, green, blue + arrFloat[3].varFloat * varTest.varFloat, 1.0);
 }

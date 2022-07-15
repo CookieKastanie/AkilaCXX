@@ -12,14 +12,21 @@ Material::Material(std::string const &shaderTxt) {
 	uniformData.resize(shader->getTotalByteCount(), 0);
 }
 
+Ref<Shader> Material::getShaderRef() const {
+	return shader;
+}
+
 bool Material::use(std::string const &name) {
 	if(!shader->uniformExist(name)) {
 		std::cerr << "uniform : " << name << " is not present in shader" << std::endl;
 		return false;
 	}
 
-	usedUniforms.push_back(&shader->getUniforminfos(name));
-	uniforms[name] = &shader->getUniforminfos(name);
+	if(uniforms.find(name) != uniforms.end()) return true;
+
+	UniformInfos const *infos = &shader->getUniforminfos(name);
+	usedUniforms.push_back(infos);
+	uniforms[name] = infos;
 
 	// tri pour avoir une lecture sequentiel dans la methode send
 	std::sort(usedUniforms.begin(), usedUniforms.end(), [](UniformInfos const *i1, UniformInfos const *i2) {
@@ -29,44 +36,48 @@ bool Material::use(std::string const &name) {
 	return true;
 }
 
+inline void Material::writeRaw(UniformInfos const *infos, void const *data, std::size_t byteCount) {
+	std::memcpy(uniformData.data() + infos->byteOffset, data, byteCount);
+}
+
 void Material::write(std::string const &name, int data) {
-	writeRaw<int>(uniforms.at(name), &data, 1);
+	writeRaw(uniforms.at(name), &data, sizeof(int));
 }
 
 void Material::write(std::string const &name, float data) {
-	writeRaw<float>(uniforms.at(name), &data, 1);
+	writeRaw(uniforms.at(name), &data, sizeof(float));
 }
 
 void Material::write(std::string const &name, Vec2 const &data) {
-	writeRaw<Vec2>(uniforms.at(name), &data, 1);
+	writeRaw(uniforms.at(name), &data, sizeof(Vec2));
 }
 
 void Material::write(std::string const &name, std::vector<Vec2> const &data) {
-	writeRaw<Vec2>(uniforms.at(name), data.data(), data.size());
+	writeRaw(uniforms.at(name), data.data(), data.size() * sizeof(Vec2));
 }
 
 void Material::write(std::string const &name, Vec3 const &data) {
-	writeRaw<Vec3>(uniforms.at(name), &data, 1);
+	writeRaw(uniforms.at(name), &data, sizeof(Vec3));
 }
 
 void Material::write(std::string const &name, std::vector<Vec3> const &data) {
-	writeRaw<Vec3>(uniforms.at(name), data.data(), data.size());
+	writeRaw(uniforms.at(name), data.data(), data.size() * sizeof(Vec3));
 }
 
 void Material::write(std::string const &name, Vec4 const &data) {
-	writeRaw<Vec4>(uniforms.at(name), &data, 1);
+	writeRaw(uniforms.at(name), &data, sizeof(Vec4));
 }
 
 void Material::write(std::string const &name, std::vector<Vec4> const &data) {
-	writeRaw<Vec4>(uniforms.at(name), data.data(), data.size());
+	writeRaw(uniforms.at(name), data.data(), data.size() * sizeof(Vec4));
 }
 
 void Material::write(std::string const &name, Mat4 const &data) {
-	writeRaw<Mat4>(uniforms.at(name), &data, 1);
+	writeRaw(uniforms.at(name), &data, sizeof(Mat4));
 }
 
 void Material::write(std::string const &name, std::vector<Mat4> const &data) {
-	writeRaw<Mat4>(uniforms.at(name), data.data(), data.size());
+	writeRaw(uniforms.at(name), data.data(), data.size() * sizeof(Mat4));
 }
 
 void Material::send() {

@@ -2,7 +2,10 @@
     "material": [
         {
             "name": "simple",
-            "shader": "shaders/simple.glsl"
+            "shader": "shaders/simple.glsl",
+            "uniforms": {
+                "green": [1]
+            }
         }
     ],
 

@@ -1,5 +1,6 @@
 #include "akila/default/loaders/material_loader.hpp"
 #include "akila/akila.hpp"
+#include "akila/default/loaders/uniform_parser.hpp"
 
 using namespace akila;
 
@@ -30,7 +31,12 @@ void MaterialLoader::onEntry(JSON json, LoaderCallback cb) {
 	std::stringstream stream;
 	stream << file.rdbuf();
 
-	Resources::create<Material>(name, stream.str());
+	auto &mat = Resources::create<Material>(name, stream.str());
+
+	Parser::parseUniforms(mat->getShaderRef(), json, [&](std::string const &name, UniformInfos const &infos, void *data, std::size_t byteCount) {
+		mat->use(name);
+		mat->writeRaw(&infos, data, byteCount);
+	});
 
 	cb.success();
 }
