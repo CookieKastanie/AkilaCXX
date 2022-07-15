@@ -22,7 +22,7 @@ bool Material::use(std::string const &name) {
 	uniforms[name] = &shader->getUniforminfos(name);
 
 	// tri pour avoir une lecture sequentiel dans la methode send
-	std::sort(usedUniforms.begin(), usedUniforms.end(), [](UniformInfos *i1, UniformInfos *i2) {
+	std::sort(usedUniforms.begin(), usedUniforms.end(), [](UniformInfos const *i1, UniformInfos const *i2) {
 		return i1->byteOffset < i2->byteOffset;
 	});
 
@@ -72,7 +72,7 @@ void Material::write(std::string const &name, std::vector<Mat4> const &data) {
 void Material::send() {
 	if(!shader->isBinded()) shader->bind();
 
-	for(UniformInfos *infos : usedUniforms) {
+	for(UniformInfos const *infos : usedUniforms) {
 		shader->sendRaw(*infos, uniformData.data() + infos->byteOffset);
 	}
 }

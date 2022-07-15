@@ -34,13 +34,13 @@ namespace akila {
 	private:
 		Ref<Shader> shader;
 
-		std::vector<UniformInfos *> usedUniforms;
-		std::unordered_map<std::string, UniformInfos *> uniforms;
+		std::vector<UniformInfos const *> usedUniforms;
+		std::unordered_map<std::string, UniformInfos const *> uniforms;
 
 		std::vector<std::uint8_t> uniformData;
 		
 		template<typename T>
-		inline void writeRaw(UniformInfos *infos, T const *data, std::size_t count) {
+		inline void writeRaw(UniformInfos const *infos, T const *data, std::size_t count) {
 			std::memcpy(uniformData.data() + infos->byteOffset, data, count * sizeof(T));
 		}
 	};

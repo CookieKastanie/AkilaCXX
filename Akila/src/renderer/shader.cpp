@@ -166,6 +166,47 @@ Shader::~Shader() {
 	glDeleteProgram(id);
 }
 
+void Shader::send(std::string const &name, int value) const {
+	UniformInfos const &infos = uniformBindings.at(name);
+	glUniform1i(infos.location, value);
+}
+
+void Shader::send(std::string const &name, float value) const {
+	UniformInfos const &infos = uniformBindings.at(name);
+	glUniform1f(infos.location, value);
+}
+
+void Shader::send(std::string const &name, std::vector<float> const &values) const {
+	UniformInfos const &infos = uniformBindings.at(name);
+	glUniform1fv(infos.location, (GLsizei)values.size(), (GLfloat *)values.data());
+}
+
+void Shader::send(std::string const &name, Vec2 const &value) const {
+	UniformInfos const &infos = uniformBindings.at(name);
+	glUniform2fv(infos.location, 1, &value[0]);
+}
+
+void Shader::send(std::string const &name, Vec3 const &value) const {
+	UniformInfos const &infos = uniformBindings.at(name);
+	glUniform3fv(infos.location, 1, &value[0]);
+}
+
+void Shader::send(std::string const &name, std::vector<Vec3> const &values) const {
+	UniformInfos const &infos = uniformBindings.at(name);
+	glUniform3fv(infos.location, (GLsizei)values.size(), (GLfloat *)values.data());
+}
+
+void Shader::send(std::string const &name, Mat4 const &mat) const {
+	UniformInfos const &infos = uniformBindings.at(name);
+	glUniformMatrix4fv(infos.location, 1, GL_FALSE, &mat[0][0]);
+}
+
+void Shader::send(std::string const &name, bool value) const {
+	UniformInfos const &infos = uniformBindings.at(name);
+	glUniform1i(infos.location, value);
+}
+
+
 void Shader::bind() const {
 	glUseProgram(id);
 	bindedId = id;
@@ -210,32 +251,32 @@ void Shader::cacheUniformsLocations() {
 	totalByteCount = byteOffset;
 }
 
-bool Shader::uniformExist(std::string const &name) {
+bool Shader::uniformExist(std::string const &name) const {
 	return uniformBindings.find(name) != uniformBindings.end();
 }
 
-UniformInfos &Shader::getUniforminfos(std::string const &name) {
+UniformInfos const &Shader::getUniforminfos(std::string const &name) const {
 	return uniformBindings.at(name);
 }
 
-std::size_t Shader::getTotalByteCount() {
+std::size_t Shader::getTotalByteCount() const {
 	return totalByteCount;
 }
 
-void Shader::sendRaw(UniformInfos const &infos, void *data) {
+void Shader::sendRaw(UniformInfos const &infos, void *data) const {
 	infos.sendFunctionPointer(infos.location, infos.length, data);
 }
 
-void Shader::sendRaw(std::string const &name, void *data) {
-	UniformInfos &infos = uniformBindings.at(name);
+void Shader::sendRaw(std::string const &name, void *data) const {
+	UniformInfos const &infos = uniformBindings.at(name);
 	infos.sendFunctionPointer(infos.location, infos.length, data);
 }
 
-bool Shader::readInt(std::string const &name, int *value) {
+bool Shader::readInt(std::string const &name, int *value) const {
 	auto it = uniformBindings.find(name);
 	if(it == uniformBindings.end()) return false;
 
-	UniformInfos &infos = it->second;
+	UniformInfos const &infos = it->second;
 	if(infos.baseType != UniformUnderlyingType::INT
 		&& infos.baseType != UniformUnderlyingType::SAMPLER) return false;
 

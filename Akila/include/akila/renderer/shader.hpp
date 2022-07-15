@@ -3,6 +3,7 @@
 #include <glad/glad.h>
 #include <string>
 #include <unordered_map>
+#include "akila/math/math.hpp"
 
 namespace akila {
 	class Shader;
@@ -36,18 +37,27 @@ namespace akila {
 		Shader(std::string const &shaderTxt);
 		~Shader();
 
+		void send(std::string const &name, int value) const;
+		void send(std::string const &name, float value) const;
+		void send(std::string const &name, std::vector<float> const &values) const;
+		void send(std::string const &name, Vec2 const &value) const;
+		void send(std::string const &name, Vec3 const &value) const;
+		void send(std::string const &name, std::vector<Vec3> const &values) const;
+		void send(std::string const &name, Mat4 const &mat) const;
+		void send(std::string const &name, bool value) const;
+
 		void bind() const;
 		bool isBinded() const;
 
-		bool uniformExist(std::string const &name);
-		UniformInfos &getUniforminfos(std::string const &name);
+		bool uniformExist(std::string const &name) const;
+		UniformInfos const &getUniforminfos(std::string const &name) const;
 
-		std::size_t getTotalByteCount();
+		std::size_t getTotalByteCount() const;
 
-		void sendRaw(UniformInfos const &infos, void *data);
-		void sendRaw(std::string const &name, void *data);
+		void sendRaw(UniformInfos const &infos, void *data) const;
+		void sendRaw(std::string const &name, void *data) const;
 
-		bool readInt(std::string const &name, int *value);
+		bool readInt(std::string const &name, int *value) const;
 
 	private:
 		static GLuint bindedId;
