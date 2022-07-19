@@ -49,3 +49,38 @@ void Parser::parseUniforms(Shader *shader, JSON &json, std::function<void(std::s
 		}
 	}
 }
+
+
+
+Ref<TextureBuffer> getTexture(std::string const &arrayName, std::string const &name) {
+	//if(arrayName == "texture2d") return Resources::get<Texture2D>(name);
+	//else
+	return Resources::get<Texture2D>(name);
+}
+
+void Parser::parseTextureBinds(Shader *shader, JSON &json, std::function<void(Ref<TextureBuffer> texRef, int unit)> onInt, std::function<void(Ref<TextureBuffer> texRef, std::string const &unifName)> onStr) {
+	std::array<std::string, 1> acceptedNames = {"texture2d"};
+
+	std::string arrayName = "";
+	for(std::string &n : acceptedNames) {
+		if(json[n].is_object()) {
+			arrayName = n;
+			break;
+		}
+	}
+	if(arrayName.empty()) return;
+
+	for(auto &item : json[arrayName].items()) {
+		auto &value = item.value();
+		if(value.is_number_integer()) {
+			onInt(getTexture(arrayName, item.key()), value);
+		} else if(value.is_string()) {
+			if(!shader->uniformExist(value)) {
+				std::cerr << "JSON : " << value << " not in shader" << std::endl;
+				return;
+			}
+
+			onStr(getTexture(arrayName, item.key()), value);
+		}
+	}
+}

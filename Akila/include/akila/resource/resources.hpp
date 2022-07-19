@@ -44,14 +44,14 @@ namespace akila {
 			TypeId id = getTypeId<T>();
 
 			// ajout auto d'un nouveau type
-			//auto it = maps.find(id);
-			//if(it == maps.end()) {
-			//	registerType<T>();
-			//	it = maps.find(id);
-			//}
+			auto it = maps.find(id);
+			if(it == maps.end()) {
+				registerType<T>();
+				it = maps.find(id);
+			}
 
-			//internal::ResourceMap<T> *map = static_cast<internal::ResourceMap<T>*>(it->second.get());
-			internal::ResourceMap<T> *map = static_cast<internal::ResourceMap<T>*>(maps.at(id).get());
+			internal::ResourceMap<T> *map = static_cast<internal::ResourceMap<T>*>(it->second.get());
+			//internal::ResourceMap<T> *map = static_cast<internal::ResourceMap<T>*>(maps.at(id).get());
 			return map->get(name);
 		}
 

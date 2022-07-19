@@ -38,5 +38,11 @@ void MaterialLoader::onEntry(JSON json, LoaderCallback cb) {
 		mat->writeRaw(&infos, data, byteCount);
 	});
 
+	Parser::parseTextureBinds(mat->getShaderRef(), json, [&](Ref<TextureBuffer> texRef, int unit) {
+		mat->affect(texRef, unit);
+	}, [&](Ref<TextureBuffer> texRef, std::string const &unifName) {
+		mat->affect(texRef, unifName);
+	});
+
 	cb.success();
 }

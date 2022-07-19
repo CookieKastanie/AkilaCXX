@@ -24,11 +24,17 @@ struct test {
 uniform float blue;
 uniform float green;
 
+uniform sampler2D diffuse;
+
 uniform test varTest;
 
 uniform test arrFloat[5];
 
 
 void main() {
-	fragColor = vec4(texCoord.x, green, blue + arrFloat[3].varFloat * varTest.varFloat, 1.0);
+	vec3 tex = texture(diffuse, texCoord).rgb;
+
+	fragColor = vec4(
+		vec3(texCoord.x, green, blue + arrFloat[3].varFloat * varTest.varFloat)
+		+ tex * 0.5, 1.0);
 }

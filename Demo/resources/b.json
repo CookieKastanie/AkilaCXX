@@ -1,14 +1,4 @@
 {
-    "material": [
-        {
-            "name": "simple",
-            "shader": "shaders/simple.glsl",
-            "uniforms": {
-                "green": [1]
-            }
-        }
-    ],
-
     "texture2d": [
         {
             "name": "link",
@@ -17,6 +7,20 @@
             "mips": true,
             "minFilter": "LINEAR_MIPMAP_LINEAR",
             "magFilter": "LINEAR"
+        }
+    ],
+
+    "material": [
+        {
+            "name": "simple",
+            "shader": "shaders/simple.glsl",
+            "uniforms": {
+                "green": [ 1 ]
+            },
+
+            "texture2d": {
+                "link":  "diffuse"
+            }
         }
     ]
 }

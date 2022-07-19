@@ -80,10 +80,40 @@ void Material::write(std::string const &name, std::vector<Mat4> const &data) {
 	writeRaw(uniforms.at(name), data.data(), data.size() * sizeof(Mat4));
 }
 
+void Material::affect(Ref<TextureBuffer> const &texRef, int unit) {
+	textures.push_back({unit, texRef});
+}
+
+void Material::affect(Ref<TextureBuffer> const &texRef, std::string const &name) {
+	if(!shader->uniformExist(name)) {
+		std::cerr << "uniform " << name << " do not exist" << std::endl;
+		return;
+	}
+
+	UniformInfos const &infos = shader->getUniforminfos(name);
+	if(infos.baseType != UniformUnderlyingType::SAMPLER) {
+		std::cerr << "uniform " << name << " is not a sampler" << std::endl;
+		return;
+	}
+
+	int unit = 0;
+	if(uniforms.find(name) != uniforms.end()) {
+		unit = *(uniformData.data() + infos.byteOffset);
+	} else {
+		shader->readInt(name, &unit);
+	}
+
+	textures.push_back({unit, texRef});
+}
+
 void Material::send() {
 	if(!shader->isBinded()) shader->bind();
 
 	for(UniformInfos const *infos : usedUniforms) {
 		shader->sendRaw(*infos, uniformData.data() + infos->byteOffset);
+	}
+
+	for(TextureBinding const &binding : textures) {
+		binding.textureBuffer->bind(binding.unit);
 	}
 }
