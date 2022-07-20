@@ -14,24 +14,35 @@ void MaterialLoader::onEntry(JSON json, LoaderCallback cb) {
 
 	std::string name = json["name"];
 
-	if(!json["shader"].is_string()) {
+	Ref<Shader> shader;
+
+	if(json["shaderPath"].is_string()) {
+		std::string shaderPath = json["shaderPath"];
+		std::ifstream file;
+		file.open(FileSystem::path(shaderPath).c_str());
+		if(!file.good()) {
+			std::cerr << "Shader loading error : can't read " << shaderPath << std::endl;
+			cb.fail();
+			return;
+		}
+
+		std::stringstream stream;
+		stream << file.rdbuf();
+
+		shader = Resources::create<Shader>(name, stream.str());
+	}
+
+	if(!shader.isValid() && json["shader"].is_string()) {
+		shader = Resources::get<Shader>(json["shader"]);
+	}
+
+	if(!shader.isValid()) {
+		std::cerr << "Material " << name << " have no shader" << std::endl;
 		cb.fail();
 		return;
 	}
-
-	std::string shaderPath = json["shader"];
-	std::ifstream file;
-	file.open(FileSystem::path(shaderPath).c_str());
-	if(!file.good()) {
-		std::cerr << "Shader loading error : can't read " << shaderPath << std::endl;
-		cb.fail();
-		return;
-	}
-
-	std::stringstream stream;
-	stream << file.rdbuf();
-
-	auto &mat = Resources::create<Material>(name, stream.str());
+	
+	Ref<Material> mat = Resources::create<Material>(name, shader);
 
 	Parser::parseUniforms(mat->getShaderRef(), json, [&](std::string const &name, UniformInfos const &infos, void *data, std::size_t byteCount) {
 		mat->use(name);

@@ -37,19 +37,32 @@ void LoadingInstance::start() {
 		}
 	}
 
-	// appelle des differents loaders
+	
 	LoaderCallback loaderCB{this};
+	
+	// verif existance des loaders
 	for(auto &json : completJSON.items()) {
-		auto loaderIt = Resources::loaders.find(json.key());
-		if(loaderIt == Resources::loaders.end()) {
+		bool found = false;
+		for(auto &loader : Resources::loaders) {
+			if(loader->getListName() == json.key()) {
+				found = true;
+				continue;
+			}
+		}
+
+		if(!found) {
 			std::cerr << "Missing loader for " << json.key() << std::endl;
 			count -= json.value().size() - 1;
 			countDown();
-			continue;
 		}
+	}
+	
+	// appelle des loaders dans l'ordre
+	for(auto &loader : Resources::loaders) {
+		std::string const &listName = loader->getListName();
+		if(!completJSON[listName].is_array()) continue;
 
-		Loader *loader = loaderIt->second.get();
-		for(JSON &value : json.value()) {
+		for(JSON &value : completJSON[listName]) {
 			loader->onEntry(value, loaderCB);
 		}
 	}

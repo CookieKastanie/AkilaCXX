@@ -8,6 +8,7 @@
 #include "akila/window/imgui_handler.hpp"
 #include "akila/threadpool/threadpool.hpp"
 #include "akila/resource/file_system.hpp"
+#include "akila/resource/resources.hpp"
 #include "akila/renderer/renderer.hpp"
 #include "akila/random/random.hpp"
 
@@ -65,9 +66,9 @@ int Core::run(void (*init)(void)) {
 			Window::swapBuffers();
 		}
 
-		// ???
 		Layers::removeAll();
 		ECS::resetAll();
+		Resources::cleanAll();
 
 		threadFinished = true;
 		glfwPostEmptyEvent();
@@ -77,10 +78,6 @@ int Core::run(void (*init)(void)) {
 
 	while(!Window::shouldClose()) {glfwWaitEvents();}
 	stop = true;
-
-	// ???
-	//Layers::removeAll();
-	//ECS::resetAll();
 
 	glfwPostEmptyEvent();
 	while(!threadFinished) glfwWaitEvents();

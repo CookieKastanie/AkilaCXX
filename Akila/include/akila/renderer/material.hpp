@@ -10,7 +10,6 @@ namespace akila {
 	public:
 		Material() = default;
 		Material(Ref<Shader> shader);
-		Material(std::string const &shaderTxt);
 
 		Ref<Shader> getShaderRef() const;
 

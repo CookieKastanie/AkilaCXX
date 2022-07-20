@@ -32,7 +32,8 @@ add_library(akila STATIC
 	"src/default/loaders/texture_loader.cpp"
 	"src/default/loaders/uniform_parser.cpp"
 	"src/renderer/buffer_object.cpp"
-	"src/renderer/vao.cpp")
+	"src/renderer/vao.cpp"
+	"src/default/loaders/shader_loader.cpp")
 
 target_include_directories(akila PRIVATE "include")
 

@@ -13,13 +13,24 @@
     "material": [
         {
             "name": "simple",
-            "shader": "shaders/simple.glsl",
+            "shader": "simpleShader",
             "uniforms": {
                 "green": [ 1 ]
             },
 
             "texture2d": {
-                "link":  "diffuse"
+                "link": "diffuse"
+            }
+        }
+    ],
+
+    "shaders": [
+        {
+            "name": "simpleShader",
+            "path": "shaders/simple.glsl",
+
+            "uniforms": {
+                "diffuse": [ 0 ]
             }
         }
     ]

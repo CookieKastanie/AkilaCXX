@@ -7,11 +7,6 @@ Material::Material(Ref<Shader> shader): shader{shader} {
 	uniformData.resize(shader->getTotalByteCount(), 0);
 }
 
-Material::Material(std::string const &shaderTxt) {
-	shader = Resources::create<Shader>("simpleShader", shaderTxt);
-	uniformData.resize(shader->getTotalByteCount(), 0);
-}
-
 Ref<Shader> Material::getShaderRef() const {
 	return shader;
 }

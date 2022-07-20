@@ -16,8 +16,9 @@ int main() {
 		FileSystem::setRootFolder("resources");
 		Window::setTitle("Akila !");
 
-		Resources::registerLoader<MaterialLoader>();
+		Resources::registerLoader<ShaderLoader>();
 		Resources::registerLoader<Texture2DLoader>();
+		Resources::registerLoader<MaterialLoader>();
 
 		Layers::add<TestLayer>();
 		Layers::add<DebugLayer>();

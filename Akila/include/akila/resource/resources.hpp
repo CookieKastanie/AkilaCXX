@@ -69,7 +69,15 @@ namespace akila {
 		template<typename T>
 		static void registerLoader() {
 			Loader *loader = new T();
-			loaders[loader->getListName()] = std::unique_ptr<Loader>(loader);
+
+			for(std::size_t i = 0; i < loaders.size(); ++i) {
+				if(loaders[i]->getListName() == loader->getListName()) {
+					loaders[i] = std::unique_ptr<Loader>(loader);
+					return;
+				}
+			}
+
+			loaders.push_back(std::unique_ptr<Loader>(loader));
 		}
 
 		template<typename T>
@@ -83,6 +91,7 @@ namespace akila {
 		}
 
 		static void cleanAll(bool force = false) {
+			for(std::size_t i = 0; i < maps.size(); ++i)
 			for(auto &m : maps) {
 				m.second->clear(force);
 			}
@@ -101,7 +110,7 @@ namespace akila {
 		static std::unordered_map<TypeId, std::string> mapNames;
 
 		friend class internal::LoadingInstance;
-		static std::unordered_map<std::string, std::unique_ptr<Loader>> loaders;
+		static std::vector<std::unique_ptr<Loader>> loaders;
 		static std::vector<internal::LoadingInstance> loadingInstances;
 
 		template<typename T>
