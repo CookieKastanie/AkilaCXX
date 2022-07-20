@@ -1,5 +1,7 @@
 #include "test_layer.hpp"
 
+#include <akila/default/resources/static_mesh_primitives.hpp>
+
 using namespace akila;
 
 GLuint vb;
@@ -204,6 +206,8 @@ TestLayer::TestLayer(): Layer{} {
 
 	simpleMat = Resources::get<Material>("simple");
 	simpleMat->use("blue");
+
+	auto cube = Resources::set<StaticMesh>("unitCube", SaticMeshPrimitives::cube());
 
 	glGenVertexArrays(1, &vb);
 }

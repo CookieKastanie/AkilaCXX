@@ -46,6 +46,7 @@ namespace akila {
 	using glm::scale;
 	using glm::angleAxis;
 	using glm::cross;
+	using glm::mix;
 
 	using glm::to_string;
 }

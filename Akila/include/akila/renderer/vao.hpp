@@ -5,17 +5,6 @@
 
 namespace akila {
 	class VAO {
-	private:
-		GLuint id;
-		GLuint drawMode;
-		int length;
-		bool useIndices;
-		GLenum indicesType;
-
-		static void drawArray(VAO const &vao);
-		static void drawElements(VAO const &vao);
-		std::function<void(VAO const &vao)> drawFunc;
-
 	public:
 		enum class Mode: GLuint {
 			TRIANGLES = GL_TRIANGLES,
@@ -37,5 +26,16 @@ namespace akila {
 		void unbind() const;
 
 		void draw() const;
+
+	private:
+		GLuint id;
+		GLuint drawMode;
+		int length;
+		bool useIndices;
+		GLenum indicesType;
+
+		static void drawArray(VAO const &vao);
+		static void drawElements(VAO const &vao);
+		std::function<void(VAO const &vao)> drawFunc;
 	};
 }

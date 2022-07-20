@@ -33,7 +33,10 @@ add_library(akila STATIC
 	"src/default/loaders/uniform_parser.cpp"
 	"src/renderer/buffer_object.cpp"
 	"src/renderer/vao.cpp"
-	"src/default/loaders/shader_loader.cpp")
+	"src/default/loaders/shader_loader.cpp"
+	"src/default/components/transform_component.cpp"
+	"src/default/resources/static_mesh.cpp"
+	"src/default/components/static_mesh_component.cpp" "src/default/resources/static_mesh_primitives.cpp")
 
 target_include_directories(akila PRIVATE "include")
 
