@@ -198,7 +198,23 @@ Renderer::clear();
 ```
 ### Textures
 ```cpp
+Ref<Texture2D> tex = Ressources::create<Texture2D>(); // Texture2DArray, Cubemap, ...
 
+tex->setSize(256, 256);
+
+float data[] = {...};
+unsigned int mipLvl = 0;
+
+//            data contient un seul cannal...    de type float
+tex->setData(&data, TextureBuffer::Format::RED, TextureBuffer::Type::FLOAT, mipLvl);
+
+// changement des parametres de la texture
+TextureBuffer::Parameters params;
+params.magFilter = TextureBuffer::FilterMode::LINEAR;
+params.minFilter = TextureBuffer::FilterMode::LINEAR;
+params.wrapS = TextureBuffer::WrapMode::REPEAT;
+params.wrapT = TextureBuffer::WrapMode::REPEAT;
+tex->setParameters(params);
 ```
 ### Shaders
 #### Instancier un shader
@@ -244,7 +260,7 @@ bool valid = mat.use("myUniform"); // indiquer que ce material utilisera "myUnif
 
 mat.write("myUniform", data); // écrit dans la mémoire du material
 
-mat.affect("mySampler2D", Resources::get<Texture>("myTexture")); // ajoute une paire uniform / texture
+mat.affect("mySampler2D", Resources::get<Texture2D>("myTexture")); // ajoute une paire uniform / texture
 // dans ce cas dans la shader, l'uniform doit être un sampler2D
 
 mat.send(); // envoi au shader les data enregistrés dans le material
@@ -252,41 +268,4 @@ mat.send(); // envoi au shader les data enregistrés dans le material
 ### FrameBuffers
 ```cpp
 
-```
-----------------
-----------------
-----------------
-----------------
-----------------
-----------------
-----------------
-----------------
-----------------
-----------------
-----------------
-----------------
-----------------
-----------------
-----------------
-----------------
-----------------
-----------------
-Idées :
-## Machine à états
-```cpp
-StateMachine m<MyStruct>{};
-m.addState(Triggers::FRAME_START, 0, [](Index i, MyStruct &s){
-	// logic
-	return i + 1;
-});
-m.addStateThread(Triggers::FRAME_START, 1, [](Index i, MyStruct &s){
-	// logic
-	return i + 1;
-});
-
-if(!m.running()) m.start(0);
-```
-## Animateur
-```cpp
-Animator::???
 ```

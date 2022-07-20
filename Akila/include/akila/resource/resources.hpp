@@ -72,6 +72,22 @@ namespace akila {
 			loaders[loader->getListName()] = std::unique_ptr<Loader>(loader);
 		}
 
+		template<typename T>
+		static void clean(bool force = false) {
+			TypeId id = getTypeId<T>();
+
+			auto it = maps.find(id);
+			if(it == maps.end()) return;
+
+			it->second->clear(force);
+		}
+
+		static void cleanAll(bool force = false) {
+			for(auto &m : maps) {
+				m.second->clear(force);
+			}
+		}
+
 		static std::unordered_map<TypeId, std::string> const &listing() {
 			return mapNames;
 		}

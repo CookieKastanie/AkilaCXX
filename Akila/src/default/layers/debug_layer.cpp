@@ -191,6 +191,10 @@ void DebugLayer::drawImGui() {
 	}
 	ImGui::EndTabBar();
 
+	if(ImGui::Button("Clean all ressources")) {
+		Resources::cleanAll();
+	}
+
 	ImGui::Separator();
 
 	ImGui::TextColored({1., 1., 0., 1.}, "GL Logs:");

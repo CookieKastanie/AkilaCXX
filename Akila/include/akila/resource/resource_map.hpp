@@ -14,6 +14,9 @@ namespace akila::internal {
 			return mapMirror;
 		}
 
+		virtual bool remove(std::string const &name, bool force = false) = 0;
+		virtual void clear(bool force = false) = 0;
+
 	protected:
 		std::unordered_map<std::string, IRefAnchor&> mapMirror;
 	};
@@ -45,7 +48,7 @@ namespace akila::internal {
 			return get(name);
 		}
 
-		bool remove(std::string const &name, bool force = false) {
+		bool remove(std::string const &name, bool force = false) override {
 			auto it = map.find(name);
 
 			if(it == map.end()) return false;
@@ -57,10 +60,22 @@ namespace akila::internal {
 			return true;
 		}
 
-		void clear(bool force = false) {
+		void clear(bool force = false) override {
 			for(auto it = map.begin(); it != map.end();) {
-				if(!it->second.haveReferences() || force) it = map.erase(it);
-				else it++;
+				if(!it->second.haveReferences() || force) {
+
+					for(auto m_it = mapMirror.begin(); m_it != mapMirror.end(); ++m_it) {
+						if(&m_it->second == &it->second) {
+							mapMirror.erase(m_it);
+							break;
+						}
+					}		
+
+					it = map.erase(it);
+				}
+				else {
+					it++;
+				}
 			}
 		}
 
