@@ -14,8 +14,8 @@ namespace akila {
 		Ref(): ra{nullptr} {}
 
 		//deplacement
-		Ref(Ref &&other) {
-			ra = other.ra;
+		Ref(Ref &&other) noexcept: ra{other.ra} {
+			if(ra != nullptr) ++ra->refCount;
 		}
 
 		Ref &operator=(Ref &&other) noexcept {
@@ -28,8 +28,7 @@ namespace akila {
 		}
 
 		// copie
-		Ref(Ref const &other) {
-			ra = other.ra;
+		Ref(Ref const &other): ra{other.ra} {
 			++ra->refCount;
 		}
 
