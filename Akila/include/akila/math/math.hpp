@@ -48,7 +48,14 @@ namespace akila {
 	using glm::cross;
 	using glm::mix;
 
+	using glm::perspective;
+	using glm::lookAt;
+
 	using glm::to_string;
+
+
+	float const PI = 3.14159265359f;
+	float const HALF_PI = 1.57079632679f;
 }
 
 std::ostream &operator<<(std::ostream &os, akila::Vec1 const &v);

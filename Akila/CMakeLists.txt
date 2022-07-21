@@ -36,7 +36,10 @@ add_library(akila STATIC
 	"src/default/loaders/shader_loader.cpp"
 	"src/default/components/transform_component.cpp"
 	"src/default/resources/static_mesh.cpp"
-	"src/default/components/static_mesh_component.cpp" "src/default/resources/static_mesh_primitives.cpp")
+	"src/default/components/static_mesh_component.cpp"
+	"src/default/resources/static_mesh_primitives.cpp"
+	"src/default/components/camera_component.cpp"
+	"src/default/systems/orbit_camera_system.cpp")
 
 target_include_directories(akila PRIVATE "include")
 

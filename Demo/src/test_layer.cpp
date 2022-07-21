@@ -207,7 +207,7 @@ TestLayer::TestLayer(): Layer{} {
 	simpleMat = Resources::get<Material>("simple");
 	simpleMat->use("blue");
 
-	auto cube = Resources::set<StaticMesh>("unitCube", SaticMeshPrimitives::cube());
+	//auto cube = Resources::set<StaticMesh>("unitCube", SaticMeshPrimitives::cube());
 
 	glGenVertexArrays(1, &vb);
 }

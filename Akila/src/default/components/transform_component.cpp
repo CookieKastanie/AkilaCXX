@@ -9,16 +9,8 @@ TransformComponent::TransformComponent():
 
 }
 
-void TransformComponent::setPosition(Vec3 const &vec) {
-	position = vec;
-}
-
 void TransformComponent::translate(Vec3 const &vec) {
 	position += vec;
-}
-
-Vec3 const &TransformComponent::getPosition() {
-	return position;
 }
 
 void TransformComponent::rotateX(float a) {
@@ -40,19 +32,11 @@ void TransformComponent::setRotationZYX(Vec3 const &r) {
 	rotateX(r.x);
 }
 
-Quat const &TransformComponent::getRotation() {
-	return rotation;
-}
-
-void TransformComponent::setScale(Vec3 const &s) {
-	scale = s;
-}
-
 void TransformComponent::setScale(float s) {
 	scale = {s, s, s};
 }
 
-Mat4 const &TransformComponent::toMatrix() {
+Mat4 const &TransformComponent::calcMatrix() {
 	Mat4 &&rotate = toMat4(rotation);
 	Mat4 &&translate = akila::translate(Mat4(1.), position);
 	Mat4 &&scaled = akila::scale(Mat4(1.), scale);
@@ -61,7 +45,7 @@ Mat4 const &TransformComponent::toMatrix() {
 	return matrix;
 }
 
-Mat4 const &TransformComponent::toMatrixFromOrigin(Mat4 const &o) {
+Mat4 const &TransformComponent::calcMatrixFromOrigin(Mat4 const &o) {
 	Mat4 &&rotate = toMat4(rotation);
 	Mat4 &&translate = akila::translate(Mat4(1.f), position);
 	Mat4 &&scaled = akila::scale(Mat4(1.f), scale);
@@ -76,7 +60,7 @@ void TransformComponent::savePrevious() {
 	prevScale = scale;
 }
 
-Mat4 const &TransformComponent::toMatrixMix(float t) {
+Mat4 const &TransformComponent::calcMatrixMix(float t) {
 	Vec3 &&lerpedPos = mix(prevPosition, position, t);
 	Quat &&lerpedRot = slerp(prevRotation, rotation, t);
 	Vec3 &&lerpedSca = mix(prevScale, scale, t);
