@@ -1,10 +1,16 @@
 #include "akila/renderer/shader_preproc.hpp"
 #include "akila/resource/file_system.hpp"
 #include <iostream>
+#include <regex>
 
 using namespace akila;
 
+bool ShaderPreProc::Define::operator<(ShaderPreProc::Define const &other) const {
+	return name < other.name;
+}
+
 std::string ShaderPreProc::version = "#version 450\n";
+std::set<ShaderPreProc::Define> ShaderPreProc::defines{};
 
 std::string readShaderSource(std::string const path) {
 	std::ifstream file;
@@ -40,7 +46,13 @@ void ShaderPreProc::process(std::string const &source, ShaderSources &sources, s
 				)
 			);
 
-		else currentSource->append(line + "\n");
+		else {
+			for(Define const &define : defines) {
+				line = std::regex_replace(line, std::regex(define.name), define.value);
+			}
+
+			currentSource->append(line + "\n");
+		}
 	}
 
 	sources.vertexShader = version + sources.vertexShader;

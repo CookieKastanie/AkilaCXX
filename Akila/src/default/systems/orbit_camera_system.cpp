@@ -37,9 +37,9 @@ void OrbitCameraSystem::update() {
 		dy = -Inputs::getMouseVelocity().y * 0.005;
 	}
 
-	cam.center[0] += cam.view[0][0] * dx + cam.view[0][1] * -dz + cam.view[0][2] * dz;
-	cam.center[1] += dy;
-	cam.center[2] += cam.view[2][0] * dx + cam.view[2][1] * -dz + cam.view[2][2] * dz;
+	cam.center.x += cam.view[0][0] * dx + cam.view[0][1] * -dz + cam.view[0][2] * dz;
+	cam.center.y += dy;
+	cam.center.z += cam.view[2][0] * dx + cam.view[2][1] * -dz + cam.view[2][2] * dz;
 
 	///////////////////////////////////////////////////////////
 
@@ -71,5 +71,9 @@ void OrbitCameraSystem::update() {
 	cam.view = lookAt(eye, cam.center, cam.up);
 	cam.pv = cam.projection * cam.view;
 
-	cam.movement = Vec3{0.0f, 0.f, 0.f};
+	cam.movement = Vec3{0.f, 0.f, 0.f};
+}
+
+Entity OrbitCameraSystem::getMainCam() {
+	return entities[0];
 }

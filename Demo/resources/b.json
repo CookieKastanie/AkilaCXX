@@ -32,6 +32,10 @@
             "uniforms": {
                 "diffuse": [ 0 ]
             }
+        },
+        {
+            "name": "unlit",
+            "path": "shaders/unlit.glsl"
         }
     ]
 }

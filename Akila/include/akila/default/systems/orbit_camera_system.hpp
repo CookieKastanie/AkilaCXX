@@ -7,5 +7,6 @@ namespace akila {
 	public:
 		OrbitCameraSystem();
 		void update();
+		Entity getMainCam();
 	};
 }

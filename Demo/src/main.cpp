@@ -4,6 +4,7 @@
 #include <akila/akila.hpp>
 #include <akila/default/loaders.hpp>
 #include <akila/default/layers.hpp>
+#include <akila/default/resources/static_mesh.hpp>
 
 #include "test_layer.hpp"
 
@@ -19,6 +20,9 @@ int main() {
 		Resources::registerLoader<ShaderLoader>();
 		Resources::registerLoader<Texture2DLoader>();
 		Resources::registerLoader<MaterialLoader>();
+
+		ShaderPreProc::define("a_position_loc", StaticMesh::Attributes::POSITION);
+		ShaderPreProc::define("a_normal_loc", StaticMesh::Attributes::NORMAL);
 
 		Layers::add<TestLayer>();
 		Layers::add<DebugLayer>();

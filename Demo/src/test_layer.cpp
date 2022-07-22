@@ -154,11 +154,18 @@ public:
 	}
 };
 
+#include "akila/default/systems.hpp"
+#include "akila/default/components.hpp"
+
 TestLayer::TestLayer(): Layer{} {
 	ECS::createSystem<EditorSystem>();
 	ECS::createSystem<PositionSystem>();
 	ECS::createSystem<PlayerSystem>();
 	ECS::createSystem<RenderRectangleSystem>();
+
+	ECS::createSystem<OrbitCameraSystem>();
+	ECS::createEntity(ECS::createSignature<OrbitCameraComponent>());
+
 
 
 	Entity e0 = ECS::createEntity(ECS::createSignature<Player, Position, Rectangle>());
@@ -206,7 +213,12 @@ TestLayer::TestLayer(): Layer{} {
 	simpleMat = Resources::get<Material>("simple");
 	simpleMat->use("blue");
 
-	//auto cube = Resources::set<StaticMesh>("unitCube", SaticMeshPrimitives::cube());
+
+
+
+
+
+	Resources::set<StaticMesh>("unitCube", SaticMeshPrimitives::cube());
 
 	glGenVertexArrays(1, &vb);
 }
@@ -217,6 +229,8 @@ void TestLayer::update() {
 }
 
 void TestLayer::draw() {
+	ECS::getSystem<OrbitCameraSystem>()->update();
+
 	Renderer::useDefaultFrameBuffer();
 
 	Renderer::disable(Renderer::Capability::DEPTH_TEST);
@@ -224,6 +238,15 @@ void TestLayer::draw() {
 	Renderer::disable(Renderer::Capability::SCISSOR_TEST);
 	Renderer::setClearColor(.5f, .2f, .8f);
 	Renderer::clearColor();
+
+	Entity cam = ECS::getSystem<OrbitCameraSystem>()->getMainCam();
+	auto &camData = cam.getComponent<OrbitCameraComponent>();
+
+	camData.resize(Window::getSize());
+
+	auto shader = simpleMat->getShaderRef();
+	shader->bind();
+	shader->send("PV", camData.pv);
 
 
 	float t = sin(Time::now) * .5 + .5;
@@ -233,6 +256,16 @@ void TestLayer::draw() {
 	glBindVertexArray(vb);
 	glDrawArrays(GL_TRIANGLES, 0, 3);
 	glBindVertexArray(0);
+
+
+
+
+	auto &unlitShader = Resources::get<Shader>("unlit");
+	unlitShader->bind();
+	unlitShader->send("PV", camData.pv);
+	Resources::get<StaticMesh>("unitCube")->draw();
+
+
 
 
 	Renderer::enable(Renderer::Capability::SCISSOR_TEST);
