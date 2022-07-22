@@ -95,8 +95,8 @@ Shader::Shader(): id{0}, totalByteCount{0} {
 		}
 	)---";
 
-	ShaderPreProc::ShaderSources sources;
-	ShaderPreProc::process(prog, sources);
+	ShaderPreproc::ShaderSources sources;
+	ShaderPreproc::process(prog, sources);
 	build(sources.vertexShader, sources.fragmentShader, sources.geometryShader);
 }
 
@@ -108,8 +108,8 @@ Shader::Shader(std::string const &vertexTxt, std::string const &fragmentTxt, std
 Shader::Shader(std::string const &shaderTxt):
 	id{0}, totalByteCount{0} {
 
-	ShaderPreProc::ShaderSources sources;
-	ShaderPreProc::process(shaderTxt, sources);
+	ShaderPreproc::ShaderSources sources;
+	ShaderPreproc::process(shaderTxt, sources);
 	build(sources.vertexShader, sources.fragmentShader, sources.geometryShader);
 }
 

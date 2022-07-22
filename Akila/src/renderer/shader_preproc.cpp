@@ -5,12 +5,12 @@
 
 using namespace akila;
 
-bool ShaderPreProc::Define::operator<(ShaderPreProc::Define const &other) const {
+bool ShaderPreproc::Define::operator<(ShaderPreproc::Define const &other) const {
 	return name < other.name;
 }
 
-std::string ShaderPreProc::version = "#version 450\n";
-std::set<ShaderPreProc::Define> ShaderPreProc::defines{};
+std::string ShaderPreproc::version = "#version 450\n";
+std::set<ShaderPreproc::Define> ShaderPreproc::defines{};
 
 std::string readShaderSource(std::string const path) {
 	std::ifstream file;
@@ -25,7 +25,7 @@ std::string readShaderSource(std::string const path) {
 	return stream.str();
 }
 
-void ShaderPreProc::process(std::string const &source, ShaderSources &sources, std::string const &currentPath) {
+void ShaderPreproc::process(std::string const &source, ShaderSources &sources, std::string const &currentPath) {
 	std::istringstream iss(source);
 
 	std::string garbage;

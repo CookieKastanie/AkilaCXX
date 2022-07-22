@@ -21,8 +21,11 @@ int main() {
 		Resources::registerLoader<Texture2DLoader>();
 		Resources::registerLoader<MaterialLoader>();
 
-		ShaderPreProc::define("a_position_loc", StaticMesh::Attributes::POSITION);
-		ShaderPreProc::define("a_normal_loc", StaticMesh::Attributes::NORMAL);
+		ShaderPreproc::define("a_position_loc", StaticMesh::Attributes::POSITION);
+		ShaderPreproc::define("a_uv_loc", StaticMesh::Attributes::UV);
+		ShaderPreproc::define("a_normal_loc", StaticMesh::Attributes::NORMAL);
+		ShaderPreproc::define("a_tangent_loc", StaticMesh::Attributes::TANGENT);
+		ShaderPreproc::define("a_color_loc", StaticMesh::Attributes::COLOR);
 
 		Layers::add<TestLayer>();
 		Layers::add<DebugLayer>();

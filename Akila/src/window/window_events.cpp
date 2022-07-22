@@ -17,8 +17,8 @@ std::mutex WindowEvents::mux;
 void WindowEvents::init() {
 	Inputs::init();
 
-	Signals::registerType<KeyPressSignal>(Signals::Stack::BEFORE_UPDATE);
-	Signals::registerType<KeyReleaseSignal>(Signals::Stack::BEFORE_UPDATE);
+	akila::Signals::registerType<KeyPressSignal>(akila::Signals::Stack::BEFORE_UPDATE);
+	akila::Signals::registerType<KeyReleaseSignal>(akila::Signals::Stack::BEFORE_UPDATE);
 }
 
 void WindowEvents::keyCallback(GLFWwindow *window, int key, int scancode, int action, int mods) {
@@ -93,14 +93,14 @@ void WindowEvents::process(unsigned int updateCount) {
 	// envoi des signaux
 	for(KeyPressSignal const &signal : keyPressed) {
 		Inputs::setInputState(signal.key, true);
-		Signals::emit<KeyPressSignal>(signal);
+		akila::Signals::emit<KeyPressSignal>(signal);
 	}
 
 	keyPressed.clear();
 
 	for(KeyReleaseSignal const &signal : keyReleased) {
 		Inputs::setInputState(signal.key, false);
-		Signals::emit<KeyReleaseSignal>(signal);
+		akila::Signals::emit<KeyReleaseSignal>(signal);
 	}
 
 	keyReleased.clear();

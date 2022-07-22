@@ -11,6 +11,9 @@ namespace akila::internal {
 	public:
 		virtual ~ISignalQueue() = default;
 
+		virtual void removeListener(Listener const &listener) = 0;
+		virtual void flush() = 0;
+
 	protected:
 		friend class Signals;
 
@@ -21,9 +24,6 @@ namespace akila::internal {
 		inline Listener createListener(TypeId typeId, ListenerId id) {
 			return {typeId, id};
 		}
-
-		virtual void removeListener(Listener const &listener) = 0;
-		virtual void flush() = 0;
 	};
 
 	template<typename T>
@@ -67,6 +67,6 @@ namespace akila::internal {
 
 		std::vector<SignalListener<T>> listeners;
 		std::vector<SignalDispatcher<T>> dipatchers[2];
-		char dispatchersIndex;
+		bool dispatchersIndex;
 	};
 }

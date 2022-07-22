@@ -4,7 +4,7 @@
 #include <set>
 
 namespace akila {
-	class ShaderPreProc {
+	class ShaderPreproc {
 	public:
 		struct ShaderSources {
 			std::string vertexShader;
