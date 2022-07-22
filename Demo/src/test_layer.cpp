@@ -43,15 +43,14 @@ public:
 	void renderUI() {
 		ImGui::Begin("Entities");
 
-		int i = 0;
 		for(Entity e : entities) {
-			std::string name = "Entity " + std::to_string(i++);
+			std::string name = "Entity " + std::to_string(e);
 			ImGui::Text(name.c_str());
 
 			auto& ed = e.getComponent<EditorData>();
 
 			bool hasPlayer = e.hasComponent<Player>();
-			std::string cbLabel = "Player###" + std::to_string(i);
+			std::string cbLabel = "Player###" + std::to_string(e);
 			ImGui::Checkbox(cbLabel.c_str(), &ed.hasPLayer);
 			if(ed.hasPLayer != hasPlayer) {
 				if(ed.hasPLayer) e.addComponent<Player>();
