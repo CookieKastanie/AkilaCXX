@@ -132,7 +132,7 @@ void GLAPIENTRY messageCallback(GLenum source, GLenum type, GLuint id,
 
 
 
-DebugLayer::DebugLayer(): show{true}, tabIndex { 0 } {
+DebugLayer::DebugLayer(): show{false}, tabIndex { 0 } {
 	keyListener = Signals::listen<KeyPressSignal>([&](KeyPressSignal const &s) {
 		if(s.key == Inputs::Key::GRAVE_ACCENT) show = !show;
 	});

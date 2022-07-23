@@ -61,6 +61,16 @@ void Window::setPosition(IVec2 const &pos) {
 	glfwSetWindowPos(window, pos.x, pos.y);
 }
 
+void Window::setPositionToCenter() {
+	GLFWmonitor *primary = glfwGetPrimaryMonitor();
+
+	int x, y, w, h;
+	glfwGetMonitorWorkarea(primary, &x, &y, &w, &h);
+
+	IVec2 size = getSize();
+	setPosition({w / 2 - size.x / 2, h / 2 - size.y / 2});
+}
+
 IVec2 Window::getPosition() {
 	IVec2 pos;
 	glfwGetWindowPos(window, &pos.x, &pos.y);

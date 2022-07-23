@@ -56,6 +56,8 @@ namespace akila {
 
 	float const PI = 3.14159265359f;
 	float const HALF_PI = 1.57079632679f;
+
+	inline float toRadians(float degree) { return degree * (PI / 180.f); }
 }
 
 std::ostream &operator<<(std::ostream &os, akila::Vec1 const &v);

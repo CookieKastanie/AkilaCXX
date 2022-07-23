@@ -6,7 +6,7 @@
 #include <akila/default/layers.hpp>
 #include <akila/default/resources/static_mesh.hpp>
 
-#include "test_layer.hpp"
+#include "utils_layer.hpp"
 
 using namespace akila;
 
@@ -27,10 +27,10 @@ int main() {
 		ShaderPreproc::define("a_tangent_loc", StaticMesh::Attributes::TANGENT);
 		ShaderPreproc::define("a_color_loc", StaticMesh::Attributes::COLOR);
 
-		Layers::add<TestLayer>();
+		Layers::add<UtilsLayer>(Layer::Depth::BACK);
 		Layers::add<DebugLayer>();
 
-		Window::setSize({1920, 1080});
-		Window::setPosition({100, 100});
+		Window::setSize({1600, 900});
+		Window::setPositionToCenter();
 	});
 }

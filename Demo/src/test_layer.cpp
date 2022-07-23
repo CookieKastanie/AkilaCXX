@@ -56,12 +56,6 @@ public:
 				if(ed.hasPLayer) e.addComponent<Player>();
 				else e.removeComponent<Player>();
 			}
-			/*
-			bool hasPosition = e.hasComponent<Position>();
-			if(hasPosition) {
-				ImGui::Text("Is a player");
-			}
-			*/
 
 			ImGui::Separator();
 		}
@@ -183,22 +177,6 @@ TestLayer::TestLayer(): Layer{} {
 		e.getComponent<Rectangle>().color = {Random::getFloat(), Random::getFloat(), Random::getFloat()};
 	}
 
-	///////
-
-	keyListener = Signals::listen<KeyPressSignal>([](KeyPressSignal const &keySignal) {
-		switch(keySignal.key) {
-			case Inputs::Key::ESC:
-				Window::close();
-				break;
-
-			case Inputs::Key::TAB:
-				Window::setFullscreen(!Window::isFullscreen());
-				break;
-		}
-	});
-
-	///////
-
 	Resources::registerLoader<LoaderTest>();
 
 	//Renderer::disable(Renderer::Capability::DEPTH_TEST);
@@ -206,10 +184,6 @@ TestLayer::TestLayer(): Layer{} {
 	Renderer::disable(Renderer::Capability::CULL_FACE);
 	Renderer::enable(Renderer::Capability::SCISSOR_TEST);
 
-	Resources::load({"a.json", "b.json"}, []() {
-		std::cout << "Loaded" << std::endl;
-	});
-	
 
 	simpleMat = Resources::get<Material>("simple");
 
@@ -272,19 +246,9 @@ void TestLayer::frame() {
 
 	Renderer::enable(Renderer::Capability::SCISSOR_TEST);
 	ECS::getSystem<RenderRectangleSystem>()->render();
-
-	//IVec2 p{sin(Time::now * 4.f) * 420.f + (1600 / 3), 100};
-	//Window::setPosition(p);
-
-	IVec2 p = Window::getPosition();
-	Window::setTitle(to_string(p));
 }
 
 void TestLayer::gui() {
 	ECS::getSystem<PlayerSystem>()->renderImGui();
 	ECS::getSystem<EditorSystem>()->renderUI();
-
-	ImGui::Begin("Texture");
-	ImGui::Image((ImTextureID)Resources::get<Texture2D>("link")->getId(), {460, 460}, {0, 1}, {1, 0});
-	ImGui::End();
 }

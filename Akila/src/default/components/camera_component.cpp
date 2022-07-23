@@ -14,7 +14,7 @@ CameraComponent::CameraComponent():
 
 PerspectiveCameraComponent::PerspectiveCameraComponent():
 	CameraComponent{},
-	fov{45},
+	fov{toRadians(70)},
 	near{0.01f},
 	far{1000.f}
 {}
@@ -39,5 +39,5 @@ OrbitCameraComponent::OrbitCameraComponent():
 	center{0.f},
 	angles{0.f, HALF_PI, 0.f},
 	movement{0.f},
-	distance{3.f}
+	distance{20.f}
 {}
