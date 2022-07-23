@@ -1,7 +1,5 @@
 #akila_vertex
 
-#akila_file shaders/constants.glsl
-
 uniform mat4 PV;
 
 out vec2 texCoord;
@@ -9,38 +7,27 @@ void main() {
 	texCoord.x = (gl_VertexID == 1) ? 2.0 : 0.0;
 	texCoord.y = (gl_VertexID == 2) ? 2.0 : 0.0;
 
-	vec4 pos = vec4(texCoord * vec2(2.0) + vec2(-1.0), 0.0, 1.0);
+	vec4 pos = vec4(texCoord * vec2(2.0) + vec2(-1.0), -1.5, 1.0);
 
 	gl_Position = PV * pos;
 }
 
 #akila_fragment
 
-in vec2 texCoord;
+#akila_file shaders/common.glsl
 
+in vec2 texCoord;
 out vec4 fragColor;
 
-struct test {
-	float varFloat;
-	sampler2D varSampler;
-};
-
-uniform float blue;
-uniform float green;
-
+uniform float hue;
 uniform sampler2D diffuse;
 
-uniform test varTest;
-
-uniform test arrFloat[5];
-
-
 void main() {
-	vec3 tex = texture(diffuse, texCoord).rgb;
+	vec3 color = texture(diffuse, texCoord).rgb;
 
-	vec4 a = vec4(
-		vec3(texCoord.x, green, blue + arrFloat[3].varFloat * varTest.varFloat)
-		+ tex * 0.5, 1.0);
+	color = rgb2hsv(color);
+	color.x += hue;
+	color = hsv2rgb(color);
 
-	fragColor = vec4(texCoord, 0., a.a + a.g + a.b);
+	fragColor = vec4(color, 1.0);
 }

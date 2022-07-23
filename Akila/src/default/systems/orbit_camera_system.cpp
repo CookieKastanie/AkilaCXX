@@ -17,8 +17,8 @@ void OrbitCameraSystem::update() {
 	if(Inputs::isPressed(Inputs::Key::LEFT_CLICK)) {
 		Vec2 &d = Inputs::getMouseVelocity();
 
-		cam.movement.x -= d.x * 0.005;
-		cam.movement.y += d.y * 0.005;
+		cam.movement.x -= d.x * 0.006;
+		cam.movement.y -= d.y * 0.006;
 	}
 
 	cam.movement.z -= Inputs::getMouseScrollVelocity().y;
@@ -29,12 +29,15 @@ void OrbitCameraSystem::update() {
 
 	if(Inputs::isPressed(Inputs::Key::RIGHT_CLICK)) {
 		Vec2 &d = Inputs::getMouseVelocity();
-		dx = -d.x * 0.005;
-		dz = d.y * 0.005;
+
+		float speedCurve = 0.005 * (0.227297 * cam.distance + 0.533723);
+		dx = -d.x * speedCurve;
+		dz = -d.y * speedCurve;
 	}
 
 	if(Inputs::isPressed(Inputs::Key::MIDDLE_CLICK)) {
-		dy = -Inputs::getMouseVelocity().y * 0.005;
+		float speedCurve = 0.005 * (0.227297 * cam.distance + 0.533723);
+		dy = Inputs::getMouseVelocity().y * speedCurve;
 	}
 
 	cam.center.x += cam.view[0][0] * dx + cam.view[0][1] * -dz + cam.view[0][2] * dz;
@@ -44,7 +47,7 @@ void OrbitCameraSystem::update() {
 	///////////////////////////////////////////////////////////
 
 	cam.distance += cam.movement.z;
-	if(cam.distance < .01) cam.distance = .01;
+	if(cam.distance < 1) cam.distance = 1;
 	else if(cam.distance > 100) cam.distance = 100;
 
 	float angle = atan2(cam.movement.x, cam.movement.y);

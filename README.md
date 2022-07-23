@@ -194,6 +194,26 @@ Renderer::clear();
 ```
 ### Buffers
 ```cpp
+Ptr<VBO> positions = createPtr<VBO>(3, 0); // vec3 sur l'attribut 0
+positions->setData(std::vector<Vec2>({
+	{3, 1, 0}, {-1, 1, 0}, {-1, -3, 0}
+}));
+
+Ptr<VBO> uvs = createPtr<VBO>(2, 1); // vec2 sur l'attribut 1
+uv->setData(std::vector<Vec2>({
+	{2, 1}, {0, 1}, {0, -1}
+}));
+
+Ptr<VAO> vao = createPtr<VAO>();
+vao->setDrawMode(VAO::Mode::POINTS); // TRIANGLES par defaut
+vao->bind();
+vao->registerVBO(positions.get());
+vao->registerVBO(uvs.get());
+vao->unbind();
+
+//...
+
+vao->draw();
 
 ```
 ### Textures

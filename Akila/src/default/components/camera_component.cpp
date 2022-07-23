@@ -14,7 +14,7 @@ CameraComponent::CameraComponent():
 
 PerspectiveCameraComponent::PerspectiveCameraComponent():
 	CameraComponent{},
-	fov{80.f},
+	fov{45},
 	near{0.01f},
 	far{1000.f}
 {}

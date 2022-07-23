@@ -212,11 +212,6 @@ TestLayer::TestLayer(): Layer{} {
 	
 
 	simpleMat = Resources::get<Material>("simple");
-	simpleMat->use("blue");
-
-
-
-
 
 
 	Resources::set<StaticMesh>("unitCube", SaticMeshPrimitives::cube());
@@ -251,20 +246,26 @@ void TestLayer::frame() {
 
 
 	float t = sin(Time::now) * .5 + .5;
-	simpleMat->write("blue", t);
+	simpleMat->write("hue", t);
 	simpleMat->send();
 
 	glBindVertexArray(vb);
 	glDrawArrays(GL_TRIANGLES, 0, 3);
 	glBindVertexArray(0);
 
-
-	std::cout << Inputs::getMousePosition() << std::endl;
-
 	auto &unlitShader = Resources::get<Shader>("unlit");
 	unlitShader->bind();
 	unlitShader->send("PV", camData.pv);
-	Resources::get<StaticMesh>("unitCube")->draw();
+	auto& cube = Resources::get<StaticMesh>("unitCube");
+
+	unlitShader->send("color", Vec3{1, 0, 0});
+	cube->draw();
+
+	unlitShader->send("color", Vec3{0, 1, 0});
+	cube->draw();
+
+	unlitShader->send("color", Vec3{0, 0, 1});
+	cube->draw();
 
 
 

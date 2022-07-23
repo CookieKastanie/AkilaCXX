@@ -6,12 +6,12 @@ StaticMesh *SaticMeshPrimitives::screenTriangle() {
 	StaticMesh *mesh = new StaticMesh{};
 
 	auto vertex = createPtr<VBO>(2, StaticMesh::Attributes::POSITION);
-	vertex->setData(std::vector<glm::vec2>({
+	vertex->setData(std::vector<Vec2>({
 		{3, 1}, {-1, 1}, {-1, -3}
 	}));
 
 	auto uv = createPtr<VBO>(2, StaticMesh::Attributes::UV);
-	uv->setData(std::vector<glm::vec2>({
+	uv->setData(std::vector<Vec2>({
 		{2, 1}, {0, 1}, {0, -1}
 	}));
 
@@ -27,25 +27,25 @@ StaticMesh *SaticMeshPrimitives::quad() {
 	StaticMesh *mesh = new StaticMesh{};
 
 	auto vertex = createPtr<VBO>(2, StaticMesh::Attributes::POSITION);
-	vertex->setData(std::vector<glm::vec2>({
+	vertex->setData(std::vector<Vec2>({
 		{-1, -1}, {1, -1}, {1, 1},
 		{-1, -1}, {1, 1}, {-1, 1}
 	}));
 
 	auto uv = createPtr<VBO>(2, StaticMesh::Attributes::UV);
-	uv->setData(std::vector<glm::vec2>({
+	uv->setData(std::vector<Vec2>({
 		{0, 0}, {1, 0}, {1, 1},
 		{0, 0}, {1, 1}, {0, 1}
 	}));
 
 	auto normal = createPtr<VBO>(3, StaticMesh::Attributes::NORMAL);
-	vertex->setData(std::vector<glm::vec3>({
+	vertex->setData(std::vector<Vec3>({
 		{0, 0, 1}, {0, 0, 1}, {0, 0, 1},
 		{0, 0, 1}, {0, 0, 1}, {0, 0, 1}
 	}));
 
 	auto tangent = createPtr<VBO>(3, StaticMesh::Attributes::TANGENT);
-	vertex->setData(std::vector<glm::vec3>({
+	vertex->setData(std::vector<Vec3>({
 		{1, 0, 0}, {1, 0, 0}, {1, 0, 0},
 		{1, 0, 0}, {1, 0, 0}, {1, 0, 0}
 	}));

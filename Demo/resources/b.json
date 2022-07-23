@@ -15,7 +15,7 @@
             "name": "simple",
             "shader": "simpleShader",
             "uniforms": {
-                "green": [ 1 ]
+                "hue": [ 0.5 ]
             },
 
             "texture2d": {
