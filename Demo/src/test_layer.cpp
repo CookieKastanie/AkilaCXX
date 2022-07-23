@@ -201,7 +201,8 @@ TestLayer::TestLayer(): Layer{} {
 
 	Resources::registerLoader<LoaderTest>();
 
-	Renderer::disable(Renderer::Capability::DEPTH_TEST);
+	//Renderer::disable(Renderer::Capability::DEPTH_TEST);
+	Renderer::enable(Renderer::Capability::DEPTH_TEST);
 	Renderer::disable(Renderer::Capability::CULL_FACE);
 	Renderer::enable(Renderer::Capability::SCISSOR_TEST);
 
@@ -223,21 +224,21 @@ TestLayer::TestLayer(): Layer{} {
 	glGenVertexArrays(1, &vb);
 }
 
-void TestLayer::update() {
+void TestLayer::tick() {
 	ECS::getSystem<PositionSystem>()->update();
 	ECS::getSystem<PlayerSystem>()->update();
 }
 
-void TestLayer::draw() {
+void TestLayer::frame() {
 	ECS::getSystem<OrbitCameraSystem>()->update();
 
 	Renderer::useDefaultFrameBuffer();
 
-	Renderer::disable(Renderer::Capability::DEPTH_TEST);
+	//Renderer::disable(Renderer::Capability::DEPTH_TEST);
 	Renderer::disable(Renderer::Capability::CULL_FACE);
 	Renderer::disable(Renderer::Capability::SCISSOR_TEST);
 	Renderer::setClearColor(.5f, .2f, .8f);
-	Renderer::clearColor();
+	Renderer::clear();
 
 	Entity cam = ECS::getSystem<OrbitCameraSystem>()->getMainCam();
 	auto &camData = cam.getComponent<OrbitCameraComponent>();
@@ -258,7 +259,7 @@ void TestLayer::draw() {
 	glBindVertexArray(0);
 
 
-
+	std::cout << Inputs::getMousePosition() << std::endl;
 
 	auto &unlitShader = Resources::get<Shader>("unlit");
 	unlitShader->bind();
@@ -278,7 +279,7 @@ void TestLayer::draw() {
 	Window::setTitle(to_string(p));
 }
 
-void TestLayer::drawImGui() {
+void TestLayer::gui() {
 	ECS::getSystem<PlayerSystem>()->renderImGui();
 	ECS::getSystem<EditorSystem>()->renderUI();
 

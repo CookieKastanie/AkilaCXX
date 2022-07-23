@@ -17,8 +17,8 @@ std::mutex WindowEvents::mux;
 void WindowEvents::init() {
 	Inputs::init();
 
-	akila::Signals::registerType<KeyPressSignal>(akila::Signals::Stack::BEFORE_UPDATE);
-	akila::Signals::registerType<KeyReleaseSignal>(akila::Signals::Stack::BEFORE_UPDATE);
+	akila::Signals::registerType<KeyPressSignal>(akila::Signals::Stack::BEFORE_TICK);
+	akila::Signals::registerType<KeyReleaseSignal>(akila::Signals::Stack::BEFORE_TICK);
 }
 
 void WindowEvents::keyCallback(GLFWwindow *window, int key, int scancode, int action, int mods) {
@@ -106,7 +106,7 @@ void WindowEvents::process(unsigned int updateCount) {
 	keyReleased.clear();
 }
 
-void WindowEvents::beforeUpdate() {
+void WindowEvents::beforeTick() {
 	interpoledMouse.position += interpoledMouse.velocity;
 
 	Inputs::setMousePosition(interpoledMouse.position);
@@ -114,7 +114,7 @@ void WindowEvents::beforeUpdate() {
 	Inputs::setMouseScrollVelocity(interpoledMouse.scrollVelocity);
 }
 
-void WindowEvents::beforeDraw() {
+void WindowEvents::beforeFrame() {
 	Inputs::setMousePosition(frameMouse.position);
 	Inputs::setMouseVelocity(frameMouse.velocity);
 	Inputs::setMouseScrollVelocity(frameMouse.scrollVelocity);

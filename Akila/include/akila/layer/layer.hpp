@@ -14,9 +14,9 @@ namespace akila {
 		Layer();
 		virtual ~Layer() = default;
 
-		virtual void update();
-		virtual void draw();
-		virtual void drawImGui();
+		virtual void tick();
+		virtual void frame();
+		virtual void gui();
 
 	private:
 		friend class Layers;

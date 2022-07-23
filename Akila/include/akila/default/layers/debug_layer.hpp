@@ -7,7 +7,7 @@ namespace akila {
 	class DebugLayer: public Layer {
 	public:
 		DebugLayer();
-		void drawImGui() override;
+		void gui() override;
 
 	private:
 		bool show;

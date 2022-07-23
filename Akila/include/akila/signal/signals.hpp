@@ -10,9 +10,8 @@ namespace akila {
 	class Signals {
 	public:
 		enum class Stack: char {
-			BEFORE_UPDATE = 0,
-			BEFORE_DRAW = 1
-			//INSTANT = 2
+			BEFORE_TICK = 0,
+			BEFORE_FRAME = 1
 		};
 		
 		template<typename T>

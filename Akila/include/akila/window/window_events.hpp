@@ -53,7 +53,7 @@ namespace akila::internal {
 
 		static void process(unsigned int updateCount);
 
-		static void beforeUpdate();
-		static void beforeDraw();
+		static void beforeTick();
+		static void beforeFrame();
 	};
 }

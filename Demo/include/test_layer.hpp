@@ -6,9 +6,9 @@ class TestLayer: public akila::Layer {
 public:
 	TestLayer();
 
-	void update() override;
-	void draw() override;
-	void drawImGui() override;
+	void tick() override;
+	void frame() override;
+	void gui() override;
 
 private:
 	akila::Listener keyListener;

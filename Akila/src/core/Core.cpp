@@ -47,20 +47,20 @@ int Core::run(void (*init)(void)) {
 			Threadpool::flush();
 
 			while(accumulator >= Time::fixedDelta) {
-				WindowEvents::beforeUpdate();
-				Signals::flush(Signals::Stack::BEFORE_UPDATE);
-				Layers::update();
+				WindowEvents::beforeTick();
+				Signals::flush(Signals::Stack::BEFORE_TICK);
+				Layers::tick();
 				accumulator -= Time::fixedDelta;
 			}
 
 			Time::mix = accumulator / Time::fixedDelta;
 
-			WindowEvents::beforeDraw();
-			Signals::flush(Signals::Stack::BEFORE_DRAW);
-			Layers::draw();
+			WindowEvents::beforeFrame();
+			Signals::flush(Signals::Stack::BEFORE_FRAME);
+			Layers::frame();
 
 			ImGuiHandler::beginFrame();
-			Layers::drawImGui();
+			Layers::gui();
 			ImGuiHandler::endFrame();
 
 			Window::swapBuffers();

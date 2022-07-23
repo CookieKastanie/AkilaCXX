@@ -45,16 +45,16 @@ namespace akila {
 
 		static std::vector<std::unique_ptr<Layer>> layers;
 
-		static inline void Layers::update() {
-			for(auto const &layer : layers) layer->update();
+		static inline void Layers::tick() {
+			for(auto const &layer : layers) layer->tick();
 		}
 
-		static inline void Layers::draw() {
-			for(auto const &layer : layers) layer->draw();
+		static inline void Layers::frame() {
+			for(auto const &layer : layers) layer->frame();
 		}
 
-		static inline void Layers::drawImGui() {
-			for(auto const &layer : layers) layer->drawImGui();
+		static inline void Layers::gui() {
+			for(auto const &layer : layers) layer->gui();
 		}
 
 		static void removeAll() {

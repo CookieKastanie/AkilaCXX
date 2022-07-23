@@ -155,7 +155,7 @@ int DebugLayer::updateMeanFPS() {
 	return static_cast<int>(std::round(mean));
 }
 
-void DebugLayer::drawImGui() {
+void DebugLayer::gui() {
 	if(!show) return;
 
 	ImGui::Begin("Debug");

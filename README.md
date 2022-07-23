@@ -27,9 +27,9 @@ using namespace akila;
 
 class MyLayer: public Layer {
 public:
-	void update() override {}
-	void draw() override {}
-	void drawImGui() override {}
+	void tick() override {}
+	void frame() override {}
+	void gui() override {}
 }
 
 int main() {
@@ -105,7 +105,7 @@ MySystem *system = ECS::getSystem<MySystem>();
 ```cpp
 // création d'un nouveau type de signal
 // indiquer dans quelle pile sera ajoutés les signaux
-Signals::registerType<MySignalType>(Signals::Stack::BEFORE_UPDATE);
+Signals::registerType<MySignalType>(Signals::Stack::BEFORE_TICK);
 
 // écoute d'un type de signal
 Listener listener = Signals::listen<MySignalType>([] (MySignalType const &e){
@@ -117,8 +117,8 @@ Signals::emit<MySignalType>(Args...);
 ```
 ### Les Stacks
 ```
-BEFORE_UPDATE
-BEFORE_DRAW
+BEFORE_TICK
+BEFORE_FRAME
 ```
 ### Signaux intégrés
 ```
