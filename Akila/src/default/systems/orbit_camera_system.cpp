@@ -75,6 +75,8 @@ void OrbitCameraSystem::update() {
 	cam.pv = cam.projection * cam.view;
 
 	cam.movement = Vec3{0.f, 0.f, 0.f};
+
+	cam.resize(Window::getSize());
 }
 
 Entity OrbitCameraSystem::getMainCam() {

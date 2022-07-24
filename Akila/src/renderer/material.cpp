@@ -11,6 +11,16 @@ Ref<Shader> Material::getShaderRef() const {
 	return shader;
 }
 
+Ptr<Material> Material::copy() {
+	Ptr<Material> mat = createPtr<Material>(shader);
+	mat->textures = textures;
+	mat->uniformData = uniformData;
+	mat->uniforms = uniforms;
+	mat->usedUniforms = usedUniforms;
+
+	return mat;
+}
+
 bool Material::use(std::string const &name) {
 	if(!shader->uniformExist(name)) {
 		std::cerr << "uniform : " << name << " is not present in shader" << std::endl;

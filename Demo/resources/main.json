@@ -21,6 +21,13 @@
             "texture2d": {
                 "link": "diffuse"
             }
+        },
+        {
+            "name": "unlit",
+            "shader": "unlit",
+            "uniforms": {
+                "color": [ 1, 1, 1 ]
+            }
         }
     ],
 

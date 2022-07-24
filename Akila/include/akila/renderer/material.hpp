@@ -1,6 +1,7 @@
 #pragma once
 
 #include "akila/memory/ref.hpp"
+#include "akila/memory/ptr.hpp"
 #include "akila/renderer/shader.hpp"
 #include "akila/math/math.hpp"
 #include "akila/renderer/texture.hpp"
@@ -12,6 +13,7 @@ namespace akila {
 		Material(Ref<Shader> shader);
 
 		Ref<Shader> getShaderRef() const;
+		Ptr<Material> copy();
 
 		/* Indique quel uniform le materiau utilisera */
 		bool use(std::string const &name);

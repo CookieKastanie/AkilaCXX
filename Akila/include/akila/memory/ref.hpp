@@ -29,7 +29,7 @@ namespace akila {
 
 		// copie
 		Ref(Ref const &other): ra{other.ra} {
-			++ra->refCount;
+			if(ra != nullptr) ++ra->refCount;
 		}
 
 		Ref &operator=(Ref const &other) {

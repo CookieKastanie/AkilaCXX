@@ -1,9 +1,12 @@
 #include "test_layer.hpp"
 
 #include <akila/default/resources/static_mesh_primitives.hpp>
+#include <akila/default/systems.hpp>
+#include <akila/default/components.hpp>
 
 using namespace akila;
 
+/*/
 GLuint vb;
 
 struct Rectangle {
@@ -63,7 +66,9 @@ public:
 		ImGui::End();
 	}
 };
+//*/
 
+/*/
 class PositionSystem : public System {
 public:
 	PositionSystem(): System{ECS::createSignature<Position>()} {};
@@ -93,7 +98,8 @@ public:
 		}
 	}
 };
-
+//*/
+/*
 class PlayerSystem: public System {
 public:
 	PlayerSystem(): System{ECS::createSignature<Player, Position>()} {};
@@ -134,67 +140,115 @@ public:
 		ImGui::InputFloat("Same Value", &pos.current.x);
 		ImGui::End();
 	}
+};//*/
+
+struct MeshComponent {
+	Ref<StaticMesh> mesh;
+	Ptr<Material> material;
 };
 
-
-class LoaderTest: public Loader {
+class DrawSystem: public System {
 public:
-	LoaderTest(): Loader{"nameA"} {};
+	DrawSystem(): System{ECS::createSignature<TransformComponent, MeshComponent>()} {
+		shader = Resources::get<Shader>("unlit");
+		camSystem = ECS::getSystem<OrbitCameraSystem>();
+	}
 
-	void onEntry(JSON json, LoaderCallback cb) override {
-		std::cout << json << std::endl;
+	void draw() {
+		Entity cam = camSystem->getMainCam();
+		auto& c = cam.getComponent<OrbitCameraComponent>();
+		
+		shader->bind();
+		shader->send("PV", c.pv);
 
-		cb.success();
+		for(Entity e : entities) {
+			auto &oc = e.getComponent<MeshComponent>();
+			auto &transform = e.getComponent<TransformComponent>();
+
+			shader->send("model", transform.calcMatrixMix());
+			oc.material->send();
+			oc.mesh->draw();
+		}
+	}
+
+private:
+	Ref<Shader> shader;
+	OrbitCameraSystem *camSystem;
+};
+
+//>
+
+struct PlayerComponent {
+	int id;
+};
+
+class PlayerSystem: public System {
+public:
+	PlayerSystem(): System{ECS::createSignature<PlayerComponent, TransformComponent>()} {};
+
+	void update() {
+		for(Entity e : entities) {
+			auto &transform = e.getComponent<TransformComponent>();
+			transform.savePrevious();
+
+			Vec3 mov{};
+
+			if(Inputs::isPressed(Inputs::Key::RIGHT)) {
+				mov.x += 100 * Time::fixedDelta;
+			}
+
+			if(Inputs::isPressed(Inputs::Key::LEFT)) {
+				mov.x -= 100 * Time::fixedDelta;
+			}
+
+			if(Inputs::isPressed(Inputs::Key::UP)) {
+				mov.z -= 100 * Time::fixedDelta;
+			}
+
+			if(Inputs::isPressed(Inputs::Key::DOWN)) {
+				mov.z += 100 * Time::fixedDelta;
+			}
+
+			transform.translate(mov);
+		}
 	}
 };
 
-#include "akila/default/systems.hpp"
-#include "akila/default/components.hpp"
+//
 
 TestLayer::TestLayer(): Layer{} {
-	ECS::createSystem<EditorSystem>();
-	ECS::createSystem<PositionSystem>();
-	ECS::createSystem<PlayerSystem>();
-	ECS::createSystem<RenderRectangleSystem>();
-
 	ECS::createSystem<OrbitCameraSystem>();
 	ECS::createEntity(ECS::createSignature<OrbitCameraComponent>());
 
+	ECS::createSystem<DrawSystem>();
+	ECS::createSystem<PlayerSystem>();
 
+	auto unitCubeMesh = Resources::set<StaticMesh>("unitCube", SaticMeshPrimitives::cube());
+	auto unlitMat = Resources::get<Material>("unlit");
 
-	Entity e0 = ECS::createEntity(ECS::createSignature<Player, Position, Rectangle>());
-	e0.getComponent<Rectangle>().size = {100, 100};
-	e0.getComponent<Rectangle>().color = {1, .5, .2};
+	for(int i = 0; i < 3; ++i) {
+		Entity e = ECS::createEntity(ECS::createSignature<MeshComponent, TransformComponent>());
+		if(i == 0) e.addComponent<PlayerComponent>();
 
+		auto &mc = e.getComponent<MeshComponent>();
+		auto &transform = e.getComponent<TransformComponent>();
 
-	Signature rectSign = ECS::createSignature<Position, Rectangle>();
-	for(int i = 0; i < 5; ++i) {
-		Entity e = ECS::createEntity(rectSign);
-		Vec3 pos = {Random::getFloat(0, 600), Random::getFloat(0, 600), 0};
-		e.getComponent<Position>().current = pos;
-		e.getComponent<Position>().old = pos;
-		e.getComponent<Rectangle>().size = {100, 100};
-		e.getComponent<Rectangle>().color = {Random::getFloat(), Random::getFloat(), Random::getFloat()};
+		mc.mesh = unitCubeMesh;
+		mc.material = unlitMat->copy();
+
+		Vec3 color{0, 0, 0};
+		color[i] = 1;
+		mc.material->write("color", color);
+		transform.position = color * 2.f;
+		transform.savePrevious();
 	}
 
-	Resources::registerLoader<LoaderTest>();
-
-	//Renderer::disable(Renderer::Capability::DEPTH_TEST);
+	Renderer::setClearColor(.5f, .2f, .8f);
 	Renderer::enable(Renderer::Capability::DEPTH_TEST);
-	Renderer::disable(Renderer::Capability::CULL_FACE);
-	Renderer::enable(Renderer::Capability::SCISSOR_TEST);
-
-
-	simpleMat = Resources::get<Material>("simple");
-
-
-	Resources::set<StaticMesh>("unitCube", SaticMeshPrimitives::cube());
-
-	glGenVertexArrays(1, &vb);
 }
 
 void TestLayer::tick() {
-	ECS::getSystem<PositionSystem>()->update();
+	//ECS::getSystem<PositionSystem>()->update();
 	ECS::getSystem<PlayerSystem>()->update();
 }
 
@@ -202,7 +256,11 @@ void TestLayer::frame() {
 	ECS::getSystem<OrbitCameraSystem>()->update();
 
 	Renderer::useDefaultFrameBuffer();
+	Renderer::clear();
+	ECS::getSystem<DrawSystem>()->draw();
+	
 
+	/*/
 	//Renderer::disable(Renderer::Capability::DEPTH_TEST);
 	Renderer::disable(Renderer::Capability::CULL_FACE);
 	Renderer::disable(Renderer::Capability::SCISSOR_TEST);
@@ -246,9 +304,10 @@ void TestLayer::frame() {
 
 	Renderer::enable(Renderer::Capability::SCISSOR_TEST);
 	ECS::getSystem<RenderRectangleSystem>()->render();
+	//*/
 }
 
 void TestLayer::gui() {
-	ECS::getSystem<PlayerSystem>()->renderImGui();
-	ECS::getSystem<EditorSystem>()->renderUI();
+	//ECS::getSystem<PlayerSystem>()->renderImGui();
+	//ECS::getSystem<EditorSystem>()->renderUI();
 }
