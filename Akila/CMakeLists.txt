@@ -62,3 +62,6 @@ target_link_libraries(akila PUBLIC nlohmann_json)
 
 add_subdirectory(libs/stbimage)
 target_link_libraries(akila PUBLIC stbimage)
+
+add_subdirectory(libs/miniaudio)
+target_link_libraries(akila PUBLIC miniaudio)
