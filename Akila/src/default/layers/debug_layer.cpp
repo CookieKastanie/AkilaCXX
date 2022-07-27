@@ -116,6 +116,9 @@ void GLAPIENTRY messageCallback(GLenum source, GLenum type, GLuint id,
 
 		case GL_DEBUG_SEVERITY_NOTIFICATION:
 			_severity = "NOTIFICATION";
+			return; // finalement, je ne trouve pas que la categorie
+			// "notification" soit tres pertinente, et imgui en genere plein
+			// donc c'est chiant
 			break;
 
 		default:
