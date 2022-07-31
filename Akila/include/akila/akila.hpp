@@ -34,7 +34,7 @@
 #include "akila/random/random.hpp"
 
 #include "akila/audio/audio.hpp"
-#include "akila/audio/audio_buffer.hpp"
+#include "akila/audio/audio_source.hpp"
 #include "akila/audio/audio_emitter.hpp"
 
 #include <imgui/imgui.h>

@@ -10,7 +10,7 @@ namespace akila {
 
 	private:
 		friend class Core;
-		friend class AudioBuffer;
+		friend class AudioSource;
 		friend class AudioEmitter;
 
 		static ma_engine engine;

@@ -14,4 +14,6 @@ private:
 	akila::Ref<akila::Material> simpleMat;
 
 	akila::Listener keyListener;
+
+	std::vector<akila::AudioEmitter> emitters;
 };

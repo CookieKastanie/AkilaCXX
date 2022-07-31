@@ -34,9 +34,13 @@ int main() {
 		Window::setPositionToCenter();
 
 
-		Ref<AudioBuffer> audioBuffer = Resources::create<AudioBuffer>("hound");
+		Ref<AudioSource> audioBuffer = Resources::create<AudioSource>("hound");
 		audioBuffer->loadFromFile(FileSystem::path("audio/the_hound.mp3"));
 
-		Resources::create<AudioEmitter>("hound", *audioBuffer);
+		Ref<AudioSource> audioBuffer2 = Resources::create<AudioSource>("boom");
+		audioBuffer2->loadFromFile(FileSystem::path("audio/boom.mp3"));
+
+		//Resources::create<AudioEmitter>("hound", *audioBuffer);
+		//Resources::create<AudioEmitter>("boom", *audioBuffer2);
 	});
 }

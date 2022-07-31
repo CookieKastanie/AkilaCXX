@@ -247,9 +247,23 @@ TestLayer::TestLayer(): Layer{} {
 	Renderer::enable(Renderer::Capability::DEPTH_TEST);
 	
 
-	keyListener = Signals::listen<KeyPressSignal>([](KeyPressSignal const &e) {
+	keyListener = Signals::listen<KeyPressSignal>([&](KeyPressSignal const &e) {
 		if(e.key == Inputs::Key::P) {
-			auto s = Resources::get<AudioEmitter>("hound");
+			//auto s = Resources::get<AudioEmitter>("hound");
+			//s->play();
+
+			auto s = Resources::get<AudioSource>("hound");
+			s->play();
+		}
+
+		if(e.key == Inputs::Key::B) {
+			//auto s = Resources::get<AudioEmitter>("boom");
+			//s->play();
+
+			//emitters.emplace_back(*Resources::get<AudioSource>("boom"));
+			//emitters.back().play();
+
+			auto s = Resources::get<AudioSource>("boom");
 			s->play();
 		}
 	});
@@ -261,6 +275,13 @@ void TestLayer::tick() {
 }
 
 void TestLayer::frame() {
+	//for(auto it = emitters.begin(); it != emitters.end();) {
+	//	if(it->isFinished()) it = emitters.erase(it);
+	//	else ++it;
+	//}
+
+	//std::cout << emitters.size() << std::endl;
+
 	ECS::getSystem<OrbitCameraSystem>()->update();
 
 	Renderer::useDefaultFrameBuffer();

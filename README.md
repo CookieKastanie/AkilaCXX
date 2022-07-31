@@ -20,6 +20,7 @@
 	- [Shaders](#shaders)
 	- [Materiaux](#Materiaux)
 	- [FrameBuffers](#framebuffers)
+- [Audio](#audio)
 ## Code de départ
 ```cpp
 #include <akila/akila.hpp>
@@ -288,4 +289,15 @@ mat.send(); // envoi au shader les data enregistrés dans le material
 ### FrameBuffers
 ```cpp
 
+```
+## Audio
+```cpp
+Ref<AudioSource> source = Resources::get<AudioSource>("mySource");
+
+AudioEmitter emitter{source};
+
+// jouer le sons :
+emitter.play();
+// ou
+Audio::detath(emitter); // detach permet de lancer des instances, pour simultanement jour le meme sont plusieur fois
 ```

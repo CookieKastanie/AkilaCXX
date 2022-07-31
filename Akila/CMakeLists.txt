@@ -39,7 +39,10 @@ add_library(akila STATIC
 	"src/default/components/static_mesh_component.cpp"
 	"src/default/resources/static_mesh_primitives.cpp"
 	"src/default/components/camera_component.cpp"
-	"src/default/systems/orbit_camera_system.cpp" "src/audio/audio_buffer.cpp" "src/audio/audio.cpp" "src/audio/audio_emitter.cpp")
+	"src/default/systems/orbit_camera_system.cpp"
+	"src/audio/audio.cpp"
+	"src/audio/audio_source.cpp"
+	"src/audio/audio_emitter.cpp")
 
 target_include_directories(akila PRIVATE "include")
 
