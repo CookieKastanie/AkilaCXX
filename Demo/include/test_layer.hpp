@@ -12,4 +12,6 @@ public:
 
 private:
 	akila::Ref<akila::Material> simpleMat;
+
+	akila::Listener keyListener;
 };

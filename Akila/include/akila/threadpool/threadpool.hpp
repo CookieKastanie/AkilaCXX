@@ -32,7 +32,7 @@ namespace akila {
 
 		static bool exit;
 		
-		static void init();
+		static void init(unsigned int maxThreadCount = 4);
 		static void flush();
 		static void terminate();
 	};

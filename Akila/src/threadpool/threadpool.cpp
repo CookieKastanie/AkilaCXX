@@ -13,8 +13,10 @@ std::queue<Threadpool::Task> Threadpool::finishedTaskQueue;
 
 bool Threadpool::exit = false;
 
-void Threadpool::init() {
+void Threadpool::init(unsigned int maxThreadCount) {
 	unsigned int threadCount = std::thread::hardware_concurrency();
+	if(threadCount == 0) threadCount = 1;
+	else if(threadCount > maxThreadCount) threadCount = maxThreadCount;
 
 	for(unsigned int i = 0; i < threadCount; ++i) {
 		threads.push_back(std::thread([]() {

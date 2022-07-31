@@ -20,6 +20,7 @@
 #include "akila/time/time.hpp"
 
 #include "akila/signal/signals.hpp"
+#include "akila/signal/listener.hpp"
 
 #include "akila/threadpool/threadpool.hpp"
 
@@ -31,6 +32,10 @@
 #include "akila/renderer/shader_preproc.hpp"
 
 #include "akila/random/random.hpp"
+
+#include "akila/audio/audio.hpp"
+#include "akila/audio/audio_buffer.hpp"
+#include "akila/audio/audio_emitter.hpp"
 
 #include <imgui/imgui.h>
 

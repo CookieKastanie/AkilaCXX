@@ -11,6 +11,7 @@
 #include "akila/resource/resources.hpp"
 #include "akila/renderer/renderer.hpp"
 #include "akila/random/random.hpp"
+#include "akila/audio/audio.hpp"
 
 #include <thread>
 #include <atomic>
@@ -31,6 +32,7 @@ int Core::run(void (*init)(void)) {
 		Window::initGraphicContext();
 		Renderer::init();
 		ImGuiHandler::init();
+		Audio::init();
 
 		threadReady = true;
 
@@ -83,6 +85,7 @@ int Core::run(void (*init)(void)) {
 	while(!threadFinished) glfwWaitEvents();
 	thread.join();
 
+	Audio::terminate();
 	Threadpool::terminate();
 	ImGuiHandler::terminate();
 	Window::terminate();

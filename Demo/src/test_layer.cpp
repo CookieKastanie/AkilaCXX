@@ -215,7 +215,7 @@ public:
 };
 
 //
-
+#include <chrono>
 TestLayer::TestLayer(): Layer{} {
 	ECS::createSystem<OrbitCameraSystem>();
 	ECS::createEntity(ECS::createSignature<OrbitCameraComponent>());
@@ -245,6 +245,14 @@ TestLayer::TestLayer(): Layer{} {
 
 	Renderer::setClearColor(.5f, .2f, .8f);
 	Renderer::enable(Renderer::Capability::DEPTH_TEST);
+	
+
+	keyListener = Signals::listen<KeyPressSignal>([](KeyPressSignal const &e) {
+		if(e.key == Inputs::Key::P) {
+			auto s = Resources::get<AudioEmitter>("hound");
+			s->play();
+		}
+	});
 }
 
 void TestLayer::tick() {
