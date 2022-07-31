@@ -54,7 +54,7 @@ void Window::setSize(IVec2 const &size) {
 IVec2 Window::getSize() {
 	IVec2 size;
 	glfwGetWindowSize(window, &size.x, &size.y);
-	return size;
+	return max(size, {1, 1});
 }
 
 void Window::setPosition(IVec2 const &pos) {
