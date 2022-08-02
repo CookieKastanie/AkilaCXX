@@ -1,5 +1,6 @@
 #include "akila/audio/audio.hpp"
 #include <iostream>
+#include "akila/time/time.hpp"
 
 using namespace akila;
 
@@ -7,6 +8,8 @@ ma_context Audio::context;
 ma_resource_manager Audio::resourceManager;
 ma_engine Audio::engine;
 ma_device Audio::device;
+
+std::deque<ma_sound> Audio::detachedSounds;
 
 void dataCallback(ma_device *pDevice, void *pOutput, const void *pInput, ma_uint32 frameCount) {
 	(void)pInput;
@@ -35,7 +38,7 @@ void Audio::init() {
 	ma_engine_config engineConfig;
 
 	deviceConfig = ma_device_config_init(ma_device_type_playback);
-	//deviceConfig.playback.pDeviceID = ...; // ne rien mettre = default
+	//deviceConfig.playback.pDeviceID = ...; // peripherique par defaut
 	deviceConfig.playback.format = resourceManager.config.decodedFormat;
 	deviceConfig.playback.channels = 0;
 	deviceConfig.sampleRate = resourceManager.config.decodedSampleRate;
@@ -70,4 +73,43 @@ void Audio::terminate() {
 	ma_engine_uninit(&engine);
 	ma_device_uninit(&device);
 	ma_resource_manager_uninit(&resourceManager);
+}
+
+void Audio::detach(AudioSource *source) {
+	checkDetechedSounds();
+
+	detachedSounds.emplace_back();
+	ma_sound *sound = &detachedSounds.back();
+
+	ma_uint32 const flags =
+	MA_RESOURCE_MANAGER_DATA_SOURCE_FLAG_DECODE |
+	MA_RESOURCE_MANAGER_DATA_SOURCE_FLAG_ASYNC |
+	MA_RESOURCE_MANAGER_DATA_SOURCE_FLAG_STREAM;
+
+	ma_sound_init_from_file(&engine, source->path.c_str(), flags, NULL, NULL, sound);
+	ma_sound_start(sound);
+}
+
+void Audio::detach(AudioEmitter *source) {
+
+}
+
+float Audio::lastCheck = 0;
+
+void Audio::checkDetechedSounds() {
+	float const now = Time::now;
+	float const delta = 1;
+	if(lastCheck + delta > now) return;
+
+	lastCheck = now;
+
+	for(auto it = detachedSounds.begin(); it != detachedSounds.end();) {
+		if(ma_sound_at_end(&*it) == MA_TRUE) {
+			ma_sound *sound = &*it;
+			ma_sound_uninit(sound);
+			it = detachedSounds.erase(it);
+		} else {
+			++it;
+		}
+	}
 }

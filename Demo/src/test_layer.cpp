@@ -264,7 +264,8 @@ TestLayer::TestLayer(): Layer{} {
 			//emitters.back().play();
 
 			auto s = Resources::get<AudioSource>("boom");
-			s->play();
+			//s->play();
+			Audio::detach(s);
 		}
 	});
 }

@@ -15,6 +15,8 @@ namespace akila {
 		bool isFinished();
 
 	private:
+		friend class Audio;
+
 		ma_sound sound;
 	};
 }
