@@ -10,11 +10,10 @@ namespace akila {
 		~AudioSource();
 
 		bool loadFromFile(std::string const &path);
-		void play();
+		bool play();
 
 	private:
 		friend class AudioEmitter;
-		std::string path;
 		ma_sound sound;
 	};
 }

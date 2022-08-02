@@ -22,6 +22,7 @@ using namespace akila::internal;
 int Core::run(void (*init)(void)) {
 	Random::init();
 	Window::initWindow();
+	Audio::init();
 	FileSystem::init();
 	Threadpool::init();
 
@@ -32,7 +33,6 @@ int Core::run(void (*init)(void)) {
 		Window::initGraphicContext();
 		Renderer::init();
 		ImGuiHandler::init();
-		Audio::init();
 
 		threadReady = true;
 
