@@ -82,7 +82,7 @@ namespace akila::internal {
 			// puis pop la liste
 			ComponentIndex lastComponentIndex = static_cast<ComponentIndex>(data.size() - 1);
 
-			data[componentIndex] = data[lastComponentIndex];
+			data[componentIndex] = std::move(data[lastComponentIndex]);
 
 			EntityId entityIdToMove = componentIndexToEntityId[lastComponentIndex];
 			componentIndexToEntityId[componentIndex] = entityIdToMove;

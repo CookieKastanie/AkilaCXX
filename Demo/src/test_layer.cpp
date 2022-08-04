@@ -214,6 +214,24 @@ public:
 	}
 };
 
+
+class AudioSystem: public System {
+public:
+	AudioSystem(): System{ECS::createSignature<TransformComponent, AudioEmitter>()} {}
+
+	void play() {
+		for(Entity e : entities) {
+			auto &t = e.getComponent<TransformComponent>();
+			auto &s = e.getComponent<AudioEmitter>();
+			s.setPosition(t.position);
+			Audio::detach(s);
+			//s.play();
+
+			std::cout << t.position << std::endl;
+		}
+	}
+};
+
 //
 #include <chrono>
 TestLayer::TestLayer(): Layer{} {
@@ -222,6 +240,7 @@ TestLayer::TestLayer(): Layer{} {
 
 	ECS::createSystem<DrawSystem>();
 	ECS::createSystem<PlayerSystem>();
+
 
 	auto unitCubeMesh = Resources::set<StaticMesh>("unitCube", SaticMeshPrimitives::cube());
 	auto unlitMat = Resources::get<Material>("unlit");
@@ -241,32 +260,40 @@ TestLayer::TestLayer(): Layer{} {
 		mc.material->write("color", color);
 		transform.position = color * 2.f;
 		transform.savePrevious();
+
+		if(i == 0) {
+			e.addComponent<AudioEmitter>(AudioEmitter{Resources::get<AudioSource>("boom")});
+		}
 	}
 
 	Renderer::setClearColor(.5f, .2f, .8f);
 	Renderer::enable(Renderer::Capability::DEPTH_TEST);
 	
 
+
+
+	music = Resources::get<AudioSource>("hound");
+	//boom.setSource(Resources::get<AudioSource>("boom"));
+
+	ECS::createSystem<AudioSystem>();
+	
 	keyListener = Signals::listen<KeyPressSignal>([&](KeyPressSignal const &e) {
 		if(e.key == Inputs::Key::P) {
-			//auto s = Resources::get<AudioEmitter>("hound");
-			//s->play();
-
-			auto s = Resources::get<AudioSource>("hound");
-			s->play();
+			music->play();
 		}
+		
 
 		if(e.key == Inputs::Key::B) {
-			//auto s = Resources::get<AudioEmitter>("boom");
-			//s->play();
-
-			//emitters.emplace_back(*Resources::get<AudioSource>("boom"));
-			//emitters.back().play();
-
-			auto s = Resources::get<AudioSource>("boom");
-			//s->play();
-			Audio::detach(s);
+			ECS::getSystem<AudioSystem>()->play();
 		}
+		/*
+		if(e.key == Inputs::Key::B) {
+			auto &t = entity.getComponent<TransformComponent>();
+
+			boom.setPosition(t.position);
+
+			Audio::detach(boom);
+		}*/
 	});
 }
 

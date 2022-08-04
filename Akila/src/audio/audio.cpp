@@ -67,6 +67,8 @@ void Audio::init() {
 		if(result != MA_SUCCESS) {
 		std::cerr << "WARNING: Failed to start engine." << std::endl;
 	}
+
+		ma_engine_listener_set_position(&engine, 0, 0, 0, 0);
 }
 
 void Audio::terminate() {
@@ -81,17 +83,24 @@ void Audio::detach(AudioSource *source) {
 	detachedSounds.emplace_back();
 	ma_sound *sound = &detachedSounds.back();
 
-	ma_uint32 const flags =
-	MA_RESOURCE_MANAGER_DATA_SOURCE_FLAG_DECODE |
-	MA_RESOURCE_MANAGER_DATA_SOURCE_FLAG_ASYNC |
-	MA_RESOURCE_MANAGER_DATA_SOURCE_FLAG_STREAM;
+	source->initSound(sound);
 
-	ma_sound_init_from_file(&engine, source->path.c_str(), flags, NULL, NULL, sound);
 	ma_sound_start(sound);
 }
 
-void Audio::detach(AudioEmitter *source) {
+void Audio::detach(AudioEmitter *emitter) {
+	checkDetechedSounds();
 
+	detachedSounds.emplace_back();
+	ma_sound *sound = &detachedSounds.back();
+
+	emitter->source->initSound(sound);
+	ma_vec3f pos = ma_sound_get_position(emitter->sound);
+	ma_sound_set_position(sound, pos.x * 0.1, pos.y * 0.1, pos.z * 0.1);
+	//ma_sound_set_max_distance(sound, 100);
+	//ma_sound_set_attenuation_model(sound, 10);
+
+	ma_sound_start(sound);
 }
 
 float Audio::lastCheck = 0;

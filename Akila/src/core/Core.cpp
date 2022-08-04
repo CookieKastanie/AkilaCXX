@@ -85,9 +85,9 @@ int Core::run(void (*init)(void)) {
 	while(!threadFinished) glfwWaitEvents();
 	thread.join();
 
-	Audio::terminate();
 	Threadpool::terminate();
 	ImGuiHandler::terminate();
+	Audio::terminate();
 	Window::terminate();
 
 	return EXIT_SUCCESS;

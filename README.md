@@ -51,6 +51,17 @@ IVec2 size = Window::getSize();
 Window::close();
 ```
 ## ECS
+### Composant
+Un composant doit avoir un constructeur par défaut, et doit être copiable et déplaçable par assignation.
+```cpp
+struct MyStruct { // struct avec des données complexes
+	// copie
+	MyStruct(MyStruct const &other);
+
+	// déplacement
+	MyStruct &operator=(MyStruct &&other) noexcept;
+}
+```
 ### Création d'une entité
 #### Basic
 ```cpp
@@ -296,8 +307,10 @@ Ref<AudioSource> source = Resources::get<AudioSource>("mySource");
 
 AudioEmitter emitter{source};
 
+emitter.setPosition({1, 0, 5});
+
 // jouer le sons :
 emitter.play();
 // ou
-Audio::detath(emitter); // detach permet de lancer des instances, pour simultanement jour le meme sont plusieur fois
+Audio::detath(emitter); // detach permet de lancer des instances, pour simultanément jouer le même son plusieurs fois
 ```

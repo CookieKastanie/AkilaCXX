@@ -10,7 +10,8 @@ namespace akila {
 	class Audio {
 	public:
 		static void detach(AudioSource *source);
-		static void detach(AudioEmitter *source);
+		static void detach(AudioEmitter *emitter);
+		static inline void detach(AudioEmitter &emitter) { detach(&emitter); }
 
 	private:
 		friend class Core;

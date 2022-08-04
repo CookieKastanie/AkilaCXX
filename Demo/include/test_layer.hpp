@@ -13,7 +13,8 @@ public:
 private:
 	akila::Ref<akila::Material> simpleMat;
 
-	akila::Listener keyListener;
+	akila::Ref<akila::AudioSource> music;
+	//akila::AudioEmitter boom;
 
-	std::vector<akila::AudioEmitter> emitters;
+	akila::Listener keyListener;
 };

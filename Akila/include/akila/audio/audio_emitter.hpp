@@ -2,21 +2,31 @@
 
 #include <miniaudio/miniaudio.h>
 #include "akila/audio/audio_source.hpp"
+#include "akila/memory/ref.hpp"
+#include "akila/math/math.hpp"
 
 namespace akila {
 	class AudioEmitter {
 	public:
-		AudioEmitter() = default;
-		AudioEmitter(AudioSource &buffer);
-		AudioEmitter(AudioEmitter &audioEmmiter);
+		AudioEmitter();
+		AudioEmitter(Ref<AudioSource> source);
 		~AudioEmitter();
 
+		
+
+		AudioEmitter(AudioEmitter const &other);
+		AudioEmitter &operator=(AudioEmitter &&other) noexcept;
+
 		void play();
+		void setSource(Ref<AudioSource> source);
 		bool isFinished();
+
+		void setPosition(Vec3 const &position);
 
 	private:
 		friend class Audio;
 
-		ma_sound sound;
+		Ref<AudioSource> source;
+		ma_sound *sound;
 	};
 }
