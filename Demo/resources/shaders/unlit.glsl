@@ -1,30 +1,34 @@
 #akila_vertex
 
 layout(location = a_position_loc) in vec4 a_position;
-//layout(location = a_uv_loc) in vec4 a_uv;
 
 uniform mat4 PV;
-
-//out vec2 uv;
-
 uniform vec3 color;
 uniform mat4 model;
 
+out vec3 vBC;
+
 void main() {
-	//uv = a_uv.xy;
+	vBC = vec3(0);
+	vBC[gl_VertexID % 3] = 1.;
 
 	gl_Position = PV * model * a_position;
 }
 
 #akila_fragment
 
-//in vec2 uv;
-
 uniform vec3 color;
+
+in vec3 vBC;
 
 out vec4 fragColor;
 
+float edgeFactor(){
+    vec3 d = fwidth(vBC);
+    vec3 a3 = smoothstep(vec3(0.0), d * 1.8, vBC);
+    return min(min(a3.x, a3.y), a3.z);
+}
+
 void main() {
-	//fragColor = vec4(uv, 0., 1.);
-	fragColor = vec4(color, 1.);
+	fragColor = vec4(color + 1. - edgeFactor(), 1.);
 }

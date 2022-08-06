@@ -51,17 +51,6 @@ IVec2 size = Window::getSize();
 Window::close();
 ```
 ## ECS
-### Composant
-Un composant doit avoir un constructeur par défaut, et doit être copiable et déplaçable par assignation.
-```cpp
-struct MyStruct { // struct avec des données complexes
-	// copie
-	MyStruct(MyStruct const &other);
-
-	// déplacement
-	MyStruct &operator=(MyStruct &&other) noexcept;
-}
-```
 ### Création d'une entité
 #### Basic
 ```cpp

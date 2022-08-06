@@ -60,11 +60,12 @@ StaticMesh *SaticMeshPrimitives::quad() {
 	return mesh;
 }
 
-StaticMesh *SaticMeshPrimitives::cube() {
+StaticMesh *SaticMeshPrimitives::cube(float scale) {
 	StaticMesh *mesh = new StaticMesh{};
 
 	auto vertex = createPtr<VBO>(3, StaticMesh::Attributes::POSITION);
-	vertex->setData(std::vector<Vec3>({
+
+	std::vector<Vec3> vertices{
 		{-1, 1, -1}, {1, 1, 1}, {1, 1, -1},
 		{1, 1, 1}, {-1, -1, 1}, {1, -1, 1},
 		{-1, 1, 1}, {-1, -1, -1}, {-1, -1, 1},
@@ -77,7 +78,11 @@ StaticMesh *SaticMeshPrimitives::cube() {
 		{1, -1, -1}, {1, -1, 1}, {-1, -1, 1},
 		{1, 1, -1}, {1, 1, 1}, {1, -1, 1},
 		{-1, 1, -1}, {1, 1, -1}, {1, -1, -1}
-	}));
+	};
+
+	for(auto &vert : vertices) vert *= scale;
+
+	vertex->setData(vertices);
 
 	auto uv = createPtr<VBO>(2, StaticMesh::Attributes::UV);
 	uv->setData(std::vector<Vec2>({

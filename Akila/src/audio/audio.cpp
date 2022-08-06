@@ -77,7 +77,7 @@ void Audio::terminate() {
 	ma_resource_manager_uninit(&resourceManager);
 }
 
-void Audio::detach(AudioSource *source) {
+void Audio::detach(AudioSource const *source) {
 	checkDetechedSounds();
 
 	detachedSounds.emplace_back();
@@ -88,19 +88,27 @@ void Audio::detach(AudioSource *source) {
 	ma_sound_start(sound);
 }
 
-void Audio::detach(AudioEmitter *emitter) {
+void Audio::detach(AudioEmitter const *emitter) {
 	checkDetechedSounds();
 
-	detachedSounds.emplace_back();
+	detachedSounds.emplace_back(emitter->sound);
 	ma_sound *sound = &detachedSounds.back();
 
 	emitter->source->initSound(sound);
-	ma_vec3f pos = ma_sound_get_position(emitter->sound);
-	ma_sound_set_position(sound, pos.x * 0.1, pos.y * 0.1, pos.z * 0.1);
+
+	ma_vec3f pos = ma_sound_get_position(&emitter->sound);
+	ma_sound_set_position(sound, pos.x, pos.y, pos.z);
+
 	//ma_sound_set_max_distance(sound, 100);
 	//ma_sound_set_attenuation_model(sound, 10);
 
 	ma_sound_start(sound);
+}
+
+void Audio::setListenerPositionDirection(Vec3 const &pos, Vec3 const &dir) {
+	//ma_engine_listener_set_position(&engine, 0, pos.x * 0.1, pos.y * 0.1, pos.z * 0.1);
+	ma_engine_listener_set_position(&engine, 0, pos.x, pos.y, pos.z);
+	ma_engine_listener_set_direction(&engine, 0, dir.x, dir.y, dir.z);
 }
 
 float Audio::lastCheck = 0;

@@ -17,8 +17,8 @@ namespace akila {
 		friend class AudioEmitter;
 
 		std::string path;
-		ma_sound *sound;
+		ma_sound sound;
 
-		bool initSound(ma_sound *otherSound);
+		bool initSound(ma_sound *otherSound) const;
 	};
 }

@@ -194,19 +194,19 @@ public:
 			Vec3 mov{};
 
 			if(Inputs::isPressed(Inputs::Key::RIGHT)) {
-				mov.x += 100 * Time::fixedDelta;
+				mov.x += 10 * Time::fixedDelta;
 			}
 
 			if(Inputs::isPressed(Inputs::Key::LEFT)) {
-				mov.x -= 100 * Time::fixedDelta;
+				mov.x -= 10 * Time::fixedDelta;
 			}
 
 			if(Inputs::isPressed(Inputs::Key::UP)) {
-				mov.z -= 100 * Time::fixedDelta;
+				mov.z -= 10 * Time::fixedDelta;
 			}
 
 			if(Inputs::isPressed(Inputs::Key::DOWN)) {
-				mov.z += 100 * Time::fixedDelta;
+				mov.z += 10 * Time::fixedDelta;
 			}
 
 			transform.translate(mov);
@@ -311,6 +311,11 @@ void TestLayer::frame() {
 	//std::cout << emitters.size() << std::endl;
 
 	ECS::getSystem<OrbitCameraSystem>()->update();
+
+	Entity e = ECS::getSystem<OrbitCameraSystem>()->getMainCam();
+	auto &c = e.getComponent<OrbitCameraComponent>();
+
+	Audio::setListenerPositionDirection(c.position, normalize(c.center - c.position));
 
 	Renderer::useDefaultFrameBuffer();
 	Renderer::clear();

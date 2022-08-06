@@ -7,7 +7,7 @@ namespace akila {
 	public:
 		static StaticMesh *screenTriangle();
 		static StaticMesh *quad();
-		static StaticMesh *cube();
+		static StaticMesh *cube(float scale = .5f);
 		static StaticMesh *invertedCube();
 	};
 }

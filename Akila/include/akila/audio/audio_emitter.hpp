@@ -12,10 +12,8 @@ namespace akila {
 		AudioEmitter(Ref<AudioSource> source);
 		~AudioEmitter();
 
-		
-
 		AudioEmitter(AudioEmitter const &other);
-		AudioEmitter &operator=(AudioEmitter &&other) noexcept;
+		AudioEmitter &operator=(AudioEmitter const &other);
 
 		void play();
 		void setSource(Ref<AudioSource> source);
@@ -27,6 +25,6 @@ namespace akila {
 		friend class Audio;
 
 		Ref<AudioSource> source;
-		ma_sound *sound;
+		ma_sound sound;
 	};
 }

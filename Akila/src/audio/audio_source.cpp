@@ -3,23 +3,24 @@
 
 using namespace akila;
 
-AudioSource::AudioSource(): sound{new ma_sound{}} {}
+AudioSource::AudioSource(): sound{} {}
 
 AudioSource::~AudioSource() {
-	ma_sound_uninit(sound);
-	delete sound;
+	ma_sound_uninit(&sound);
 }
 
 bool AudioSource::decodeFile(std::string const &p) {
 	path = p;
-	return initSound(sound);
+	bool r = initSound(&sound);
+	ma_sound_set_spatialization_enabled(&sound, false);
+	return r;
 }
 
 bool AudioSource::play() {
-	return ma_sound_start(sound) == MA_SUCCESS;
+	return ma_sound_start(&sound) == MA_SUCCESS;
 }
 
-bool AudioSource::initSound(ma_sound *otherSound) {
+bool AudioSource::initSound(ma_sound *otherSound) const {
 	ma_uint32 const flags =
 		MA_RESOURCE_MANAGER_DATA_SOURCE_FLAG_DECODE |
 		MA_RESOURCE_MANAGER_DATA_SOURCE_FLAG_ASYNC |

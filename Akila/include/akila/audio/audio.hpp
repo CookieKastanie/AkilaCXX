@@ -9,9 +9,11 @@
 namespace akila {
 	class Audio {
 	public:
-		static void detach(AudioSource *source);
-		static void detach(AudioEmitter *emitter);
-		static inline void detach(AudioEmitter &emitter) { detach(&emitter); }
+		static void detach(AudioSource const *source);
+		static void detach(AudioEmitter const *emitter);
+		static void detach(AudioEmitter const &emitter) { detach(&emitter); }
+
+		static void setListenerPositionDirection(Vec3 const &pos, Vec3 const &dir);
 
 	private:
 		friend class Core;
