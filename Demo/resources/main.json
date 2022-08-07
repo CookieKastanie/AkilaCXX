@@ -23,15 +23,15 @@
             }
         },
         {
-            "name": "unlit",
-            "shader": "unlit",
+            "name": "wireframe",
+            "shader": "wireframe",
             "uniforms": {
                 "color": [ 1, 1, 1 ]
             }
         }
     ],
 
-    "shaders": [
+    "shader": [
         {
             "name": "simpleShader",
             "path": "shaders/simple.glsl",
@@ -41,8 +41,30 @@
             }
         },
         {
-            "name": "unlit",
-            "path": "shaders/unlit.glsl"
+            "name": "wireframe",
+            "path": "shaders/wireframe.glsl"
+        }
+    ],
+
+    "audio": [
+        {
+            "name": "hound",
+            "path": "sounds/the_hound.mp3"
+        },
+        {
+            "name": "boom",
+            "path": "sounds/boom.mp3"
+        }
+    ],
+
+    "mesh": [
+        {
+            "name": "smooth_cube",
+            "path": "meshs/smooth_cube.glb"
+        },
+        {
+            "name": "palmtree",
+            "path": "meshs/palmtree.glb"
         }
     ]
 }

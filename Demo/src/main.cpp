@@ -20,6 +20,8 @@ int main() {
 		Resources::registerLoader<ShaderLoader>();
 		Resources::registerLoader<Texture2DLoader>();
 		Resources::registerLoader<MaterialLoader>();
+		Resources::registerLoader<AudioLoader>();
+		Resources::registerLoader<MeshLoader>();
 
 		ShaderPreproc::define("a_position_loc", StaticMesh::Attributes::POSITION);
 		ShaderPreproc::define("a_uv_loc", StaticMesh::Attributes::UV);
@@ -32,15 +34,5 @@ int main() {
 
 		Window::setSize({1600, 900});
 		Window::setPositionToCenter();
-
-
-		Ref<AudioSource> audioBuffer = Resources::create<AudioSource>("hound");
-		audioBuffer->decodeFile(FileSystem::path("audio/the_hound.mp3"));
-
-		Ref<AudioSource> audioBuffer2 = Resources::create<AudioSource>("boom");
-		audioBuffer2->decodeFile(FileSystem::path("audio/boom.mp3"));
-
-		//Resources::create<AudioEmitter>("hound", *audioBuffer);
-		//Resources::create<AudioEmitter>("boom", *audioBuffer2);
 	});
 }

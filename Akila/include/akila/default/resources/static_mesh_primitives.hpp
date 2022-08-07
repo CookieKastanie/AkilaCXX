@@ -3,7 +3,7 @@
 #include "akila/default/resources/static_mesh.hpp"
 
 namespace akila {
-	class SaticMeshPrimitives {
+	class StaticMeshPrimitives {
 	public:
 		static StaticMesh *screenTriangle();
 		static StaticMesh *quad();

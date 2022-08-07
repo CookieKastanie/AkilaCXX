@@ -17,3 +17,15 @@ int Random::getInt(int from, int to) {
 	std::uniform_int_distribution<int> dist{from, to};
 	return dist(engine);
 }
+
+Vec2 Random::getVec2(float from, float to) {
+	return {getFloat(from, to), getFloat(from, to)};
+}
+
+Vec3 Random::getVec3(float from, float to) {
+	return {getFloat(from, to), getFloat(from, to), getFloat(from, to)};
+}
+
+float Random::getAngle() {
+	return getFloat(0, PI * 2.f);
+}

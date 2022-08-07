@@ -150,7 +150,7 @@ struct MeshComponent {
 class DrawSystem: public System {
 public:
 	DrawSystem(): System{ECS::createSignature<TransformComponent, MeshComponent>()} {
-		shader = Resources::get<Shader>("unlit");
+		shader = Resources::get<Shader>("wireframe");
 		camSystem = ECS::getSystem<OrbitCameraSystem>();
 	}
 
@@ -242,8 +242,9 @@ TestLayer::TestLayer(): Layer{} {
 	ECS::createSystem<PlayerSystem>();
 
 
-	auto unitCubeMesh = Resources::set<StaticMesh>("unitCube", SaticMeshPrimitives::cube());
-	auto unlitMat = Resources::get<Material>("unlit");
+	//auto unitCubeMesh = Resources::set<StaticMesh>("unitCube", StaticMeshPrimitives::cube());
+	auto unitCubeMesh = Resources::get<StaticMesh>("smooth_cube");
+	auto wireframeMat = Resources::get<Material>("wireframe");
 
 	for(int i = 0; i < 3; ++i) {
 		Entity e = ECS::createEntity(ECS::createSignature<MeshComponent, TransformComponent>());
@@ -253,18 +254,60 @@ TestLayer::TestLayer(): Layer{} {
 		auto &transform = e.getComponent<TransformComponent>();
 
 		mc.mesh = unitCubeMesh;
-		mc.material = unlitMat->copy();
+		mc.material = wireframeMat->copy();
 
 		Vec3 color{0, 0, 0};
 		color[i] = 1;
 		mc.material->write("color", color);
 		transform.position = color * 2.f;
+		transform.position.y += .5;
 		transform.savePrevious();
 
 		if(i == 0) {
 			e.addComponent<AudioEmitter>(AudioEmitter{Resources::get<AudioSource>("boom")});
 		}
 	}
+
+	for(int i = 0; i < 20; ++i) {
+		Entity e = ECS::createEntity(ECS::createSignature<MeshComponent, TransformComponent>());
+
+		auto &mc = e.getComponent<MeshComponent>();
+		auto &transform = e.getComponent<TransformComponent>();
+
+		mc.mesh = Resources::get<StaticMesh>("palmtree");
+		mc.material = wireframeMat->copy();
+
+		Vec3 color{.5f, .5f, .5f};
+		mc.material->write("color", color);
+		//transform.position = {4, 0, 0};
+
+		Vec2 pos = Random::getVec2(-10, 10);
+		transform.position = {pos.x, 0, pos.y};
+		//transform.rotateY(PI / 2.f);
+		transform.rotateY(Random::getAngle());
+		transform.setScale(Random::getFloat(.7, 1.3));
+
+		transform.savePrevious();
+	}
+
+	//*/
+	{
+		Entity e = ECS::createEntity(ECS::createSignature<MeshComponent, TransformComponent>());
+
+		auto &mc = e.getComponent<MeshComponent>();
+		auto &transform = e.getComponent<TransformComponent>();
+
+		mc.mesh = Resources::set<StaticMesh>("plane", StaticMeshPrimitives::quad());
+		mc.material = wireframeMat->copy();
+
+		Vec3 color{.1f, .8f, .1f};
+		mc.material->write("color", color);
+		transform.setScale(11);
+		transform.rotateX(PI / 2.f);
+
+		transform.savePrevious();
+	}
+	//*/
 
 	Renderer::setClearColor(.5f, .2f, .8f);
 	Renderer::enable(Renderer::Capability::DEPTH_TEST);

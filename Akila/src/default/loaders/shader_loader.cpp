@@ -4,7 +4,7 @@
 
 using namespace akila;
 
-ShaderLoader::ShaderLoader(): Loader{"shaders"} {}
+ShaderLoader::ShaderLoader(): Loader{"shader"} {}
 
 void ShaderLoader::onEntry(JSON json, LoaderCallback cb) {
 	if(!json["name"].is_string()) {

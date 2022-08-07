@@ -2,7 +2,7 @@
 
 using namespace akila;
 
-StaticMesh *SaticMeshPrimitives::screenTriangle() {
+StaticMesh *StaticMeshPrimitives::screenTriangle() {
 	StaticMesh *mesh = new StaticMesh{};
 
 	auto vertex = createPtr<VBO>(2, StaticMesh::Attributes::POSITION);
@@ -23,7 +23,7 @@ StaticMesh *SaticMeshPrimitives::screenTriangle() {
 	return mesh;
 }
 
-StaticMesh *SaticMeshPrimitives::quad() {
+StaticMesh *StaticMeshPrimitives::quad() {
 	StaticMesh *mesh = new StaticMesh{};
 
 	auto vertex = createPtr<VBO>(2, StaticMesh::Attributes::POSITION);
@@ -39,13 +39,13 @@ StaticMesh *SaticMeshPrimitives::quad() {
 	}));
 
 	auto normal = createPtr<VBO>(3, StaticMesh::Attributes::NORMAL);
-	vertex->setData(std::vector<Vec3>({
+	normal->setData(std::vector<Vec3>({
 		{0, 0, 1}, {0, 0, 1}, {0, 0, 1},
 		{0, 0, 1}, {0, 0, 1}, {0, 0, 1}
 	}));
 
 	auto tangent = createPtr<VBO>(3, StaticMesh::Attributes::TANGENT);
-	vertex->setData(std::vector<Vec3>({
+	tangent->setData(std::vector<Vec3>({
 		{1, 0, 0}, {1, 0, 0}, {1, 0, 0},
 		{1, 0, 0}, {1, 0, 0}, {1, 0, 0}
 	}));
@@ -60,7 +60,7 @@ StaticMesh *SaticMeshPrimitives::quad() {
 	return mesh;
 }
 
-StaticMesh *SaticMeshPrimitives::cube(float scale) {
+StaticMesh *StaticMeshPrimitives::cube(float scale) {
 	StaticMesh *mesh = new StaticMesh{};
 
 	auto vertex = createPtr<VBO>(3, StaticMesh::Attributes::POSITION);
@@ -142,7 +142,7 @@ StaticMesh *SaticMeshPrimitives::cube(float scale) {
 	return mesh;
 }
 
-StaticMesh *SaticMeshPrimitives::invertedCube() {
+StaticMesh *StaticMeshPrimitives::invertedCube() {
 	StaticMesh *mesh = new StaticMesh{};
 
 	auto vertex = createPtr<VBO>(3, StaticMesh::Attributes::POSITION);

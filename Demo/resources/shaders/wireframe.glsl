@@ -2,17 +2,31 @@
 
 layout(location = a_position_loc) in vec4 a_position;
 
-uniform mat4 PV;
-uniform vec3 color;
-uniform mat4 model;
-
-out vec3 vBC;
-
 void main() {
-	vBC = vec3(0);
-	vBC[gl_VertexID % 3] = 1.;
+	gl_Position = a_position;
+}
 
-	gl_Position = PV * model * a_position;
+#akila_geometry
+
+layout(triangles) in;
+layout(triangle_strip, max_vertices = 3) out;
+
+uniform mat4 PV;
+uniform mat4 model;
+ 
+out vec3 vBC;
+ 
+void main() {
+	mat4 W = PV * model;
+
+	for(int i = 0; i < 3; ++i) {
+		vBC = vec3(0);
+		vBC[i] = 1.;
+		gl_Position = W * gl_in[i].gl_Position;
+		EmitVertex();
+	}
+
+	EndPrimitive();
 }
 
 #akila_fragment
