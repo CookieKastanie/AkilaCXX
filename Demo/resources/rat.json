@@ -1,0 +1,44 @@
+{
+    "texture2d": [
+        {
+            "name": "rat",
+            "path": "textures/rat.png"
+        }
+    ],
+
+    "material": [
+        {
+            "name": "rat",
+            "shader": "texLit",
+
+            "texture2d": {
+                "rat": "diffuse"
+            }
+        }
+    ],
+
+    "shader": [
+        {
+            "name": "texLit",
+            "path": "shaders/texLit.glsl",
+
+            "uniforms": {
+                "diffuse": [ 0 ]
+            }
+        }
+    ],
+
+    "audio": [
+        {
+            "name": "rat",
+            "path": "sounds/rat.mp3"
+        }
+    ],
+
+    "mesh": [
+        {
+            "name": "rat",
+            "path": "meshs/rat.glb"
+        }
+    ]
+}

@@ -6,7 +6,7 @@ target_sources(demo PRIVATE
 	"Demo/src/main.cpp"
 	"Demo/include/test_layer.hpp"
 	"Demo/src/test_layer.cpp"
-	"Demo/src/utils_layer.cpp")
+	"Demo/src/utils_layer.cpp" "Demo/src/rat_layer.cpp")
 
 target_include_directories(demo PRIVATE "Demo/include")
 target_compile_features(demo PRIVATE cxx_std_17)

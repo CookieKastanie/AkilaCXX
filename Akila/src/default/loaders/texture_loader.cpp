@@ -77,6 +77,9 @@ void Texture2DLoader::onEntry(JSON json, LoaderCallback cb) {
 	bool mips = false;
 	if(json["mips"].is_boolean()) mips = json["mips"];
 
+	bool invertY = false;
+	if(json["invertY"].is_boolean()) invertY = json["invertY"];
+
 	Resources::set<Texture2D>(name, texture);
 
 	if(json["path"].is_string()) {
@@ -94,7 +97,7 @@ void Texture2DLoader::onEntry(JSON json, LoaderCallback cb) {
 		p->path = json["path"];
 
 		Threadpool::submit([=]() {
-			stbi_set_flip_vertically_on_load(true);
+			stbi_set_flip_vertically_on_load(invertY);
 			if(texture->getInternalFormat() == TextureBuffer::Format::RGB16F || texture->getInternalFormat() == TextureBuffer::Format::RGBA16F) {// <- pas fou
 				p->data = stbi_loadf(FileSystem::path(p->path).c_str(), &p->fwidth, &p->fheight, &p->textureNrChannels, 0);
 				p->dataType = TextureBuffer::Type::FLOAT;

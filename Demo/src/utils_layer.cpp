@@ -1,5 +1,6 @@
 #include "utils_layer.hpp"
 #include "test_layer.hpp"
+#include "rat_layer.hpp"
 
 using namespace akila;
 
@@ -16,9 +17,15 @@ UtilsLayer::UtilsLayer() {
 		}
 	});
 
+	/*/
 	Resources::load({"main.json"}, []() {
 		std::cout << "Loaded" << std::endl;
 		Layers::add<TestLayer>();
+	});
+	//*/
+
+	Resources::load({"rat.json"}, []() {
+		Layers::add<RatLayer>();
 	});
 }
 

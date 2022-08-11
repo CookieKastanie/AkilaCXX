@@ -4,19 +4,19 @@
 
 using namespace akila;
 
-void inline override_glUniformMatrix2fv(GLint l, GLsizei s, void *d) {
+void override_glUniformMatrix2fv(GLint l, GLsizei s, void *d) {
 	glUniformMatrix2fv(l, s, false, (GLfloat *)d);
 }
 
-void inline override_glUniformMatrix3fv(GLint l, GLsizei s, void *d) {
+void override_glUniformMatrix3fv(GLint l, GLsizei s, void *d) {
 	glUniformMatrix3fv(l, s, false, (GLfloat *)d);
 }
 
-void inline override_glUniformMatrix4fv(GLint l, GLsizei s, void *d) {
+void override_glUniformMatrix4fv(GLint l, GLsizei s, void *d) {
 	glUniformMatrix4fv(l, s, false, (GLfloat *)d);
 }
 
-void inline ssui(UniformInfos &infos, int size, UniformUnderlyingType baseType, std::size_t typeByte, SendFunction sendFunctionPointer) {
+void ssui(UniformInfos &infos, int size, UniformUnderlyingType baseType, std::size_t typeByte, SendFunction sendFunctionPointer) {
 	infos.blockSize = size;
 	infos.baseType = baseType;
 	infos.byteCount = typeByte * infos.blockSize * infos.length;

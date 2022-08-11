@@ -11,6 +11,8 @@ namespace akila {
 
 		bool decodeFile(std::string const &path);
 		bool play();
+		void setVolume(float volume);
+		void setLooping(bool loop);
 
 	private:
 		friend class Audio;

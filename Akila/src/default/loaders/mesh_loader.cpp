@@ -149,13 +149,13 @@ void MeshLoader::onEntry(JSON json, LoaderCallback cb) {
 		if(p->tangent.byteLength) {
 			auto tangentVBO = createPtr<VBO>(3, StaticMesh::Attributes::TANGENT);
 
-			std::vector<glm::vec3> tangents;
+			std::vector<Vec3> tangents;
 			tangents.reserve(p->tangent.byteLength / 3);
 
 			std::uint8_t *start = p->raw.data() + p->tangent.byteOffset;
 			std::uint8_t *end = start + p->tangent.byteLength;
 			for(std::uint8_t *i = start; i < end; i += (4 * sizeof(float))) {
-				tangents.push_back(reinterpret_cast<glm::vec3 &>(*i));
+				tangents.push_back(reinterpret_cast<Vec3 &>(*i));
 			}
 
 			tangentVBO->setData(tangents);

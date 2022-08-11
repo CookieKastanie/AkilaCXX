@@ -14,15 +14,15 @@ void TransformComponent::translate(Vec3 const &vec) {
 }
 
 void TransformComponent::rotateX(float a) {
-	rotation *= angleAxis(a, Vec3{-1, 0, 0});
+	rotation *= angleAxis(a, Vec3{1, 0, 0});
 }
 
 void TransformComponent::rotateY(float a) {
-	rotation *= angleAxis(a, Vec3{0, -1, 0});
+	rotation *= angleAxis(a, Vec3{0, 1, 0});
 }
 
 void TransformComponent::rotateZ(float a) {
-	rotation *=  angleAxis(a, Vec3{0, 0, -1});
+	rotation *=  angleAxis(a, Vec3{0, 0, 1});
 }
 
 void TransformComponent::setRotationZYX(Vec3 const &r) {

@@ -33,3 +33,11 @@ bool AudioSource::initSound(ma_sound *otherSound) const {
 
 	return result == MA_SUCCESS;
 }
+
+void AudioSource::setVolume(float volume) {
+	ma_sound_set_volume(&sound, volume);
+}
+
+void AudioSource::setLooping(bool loop) {
+	ma_sound_set_looping(&sound, loop);
+}
