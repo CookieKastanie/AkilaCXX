@@ -134,6 +134,25 @@ void MeshLoader::onEntry(JSON json, LoaderCallback cb) {
 				0, sizeof(float) * 3
 			);
 			mesh->addVBO(vertexVBO);
+			
+			// calcule la AABB et la bounding sphere
+			Vec3 *data = (Vec3 *)(p->raw.data() + p->vertex.byteOffset);
+			for(std::size_t i = 0; i < p->vertex.byteLength / (sizeof(float) * 3); ++i) {
+				Vec3 *vec = data + i;
+
+				mesh->mins.x = min(mesh->mins.x, vec->x);
+				mesh->mins.y = min(mesh->mins.y, vec->y);
+				mesh->mins.z = min(mesh->mins.z, vec->z);
+
+				mesh->maxs.x = max(mesh->maxs.x, vec->x);
+				mesh->maxs.y = max(mesh->maxs.y, vec->y);
+				mesh->maxs.z = max(mesh->maxs.z, vec->z);
+			}
+
+			mesh->radius = max(mesh->maxs.x, max(mesh->maxs.y, mesh->maxs.z));
+			mesh->radius = max(mesh->radius, max(abs(mesh->mins.x), max(abs(mesh->mins.y), abs(mesh->mins.z))));
+
+			mesh->squaredRadius = mesh->radius * mesh->radius;
 		}
 
 		if(p->normal.byteLength) {

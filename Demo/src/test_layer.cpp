@@ -158,7 +158,7 @@ public:
 		Entity cam = camSystem->getMainCam();
 		auto& c = cam.getComponent<OrbitCameraComponent>();
 		
-		shader->bind();
+		//shader->bind();
 		shader->send("PV", c.pv);
 
 		for(Entity e : entities) {
@@ -303,7 +303,7 @@ TestLayer::TestLayer(): Layer{} {
 		Vec3 color{.1f, .8f, .1f};
 		mc.material->write("color", color);
 		transform.setScale(11);
-		transform.rotateX(PI / 2.f);
+		transform.rotateX(-PI / 2.f);
 
 		transform.savePrevious();
 	}

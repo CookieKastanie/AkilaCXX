@@ -4,16 +4,16 @@
 
 using namespace akila;
 
-void override_glUniformMatrix2fv(GLint l, GLsizei s, void *d) {
-	glUniformMatrix2fv(l, s, false, (GLfloat *)d);
+void override_glUniformMatrix2fv(GLint id, GLint l, GLsizei s, void *d) {
+	glProgramUniformMatrix2fv(id, l, s, false, (GLfloat *)d);
 }
 
-void override_glUniformMatrix3fv(GLint l, GLsizei s, void *d) {
-	glUniformMatrix3fv(l, s, false, (GLfloat *)d);
+void override_glUniformMatrix3fv(GLint id, GLint l, GLsizei s, void *d) {
+	glProgramUniformMatrix3fv(id, l, s, false, (GLfloat *)d);
 }
 
-void override_glUniformMatrix4fv(GLint l, GLsizei s, void *d) {
-	glUniformMatrix4fv(l, s, false, (GLfloat *)d);
+void override_glUniformMatrix4fv(GLint id, GLint l, GLsizei s, void *d) {
+	glProgramUniformMatrix4fv(id, l, s, false, (GLfloat *)d);
 }
 
 void ssui(UniformInfos &infos, int size, UniformUnderlyingType baseType, std::size_t typeByte, SendFunction sendFunctionPointer) {
@@ -25,31 +25,31 @@ void ssui(UniformInfos &infos, int size, UniformUnderlyingType baseType, std::si
 
 void setUniformInfos(GLenum glType, UniformInfos &infos) {
 	switch(glType) { // quel enfer
-		case GL_FLOAT:      ssui(infos, 1, UniformUnderlyingType::FLOAT, sizeof(GLfloat), (SendFunction)glUniform1fv); break;
-		case GL_FLOAT_VEC2: ssui(infos, 2, UniformUnderlyingType::FLOAT, sizeof(GLfloat), (SendFunction)glUniform2fv); break;
-		case GL_FLOAT_VEC3: ssui(infos, 3, UniformUnderlyingType::FLOAT, sizeof(GLfloat), (SendFunction)glUniform3fv); break;
-		case GL_FLOAT_VEC4: ssui(infos, 4, UniformUnderlyingType::FLOAT, sizeof(GLfloat), (SendFunction)glUniform4fv); break;
+		case GL_FLOAT:      ssui(infos, 1, UniformUnderlyingType::FLOAT, sizeof(GLfloat), (SendFunction)glProgramUniform1fv); break;
+		case GL_FLOAT_VEC2: ssui(infos, 2, UniformUnderlyingType::FLOAT, sizeof(GLfloat), (SendFunction)glProgramUniform2fv); break;
+		case GL_FLOAT_VEC3: ssui(infos, 3, UniformUnderlyingType::FLOAT, sizeof(GLfloat), (SendFunction)glProgramUniform3fv); break;
+		case GL_FLOAT_VEC4: ssui(infos, 4, UniformUnderlyingType::FLOAT, sizeof(GLfloat), (SendFunction)glProgramUniform4fv); break;
 
 		case GL_FLOAT_MAT2: ssui(infos,  4, UniformUnderlyingType::FLOAT, sizeof(GLfloat), override_glUniformMatrix2fv); break;
 		case GL_FLOAT_MAT3: ssui(infos,  9, UniformUnderlyingType::FLOAT, sizeof(GLfloat), override_glUniformMatrix3fv); break;
 		case GL_FLOAT_MAT4: ssui(infos, 16, UniformUnderlyingType::FLOAT, sizeof(GLfloat), override_glUniformMatrix4fv); break;
 
-		case GL_INT:      ssui(infos, 1, UniformUnderlyingType::INT, sizeof(GLint), (SendFunction)glUniform1iv); break;
-		case GL_INT_VEC2: ssui(infos, 2, UniformUnderlyingType::INT, sizeof(GLint), (SendFunction)glUniform2iv); break;
-		case GL_INT_VEC3: ssui(infos, 3, UniformUnderlyingType::INT, sizeof(GLint), (SendFunction)glUniform3iv); break;
-		case GL_INT_VEC4: ssui(infos, 4, UniformUnderlyingType::INT, sizeof(GLint), (SendFunction)glUniform4iv); break;
+		case GL_INT:      ssui(infos, 1, UniformUnderlyingType::INT, sizeof(GLint), (SendFunction)glProgramUniform1iv); break;
+		case GL_INT_VEC2: ssui(infos, 2, UniformUnderlyingType::INT, sizeof(GLint), (SendFunction)glProgramUniform2iv); break;
+		case GL_INT_VEC3: ssui(infos, 3, UniformUnderlyingType::INT, sizeof(GLint), (SendFunction)glProgramUniform3iv); break;
+		case GL_INT_VEC4: ssui(infos, 4, UniformUnderlyingType::INT, sizeof(GLint), (SendFunction)glProgramUniform4iv); break;
 
-		case GL_UNSIGNED_INT:      ssui(infos, 1, UniformUnderlyingType::UINT, sizeof(GLuint), (SendFunction)glUniform1uiv); break;
-		case GL_UNSIGNED_INT_VEC2: ssui(infos, 2, UniformUnderlyingType::UINT, sizeof(GLuint), (SendFunction)glUniform2uiv); break;
-		case GL_UNSIGNED_INT_VEC3: ssui(infos, 3, UniformUnderlyingType::UINT, sizeof(GLuint), (SendFunction)glUniform3uiv); break;
-		case GL_UNSIGNED_INT_VEC4: ssui(infos, 4, UniformUnderlyingType::UINT, sizeof(GLuint), (SendFunction)glUniform4uiv); break;
+		case GL_UNSIGNED_INT:      ssui(infos, 1, UniformUnderlyingType::UINT, sizeof(GLuint), (SendFunction)glProgramUniform1uiv); break;
+		case GL_UNSIGNED_INT_VEC2: ssui(infos, 2, UniformUnderlyingType::UINT, sizeof(GLuint), (SendFunction)glProgramUniform2uiv); break;
+		case GL_UNSIGNED_INT_VEC3: ssui(infos, 3, UniformUnderlyingType::UINT, sizeof(GLuint), (SendFunction)glProgramUniform3uiv); break;
+		case GL_UNSIGNED_INT_VEC4: ssui(infos, 4, UniformUnderlyingType::UINT, sizeof(GLuint), (SendFunction)glProgramUniform4uiv); break;
 
-		case GL_BOOL:      ssui(infos, 1, UniformUnderlyingType::BOOL, sizeof(GLboolean), (SendFunction)glUniform1iv); break;
-		case GL_BOOL_VEC2: ssui(infos, 2, UniformUnderlyingType::BOOL, sizeof(GLboolean), (SendFunction)glUniform2iv); break;
-		case GL_BOOL_VEC3: ssui(infos, 3, UniformUnderlyingType::BOOL, sizeof(GLboolean), (SendFunction)glUniform3iv); break;
-		case GL_BOOL_VEC4: ssui(infos, 4, UniformUnderlyingType::BOOL, sizeof(GLboolean), (SendFunction)glUniform4iv); break;
+		case GL_BOOL:      ssui(infos, 1, UniformUnderlyingType::BOOL, sizeof(GLboolean), (SendFunction)glProgramUniform1iv); break;
+		case GL_BOOL_VEC2: ssui(infos, 2, UniformUnderlyingType::BOOL, sizeof(GLboolean), (SendFunction)glProgramUniform2iv); break;
+		case GL_BOOL_VEC3: ssui(infos, 3, UniformUnderlyingType::BOOL, sizeof(GLboolean), (SendFunction)glProgramUniform3iv); break;
+		case GL_BOOL_VEC4: ssui(infos, 4, UniformUnderlyingType::BOOL, sizeof(GLboolean), (SendFunction)glProgramUniform4iv); break;
 
-		default: ssui(infos, 1, UniformUnderlyingType::SAMPLER, sizeof(GLint), (SendFunction)glUniform1iv); break;
+		default: ssui(infos, 1, UniformUnderlyingType::SAMPLER, sizeof(GLint), (SendFunction)glProgramUniform1iv); break;
 	}
 }
 
@@ -75,8 +75,6 @@ bool checkErrors(GLuint shader, std::string type) {
 }
 
 /////////////////////////////////////////
-
-GLuint Shader::bindedId = -1;
 
 Shader::Shader(): id{0}, totalByteCount{0} {
 	std::string prog = R"---(
@@ -168,56 +166,46 @@ Shader::~Shader() {
 
 void Shader::send(std::string const &name, int value) const {
 	UniformInfos const &infos = uniformBindings.at(name);
-	glUniform1i(infos.location, value);
+	glProgramUniform1i(id, infos.location, value);
 }
 
 void Shader::send(std::string const &name, float value) const {
 	UniformInfos const &infos = uniformBindings.at(name);
-	glUniform1f(infos.location, value);
+	glProgramUniform1f(id, infos.location, value);
 }
 
 void Shader::send(std::string const &name, std::vector<float> const &values) const {
 	UniformInfos const &infos = uniformBindings.at(name);
-	glUniform1fv(infos.location, (GLsizei)values.size(), (GLfloat *)values.data());
+	glProgramUniform1fv(id, infos.location, (GLsizei)values.size(), (GLfloat *)values.data());
 }
 
 void Shader::send(std::string const &name, Vec2 const &value) const {
 	UniformInfos const &infos = uniformBindings.at(name);
-	glUniform2fv(infos.location, 1, &value[0]);
+	glProgramUniform2fv(id, infos.location, 1, &value[0]);
 }
 
 void Shader::send(std::string const &name, Vec3 const &value) const {
 	UniformInfos const &infos = uniformBindings.at(name);
-	glUniform3fv(infos.location, 1, &value[0]);
+	glProgramUniform3fv(id, infos.location, 1, &value[0]);
 }
 
 void Shader::send(std::string const &name, std::vector<Vec3> const &values) const {
 	UniformInfos const &infos = uniformBindings.at(name);
-	glUniform3fv(infos.location, (GLsizei)values.size(), (GLfloat *)values.data());
+	glProgramUniform3fv(id, infos.location, (GLsizei)values.size(), (GLfloat *)values.data());
 }
 
 void Shader::send(std::string const &name, Mat4 const &mat) const {
 	UniformInfos const &infos = uniformBindings.at(name);
-	glUniformMatrix4fv(infos.location, 1, GL_FALSE, &mat[0][0]);
+	glProgramUniformMatrix4fv(id, infos.location, 1, GL_FALSE, &mat[0][0]);
 }
 
 void Shader::send(std::string const &name, bool value) const {
 	UniformInfos const &infos = uniformBindings.at(name);
-	glUniform1i(infos.location, value);
-}
-
-
-void Shader::bind() const {
-	glUseProgram(id);
-	bindedId = id;
-}
-
-bool Shader::isBinded() const {
-	return bindedId == id;
+	glProgramUniform1i(id, infos.location, value);
 }
 
 void Shader::cacheUniformsLocations() {
-	bind();
+	glUseProgram(id);
 
 	GLint size; // size of the variable (array length)
 	GLenum type; // (float, vec3 or mat4, etc)
@@ -264,12 +252,12 @@ std::size_t Shader::getTotalByteCount() const {
 }
 
 void Shader::sendRaw(UniformInfos const &infos, void *data) const {
-	infos.sendFunctionPointer(infos.location, infos.length, data);
+	infos.sendFunctionPointer(id, infos.location, infos.length, data);
 }
 
 void Shader::sendRaw(std::string const &name, void *data) const {
 	UniformInfos const &infos = uniformBindings.at(name);
-	infos.sendFunctionPointer(infos.location, infos.length, data);
+	infos.sendFunctionPointer(id, infos.location, infos.length, data);
 }
 
 bool Shader::readInt(std::string const &name, int *value) const {

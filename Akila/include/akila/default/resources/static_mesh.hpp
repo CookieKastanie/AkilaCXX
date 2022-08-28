@@ -3,6 +3,7 @@
 #include "akila/memory/ptr.hpp"
 #include "akila/renderer/buffer_object.hpp"
 #include "akila/renderer/vao.hpp"
+#include "akila/math/math.hpp"
 #include <vector>
 
 namespace akila {
@@ -23,6 +24,11 @@ namespace akila {
 		void prepare();
 
 		void draw() const;
+
+		Vec3 mins;
+		Vec3 maxs;
+		float radius;
+		float squaredRadius;
 
 	private:
 		Ptr<VAO> vao;

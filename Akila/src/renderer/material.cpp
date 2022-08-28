@@ -112,8 +112,6 @@ void Material::affect(Ref<TextureBuffer> const &texRef, std::string const &name)
 }
 
 void Material::send() {
-	if(!shader->isBinded()) shader->bind();
-
 	for(UniformInfos const *infos : usedUniforms) {
 		shader->sendRaw(*infos, uniformData.data() + infos->byteOffset);
 	}

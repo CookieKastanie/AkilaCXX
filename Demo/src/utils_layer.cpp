@@ -17,16 +17,19 @@ UtilsLayer::UtilsLayer() {
 		}
 	});
 
-	/*/
+	//*/
 	Resources::load({"main.json"}, []() {
 		std::cout << "Loaded" << std::endl;
 		Layers::add<TestLayer>();
 	});
 	//*/
 
+
+	/*/
 	Resources::load({"rat.json"}, []() {
 		Layers::add<RatLayer>();
 	});
+	//*/
 }
 
 void UtilsLayer::tick() {}

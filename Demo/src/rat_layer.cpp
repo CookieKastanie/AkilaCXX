@@ -22,7 +22,7 @@ public:
 		Entity cam = camSystem->getMainCam();
 		auto &c = cam.getComponent<OrbitCameraComponent>();
 
-		shader->bind();
+		//shader->bind();
 		shader->send("PV", c.pv);
 
 		for(Entity e : entities) {

@@ -2,7 +2,7 @@
 
 using namespace akila;
 
-StaticMesh::StaticMesh() {
+StaticMesh::StaticMesh(): mins{0, 0, 0}, maxs{0, 0, 0}, radius{0}, squaredRadius{0}{
 	vao = createPtr<VAO>();
 }
 

@@ -5,6 +5,9 @@
 #include <glm/gtx/string_cast.hpp>
 #include <iostream>
 
+#undef min
+#undef max
+
 namespace akila {
 	using Vec1 = glm::vec1;
 	using IVec1 = glm::ivec1;
@@ -38,6 +41,8 @@ namespace akila {
 	using glm::atan;
 
 	using glm::abs;
+	using glm::min;
+	using glm::max;
 	using glm::clamp;
 	using glm::lerp;
 	using glm::slerp;

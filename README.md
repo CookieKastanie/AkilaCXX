@@ -245,7 +245,7 @@ Ref<Shader> shader = Rersources::create<Shader>("#full_shader_code"); // passe p
 // ou
 Ref<Shader> shader = Rersources::create<Shader>("#vertex_shader", "#fragment_shader", "#geometry_shader");
 ```
-#### Exemple de shader qui passe au preproc
+#### Exemple de shader
 ```glsl
 #akila_vertex
 
@@ -269,6 +269,54 @@ out vec4 fragColor;
 void main() {
 	fragColor = vec4(texCoord, 0.0, 1.0);
 }
+```
+#### Exemple avec un template
+
+`path/unlit.glsl` qui sert de template :
+```glsl
+#akila_vertex
+
+layout(location = a_position_loc) in vec4 a_position;
+layout(location = a_uv_loc) in vec4 a_uv;
+
+uniform mat4 PV;
+uniform mat4 M;
+
+out vec2 v_uv;
+
+void main() {
+	v_uv = a_uv.xy;
+	glPosition = PV * M * a_position;
+}
+
+#akila_fragment
+
+in vec2 v_uv;
+
+out vec4 fragColor;
+
+vec4 brdf(...) {
+	fragColor = ...;
+}
+
+// macro qui indique ou sera inséré le code du fragment
+#user_code
+```
+
+Un shader qui utilise le template :
+```glsl
+#use_template path/unlit.glsl
+
+#akila_fragment
+
+uniform sampler2D albedo;
+
+void main() {
+	vec3 color = texture(albedo, v_uv);
+
+	brdf(...);
+}
+
 ```
 ### Materiaux
 ```cpp

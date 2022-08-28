@@ -19,7 +19,7 @@ namespace akila {
 		SAMPLER
 	};
 
-	using SendFunction = void(*)(GLint, GLsizei, void *);
+	using SendFunction = void(*)(GLint, GLint, GLsizei, void *);
 	struct UniformInfos {
 		unsigned int location; // adresse dans le shader
 		UniformUnderlyingType baseType;
@@ -46,9 +46,6 @@ namespace akila {
 		void send(std::string const &name, Mat4 const &mat) const;
 		void send(std::string const &name, bool value) const;
 
-		void bind() const;
-		bool isBinded() const;
-
 		bool uniformExist(std::string const &name) const;
 		UniformInfos const &getUniforminfos(std::string const &name) const;
 
@@ -60,8 +57,6 @@ namespace akila {
 		bool readInt(std::string const &name, int *value) const;
 
 	private:
-		static GLuint bindedId;
-
 		GLuint id;
 
 		std::unordered_map<std::string, UniformInfos> uniformBindings;
