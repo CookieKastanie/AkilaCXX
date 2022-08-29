@@ -37,6 +37,9 @@ namespace akila {
 		Shader(std::string const &shaderTxt);
 		~Shader();
 
+		void bind() const;
+		bool isBinded() const;                                              
+
 		void send(std::string const &name, int value) const;
 		void send(std::string const &name, float value) const;
 		void send(std::string const &name, std::vector<float> const &values) const;
@@ -57,6 +60,8 @@ namespace akila {
 		bool readInt(std::string const &name, int *value) const;
 
 	private:
+		static GLuint bindedId;
+
 		GLuint id;
 
 		std::unordered_map<std::string, UniformInfos> uniformBindings;

@@ -4,6 +4,8 @@
 
 using namespace akila;
 
+GLuint Shader::bindedId = -1;
+
 void override_glUniformMatrix2fv(GLint id, GLint l, GLsizei s, void *d) {
 	glProgramUniformMatrix2fv(id, l, s, false, (GLfloat *)d);
 }
@@ -164,6 +166,15 @@ Shader::~Shader() {
 	glDeleteProgram(id);
 }
 
+void Shader::bind() const {
+	glUseProgram(id);
+	bindedId = id;
+}
+
+bool Shader::isBinded() const {
+	return bindedId == id;
+}
+
 void Shader::send(std::string const &name, int value) const {
 	UniformInfos const &infos = uniformBindings.at(name);
 	glProgramUniform1i(id, infos.location, value);
@@ -205,8 +216,6 @@ void Shader::send(std::string const &name, bool value) const {
 }
 
 void Shader::cacheUniformsLocations() {
-	glUseProgram(id);
-
 	GLint size; // size of the variable (array length)
 	GLenum type; // (float, vec3 or mat4, etc)
 

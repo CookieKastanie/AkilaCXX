@@ -285,7 +285,7 @@ TestLayer::TestLayer(): Layer{} {
 		transform.position = {pos.x, 0, pos.y};
 		//transform.rotateY(PI / 2.f);
 		transform.rotateY(Random::getAngle());
-		transform.setScale(Random::getFloat(.7, 1.3));
+		transform.setScale(Random::getFloat(.7f, 1.3f));
 
 		transform.savePrevious();
 	}

@@ -48,10 +48,10 @@ void MeshLoader::onEntry(JSON json, LoaderCallback cb) {
 		if(!file.good()) std::cerr << "Mesh loading error : can't read " << path << std::endl;
 
 		{
-			std::uint32_t val;
+			std::uint32_t val = 0;
 
 			file.read(reinterpret_cast<char *>(&val), sizeof(val));
-			if(val != 0x46546C67) return 1; // "glTF"
+			if(val != 0x46546C67) return; // "glTF"
 
 			file.read(reinterpret_cast<char *>(&val), sizeof(val));
 			// verifier la version ?
@@ -64,12 +64,12 @@ void MeshLoader::onEntry(JSON json, LoaderCallback cb) {
 
 		JSON json;
 		{ // le premier block doit etre de type JSON
-			std::uint32_t chunkLength;
+			std::uint32_t chunkLength = 0;
 			file.read(reinterpret_cast<char *>(&chunkLength), sizeof(chunkLength));
-			std::uint32_t chunkType;
+			std::uint32_t chunkType = 0;
 			file.read(reinterpret_cast<char *>(&chunkType), sizeof(chunkType));
 
-			if(chunkType != 0x4E4F534A) return 1; // "JSON"
+			if(chunkType != 0x4E4F534A) return; // "JSON"
 
 			std::string jsonText;
 			jsonText.resize(chunkLength);
@@ -78,12 +78,12 @@ void MeshLoader::onEntry(JSON json, LoaderCallback cb) {
 		}
 
 		{ // le second de type BIN
-			std::uint32_t chunkLength;
+			std::uint32_t chunkLength = 0;
 			file.read(reinterpret_cast<char *>(&chunkLength), sizeof(chunkLength));
-			std::uint32_t chunkType;
+			std::uint32_t chunkType = 0;
 			file.read(reinterpret_cast<char *>(&chunkType), sizeof(chunkType));
 
-			if(chunkType != 0x004E4942) return 1; // "BIN"
+			if(chunkType != 0x004E4942) return; // "BIN"
 
 			p->raw.resize(chunkLength);
 			file.read(reinterpret_cast<char *>(p->raw.data()), chunkLength);
@@ -94,7 +94,7 @@ void MeshLoader::onEntry(JSON json, LoaderCallback cb) {
 		if(!json["meshes"].is_array() ||
 			!json["accessors"].is_array() ||
 			!json["bufferViews"].is_array())
-			return 1;
+			return;
 
 		std::size_t vertexBufferIndex = -1;
 		std::size_t normalBufferIndex = -1;
@@ -130,7 +130,7 @@ void MeshLoader::onEntry(JSON json, LoaderCallback cb) {
 			auto vertexVBO = createPtr<VBO>(3, StaticMesh::Attributes::POSITION);
 			vertexVBO->setRawData(
 				p->raw.data() + p->vertex.byteOffset,
-				p->vertex.byteLength,
+				static_cast<int>(p->vertex.byteLength),
 				0, sizeof(float) * 3
 			);
 			mesh->addVBO(vertexVBO);
@@ -159,7 +159,7 @@ void MeshLoader::onEntry(JSON json, LoaderCallback cb) {
 			auto normalVBO = createPtr<VBO>(3, StaticMesh::Attributes::NORMAL);
 			normalVBO->setRawData(
 				p->raw.data() + p->normal.byteOffset,
-				p->normal.byteLength,
+				static_cast<int>(p->normal.byteLength),
 				0, sizeof(float) * 3
 			);
 			mesh->addVBO(normalVBO);
@@ -185,7 +185,7 @@ void MeshLoader::onEntry(JSON json, LoaderCallback cb) {
 			auto uvVBO = createPtr<VBO>(2, StaticMesh::Attributes::UV);
 			uvVBO->setRawData(
 				p->raw.data() + p->uv.byteOffset,
-				p->uv.byteLength,
+				static_cast<int>(p->uv.byteLength),
 				0, sizeof(float) * 2
 			);
 			mesh->addVBO(uvVBO);
@@ -195,7 +195,7 @@ void MeshLoader::onEntry(JSON json, LoaderCallback cb) {
 			auto ibo = createPtr<IBO>();
 			ibo->setRawData(
 				p->raw.data() + p->index.byteOffset,
-				p->index.byteLength,
+				static_cast<int>(p->index.byteLength),
 				0, sizeof(unsigned short)
 			);
 			mesh->setIBO(ibo);

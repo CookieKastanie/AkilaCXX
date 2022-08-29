@@ -44,7 +44,7 @@ int Core::run(void (*init)(void)) {
 			Time::update();
 			accumulator += Time::delta;
 
-			WindowEvents::process(accumulator / Time::fixedDelta);
+			WindowEvents::process(static_cast<unsigned int>(accumulator / Time::fixedDelta));
 
 			Threadpool::flush();
 

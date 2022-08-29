@@ -37,20 +37,20 @@ void TransformComponent::setScale(float s) {
 }
 
 Mat4 const &TransformComponent::calcMatrix() {
-	Mat4 &&rotate = toMat4(rotation);
-	Mat4 &&translate = akila::translate(Mat4(1.), position);
-	Mat4 &&scaled = akila::scale(Mat4(1.), scale);
-	matrix = translate * rotate * scaled;
+	matrix = toMat4(rotation);
+
+	matrix[3].x = position.x;
+	matrix[3].y = position.y;
+	matrix[3].z = position.z; // affectation direct,
+	// car une rotation n'a pas de translate de base
+
+	matrix = akila::scale(matrix, scale);
 
 	return matrix;
 }
 
 Mat4 const &TransformComponent::calcMatrixFromOrigin(Mat4 const &o) {
-	Mat4 &&rotate = toMat4(rotation);
-	Mat4 &&translate = akila::translate(Mat4(1.f), position);
-	Mat4 &&scaled = akila::scale(Mat4(1.f), scale);
-	matrix = o * translate * rotate * scaled;
-
+	matrix = o * calcMatrix();
 	return matrix;
 }
 
@@ -61,14 +61,17 @@ void TransformComponent::savePrevious() {
 }
 
 Mat4 const &TransformComponent::calcMatrixMix(float t) {
-	Vec3 &&lerpedPos = mix(prevPosition, position, t);
-	Quat &&lerpedRot = slerp(prevRotation, rotation, t);
-	Vec3 &&lerpedSca = mix(prevScale, scale, t);
+	Vec3 lerpedPos = mix(prevPosition, position, t);
+	Quat lerpedRot = slerp(prevRotation, rotation, t);
+	Vec3 lerpedSca = mix(prevScale, scale, t);
 
-	Mat4 &&rotate = toMat4(lerpedRot);
-	Mat4 &&translate = akila::translate(Mat4(1.f), lerpedPos);
-	Mat4 &&scaled = akila::scale(Mat4(1.f), lerpedSca);
-	matrix = translate * rotate * scaled;
+	matrix = toMat4(lerpedRot);
+
+	matrix[3].x = lerpedPos.x;
+	matrix[3].y = lerpedPos.y;
+	matrix[3].z = lerpedPos.z;
+
+	matrix = akila::scale(matrix, lerpedSca);
 
 	return matrix;
 }
