@@ -35,6 +35,10 @@ namespace akila {
 		static bool isMouseGrabbed();
 		static void setMouseGrab(bool grab);
 
+		static float getDPI();
+
+		static void loadImGuiFont(std::string const &path);
+
 	private:
 		friend class Core;
 		friend class internal::ImGuiHandler;

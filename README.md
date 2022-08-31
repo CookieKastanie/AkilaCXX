@@ -300,12 +300,12 @@ vec4 brdf(...) {
 }
 
 // macro qui indique ou sera inséré le code du fragment
-#user_code
+#akila_user_code
 ```
 
 Un shader qui utilise le template :
 ```glsl
-#use_template path/unlit.glsl
+#akila_template path/unlit.glsl
 
 #akila_fragment
 

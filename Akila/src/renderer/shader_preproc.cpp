@@ -25,37 +25,77 @@ std::string readShaderSource(std::string const path) {
 	return stream.str();
 }
 
+void ShaderPreproc::parseLine(std::string &line, std::string *&currentSource, ShaderSources &sources) {
+	if(!line.compare("#akila_vertex")) currentSource = &sources.vertexShader;
+	else if(!line.compare("#akila_fragment")) currentSource = &sources.fragmentShader;
+	else if(!line.compare("#akila_geometry")) currentSource = &sources.geometryShader;
+
+	// permet d'inclure d'autres fichiers (n'est pas recursif)
+	else if(line.find("#akila_file") != std::string::npos)
+		currentSource->append(
+			// split apres le premier espace
+			readShaderSource(line.substr(
+				line.find(" ") + 1)
+			)
+		);
+
+	else {
+		for(Define const &define : defines) {
+			line = std::regex_replace(line, std::regex(define.name), define.value);
+		}
+
+		currentSource->append(line + "\n");
+	}
+}
+
 void ShaderPreproc::process(std::string const &source, ShaderSources &sources, std::string const &currentPath) {
 	std::istringstream iss(source);
 
 	std::string garbage;
 	std::string *currentSource = &garbage;
 
+	std::string shaderTemplatePath = "";
+
 	std::string line;
-	while(std::getline(iss, line)) {
-		if(!line.compare("#akila_vertex")) currentSource = &sources.vertexShader;
-		else if(!line.compare("#akila_fragment")) currentSource = &sources.fragmentShader;
-		else if(!line.compare("#akila_geometry")) currentSource = &sources.geometryShader;
-		
-		// permet d'inclure d'autres fichiers (n'est pas recursif)
-		else if(line.find("#akila_file") != std::string::npos)
-			currentSource->append(
-				// split apres le premier espace
-				readShaderSource(line.substr(
-					line.find(" ") + 1)
-				)
+	if(std::getline(iss, line)) {
+		if(line.find("#akila_template") != std::string::npos) {
+			shaderTemplatePath = readShaderSource(line.substr(
+				line.find(" ") + 1)
 			);
-
-		else {
-			for(Define const &define : defines) {
-				line = std::regex_replace(line, std::regex(define.name), define.value);
-			}
-
-			currentSource->append(line + "\n");
 		}
 	}
 
-	sources.vertexShader = version + sources.vertexShader;
-	sources.fragmentShader = version + sources.fragmentShader;
-	if(!sources.geometryShader.empty()) sources.geometryShader = version + sources.geometryShader;
+	do {
+		parseLine(line, currentSource, sources);
+	} while(std::getline(iss, line));
+
+	if(!shaderTemplatePath.empty()) {
+		std::string templateSource = readShaderSource(shaderTemplatePath);
+		std::istringstream iss(templateSource);
+
+		ShaderSources templateSources;
+		currentSource = &garbage;
+
+		while(std::getline(iss, line)) {
+			parseLine(line, currentSource, templateSources);
+			if(!line.compare("#akila_user_code")) {
+				if(&templateSources.vertexShader == currentSource)
+					currentSource->append(sources.vertexShader);
+				else if(&templateSources.fragmentShader == currentSource)
+					currentSource->append(sources.fragmentShader);
+				else if(&templateSources.geometryShader == currentSource)
+					currentSource->append(sources.geometryShader);
+			}
+		}
+
+		sources.vertexShader = version + templateSources.vertexShader;
+		sources.fragmentShader = version + templateSources.fragmentShader;
+		if(!templateSources.geometryShader.empty()) sources.geometryShader = version + templateSources.geometryShader;
+
+		sources.templateName = shaderTemplatePath;
+	} else {
+		sources.vertexShader = version + sources.vertexShader;
+		sources.fragmentShader = version + sources.fragmentShader;
+		if(!sources.geometryShader.empty()) sources.geometryShader = version + sources.geometryShader;
+	}
 }

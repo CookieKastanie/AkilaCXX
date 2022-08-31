@@ -1,4 +1,5 @@
 #include "akila/window/window.hpp"
+#include "akila/window/imgui_handler.hpp"
 #include <iostream>
 
 using namespace akila;
@@ -149,6 +150,18 @@ void Window::setMouseGrab(bool grab) {
 	);
 	
 	mouseGrab = grab;
+}
+
+float Window::getDPI() {
+	float xscale, yscale;
+	//GLFWmonitor *monitor = glfwGetPrimaryMonitor();
+	glfwGetWindowContentScale(window, &xscale, &yscale);
+
+	return max(xscale, yscale);
+}
+
+void Window::loadImGuiFont(std::string const &path) {
+	internal::ImGuiHandler::loadFont(path, getDPI());
 }
 
 void Window::terminate() {

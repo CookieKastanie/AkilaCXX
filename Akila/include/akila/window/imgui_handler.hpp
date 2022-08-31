@@ -9,6 +9,7 @@ namespace akila::internal {
 
 		private:
 			friend class Core;
+			friend class Window;
 			friend class WindowEvents;
 
 			static ImGuiIO *io;
@@ -19,6 +20,8 @@ namespace akila::internal {
 			static void endFrame();
 
 			static bool wantCaptureMouse();
+
+			static void loadFont(std::string const &path, float dpi = 1);
 
 			static void terminate();
 	};

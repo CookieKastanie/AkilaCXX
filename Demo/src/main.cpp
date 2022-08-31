@@ -34,5 +34,7 @@ int main() {
 
 		Window::setSize({1600, 900});
 		Window::setPositionToCenter();
+
+		Window::loadImGuiFont(FileSystem::path("fonts/Cascadia.ttf"));
 	});
 }

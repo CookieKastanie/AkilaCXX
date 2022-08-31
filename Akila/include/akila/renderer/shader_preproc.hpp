@@ -7,6 +7,7 @@ namespace akila {
 	class ShaderPreproc {
 	public:
 		struct ShaderSources {
+			std::string templateName;
 			std::string vertexShader;
 			std::string fragmentShader;
 			std::string geometryShader;
@@ -28,5 +29,7 @@ namespace akila {
 			bool operator<(Define const &other) const;
 		};
 		static std::set<Define> defines;
+
+		static void parseLine(std::string &line, std::string *&currentSource, ShaderSources &sources);
 	};
 }
