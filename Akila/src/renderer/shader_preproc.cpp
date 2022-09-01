@@ -44,7 +44,8 @@ void ShaderPreproc::parseLine(std::string &line, std::string *&currentSource, Sh
 			line = std::regex_replace(line, std::regex(define.name), define.value);
 		}
 
-		currentSource->append(line + "\n");
+		// !!!!!!!!!!!!!!!
+		if(line.compare("#akila_user_code")) currentSource->append(line + "\n");
 	}
 }
 
@@ -59,9 +60,7 @@ void ShaderPreproc::process(std::string const &source, ShaderSources &sources, s
 	std::string line;
 	if(std::getline(iss, line)) {
 		if(line.find("#akila_template") != std::string::npos) {
-			shaderTemplatePath = readShaderSource(line.substr(
-				line.find(" ") + 1)
-			);
+			shaderTemplatePath = line.substr(line.find(" ") + 1);
 		}
 	}
 

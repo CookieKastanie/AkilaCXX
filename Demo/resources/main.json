@@ -24,10 +24,14 @@
         },
         {
             "name": "wireframe",
-            "shader": "wireframe",
+            "shader": "pbr_flat",
             "uniforms": {
                 "color": [ 1, 1, 1 ]
             }
+        },
+        {
+            "name": "pbr_flat",
+            "shader": "pbr_flat"
         }
     ],
 
@@ -43,6 +47,10 @@
         {
             "name": "wireframe",
             "path": "shaders/wireframe.glsl"
+        },
+        {
+            "name": "pbr_flat",
+            "path": "shaders/pbr_flat.glsl"
         }
     ],
 

@@ -32,7 +32,7 @@ int main() {
 		Layers::add<UtilsLayer>(Layer::Depth::BACK);
 		Layers::add<DebugLayer>();
 
-		Window::setSize({1600, 900});
+		Window::setSize({1280, 720});
 		Window::setPositionToCenter();
 
 		Window::loadImGuiFont(FileSystem::path("fonts/Cascadia.ttf"));

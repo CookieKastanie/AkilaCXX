@@ -154,9 +154,7 @@ void Window::setMouseGrab(bool grab) {
 
 float Window::getDPI() {
 	float xscale, yscale;
-	//GLFWmonitor *monitor = glfwGetPrimaryMonitor();
 	glfwGetWindowContentScale(window, &xscale, &yscale);
-
 	return max(xscale, yscale);
 }
 
