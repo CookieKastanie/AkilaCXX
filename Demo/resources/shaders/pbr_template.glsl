@@ -8,6 +8,8 @@ out vec3 normal;
 out vec2 uv;
 out vec3 fragPos;
 
+out vec3 sunDir;
+
 uniform mat4 modelMatrix;
 
 struct akila_camera {
@@ -31,6 +33,8 @@ void main() {
     vec4 viewPos = VM * a_position;
     fragPos = viewPos.xyz; 
 
+    sunDir = (u_camera.view * vec4(1, 1, 1, 0)).xyz;
+
     gl_Position = u_camera.projection * viewPos;
 }
 
@@ -41,12 +45,16 @@ in vec3 normal;
 in vec2 uv;
 in vec3 fragPos;
 
+in vec3 sunDir;
+
 #akila_file shaders/common.glsl
 #akila_file shaders/pbr_functions.glsl
 
 uniform float exposure = 2.;
 
 vec3 brdf(vec3 albedo, float roughness, float metallic) {
+    roughness = max(roughness, 0.01);
+
     vec3 N = normalize(normal);
     vec3 V = normalize(-fragPos);
 
@@ -59,7 +67,7 @@ vec3 brdf(vec3 albedo, float roughness, float metallic) {
 
     // sunlight
     {
-        vec3 L = normalize(vec3(100.) - fragPos);
+        vec3 L = normalize(sunDir);
         vec3 radiance = vec3(1, 0.996, 0.949) * 2.;        
         
         brdf_impl(Lo, N, V, L, radiance, albedo, metallic, roughness, F0);
