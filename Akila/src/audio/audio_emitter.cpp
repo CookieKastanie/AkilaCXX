@@ -16,6 +16,7 @@ AudioEmitter::AudioEmitter(Ref<AudioSource> source): source{source}, sound{}{
 }
 
 AudioEmitter::~AudioEmitter() {
+	ma_sound_stop(&sound);
 	ma_sound_uninit(&sound);
 }
 

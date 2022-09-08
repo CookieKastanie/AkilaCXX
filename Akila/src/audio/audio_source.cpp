@@ -6,6 +6,7 @@ using namespace akila;
 AudioSource::AudioSource(): sound{} {}
 
 AudioSource::~AudioSource() {
+	ma_sound_stop(&sound);
 	ma_sound_uninit(&sound);
 }
 

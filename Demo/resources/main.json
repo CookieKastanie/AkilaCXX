@@ -24,7 +24,7 @@
         },
         {
             "name": "wireframe",
-            "shader": "pbr_flat",
+            "shader": "wireframe",
             "uniforms": {
                 "color": [ 1, 1, 1 ]
             }

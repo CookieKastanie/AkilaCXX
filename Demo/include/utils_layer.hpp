@@ -12,4 +12,5 @@ public:
 
 private:
 	akila::Listener keyListener;
+	bool isLoading;
 };

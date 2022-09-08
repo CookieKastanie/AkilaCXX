@@ -76,7 +76,7 @@ namespace akila {
 
 	class System {
 	public:
-		System(Signature signature): signature{signature} {};
+		System(Signature signature): signature{signature}, entities{} {};
 		virtual ~System() = default;
 
 	protected:

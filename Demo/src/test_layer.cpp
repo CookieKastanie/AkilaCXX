@@ -150,8 +150,8 @@ struct MeshComponent {
 class DrawSystem: public System {
 public:
 	DrawSystem(): System{ECS::createSignature<TransformComponent, MeshComponent>()} {
-		//shader = Resources::get<Shader>("wireframe");
-		shader = Resources::get<Shader>("pbr_flat");
+		shader = Resources::get<Shader>("wireframe");
+		//shader = Resources::get<Shader>("pbr_flat");
 		camSystem = ECS::getSystem<OrbitCameraSystem>();
 	}
 
@@ -159,17 +159,17 @@ public:
 		Entity cam = camSystem->getMainCam();
 		auto& c = cam.getComponent<OrbitCameraComponent>();
 		
-		//shader->send("PV", c.pv);
+		shader->send("PV", c.pv);
 
-		shader->send("u_camera.view", c.view);
-		shader->send("u_camera.projection", c.projection);
+		//shader->send("u_camera.view", c.view);
+		//shader->send("u_camera.projection", c.projection);
 
 		for(Entity e : entities) {
 			auto &oc = e.getComponent<MeshComponent>();
 			auto &transform = e.getComponent<TransformComponent>();
 
-			//shader->send("model", transform.calcMatrixMix());
-			shader->send("modelMatrix", transform.calcMatrixMix());
+			shader->send("model", transform.calcMatrixMix());
+			//shader->send("modelMatrix", transform.calcMatrixMix());
 			oc.material->send();
 			oc.mesh->draw();
 		}
