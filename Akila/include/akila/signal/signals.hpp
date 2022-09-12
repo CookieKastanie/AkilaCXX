@@ -59,6 +59,17 @@ namespace akila {
 		friend class Listener;
 		friend class Core;
 
+		static void init() {
+			internal::SignalListenerIds::nextListenerId = 0;
+		}
+
+		static void terminate() {
+			queues[0].clear();
+			queues[1].clear();
+			allQueues.clear();
+			typeToIndex.clear();
+		}
+
 		static void removeListener(Listener const &listener) {
 			std::size_t index = typeToIndex[listener.type];
 			allQueues[index]->removeListener(listener);

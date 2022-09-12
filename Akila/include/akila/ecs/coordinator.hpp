@@ -4,7 +4,6 @@
 #include "akila/ecs/component_manager.hpp"
 #include "akila/ecs/system_manager.hpp"
 
-#include <memory>
 #include <set>
 
 namespace akila::internal {
@@ -13,11 +12,24 @@ namespace akila::internal {
 		friend class ECS;
 		friend class Entity;
 
-		static std::unique_ptr<EntityManager> entityManager;
-		static std::unique_ptr<ComponentManager> componentManager;
-		static std::unique_ptr<SystemManager> systemManager;
+		static EntityManager *entityManager;
+		static ComponentManager *componentManager;
+		static SystemManager *systemManager;
 
 		static std::set<EntityId> entityEraseQueue;
+
+		static void init() {
+			entityManager = new EntityManager{};
+			componentManager = new ComponentManager{};
+			systemManager = new SystemManager{};
+			entityEraseQueue = {};
+		}
+
+		static void terminate() {
+			delete entityManager;
+			delete componentManager;
+			delete systemManager;
+		}
 
 		static inline EntityId createEntity() {
 			return entityManager->create();
@@ -128,7 +140,7 @@ namespace akila::internal {
 			return systemManager->eraseSystem<T>();
 		}
 
-		static inline void eraseAllSystem() {
+		static void eraseAllSystem() {
 			systemManager->eraseAll();
 		}
 

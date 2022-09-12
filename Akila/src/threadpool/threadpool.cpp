@@ -11,9 +11,11 @@ std::queue<Threadpool::Task> Threadpool::waitingTaskQueue;
 std::mutex Threadpool::finishedTaskQueueMutex;
 std::queue<Threadpool::Task> Threadpool::finishedTaskQueue;
 
-bool Threadpool::exit = false;
+bool Threadpool::exit;
 
 void Threadpool::init(unsigned int maxThreadCount) {
+	exit = false;
+
 	unsigned int threadCount = std::thread::hardware_concurrency();
 	if(threadCount == 0) threadCount = 1;
 	else if(threadCount > maxThreadCount) threadCount = maxThreadCount;
@@ -71,4 +73,8 @@ void Threadpool::terminate() {
 	exit = true;
 	cv.notify_all();
 	for(int i = 0; i < threads.size(); i++) threads[i].join();
+
+	threads.clear();
+	std::queue<Threadpool::Task>().swap(waitingTaskQueue); // = clear
+	std::queue<Threadpool::Task>().swap(finishedTaskQueue); // = clear
 }

@@ -19,12 +19,21 @@
 using namespace akila;
 using namespace akila::internal;
 
+bool Core::restartFlag;
+
 int Core::run(void (*init)(void)) {
-	Random::init();
-	Window::initWindow();
-	Audio::init();
-	FileSystem::init();
+start:
+	restartFlag = false;
+
 	Threadpool::init();
+	Window::initWindow();
+	//Audio::init();
+	FileSystem::init();
+	Random::init();
+	Signals::init();
+	Resources::init();
+	ECS::init();
+	Layers::init();
 
 	std::atomic<bool> stop = false;
 	std::atomic<bool> threadReady = false;
@@ -85,10 +94,22 @@ int Core::run(void (*init)(void)) {
 	while(!threadFinished) glfwWaitEvents();
 	thread.join();
 
+	ECS::terminate();
+	Layers::terminate();
+	Resources::terminate();
+	Signals::terminate();
 	Threadpool::terminate();
 	ImGuiHandler::terminate();
-	Audio::terminate();
+	//Audio::terminate();
 	Window::terminate();
+
+	if(restartFlag) goto start;
 
 	return EXIT_SUCCESS;
 }
+
+void Core::restart() {
+	restartFlag = true;
+	Window::close();
+}
+

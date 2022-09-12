@@ -221,14 +221,16 @@ public:
 
 class AudioSystem: public System {
 public:
-	AudioSystem(): System{ECS::createSignature<TransformComponent, AudioEmitter>()} {}
+	AudioSystem(): System{ECS::createSignature<TransformComponent/*, AudioEmitter*/>()} {}
 
 	void play() {
 		for(Entity e : entities) {
 			auto &t = e.getComponent<TransformComponent>();
-			auto &s = e.getComponent<AudioEmitter>();
-			s.setPosition(t.position);
-			Audio::detach(s);
+			//auto &s = e.getComponent<AudioEmitter>();
+			//s.setPosition(t.position);
+			//Audio::detach(s);
+			
+			
 			//s.play();
 
 			std::cout << t.position << std::endl;
@@ -268,7 +270,7 @@ TestLayer::TestLayer(): Layer{} {
 		transform.savePrevious();
 
 		if(i == 0) {
-			e.addComponent<AudioEmitter>(AudioEmitter{Resources::get<AudioSource>("boom")});
+			//e.addComponent<AudioEmitter>(AudioEmitter{Resources::get<AudioSource>("boom")});
 		}
 	}
 
@@ -319,19 +321,21 @@ TestLayer::TestLayer(): Layer{} {
 
 
 
-	music = Resources::get<AudioSource>("hound");
+	//music = Resources::get<AudioSource>("hound");
+	
+	
 	//boom.setSource(Resources::get<AudioSource>("boom"));
 
 	ECS::createSystem<AudioSystem>();
 	
 	keyListener = Signals::listen<KeyPressSignal>([&](KeyPressSignal const &e) {
 		if(e.key == Inputs::Key::P) {
-			music->play();
+			//music->play();
 		}
 		
 
 		if(e.key == Inputs::Key::B) {
-			ECS::getSystem<AudioSystem>()->play();
+			//ECS::getSystem<AudioSystem>()->play();
 		}
 		/*
 		if(e.key == Inputs::Key::B) {
@@ -362,7 +366,7 @@ void TestLayer::frame() {
 	Entity e = ECS::getSystem<OrbitCameraSystem>()->getMainCam();
 	auto &c = e.getComponent<OrbitCameraComponent>();
 
-	Audio::setListenerPositionDirection(c.position, normalize(c.center - c.position));
+	//Audio::setListenerPositionDirection(c.position, normalize(c.center - c.position));
 
 	Renderer::useDefaultFrameBuffer();
 	Renderer::clear();

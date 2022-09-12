@@ -18,10 +18,14 @@ namespace akila {
 		virtual void frame();
 		virtual void gui();
 
+		std::string const getTypeName() const;
+
 	private:
 		friend class Layers;
 
 		TypeId typeId;
 		Depth depth;
+
+		std::string typeName;
 	};
 }

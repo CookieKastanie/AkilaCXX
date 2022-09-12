@@ -163,7 +163,7 @@ void DebugLayer::gui() {
 
 	ImGui::Begin("Debug");
 
-	ImGui::TextColored({1., 1., 0., 1.}, "Infos:");
+	ImGui::TextColored({1., 1., 0., 1.}, "Timings:");
 	std::string fps = "FPS: " + std::to_string(updateMeanFPS());
 	ImGui::Text(fps.c_str());
 
@@ -205,6 +205,15 @@ void DebugLayer::gui() {
 
 	ImGui::Separator();
 
+	ImGui::TextColored({1., 1., 0., 1.}, "Layers:");
+	for(auto const &layer : Layers::listing()) {
+		std::string name = "\t- " + layer->getTypeName();
+		ImGui::Text(name.c_str());
+	}
+
+	ImGui::Separator();
+
+	if(ImGui::Button("Restart /!\\")) Core::restart();
 	if(ImGui::Button("Quit /!\\")) Window::close();
 
 	ImGui::End();

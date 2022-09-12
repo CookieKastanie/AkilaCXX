@@ -84,7 +84,7 @@ UtilsLayer::UtilsLayer(): isLoading{false} {
 		}
 	});
 
-	/*/
+	//*/
 	Resources::load({"main.json"}, []() {
 		std::cout << "Loaded" << std::endl;
 		Layers::add<TestLayer>();

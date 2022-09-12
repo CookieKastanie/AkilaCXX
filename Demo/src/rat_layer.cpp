@@ -22,6 +22,9 @@ public:
 		Entity cam = camSystem->getMainCam();
 		auto &c = cam.getComponent<OrbitCameraComponent>();
 
+		c.resize(Window::getSize());
+		c.recalcProjection();
+
 		//shader->bind();
 		shader->send("PV", c.pv);
 
@@ -60,10 +63,10 @@ RatLayer::RatLayer(): Layer{} {
 
 	ECS::createSystem<DrawRatSystem>();
 
-	music = Resources::get<AudioSource>("rat");
-	music->setVolume(.5);
-	music->setLooping(true);
-	music->play();
+	//music = Resources::get<AudioSource>("rat");
+	//music->setVolume(.5);
+	//music->setLooping(true);
+	//music->play();
 }
 
 void RatLayer::tick() {

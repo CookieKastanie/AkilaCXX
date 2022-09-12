@@ -20,7 +20,7 @@ int main() {
 		Resources::registerLoader<ShaderLoader>();
 		Resources::registerLoader<Texture2DLoader>();
 		Resources::registerLoader<MaterialLoader>();
-		Resources::registerLoader<AudioLoader>();
+		//Resources::registerLoader<AudioLoader>();
 		Resources::registerLoader<MeshLoader>();
 
 		ShaderPreproc::define("a_position_loc", StaticMesh::Attributes::POSITION);

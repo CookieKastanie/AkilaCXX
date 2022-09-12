@@ -1,9 +1,12 @@
 #include "akila/renderer/renderer.hpp"
+#include "akila/renderer/shader.hpp"
 #include "akila/window/window.hpp"
 
 using namespace akila;
 
 void Renderer::init() {
+	Shader::bindedId = 0;
+
 	enable(Capability::BLEND);
 	blendFunc(BlendFactor::SRC_ALPHA, BlendFactor::ONE_MINUS_SRC_ALPHA);
 	enable(Capability::DEPTH_TEST);

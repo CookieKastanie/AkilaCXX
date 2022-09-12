@@ -106,12 +106,25 @@ namespace akila {
 		}
 
 	private:
+		friend class Core;
+
 		static std::unordered_map<TypeId, std::unique_ptr<internal::IResourceMap>> maps;
 		static std::unordered_map<TypeId, std::string> mapNames;
 
 		friend class internal::LoadingInstance;
 		static std::vector<std::unique_ptr<Loader>> loaders;
 		static std::vector<internal::LoadingInstance> loadingInstances;
+
+		static void init() {
+			
+		}
+
+		static void terminate() {
+			maps.clear();
+			mapNames.clear();
+			loaders.clear();
+			loadingInstances.clear();
+		}
 
 		template<typename T>
 		static void registerType() {

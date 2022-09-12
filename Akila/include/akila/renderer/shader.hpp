@@ -60,6 +60,8 @@ namespace akila {
 		bool readInt(std::string const &name, int *value) const;
 
 	private:
+		friend class Renderer;
+
 		static GLuint bindedId;
 
 		GLuint id;

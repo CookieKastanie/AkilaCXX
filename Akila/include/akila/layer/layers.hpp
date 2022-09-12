@@ -17,6 +17,7 @@ namespace akila {
 			Layer *layer = new T{args...};
 			layer->depth = depth;
 			layer->typeId = getTypeId<T>();
+			layer->typeName = getTypeName<T>();
 
 			for(auto it = layers.begin(); it != layers.end(); ++it) {
 				if(it->get()->depth > depth) {
@@ -40,10 +41,22 @@ namespace akila {
 			}
 		}
 
+		static std::vector<std::unique_ptr<Layer>> const &listing() {
+			return layers;
+		}
+
 	private:
 		friend class Core;
 
 		static std::vector<std::unique_ptr<Layer>> layers;
+
+		static void init() {
+
+		}
+
+		static void terminate() {
+			layers.clear();
+		}
 
 		static inline void Layers::tick() {
 			for(auto const &layer : layers) layer->tick();

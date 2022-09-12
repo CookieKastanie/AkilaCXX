@@ -339,6 +339,7 @@ mat.send(); // envoi au shader les data enregistrés dans le material
 
 ```
 ## Audio
+(ça ne marche PAS DU TOUT LA 🤬)
 ```cpp
 Ref<AudioSource> source = Resources::get<AudioSource>("mySource");
 

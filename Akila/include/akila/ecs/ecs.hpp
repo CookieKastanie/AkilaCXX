@@ -48,12 +48,22 @@ namespace akila {
 			return internal::Coordinator::createSignature<Ts...>();
 		}
 
-	//private:
-	//	friend class Core;
-
 		static inline void resetAll() {
 			internal::Coordinator::eraseAllSystem();
 			internal::Coordinator::eraseAllEntities();
+		}
+
+
+	private:
+		friend class Core;
+
+		static void init() {
+			internal::Coordinator::init();
+		}
+
+		static void terminate() {
+			resetAll();
+			internal::Coordinator::terminate();
 		}
 	};
 }
