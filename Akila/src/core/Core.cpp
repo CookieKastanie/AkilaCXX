@@ -57,6 +57,9 @@ start:
 
 			Threadpool::flush();
 
+			Layers::updateUnmounts();
+			Layers::updateMounts();
+
 			while(accumulator >= Time::fixedDelta) {
 				WindowEvents::beforeTick();
 				Signals::flush(Signals::Stack::BEFORE_TICK);
@@ -85,7 +88,7 @@ start:
 		glfwPostEmptyEvent();
 	}};
 
-	while(!threadReady); // attente active mais c'est bon ca va hein me faites pas chier ca dure moins de 1ms
+	while(!threadReady); // attente active
 
 	while(!Window::shouldClose()) {glfwWaitEvents();}
 	stop = true;

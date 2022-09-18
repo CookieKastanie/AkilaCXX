@@ -17,21 +17,19 @@ UtilsLayer::UtilsLayer(): isLoading{false} {
 
 			//*/
 			case Inputs::Key::NUM_1:
-				Threadpool::submit([]() {}, [&]() {
 					
 					if(isLoading) return;
 
 					isLoading = true;
 					Layers::remove<RatLayer>();
 					Layers::remove<TestLayer>();
-					ECS::resetAll();
-					Resources::cleanAll();
+					//ECS::resetAll();
+					//Resources::cleanAll();
 
 					Resources::load({"main.json"}, [&]() {
 						Layers::add<TestLayer>();
 						isLoading = false;
 					});
-				});
 				break;
 				/*/
 				if(isLoading) break;
@@ -56,8 +54,8 @@ UtilsLayer::UtilsLayer(): isLoading{false} {
 					isLoading = true;
 					Layers::remove<RatLayer>();
 					Layers::remove<TestLayer>();
-					ECS::resetAll();
-					Resources::cleanAll();
+					//ECS::resetAll();
+					//Resources::cleanAll();
 
 					Resources::load({"rat.json"}, [&]() {
 						Layers::add<RatLayer>();

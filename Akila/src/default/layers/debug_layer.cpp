@@ -158,17 +158,19 @@ int DebugLayer::updateMeanFPS() {
 	return static_cast<int>(std::round(mean));
 }
 
-void DebugLayer::gui() {
-	if(!show) return;
 
-	ImGui::Begin("Debug");
 
+
+
+
+
+void DebugLayer::guiTimings() {
 	ImGui::TextColored({1., 1., 0., 1.}, "Timings:");
 	std::string fps = "FPS: " + std::to_string(updateMeanFPS());
 	ImGui::Text(fps.c_str());
+}
 
-	ImGui::Separator();
-
+void DebugLayer::guiResources() {
 	ImGui::TextColored({1., 1., 0., 1.}, "Resources:");
 	ImGui::BeginTabBar("Resources");
 	for(auto const &type : Resources::listing()) {
@@ -197,20 +199,50 @@ void DebugLayer::gui() {
 	if(ImGui::Button("Clean all ressources")) {
 		Resources::cleanAll();
 	}
+}
 
-	ImGui::Separator();
-
+void DebugLayer::guiGLLogs() {
 	ImGui::TextColored({1., 1., 0., 1.}, "GL Logs:");
 	glLogger.draw();
+}
 
-	ImGui::Separator();
-
+void DebugLayer::guiLayers() {
 	ImGui::TextColored({1., 1., 0., 1.}, "Layers:");
 	for(auto const &layer : Layers::listing()) {
 		std::string name = "\t- " + layer->getTypeName();
 		ImGui::Text(name.c_str());
 	}
+}
 
+void DebugLayer::guiECS() {
+	ImGui::TextColored({1., 1., 0., 1.}, "Components:");
+	for(auto const &type : ECS::componentTypeListing()) {
+		std::string name = "\t- " + type.second;
+		ImGui::Text(name.c_str());
+	}
+}
+
+void DebugLayer::gui() {
+	if(!show) return;
+
+	ImGui::Begin("Debug");
+
+	//ImGui::BeginTabBar("Tools");
+	//if(ImGui::BeginTabItem("Timeing") {
+		
+	//}
+
+	//ImGui::EndTabBar();
+
+	guiTimings();
+	ImGui::Separator();
+	guiResources();
+	ImGui::Separator();
+	guiGLLogs();
+	ImGui::Separator();
+	guiLayers();
+	ImGui::Separator();
+	guiECS();
 	ImGui::Separator();
 
 	if(ImGui::Button("Restart /!\\")) Core::restart();

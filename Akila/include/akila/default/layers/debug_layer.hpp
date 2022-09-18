@@ -17,5 +17,11 @@ namespace akila {
 		Listener keyListener;
 
 		int updateMeanFPS();
+
+		void guiTimings();
+		void guiResources();
+		void guiGLLogs();
+		void guiLayers();
+		void guiECS();
 	};
 }

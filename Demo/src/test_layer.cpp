@@ -156,6 +156,8 @@ public:
 	}
 
 	void draw() {
+		if(entities.empty()) return;
+
 		Entity cam = camSystem->getMainCam();
 		auto& c = cam.getComponent<OrbitCameraComponent>();
 		
@@ -363,8 +365,8 @@ void TestLayer::frame() {
 
 	ECS::getSystem<OrbitCameraSystem>()->update();
 
-	Entity e = ECS::getSystem<OrbitCameraSystem>()->getMainCam();
-	auto &c = e.getComponent<OrbitCameraComponent>();
+	//Entity e = ECS::getSystem<OrbitCameraSystem>()->getMainCam();
+	//auto &c = e.getComponent<OrbitCameraComponent>();
 
 	//Audio::setListenerPositionDirection(c.position, normalize(c.center - c.position));
 

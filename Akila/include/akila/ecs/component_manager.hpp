@@ -104,6 +104,9 @@ namespace akila::internal {
 		std::unordered_map<TypeId, std::unique_ptr<IComponentVector>> componentVectors;
 		std::unordered_map<ComponentType, TypeId> componentTypeToId;
 
+		// mapNames uniquement pour le listing
+		std::unordered_map<TypeId, std::string> typeNames;
+
 		template<typename T>
 		ComponentVector<T> *createComponent() {
 			ComponentType type = nextType++;
@@ -117,6 +120,9 @@ namespace akila::internal {
 			ComponentVector<T> *vector = new ComponentVector<T>{type};
 			componentVectors[id] = std::unique_ptr<ComponentVector<T>>(vector);
 			componentTypeToId[type] = id;
+
+			// pour le listing
+			typeNames[type] = getTypeName<T>();
 
 			return vector;
 		}
@@ -195,6 +201,10 @@ namespace akila::internal {
 			vector->erase(entityId);
 
 			return vector->getType();
+		}
+
+		std::unordered_map<TypeId, std::string> const &typesListing() {
+			return typeNames;
 		}
 	};
 }

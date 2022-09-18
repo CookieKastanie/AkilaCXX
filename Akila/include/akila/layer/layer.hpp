@@ -14,6 +14,9 @@ namespace akila {
 		Layer();
 		virtual ~Layer() = default;
 
+		virtual void onMount();
+		virtual void onUnmount();
+
 		virtual void tick();
 		virtual void frame();
 		virtual void gui();

@@ -53,6 +53,9 @@ namespace akila {
 			internal::Coordinator::eraseAllEntities();
 		}
 
+		static std::unordered_map<TypeId, std::string> const &componentTypeListing() {
+			return internal::Coordinator::componentListing();
+		}
 
 	private:
 		friend class Core;

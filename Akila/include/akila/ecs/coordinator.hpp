@@ -115,6 +115,10 @@ namespace akila::internal {
 			systemManager->eraseIfNotCompatible(id, prevSignature, signature);
 		}
 
+		static std::unordered_map<TypeId, std::string> const &componentListing() {
+			return componentManager->typesListing();
+		}
+
 		//---
 
 		template<typename T>
