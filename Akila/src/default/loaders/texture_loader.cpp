@@ -112,7 +112,7 @@ void Texture2DLoader::onEntry(JSON json, LoaderCallback cb) {
 			}
 		}, [=]() {
 			if(p->data != nullptr) {
-				texture->setSize(p->fwidth, p->fheight);
+				texture->setSize({p->fwidth, p->fheight});
 				texture->setData(p->data, p->fileFormat, p->dataType);
 
 				stbi_image_free(p->data);

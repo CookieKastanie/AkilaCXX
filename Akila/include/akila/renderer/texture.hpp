@@ -1,6 +1,7 @@
 #pragma once
 
 #include <glad/glad.h>
+#include "akila/math/math.hpp"
 
 namespace akila {
 	class TextureBuffer {
@@ -46,11 +47,10 @@ namespace akila {
 		unsigned int getId() const;
 
 		void bind(unsigned int unit = 0) const;
-		virtual void setSize(int width, int height) = 0;
+		virtual void setSize(IVec2 size) = 0;
 		virtual void setData(void const *data, Format format, Type type, unsigned int mipLevel = 0) = 0;
 
-		int getWidth() const;
-		int getHeight() const;
+		IVec2 getSize() const;
 
 		enum class WrapMode: GLint {
 			CLAMP_TO_EDGE = GL_CLAMP_TO_EDGE,
@@ -87,8 +87,7 @@ namespace akila {
 		GLenum kind;
 		GLenum internalFormat;
 
-		int width;
-		int height;
+		IVec2 size;
 	};
 
 	/////
@@ -97,7 +96,7 @@ namespace akila {
 	public:
 		Texture2D(Format format = Format::RGB);
 
-		void setSize(int width, int height) override;
+		void setSize(IVec2 size) override;
 		void setData(void const *data, Format format, Type type, unsigned int mipLevel = 0) override;
 	};
 

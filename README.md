@@ -336,7 +336,18 @@ mat.send(); // envoi au shader les data enregistrés dans le material
 ```
 ### FrameBuffers
 ```cpp
+FrameBuffer framebuffer{};
+framebuffer.setTexture(Resources::create<Texture2D>("colorTarget"), 0); // 0 = index d'attachment
+framebuffer.setDepthTexture(Resources::create<Texture2D>("depthTarget", TextureBuffer::Format::DEPTH_COMPONENT));
+framebuffer.resizeAll(Window::getSize());
+framebuffer.prepare(); // appeler 1 fois pour commencer à render
 
+//render...
+framebuffer.bind(0);
+
+//...
+
+frambuffer.blitToDefault(0);
 ```
 ## Audio
 (ça ne marche PAS DU TOUT LA 🤬)

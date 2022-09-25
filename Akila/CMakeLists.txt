@@ -42,7 +42,7 @@ add_library(akila STATIC
 	"src/default/systems/orbit_camera_system.cpp"
 	"src/audio/audio.cpp"
 	"src/audio/audio_source.cpp"
-	"src/audio/audio_emitter.cpp" "src/default/loaders/audio_loader.cpp" "src/default/loaders/mesh_loader.cpp")
+	"src/audio/audio_emitter.cpp" "src/default/loaders/audio_loader.cpp" "src/default/loaders/mesh_loader.cpp" "src/renderer/framebuffer.cpp")
 
 target_include_directories(akila PRIVATE "include")
 
