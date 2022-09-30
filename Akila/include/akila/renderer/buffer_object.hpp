@@ -63,13 +63,12 @@ namespace akila {
 
 	class UBO: public BufferObject {
 	public:
-		UBO(unsigned int size, BufferObject::Usage usage = Usage::DYNAMIC);
+		UBO(unsigned int bindingPoint, unsigned int size, BufferObject::Usage usage = Usage::DYNAMIC);
 
 		void setData(void const *data);
 		unsigned int getBindingPoint();
 
 	private:
-		static unsigned int nextBindingPoint;
 		unsigned int bindingPoint;
 	};
 }

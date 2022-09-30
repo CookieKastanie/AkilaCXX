@@ -1,11 +1,13 @@
 #include "rat_layer.hpp"
 
-#include <akila/default/resources/static_mesh_primitives.hpp>
-#include <akila/default/systems.hpp>
-#include <akila/default/components.hpp>
+//#include <akila/default/resources/static_mesh_primitives.hpp>
+//#include <akila/default/systems.hpp>
+//#include <akila/default/components.hpp>
+
+
 
 using namespace akila;
-
+/*
 struct MeshComponent {
 	Ref<StaticMesh> mesh;
 	Ptr<Material> material;
@@ -46,22 +48,23 @@ private:
 	Ref<Shader> shader;
 	OrbitCameraSystem *camSystem;
 };
+*/
 
-RatLayer::RatLayer(): Layer{} {
+void RatLayer::onMount() {
 	Entity e = ECS::createEntity();
 	e.addComponent<MeshComponent>({
 		Resources::get<StaticMesh>("rat"),
 		Resources::get<Material>("rat")->copy()
+		//{Resources::get<Material>("rat")}
 	});
 	e.addComponent<TransformComponent>();
 
+	
+	//ECS::createSystem<OrbitCameraSystem>();
+	//ECS::createEntity(ECS::createSignature<OrbitCameraComponent>());
+
 	Renderer::setClearColor(.3f, .3f, .3f);
-	Renderer::enable(Renderer::Capability::DEPTH_TEST);
-
-	ECS::createSystem<OrbitCameraSystem>();
-	ECS::createEntity(ECS::createSignature<OrbitCameraComponent>());
-
-	ECS::createSystem<DrawRatSystem>();
+	renderSystem = ECS::createSystem<RenderSystem>();
 
 	//music = Resources::get<AudioSource>("rat");
 	//music->setVolume(.5);
@@ -69,16 +72,20 @@ RatLayer::RatLayer(): Layer{} {
 	//music->play();
 }
 
+void RatLayer::onUnmount() {
+	ECS::eraseSystem<RenderSystem>();
+	ECS::resetAll();
+	Resources::cleanAll();
+}
+
 void RatLayer::tick() {
 
 }
 
 void RatLayer::frame() {
-	ECS::getSystem<OrbitCameraSystem>()->update();
+	//ECS::getSystem<OrbitCameraSystem>()->update();
 
-	Renderer::useDefaultFrameBuffer();
-	Renderer::clear();
-	ECS::getSystem<DrawRatSystem>()->draw();
+	renderSystem->colorPass();
 }
 
 void RatLayer::gui() {

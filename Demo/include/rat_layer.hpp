@@ -1,15 +1,19 @@
 #pragma once
 
 #include <akila/akila.hpp>
+#include "render_system.hpp"
 
 class RatLayer: public akila::Layer {
 public:
-	RatLayer();
+	void onMount() override;
+	void onUnmount() override;
 
 	void tick() override;
 	void frame() override;
 	void gui() override;
 
 private:
-	akila::Ref<akila::AudioSource> music;
+	RenderSystem *renderSystem;
+
+	//akila::Ref<akila::AudioSource> music;
 };

@@ -88,12 +88,9 @@ template void IBO::setData(std::vector<unsigned int> const &data);
 
 /////////////////////////////////////////////////////////////////////////////////////////////////
 
-unsigned int UBO::nextBindingPoint = 0;
-
-UBO::UBO(unsigned int size, BufferObject::Usage usage): BufferObject{GL_UNIFORM_BUFFER, usage} {
+UBO::UBO(unsigned int bindingPoint, unsigned int size, BufferObject::Usage usage): BufferObject{GL_UNIFORM_BUFFER, usage}, bindingPoint{bindingPoint} {
 	setRawData(NULL, size);
 	length = size;
-	bindingPoint = nextBindingPoint++;
 	glBindBufferBase(GL_UNIFORM_BUFFER, bindingPoint, id);
 }
 

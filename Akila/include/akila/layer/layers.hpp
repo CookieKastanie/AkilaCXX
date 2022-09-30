@@ -86,21 +86,6 @@ namespace akila {
 		}
 
 		static void updateMounts() {
-			/*/
-			for(auto &l : mounts) {
-				Layer *layer = l.release();
-
-				for(auto it = layers.begin(); it != layers.end(); ++it) {
-					if(it->get()->depth > layer->depth) {
-						layers.emplace(it, layer);
-						return;
-					}
-				}
-
-				layers.emplace_back(layer);
-			}
-			//*/
-
 			while(!mounts.empty()) {
 				Layer *layer = mounts.back();
 				mounts.pop_back();
@@ -113,26 +98,18 @@ namespace akila {
 				}
 
 				layers.emplace_back(layer);
+				layer->onMount();
 			}
 		}
 
 		static void updateUnmounts() {
-			/*/
-			for(TypeId typeId : unmounts)
-			for(auto &it = layers.begin(); it != layers.end(); ++it) {
-				if(it->get()->typeId == typeId) {
-					layers.erase(it);
-					break;
-				}
-			}
-			//*/
-
 			while(!unmounts.empty()) {
 				TypeId typeId = unmounts.back();
 				unmounts.pop_back();
 
 				for(auto &it = layers.begin(); it != layers.end(); ++it) {
 					if(it->get()->typeId == typeId) {
+						it->get()->onUnmount();
 						layers.erase(it);
 						break;
 					}

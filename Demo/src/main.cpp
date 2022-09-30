@@ -6,6 +6,7 @@
 #include <akila/default/layers.hpp>
 #include <akila/default/resources/static_mesh.hpp>
 
+#include "render_system.hpp"
 #include "utils_layer.hpp"
 
 using namespace akila;
@@ -28,6 +29,8 @@ int main() {
 		ShaderPreproc::define("a_normal_loc", StaticMesh::Attributes::NORMAL);
 		ShaderPreproc::define("a_tangent_loc", StaticMesh::Attributes::TANGENT);
 		ShaderPreproc::define("a_color_loc", StaticMesh::Attributes::COLOR);
+
+		ShaderPreproc::define("u_camera_loc", RenderSystem::CAMERA_LOCATION);
 
 		Layers::add<UtilsLayer>(Layer::Depth::BACK);
 		Layers::add<DebugLayer>();
