@@ -9,11 +9,18 @@ RenderSystem::RenderSystem():
 	
 }
 
-void RenderSystem::colorPass() {
+void RenderSystem::colorPass(CameraComponent *cam) {
 	Renderer::useDefaultFrameBuffer();
 	Renderer::clear();
 
+	cameraBuffer.setData(cam);
+
 	for(Entity entity : entities) {
-		
+		auto &transform = entity.getComponent<TransformComponent>();
+		auto &mesh = entity.getComponent<MeshComponent>();
+
+		mesh.material->getShader()->send("u_modelMatrix", transform.calcMatrixMix());
+		mesh.material->send();
+		mesh.mesh->draw();
 	}
 }

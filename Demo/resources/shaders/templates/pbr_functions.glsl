@@ -49,19 +49,19 @@ void brdf_impl(
     float NdotL = max(dot(N, L), 0.0);    
     
     // cook-torrance brdf
-    float NDF = DistributionGGX(N, H, roughness);        
-    float G   = GeometrySmith(NdotV, NdotL, roughness);      
-    vec3 F    = fresnelSchlick(HdotV, F0);       
+    float NDF = DistributionGGX(N, H, roughness);
+    float G   = GeometrySmith(NdotV, NdotL, roughness);
+    vec3 F    = fresnelSchlick(HdotV, F0);
     
     vec3 kS = F;
     vec3 kD = vec3(1.0) - kS;
-    kD *= 1.0 - metallic;	  
+    kD *= 1.0 - metallic;
     
     vec3 numerator    = NDF * G * F;
     float denominator = 4.0 * NdotV * NdotL;
-    vec3 specular     = numerator / max(denominator, 0.001);  
+    vec3 specular     = numerator / max(denominator, 0.001);
 
-    Lo += (kD * albedo / PI + specular) * radiance * NdotL; 
+    Lo += (kD * albedo / PI + specular) * radiance * NdotL;
 }
 
 vec3 aces(vec3 x) {

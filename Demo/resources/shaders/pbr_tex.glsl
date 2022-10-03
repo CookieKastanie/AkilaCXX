@@ -4,8 +4,8 @@
 
 out vec4 FragColor;
 
-uniform vec3 color = vec3(1.0, 0.0, 0.0);
+uniform sampler2D diffuse;
 
 void main() {
-    FragColor = vec4(brdf(color, 0.4, 0.0), 1.0);
+    FragColor = vec4(brdf(texture(diffuse, uv).rgb, 0.9, 0.0), 1.0);
 }

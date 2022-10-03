@@ -13,6 +13,7 @@ namespace akila {
 		Material(Ref<Shader> shader);
 
 		Ref<Shader> getShaderRef() const;
+		Shader *getShader() const;
 		Ptr<Material> copy();
 
 		/* Indique quel uniform le materiau utilisera */

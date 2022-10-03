@@ -20,7 +20,7 @@ struct Camera {
 	float ratio;
 };
 
-layout(std140, location = u_camera_loc) uniform camera_ubo {
+layout(std140, binding = u_camera_loc) uniform camera_ubo {
     Camera u_camera;
 };
 

@@ -11,6 +11,10 @@ Ref<Shader> Material::getShaderRef() const {
 	return shader;
 }
 
+Shader *Material::getShader() const {
+	return shader.raw();
+}
+
 Ptr<Material> Material::copy() {
 	Ptr<Material> mat = createPtr<Material>(shader);
 	mat->textures = textures;

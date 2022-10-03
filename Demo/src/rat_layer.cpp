@@ -1,8 +1,8 @@
 #include "rat_layer.hpp"
 
 //#include <akila/default/resources/static_mesh_primitives.hpp>
-//#include <akila/default/systems.hpp>
-//#include <akila/default/components.hpp>
+#include <akila/default/systems.hpp>
+#include <akila/default/components.hpp>
 
 
 
@@ -60,8 +60,8 @@ void RatLayer::onMount() {
 	e.addComponent<TransformComponent>();
 
 	
-	//ECS::createSystem<OrbitCameraSystem>();
-	//ECS::createEntity(ECS::createSignature<OrbitCameraComponent>());
+	ECS::createSystem<OrbitCameraSystem>();
+	ECS::createEntity(ECS::createSignature<OrbitCameraComponent>());
 
 	Renderer::setClearColor(.3f, .3f, .3f);
 	renderSystem = ECS::createSystem<RenderSystem>();
@@ -83,9 +83,9 @@ void RatLayer::tick() {
 }
 
 void RatLayer::frame() {
-	//ECS::getSystem<OrbitCameraSystem>()->update();
+	ECS::getSystem<OrbitCameraSystem>()->update();
 
-	renderSystem->colorPass();
+	renderSystem->colorPass(&ECS::getSystem<OrbitCameraSystem>()->getMainCam().getComponent<OrbitCameraComponent>());
 }
 
 void RatLayer::gui() {

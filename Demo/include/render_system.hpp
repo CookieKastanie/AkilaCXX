@@ -10,7 +10,7 @@ public:
 
 	RenderSystem();
 
-	void colorPass();
+	void colorPass(akila::CameraComponent *cam);
 
 private:
 	akila::UBO cameraBuffer;

@@ -2,7 +2,8 @@
     "texture2d": [
         {
             "name": "rat",
-            "path": "textures/rat.png"
+            "path": "textures/rat.png",
+            "format": "SRGB"
         }
     ],
 
@@ -20,7 +21,7 @@
     "shader": [
         {
             "name": "texLit",
-            "path": "shaders/texLit.glsl",
+            "path": "shaders/pbr_tex.glsl",
 
             "uniforms": {
                 "diffuse": [ 0 ]
