@@ -36,6 +36,7 @@ void Threadpool::init(unsigned int maxThreadCount) {
 
 				{
 					std::scoped_lock<std::mutex> lck(waitingTaskQueueMutex);
+					if(waitingTaskQueue.empty()) continue;
 					task = waitingTaskQueue.front();
 					waitingTaskQueue.pop();
 				}

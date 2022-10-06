@@ -50,16 +50,90 @@ private:
 };
 */
 
-void RatLayer::onMount() {
-	Entity e = ECS::createEntity();
-	e.addComponent<MeshComponent>({
-		Resources::get<StaticMesh>("rat"),
-		Resources::get<Material>("rat")->copy()
-		//{Resources::get<Material>("rat")}
-	});
-	e.addComponent<TransformComponent>();
+struct RatComponent {
+	Vec3 rotationSpeeds;
+	Vec3 vel;
+};
 
+class RatBehaviourSystem: public System {
+public:
+	float dt = 0;
+
+	RatBehaviourSystem(): System(ECS::createSignature<RatComponent, TransformComponent>()) {}
+
+	void update() {
+		dt -= Time::fixedDelta;
+
+		if(dt <= 0) {
+			dt = 0.1;
+			//*/
+			Entity e = ECS::createEntity();
+			e.addComponent<MeshComponent>({
+				Resources::get<StaticMesh>("rat"),
+				Resources::get<Material>("rat")->copy()
+				//{Resources::get<Material>("rat")}
+			});
+			e.addComponent<TransformComponent>();
+			e.addComponent<RatComponent>({
+				{Random::getAngle(), Random::getAngle(), Random::getAngle()},
+				{Random::getFloat(), Random::getFloat(), Random::getFloat()}
+			});
+			//*/
+		}
+
+
+		for(Entity e : entities) {
+			auto &transform = e.getComponent<TransformComponent>();
+			auto &rat = e.getComponent<RatComponent>();
+
+			transform.savePrevious();
+
+			transform.rotateX(rat.rotationSpeeds.x * Time::fixedDelta);
+			transform.rotateY(rat.rotationSpeeds.y * Time::fixedDelta);
+			transform.rotateZ(rat.rotationSpeeds.z * Time::fixedDelta);
+
+			rat.vel.y -= Time::fixedDelta;
+
+			transform.translate(rat.vel * Time::fixedDelta);
+
+			if(transform.position.y < -10) {
+				ECS::addToEraseQueue(e);
+			}
+		}
+
+		ECS::flushEraseQueue();
+	}
+};
+
+void RatLayer::onMount() {
+	{
+		Entity e = ECS::createEntity();
+		e.addComponent<MeshComponent>({
+			Resources::get<StaticMesh>("rat"),
+			Resources::get<Material>("rat")->copy()
+			//{Resources::get<Material>("rat")}
+			});
+		e.addComponent<TransformComponent>();
+		e.addComponent<RatComponent>({
+			{Random::getAngle(), Random::getAngle(), Random::getAngle()},
+			{Random::getFloat(), Random::getFloat(), Random::getFloat()}
+		});
+	}
+
+	{
+		Entity e = ECS::createEntity();
+		e.addComponent<MeshComponent>({
+			Resources::get<StaticMesh>("rat"),
+			Resources::get<Material>("rat")->copy()
+			//{Resources::get<Material>("rat")}
+			});
+		e.addComponent<TransformComponent>();
+		//e.getComponent<TransformComponent>().translate({2, 0, 0});
+		//e.getComponent<TransformComponent>().savePrevious();
+	}
 	
+	ECS::createSystem<RatBehaviourSystem>();
+
 	ECS::createSystem<OrbitCameraSystem>();
 	ECS::createEntity(ECS::createSignature<OrbitCameraComponent>());
 
@@ -79,7 +153,7 @@ void RatLayer::onUnmount() {
 }
 
 void RatLayer::tick() {
-
+	ECS::getSystem<RatBehaviourSystem>()->update();
 }
 
 void RatLayer::frame() {

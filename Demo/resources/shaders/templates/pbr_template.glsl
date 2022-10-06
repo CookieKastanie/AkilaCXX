@@ -93,7 +93,8 @@ vec3 brdf(vec3 albedo, float roughness, float metallic) {
 
     // static
     //vec3 ambient = vec3(0.259, 0.647, 0.961) * albedo;// * ao;
-    vec3 ambient = vec3(0.259) * albedo;// * ao;
+    //vec3 ambient = vec3(0.259) * albedo;
+    vec3 ambient = vec3(0.159) * albedo;
 
     // IBL
     /*/

@@ -111,6 +111,7 @@ Shader::Shader(std::string const &shaderTxt):
 	ShaderPreproc::ShaderSources sources;
 	ShaderPreproc::process(shaderTxt, sources);
 	build(sources.vertexShader, sources.fragmentShader, sources.geometryShader);
+	templateFileName = sources.templateName;
 }
 
 void Shader::build(std::string const &vertexTxt, std::string const &fragmentTxt, std::string const &geometryTxt) {
@@ -279,4 +280,16 @@ bool Shader::readInt(std::string const &name, int *value) const {
 
 	glGetUniformiv(id, infos.location, value);
 	return true;
+}
+
+void Shader::setFileName(std::string const &name) {
+	fileName = name;
+}
+
+std::string const &Shader::getFileName() const {
+	return fileName;
+}
+
+std::string const &Shader::getTemplateFileName() const {
+	return templateFileName;
 }

@@ -32,6 +32,7 @@ void ShaderLoader::onEntry(JSON json, LoaderCallback cb) {
 	stream << file.rdbuf();
 
 	auto &shader = Resources::create<Shader>(name, stream.str());
+	shader->setFileName(shaderPath);
 
 	Parser::parseUniforms(shader, json, [&](std::string const &name, UniformInfos const &infos, void *data, std::size_t byteCount) {
 		(void)(name);

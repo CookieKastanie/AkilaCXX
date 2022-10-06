@@ -59,6 +59,11 @@ namespace akila {
 
 		bool readInt(std::string const &name, int *value) const;
 
+		void setFileName(std::string const &name);
+
+		std::string const &getFileName() const;
+		std::string const &getTemplateFileName() const;
+
 	private:
 		friend class Renderer;
 
@@ -68,6 +73,9 @@ namespace akila {
 
 		std::unordered_map<std::string, UniformInfos> uniformBindings;
 		std::size_t totalByteCount;
+
+		std::string fileName;
+		std::string templateFileName;
 
 		void build(std::string const &vertexTxt, std::string const &fragmentTxt, std::string const &geometryTxt = "");
 		void cacheUniformsLocations();

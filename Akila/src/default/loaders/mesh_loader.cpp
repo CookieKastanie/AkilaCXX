@@ -193,6 +193,12 @@ void MeshLoader::onEntry(JSON json, LoaderCallback cb) {
 
 		if(p->index.byteLength) {
 			auto ibo = createPtr<IBO>();
+
+			std::size_t const ushortMaxValue = 65535;
+			if(p->index.byteLength > ushortMaxValue) {
+				ibo->setDataType(BufferObject::Type::UNSIGNED_INT);
+			}
+
 			ibo->setRawData(
 				p->raw.data() + p->index.byteOffset,
 				static_cast<int>(p->index.byteLength),
