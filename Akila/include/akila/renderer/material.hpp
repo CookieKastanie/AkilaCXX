@@ -10,7 +10,16 @@ namespace akila {
 	class Material {
 	public:
 		Material() = default;
-		Material(Ref<Shader> shader);
+		explicit Material(Ref<Shader> shader);
+		explicit Material(Ref<Material> material);
+
+		//deplacement
+		Material(Material &&other) noexcept;
+		Material &operator=(Material &&other) noexcept;
+
+		// copie
+		Material(Material const &other);
+		Material &operator=(Material const &other);
 
 		Ref<Shader> getShaderRef() const;
 		Shader *getShader() const;

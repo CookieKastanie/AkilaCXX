@@ -65,20 +65,18 @@ public:
 		dt -= Time::fixedDelta;
 
 		if(dt <= 0) {
-			dt = 0.1;
-			//*/
+			dt = 0.1f;
+
 			Entity e = ECS::createEntity();
 			e.addComponent<MeshComponent>({
 				Resources::get<StaticMesh>("rat"),
-				Resources::get<Material>("rat")->copy()
-				//{Resources::get<Material>("rat")}
+				*Resources::get<Material>("rat")
 			});
 			e.addComponent<TransformComponent>();
 			e.addComponent<RatComponent>({
 				{Random::getAngle(), Random::getAngle(), Random::getAngle()},
 				{Random::getFloat(), Random::getFloat(), Random::getFloat()}
 			});
-			//*/
 		}
 
 
@@ -106,31 +104,33 @@ public:
 };
 
 void RatLayer::onMount() {
+	/*/
 	{
 		Entity e = ECS::createEntity();
 		e.addComponent<MeshComponent>({
 			Resources::get<StaticMesh>("rat"),
-			Resources::get<Material>("rat")->copy()
-			//{Resources::get<Material>("rat")}
-			});
+			//Resources::get<Material>("rat")->copy()
+			*Resources::get<Material>("rat")
+		});
 		e.addComponent<TransformComponent>();
 		e.addComponent<RatComponent>({
 			{Random::getAngle(), Random::getAngle(), Random::getAngle()},
 			{Random::getFloat(), Random::getFloat(), Random::getFloat()}
 		});
 	}
+	//*/
 
 	{
 		Entity e = ECS::createEntity();
 		e.addComponent<MeshComponent>({
 			Resources::get<StaticMesh>("rat"),
-			Resources::get<Material>("rat")->copy()
-			//{Resources::get<Material>("rat")}
-			});
+			*Resources::get<Material>("rat")
+		});
 		e.addComponent<TransformComponent>();
 		//e.getComponent<TransformComponent>().translate({2, 0, 0});
 		//e.getComponent<TransformComponent>().savePrevious();
 	}
+	//*/
 	
 	ECS::createSystem<RatBehaviourSystem>();
 

@@ -142,10 +142,10 @@ public:
 	}
 };//*/
 
-struct MeshComponent {
-	Ref<StaticMesh> mesh;
-	Ptr<Material> material;
-};
+//struct MeshComponent {
+//	Ref<StaticMesh> mesh;
+//	Ptr<Material> material;
+//};
 
 class DrawSystem: public System {
 public:
@@ -172,7 +172,7 @@ public:
 
 			shader->send("model", transform.calcMatrixMix());
 			//shader->send("modelMatrix", transform.calcMatrixMix());
-			oc.material->send();
+			oc.material.send();
 			oc.mesh->draw();
 		}
 	}
@@ -262,11 +262,11 @@ TestLayer::TestLayer(): Layer{} {
 		auto &transform = e.getComponent<TransformComponent>();
 
 		mc.mesh = unitCubeMesh;
-		mc.material = wireframeMat->copy();
+		mc.material = *wireframeMat;
 
 		Vec3 color{0, 0, 0};
 		color[i] = 1;
-		mc.material->write("color", color);
+		mc.material.write("color", color);
 		transform.position = color * 2.f;
 		transform.position.y += .5;
 		transform.savePrevious();
@@ -283,10 +283,10 @@ TestLayer::TestLayer(): Layer{} {
 		auto &transform = e.getComponent<TransformComponent>();
 
 		mc.mesh = Resources::get<StaticMesh>("palmtree");
-		mc.material = wireframeMat->copy();
+		mc.material = *wireframeMat;
 
 		Vec3 color{.5f, .5f, .5f};
-		mc.material->write("color", color);
+		mc.material.write("color", color);
 		//transform.position = {4, 0, 0};
 
 		Vec2 pos = Random::getVec2(-10, 10);
@@ -306,10 +306,11 @@ TestLayer::TestLayer(): Layer{} {
 		auto &transform = e.getComponent<TransformComponent>();
 
 		mc.mesh = Resources::set<StaticMesh>("plane", StaticMeshPrimitives::quad());
-		mc.material = wireframeMat->copy();
+		//mc.material = wireframeMat->copy();
+		mc.material = *wireframeMat;
 
 		Vec3 color{.1f, .8f, .1f};
-		mc.material->write("color", color);
+		mc.material.write("color", color);
 		transform.setScale(11);
 		transform.rotateX(-PI / 2.f);
 

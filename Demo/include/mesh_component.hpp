@@ -5,5 +5,5 @@
 
 struct MeshComponent {
 	akila::Ref<akila::StaticMesh> mesh;
-	akila::Ptr<akila::Material> material;
+	akila::Material material;
 };

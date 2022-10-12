@@ -7,6 +7,53 @@ Material::Material(Ref<Shader> shader): shader{shader} {
 	uniformData.resize(shader->getTotalByteCount(), 0);
 }
 
+Material::Material(Ref<Material> other):
+	shader{other->shader},
+	usedUniforms{other->usedUniforms},
+	uniforms{other->uniforms},
+	uniformData{other->uniformData},
+	textures{other->textures} {
+
+}
+
+Material::Material(Material &&other) noexcept:
+	shader{other.shader},
+	usedUniforms{other.usedUniforms},
+	uniforms{other.uniforms},
+	uniformData{other.uniformData},
+	textures{other.textures} {
+
+}
+
+Material &Material::operator=(Material &&other) noexcept {
+	shader = other.shader;
+	usedUniforms = other.usedUniforms;
+	uniforms = other.uniforms;
+	uniformData = other.uniformData;
+	textures = other.textures;
+
+	return *this;
+}
+
+Material::Material(Material const &other):
+	shader{other.shader},
+	usedUniforms{other.usedUniforms},
+	uniforms{other.uniforms},
+	uniformData{other.uniformData},
+	textures{other.textures} {
+
+}
+
+Material &Material::operator=(Material const &other) {
+	shader = other.shader;
+	usedUniforms = other.usedUniforms;
+	uniforms = other.uniforms;
+	uniformData = other.uniformData;
+	textures = other.textures;
+
+	return *this;
+}
+
 Ref<Shader> Material::getShaderRef() const {
 	return shader;
 }

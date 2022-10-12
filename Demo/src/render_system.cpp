@@ -19,8 +19,8 @@ void RenderSystem::colorPass(CameraComponent *cam) {
 		auto &transform = entity.getComponent<TransformComponent>();
 		auto &mesh = entity.getComponent<MeshComponent>();
 
-		mesh.material->getShader()->send("u_modelMatrix", transform.calcMatrixMix());
-		mesh.material->send();
+		mesh.material.getShader()->send("u_modelMatrix", transform.calcMatrixMix());
+		mesh.material.send();
 		mesh.mesh->draw();
 	}
 }
