@@ -1,0 +1,12 @@
+{
+    "shader": [
+        {
+            "path": "shaders/bake/brdf_lut.glsl",
+            "name": "brdf_lut"
+        },
+        {
+            "path": "shaders/bake/equi_to_cube.glsl",
+            "name": "equi_to_cube"
+        }
+    ]
+}

@@ -10,7 +10,7 @@ namespace akila {
 		FrameBuffer();
 		~FrameBuffer();
 
-		enum class Attachement {
+		enum class Attachement: GLenum {
 			TEXTURE = GL_TEXTURE_2D,
 			CUBE_MAP_POSITIVE_X = GL_TEXTURE_CUBE_MAP_POSITIVE_X,
 			CUBE_MAP_NEGATIVE_X = GL_TEXTURE_CUBE_MAP_NEGATIVE_X,
@@ -20,6 +20,8 @@ namespace akila {
 			CUBE_MAP_NEGATIVE_Z = GL_TEXTURE_CUBE_MAP_NEGATIVE_Z
 		};
 
+		static Attachement nextAttachement(Attachement attachement);
+		
 		void setTexture(Ref<TextureBuffer> const &texture, int unit = 0, Attachement attachment = Attachement::TEXTURE);
 		Ref<TextureBuffer> &getTexture(int unit);
 

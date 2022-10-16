@@ -1,6 +1,6 @@
 #include "akila/default/loaders/texture_loader.hpp"
-#include "akila/akila.hpp"
 #include <stbimage/stb_image.h>
+#include <stbimage/stb_image_write.h>
 
 using namespace akila;
 
@@ -129,3 +129,29 @@ void Texture2DLoader::onEntry(JSON json, LoaderCallback cb) {
 		cb.success();
 	}
 }
+
+void Texture2DLoader::write(std::string const &path, akila::TextureBuffer *texture, bool invertY) {
+	auto buffer = texture->getData();
+	IVec2 size = texture->getSize();
+
+	stbi_flip_vertically_on_write(invertY);
+	stbi_write_png(FileSystem::path(path).c_str(), size.x, size.y, 4, buffer.get(), 0);
+
+	/*/
+	int const w = 100;
+	int const h = 100;
+	unsigned char data[w * h * 3];
+
+	int index = 0;
+	for(int j = h - 1; j >= 0; --j) {
+		for(int i = 0; i < w; ++i) {
+			data[index++] = (unsigned char)(255.0 * i / w);
+			data[index++] = (unsigned char)(255.0 * j / h);
+			data[index++] = (unsigned char)(255.0 * 0.2);
+		}
+	}
+
+	stbi_write_png(FileSystem::path(path).c_str(), w, h, 3, data, w * 3);
+	//*/
+}
+

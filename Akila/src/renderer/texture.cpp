@@ -27,6 +27,16 @@ IVec2 TextureBuffer::getSize() const {
 	return size;
 }
 
+Ptr<std::uint8_t> TextureBuffer::getData(unsigned int mip) const {
+	std::size_t byteSize = size.x * size.y * 4 * sizeof(GLuint);
+	Ptr<std::uint8_t> buffer = Ptr<std::uint8_t>(new std::uint8_t[byteSize]);
+
+	glBindTexture(kind, id);
+	glGetTexImage(kind, mip, GL_RGBA, GL_UNSIGNED_BYTE, buffer.get());
+
+	return buffer;
+}
+
 TextureBuffer::Parameters::Parameters():
 	wrapS{WrapMode::REPEAT},
 	wrapT{WrapMode::REPEAT},
@@ -53,6 +63,10 @@ void TextureBuffer::generateMipmap() {
 	glGenerateMipmap(kind);
 }
 
+int TextureBuffer::calculatMipmapCount() {
+	return 1 + static_cast<int>(floor(log2(max(size.x, size.y))));
+}
+
 /////
 
 Texture2D::Texture2D(Format format): TextureBuffer{Kind::TEXTURE_2D, format} {}
@@ -74,6 +88,34 @@ void Texture2D::setData(void const *data, Format format, Type type, unsigned int
 	bind();
 	glTexSubImage2D(
 		kind, mipLevel, 0, 0, size.x, size.y,
+		static_cast<GLenum>(format), static_cast<GLenum>(type), data
+	);
+}
+
+/////
+
+TextureCubmap::TextureCubmap(Format format): TextureBuffer{Kind::TEXTURE_CUBE_MAP, format} {}
+
+void TextureCubmap::setSize(IVec2 size) {
+	bind();
+	for(unsigned int i = 0; i < 6; ++i) {
+		glTexImage2D(
+			GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, internalFormat,
+			size.x, size.y, 0, static_cast<GLenum>(Format::RGB), static_cast<GLenum>(Type::UNSIGNED_BYTE), nullptr
+		);
+	}
+
+	this->size = size;
+}
+
+void TextureCubmap::setData(void const *data, Format format, Type type, unsigned int mipLevel) {
+	setData(data, Face::FRONT, format, type, mipLevel);
+}
+
+void TextureCubmap::setData(const void *data, Face face, Format format, Type type, unsigned int mipLevel) {
+	bind();
+	glTexSubImage2D(
+		static_cast<GLenum>(face), mipLevel, 0, 0, size.x, size.y,
 		static_cast<GLenum>(format), static_cast<GLenum>(type), data
 	);
 }

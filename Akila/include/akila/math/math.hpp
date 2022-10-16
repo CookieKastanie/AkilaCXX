@@ -52,6 +52,7 @@ namespace akila {
 	using glm::angleAxis;
 	using glm::cross;
 	using glm::mix;
+	using glm::radians;
 
 	using glm::perspective;
 	using glm::lookAt;

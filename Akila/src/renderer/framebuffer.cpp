@@ -13,6 +13,13 @@ FrameBuffer::~FrameBuffer() {
     glDeleteFramebuffers(1, &id);
 }
 
+FrameBuffer::Attachement FrameBuffer::nextAttachement(Attachement attachement) {
+    if(attachement == Attachement::CUBE_MAP_NEGATIVE_Z) return Attachement::CUBE_MAP_POSITIVE_X;
+
+    GLenum a = static_cast<GLenum>(attachement);
+    return static_cast<Attachement>(a + 1);
+}
+
 void FrameBuffer::setTexture(Ref<TextureBuffer> const &texture, int unit, Attachement attachment) {
     textures[unit] = texture;
     changeAttachment(unit, attachment);

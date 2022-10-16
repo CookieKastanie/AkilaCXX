@@ -14,4 +14,6 @@ public:
 
 private:
 	akila::UBO cameraBuffer;
+
+	//akila::FrameBuffer framebuffer;
 };

@@ -15,5 +15,6 @@ public:
 private:
 	RenderSystem *renderSystem;
 
+	akila::Listener keyListener;
 	//akila::Ref<akila::AudioSource> music;
 };

@@ -4,6 +4,7 @@
 #include <akila/default/systems.hpp>
 #include <akila/default/components.hpp>
 
+#include <akila/default/loaders/texture_loader.hpp>
 
 
 using namespace akila;
@@ -104,6 +105,14 @@ public:
 };
 
 void RatLayer::onMount() {
+
+	keyListener = Signals::listen<KeyPressSignal>([](KeyPressSignal const &e) {
+		if(e.key == Inputs::Key::SPACE) {
+			Texture2DLoader::write("test.png", Resources::get<Texture2D>("color_target"));
+		}
+	});
+
+
 	/*/
 	{
 		Entity e = ECS::createEntity();

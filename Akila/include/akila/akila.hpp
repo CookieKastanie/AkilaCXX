@@ -30,6 +30,7 @@
 #include "akila/renderer/texture.hpp"
 #include "akila/renderer/buffer_object.hpp"
 #include "akila/renderer/shader_preproc.hpp"
+#include "akila/renderer/framebuffer.hpp"
 
 #include "akila/random/random.hpp"
 

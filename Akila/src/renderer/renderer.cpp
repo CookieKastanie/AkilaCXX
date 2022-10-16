@@ -16,7 +16,7 @@ void Renderer::init() {
 	enable(Capability::TEXTURE_CUBE_MAP_SEAMLESS);
 }
 
-void Renderer::useDefaultFrameBuffer() {
+void Renderer::bindDefaultFrameBuffer() {
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	IVec2 size = Window::getSize();
 	glViewport(0, 0, size.x, size.y);
@@ -61,4 +61,8 @@ void Renderer::clearColor() {
 
 void Renderer::clearDepth() {
 	glClear(GL_DEPTH_BUFFER_BIT);
+}
+
+void Renderer::memoryBarrier(Barrier barrier) {
+	glMemoryBarrier(static_cast<GLbitfield>(barrier));
 }

@@ -147,6 +147,7 @@ public:
 //	Ptr<Material> material;
 //};
 
+//*/
 class DrawSystem: public System {
 public:
 	DrawSystem(): System{ECS::createSignature<TransformComponent, MeshComponent>()} {
@@ -181,6 +182,7 @@ private:
 	Ref<Shader> shader;
 	OrbitCameraSystem *camSystem;
 };
+//*/
 
 //>
 
@@ -371,7 +373,7 @@ void TestLayer::frame() {
 
 	//Audio::setListenerPositionDirection(c.position, normalize(c.center - c.position));
 
-	Renderer::useDefaultFrameBuffer();
+	Renderer::bindDefaultFrameBuffer();
 	Renderer::clear();
 	ECS::getSystem<DrawSystem>()->draw();
 	
