@@ -38,6 +38,8 @@
 #include "akila/audio/audio_source.hpp"
 #include "akila/audio/audio_emitter.hpp"
 
+#include "akila/coroutine/coroutine.hpp"
+
 #include <imgui/imgui.h>
 
 namespace akila {

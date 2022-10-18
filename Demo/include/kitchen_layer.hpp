@@ -1,3 +1,5 @@
+#pragma once
+
 #include <akila/akila.hpp>
 #include "render_system.hpp"
 

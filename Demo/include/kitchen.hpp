@@ -1,3 +1,5 @@
+#pragma once
+
 #include <akila/akila.hpp>
 #include <akila/default/resources.hpp>
 #include <akila/default/loaders.hpp>

@@ -21,6 +21,7 @@
 	- [Materiaux](#Materiaux)
 	- [FrameBuffers](#framebuffers)
 - [Audio](#audio)
+- [Coroutines](#coroutines)
 ## Code de départ
 ```cpp
 #include <akila/akila.hpp>
@@ -362,4 +363,22 @@ emitter.setPosition({1, 0, 5});
 emitter.play();
 // ou
 Audio::detath(emitter); // detach permet de lancer des instances, pour simultanément jouer le même son plusieurs fois
+```
+
+## Coroutines
+```cpp
+Coroutine co;
+
+co.start([](Coroutine::Context const &ctx) {
+	//...
+	ctx.yield();
+	//...
+	ctx.wait(0.5f);
+	//...
+});
+
+co.resume(Time::delta); // si dans frame
+co.resume(); // Time::delta par defaut
+co.resume(Time::fixedDelta); // si dans tick
+co.resume(0.1f); // ou bien sur n'importe quel delta 
 ```

@@ -45,7 +45,8 @@ add_library(akila STATIC
 	"src/audio/audio_emitter.cpp"
 	"src/default/loaders/audio_loader.cpp"
 	"src/default/loaders/mesh_loader.cpp"
-	"src/renderer/framebuffer.cpp")
+	"src/renderer/framebuffer.cpp"
+	"src/coroutine/coroutine.cpp")
 
 target_include_directories(akila PRIVATE "include")
 
