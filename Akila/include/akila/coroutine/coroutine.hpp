@@ -1,6 +1,5 @@
 #pragma once
 
-#include <deque>
 #include <memory>
 #include <functional>
 #include "akila/time/time.hpp"
