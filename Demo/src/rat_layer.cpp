@@ -6,6 +6,7 @@
 
 #include <akila/default/loaders/texture_loader.hpp>
 
+#include "kitchen.hpp"
 
 using namespace akila;
 /*
@@ -105,12 +106,31 @@ public:
 };
 
 void RatLayer::onMount() {
+	Kitchen::loadShaders();
+	Kitchen::bakeCubemapFromEqui("skybox", Resources::get<Texture2D>("desert"));
+	auto skybox = Resources::get<TextureCubmap>("skybox");
+	Kitchen::bakeIrradiance("irradiance", skybox);
+	Kitchen::bakePrefilter("prefilter", skybox);
 
+
+	Renderer::setClearColor(.3f, .3f, .3f);
+	renderSystem = ECS::createSystem<RenderSystem>();
+
+	renderSystem->invertedCube = Resources::set<StaticMesh>("invertedCube", StaticMeshPrimitives::invertedCube());
+	renderSystem->skyboxShader = Resources::get<Shader>("skybox");
+	renderSystem->skyboxTexture = Resources::get<TextureCubmap>("skybox");
+	renderSystem->prefilterTexture = Resources::get<TextureCubmap>("prefilter");
+	renderSystem->irradianceTexture = Resources::get<TextureCubmap>("irradiance");
+	renderSystem->brdtLUTexture = Resources::get<Texture2D>("brdfLUT");
+
+
+	/*/
 	keyListener = Signals::listen<KeyPressSignal>([](KeyPressSignal const &e) {
 		if(e.key == Inputs::Key::SPACE) {
 			Texture2DLoader::write("test.png", Resources::get<Texture2D>("color_target"));
 		}
 	});
+	//*/
 
 
 	/*/
@@ -139,6 +159,17 @@ void RatLayer::onMount() {
 		//e.getComponent<TransformComponent>().translate({2, 0, 0});
 		//e.getComponent<TransformComponent>().savePrevious();
 	}
+
+	{
+		Entity e = ECS::createEntity();
+		e.addComponent<MeshComponent>({
+			Resources::get<StaticMesh>("lucy"),
+			*Resources::get<Material>("lucy")
+			});
+		e.addComponent<TransformComponent>();
+		e.getComponent<TransformComponent>().translate({2, 0, 0});
+		e.getComponent<TransformComponent>().savePrevious();
+	}
 	//*/
 	
 	ECS::createSystem<RatBehaviourSystem>();
@@ -146,8 +177,7 @@ void RatLayer::onMount() {
 	ECS::createSystem<OrbitCameraSystem>();
 	ECS::createEntity(ECS::createSignature<OrbitCameraComponent>());
 
-	Renderer::setClearColor(.3f, .3f, .3f);
-	renderSystem = ECS::createSystem<RenderSystem>();
+	
 
 	//music = Resources::get<AudioSource>("rat");
 	//music->setVolume(.5);

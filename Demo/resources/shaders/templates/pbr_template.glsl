@@ -54,6 +54,10 @@ in vec3 sunDir;
 
 uniform float exposure = 2.;
 
+layout(binding = 10) uniform sampler2D brdfLUT;
+layout(binding = 11) uniform samplerCube irradianceMap;
+layout(binding = 12) uniform samplerCube prefilterMap;
+
 vec3 brdf(vec3 albedo, float roughness, float metallic) {
     roughness = max(roughness, 0.01);
 
@@ -93,11 +97,10 @@ vec3 brdf(vec3 albedo, float roughness, float metallic) {
 
     // static
     //vec3 ambient = vec3(0.259, 0.647, 0.961) * albedo;// * ao;
-    //vec3 ambient = vec3(0.259) * albedo;
-    vec3 ambient = vec3(0.159) * albedo;
+    //vec3 ambient = vec3(0.159) * albedo;
 
     // IBL
-    /*/
+    //*/
     vec3 F = fresnelSchlickRoughness(max(dot(N, V), 0.0), F0, roughness);
     
     vec3 kS = F;

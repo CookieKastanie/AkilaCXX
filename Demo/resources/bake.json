@@ -7,6 +7,14 @@
         {
             "path": "shaders/bake/equi_to_cube.glsl",
             "name": "equi_to_cube"
+        },
+        {
+            "path": "shaders/bake/irradiance.glsl",
+            "name": "irradiance"
+        },
+        {
+            "path": "shaders/bake/prefilter.glsl",
+            "name": "prefilter"
         }
     ]
 }

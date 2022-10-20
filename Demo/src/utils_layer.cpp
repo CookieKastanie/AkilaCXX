@@ -91,13 +91,13 @@ UtilsLayer::UtilsLayer(): isLoading{false} {
 	//*/
 
 
-	/*/
+	//*/
 	Resources::load({"rat.json"}, []() {
 		Layers::add<RatLayer>();
 	});
 	//*/
 
-	//*/
+	/*/
 	Layers::add<KitchenLayer>();
 	//*/
 }

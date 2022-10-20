@@ -13,8 +13,12 @@ void KitchenLayer::onMount() {
 	Kitchen::loadShaders();
 
 	Resources::load("kitchen.json", []() {
-		Kitchen::bakeCubemapFromEqui(Resources::get<Texture2D>("desert"));
-		//Kitchen::bakeCubemapFromEqui(Resources::get<Texture2D>("desert"), {2048, 2048});
+		Kitchen::bakeCubemapFromEqui("skybox", Resources::get<Texture2D>("desert"));
+		//Kitchen::bakeCubemapFromEqui("skybox", Resources::get<Texture2D>("desert"), {2048, 2048});
+
+		auto skybox = Resources::get<TextureCubmap>("skybox");
+		Kitchen::bakeIrradiance("irradiance", skybox);
+		Kitchen::bakePrefilter("prefilter", skybox);
 	});
 
 	Resources::set<StaticMesh>("invertedCube", StaticMeshPrimitives::invertedCube());
@@ -37,7 +41,7 @@ void KitchenLayer::frame() {
 
 
 	auto shader = Resources::get<Shader>("skybox");
-	auto skybox = Resources::get<TextureCubmap>("bake_render_target");
+	auto skybox = Resources::get<TextureCubmap>("skybox");
 	auto invertedCube = Resources::get<StaticMesh>("invertedCube");
 
 	Renderer::disable(Renderer::Capability::DEPTH_TEST);

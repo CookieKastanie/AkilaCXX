@@ -4,6 +4,19 @@
             "name": "rat",
             "path": "textures/rat.png",
             "format": "SRGB"
+        },
+        {
+            "name": "lucy",
+            "path": "textures/lucy.png",
+            "format": "SRGB"
+        },
+        {
+            "name": "desert",
+            "path": "textures/Arches_E_PineTree.hdr"
+        },
+        {
+            "name": "brdfLUT",
+            "path": "textures/brdf_lut128.png"
         }
     ],
 
@@ -14,6 +27,14 @@
 
             "texture2d": {
                 "rat": "diffuse"
+            }
+        },
+        {
+            "name": "lucy",
+            "shader": "texLit",
+
+            "texture2d": {
+                "lucy": "diffuse"
             }
         }
     ],
@@ -26,6 +47,10 @@
             "uniforms": {
                 "diffuse": [ 0 ]
             }
+        },
+        {
+            "name": "skybox",
+            "path": "shaders/skybox.glsl"
         }
     ],
 
@@ -40,6 +65,10 @@
         {
             "name": "rat",
             "path": "meshs/rat.glb"
+        },
+        {
+            "name": "lucy",
+            "path": "meshs/lucy.glb"
         }
     ]
 }

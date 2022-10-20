@@ -20,6 +20,10 @@ void RenderSystem::colorPass(CameraComponent *cam) {
 
 	cameraBuffer.setData(cam);
 
+	brdtLUTexture->bind(10);
+	irradianceTexture->bind(11);
+	prefilterTexture->bind(12);
+
 	for(Entity entity : entities) {
 		auto &transform = entity.getComponent<TransformComponent>();
 		auto &mesh = entity.getComponent<MeshComponent>();
@@ -28,6 +32,12 @@ void RenderSystem::colorPass(CameraComponent *cam) {
 		mesh.material.send();
 		mesh.mesh->draw();
 	}
+
+	skyboxShader->bind();
+	skyboxTexture->bind();
+	Renderer::depthFunc(Renderer::DepthFunc::LEQUAL);
+	invertedCube->draw();
+	Renderer::depthFunc(Renderer::DepthFunc::LESS);
 
 	//framebuffer.blitToDefault(0, TextureBuffer::FilterMode::NEAREST);
 	//framebuffer.blitToDefault(0);
