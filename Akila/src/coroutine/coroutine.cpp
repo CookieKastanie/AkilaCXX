@@ -30,7 +30,7 @@ void Coroutine::start(std::size_t stackSize, Function const &function) {
 
 	mco_desc desc = mco_desc_init(retrieveCoroFunc, stackSize);
 
-	desc.user_data = (void *)context.get();
+	desc.user_data = static_cast<void *>(context.get());
 
 	mco_coro *mco;
 	mco_result res = mco_create(&mco, &desc);

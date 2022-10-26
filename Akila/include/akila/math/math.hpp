@@ -55,6 +55,7 @@ namespace akila {
 	using glm::radians;
 
 	using glm::perspective;
+	using glm::ortho;
 	using glm::lookAt;
 
 	using glm::to_string;

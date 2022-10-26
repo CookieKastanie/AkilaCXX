@@ -27,6 +27,10 @@
 
             "texture2d": {
                 "rat": "diffuse"
+            },
+            "uniforms": {
+                "roughness": [ 0.8 ],
+                "metallic": [ 0.0 ]
             }
         },
         {
@@ -35,6 +39,22 @@
 
             "texture2d": {
                 "lucy": "diffuse"
+            },
+            "uniforms": {
+                "roughness": [ 0.1 ],
+                "metallic": [ 1.0 ]
+            }
+        },
+        {
+            "name": "plane",
+            "shader": "texLit",
+
+            "texture2d": {
+                "lucy": "diffuse"
+            },
+            "uniforms": {
+                "roughness": [ 0.8 ],
+                "metallic": [ 0.0 ]
             }
         }
     ],

@@ -77,8 +77,8 @@ void Texture2DLoader::onEntry(JSON json, LoaderCallback cb) {
 	bool mips = false;
 	if(json["mips"].is_boolean()) mips = json["mips"];
 
-	bool invertY = false;
-	if(json["invertY"].is_boolean()) invertY = json["invertY"];
+	bool invertY = true;
+	//if(json["invertY"].is_boolean()) invertY = json["invertY"];
 
 	Resources::set<Texture2D>(name, texture);
 

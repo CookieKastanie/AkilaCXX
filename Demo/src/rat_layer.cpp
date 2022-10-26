@@ -77,7 +77,7 @@ public:
 			e.addComponent<TransformComponent>();
 			e.addComponent<RatComponent>({
 				{Random::getAngle(), Random::getAngle(), Random::getAngle()},
-				{Random::getFloat(), Random::getFloat(), Random::getFloat()}
+				{Random::getFloat(-10.f, 10.f), Random::getFloat(5.f, 20.f), Random::getFloat(-10.f, 10.f)}
 			});
 		}
 
@@ -92,11 +92,11 @@ public:
 			transform.rotateY(rat.rotationSpeeds.y * Time::fixedDelta);
 			transform.rotateZ(rat.rotationSpeeds.z * Time::fixedDelta);
 
-			rat.vel.y -= Time::fixedDelta;
+			rat.vel.y -= Time::fixedDelta * 9.8f;
 
 			transform.translate(rat.vel * Time::fixedDelta);
 
-			if(transform.position.y < -10) {
+			if(transform.position.y < -100.f) {
 				ECS::addToEraseQueue(e);
 			}
 		}
@@ -165,11 +165,26 @@ void RatLayer::onMount() {
 		e.addComponent<MeshComponent>({
 			Resources::get<StaticMesh>("lucy"),
 			*Resources::get<Material>("lucy")
-			});
+		});
 		e.addComponent<TransformComponent>();
 		e.getComponent<TransformComponent>().translate({2, 0, 0});
 		e.getComponent<TransformComponent>().savePrevious();
 	}
+
+
+
+	{
+		Entity e = ECS::createEntity();
+		e.addComponent<MeshComponent>({
+			Resources::set<StaticMesh>("plane", StaticMeshPrimitives::quad()),
+			*Resources::get<Material>("plane")
+		});
+		e.addComponent<TransformComponent>();
+		e.getComponent<TransformComponent>().translate({4, 0, 0});
+		e.getComponent<TransformComponent>().rotateX(-PI / 2.f);
+		e.getComponent<TransformComponent>().savePrevious();
+	}
+
 	//*/
 	
 	ECS::createSystem<RatBehaviourSystem>();

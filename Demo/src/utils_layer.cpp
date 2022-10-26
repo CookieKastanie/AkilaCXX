@@ -2,6 +2,7 @@
 #include "test_layer.hpp"
 #include "rat_layer.hpp"
 #include "kitchen_layer.hpp"
+#include "coro_layer.hpp"
 
 using namespace akila;
 
@@ -91,7 +92,7 @@ UtilsLayer::UtilsLayer(): isLoading{false} {
 	//*/
 
 
-	//*/
+	/*/
 	Resources::load({"rat.json"}, []() {
 		Layers::add<RatLayer>();
 	});
@@ -99,6 +100,10 @@ UtilsLayer::UtilsLayer(): isLoading{false} {
 
 	/*/
 	Layers::add<KitchenLayer>();
+	//*/
+
+	//*/
+	Layers::add<CoroLayer>();
 	//*/
 }
 

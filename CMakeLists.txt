@@ -9,7 +9,7 @@ target_sources(demo PRIVATE
 	"Demo/src/rat_layer.cpp"
 	"Demo/src/render_system.cpp"
 	"Demo/src/kitchen.cpp"
-	"Demo/src/kitchen_layer.cpp")
+	"Demo/src/kitchen_layer.cpp" "Demo/src/coro_layer.cpp")
 
 target_include_directories(demo PRIVATE "Demo/include")
 target_compile_features(demo PRIVATE cxx_std_17)
