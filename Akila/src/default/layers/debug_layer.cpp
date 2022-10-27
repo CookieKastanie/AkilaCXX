@@ -1,11 +1,10 @@
 #include "akila/default/layers/debug_layer.hpp"
-#include "akila/akila.hpp"
 
 using namespace akila;
 
 struct Log {
 	ImGuiTextBuffer buf;
-	bool scrollToBottom;
+	bool scrollToBottom = false;
 
 	void clear() { buf.clear(); }
 
@@ -168,6 +167,9 @@ void DebugLayer::guiTimings() {
 	ImGui::TextColored({1., 1., 0., 1.}, "Timings:");
 	std::string fps = "FPS: " + std::to_string(updateMeanFPS());
 	ImGui::Text(fps.c_str());
+
+	ImGui::Text("Timers Stats:");
+	internal::TimeMetric::flushAndDrawImGui();
 }
 
 void DebugLayer::guiResources() {

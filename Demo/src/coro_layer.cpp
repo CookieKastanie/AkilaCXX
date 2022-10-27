@@ -3,6 +3,8 @@
 #include <akila/default/resources/static_mesh_primitives.hpp>
 #include <akila/default/systems.hpp>
 
+#include <akila/default/layers.hpp>
+
 using namespace akila;
 
 std::string const shaderCode = R"---(
@@ -104,7 +106,7 @@ void CoroLayer::spawnQuad() {
 
 	e.addComponent<SquareComponent>({Random::getVec3()});
 	e.addComponent<TransformComponent>();
-	e.getComponent<TransformComponent>().position = Vec3(Random::getVec2(0, min(winSize.x, winSize.y)), Random::getFloat());
+	e.getComponent<TransformComponent>().position = Vec3(Random::getVec2(0.f, min(winSize.x, winSize.y)), Random::getFloat());
 	e.getComponent<TransformComponent>().setScale(50);
 }
 
@@ -140,6 +142,7 @@ void CoroLayer::onUnmount() {
 }
 
 void CoroLayer::tick() {
+	FUNC_TIME_METRIC();
 	mainSystem->update();
 }
 

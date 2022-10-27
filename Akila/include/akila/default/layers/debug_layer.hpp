@@ -1,6 +1,7 @@
 #pragma once
 
 #include "akila/akila.hpp"
+#include "akila/default/layers/debug_timings.hpp"
 
 namespace akila {
 
