@@ -351,7 +351,7 @@ framebuffer.bind(0);
 frambuffer.blitToDefault(0);
 ```
 ## Audio
-(ça ne marche PAS DU TOUT LA 🤬)
+(non fonctionnelle)
 ```cpp
 Ref<AudioSource> source = Resources::get<AudioSource>("mySource");
 
