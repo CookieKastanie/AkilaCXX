@@ -12,31 +12,38 @@ IVec2 Window::positionBeforeFS = {0, 0};
 
 bool Window::mouseGrab = false;
 
-void Window::initWindow() {
-	//glfwSetErrorCallback(error_callback);
-	
+Window::InitValues::InitValues():
+	size{640, 480},
+	title{""},
+	visible{true},
+	vSync{true},
+	samples{0} {
+}
+
+void Window::initWindow(InitValues const &initVals) {
 	if(!glfwInit())
 		std::exit(EXIT_FAILURE);
 
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+	glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GLFW_TRUE);
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-	glfwWindowHint(GLFW_SAMPLES, 4);
-	//glfwWindowHint(GLFW_SAMPLES, 0);
+	glfwWindowHint(GLFW_SAMPLES, initVals.samples);
+	glfwWindowHint(GLFW_VISIBLE, initVals.visible ? GLFW_TRUE : GLFW_FALSE);
 
-	window = glfwCreateWindow(640, 480, "", NULL, NULL);
+	window = glfwCreateWindow(initVals.size.x, initVals.size.y, initVals.title.c_str(), NULL, NULL);
 	if(!window) {
 		glfwTerminate();
 		std::exit(EXIT_FAILURE);
 	}
 
+	glfwSetWindowSizeCallback(window, internal::WindowEvents::resizeCallback);
 	glfwSetKeyCallback(window, internal::WindowEvents::keyCallback);
 	glfwSetMouseButtonCallback(window, internal::WindowEvents::mouseButtonCallback);
 	glfwSetCursorPosCallback(window, internal::WindowEvents::cursorPosCallback);
 	glfwSetScrollCallback(window, internal::WindowEvents::scrollCallback);
 	
-	setVerticalSync(true);
-	glfwShowWindow(window);
+	setVerticalSync(initVals.vSync);
 
 	internal::WindowEvents::init();
 }
@@ -151,6 +158,23 @@ void Window::setMouseGrab(bool grab) {
 	);
 	
 	mouseGrab = grab;
+}
+
+bool Window::isVisible() {
+	return glfwGetWindowAttrib(window, GLFW_VISIBLE) != 0;
+}
+
+void Window::setVisibility(bool visible) {
+	if(visible) glfwShowWindow(window);
+	else glfwHideWindow(window);
+}
+
+bool Window::isDecoarated() {
+	return glfwGetWindowAttrib(window, GLFW_DECORATED) != 0;
+}
+
+void Window::setDecoaration(bool decoration) {
+	glfwSetWindowAttrib(window, GLFW_DECORATED, decoration);
 }
 
 float Window::getDPI() {

@@ -5,6 +5,7 @@
 
 using namespace akila::internal;
 
+std::vector<akila::WindowResizeSignal> WindowEvents::resizes;
 std::vector<akila::KeyPressSignal> WindowEvents::keyPressed;
 std::vector<akila::KeyReleaseSignal> WindowEvents::keyReleased;
 
@@ -17,8 +18,14 @@ std::mutex WindowEvents::mux;
 void WindowEvents::init() {
 	Inputs::init();
 
+	akila::Signals::registerType<WindowResizeSignal>(akila::Signals::Stack::BEFORE_FRAME);
 	akila::Signals::registerType<KeyPressSignal>(akila::Signals::Stack::BEFORE_TICK);
 	akila::Signals::registerType<KeyReleaseSignal>(akila::Signals::Stack::BEFORE_TICK);
+}
+
+void WindowEvents::resizeCallback(GLFWwindow *window, int width, int height) {
+	std::scoped_lock<std::mutex> lock(mux);
+	resizes.push_back({{width, height}});
 }
 
 void WindowEvents::keyCallback(GLFWwindow *window, int key, int scancode, int action, int mods) {
@@ -91,6 +98,12 @@ void WindowEvents::process(unsigned int updateCount) {
 	accumulatedMouse.resetVels();
 
 	// envoi des signaux
+	for(WindowResizeSignal const &signal : resizes) {
+		akila::Signals::emit<WindowResizeSignal>(signal);
+	}
+
+	resizes.clear();
+
 	for(KeyPressSignal const &signal : keyPressed) {
 		Inputs::setInputState(signal.key, true);
 		akila::Signals::emit<KeyPressSignal>(signal);

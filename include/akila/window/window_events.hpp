@@ -6,6 +6,10 @@
 #include <mutex>
 
 namespace akila {
+	struct WindowResizeSignal {
+		IVec2 size;
+	};
+
 	struct KeyPressSignal {
 		Inputs::Key key;
 	};
@@ -24,6 +28,7 @@ namespace akila::internal {
 		friend class akila::Window;
 		friend class akila::Core;
 
+		static std::vector<WindowResizeSignal> resizes;
 		static std::vector<KeyPressSignal> keyPressed;
 		static std::vector<KeyReleaseSignal> keyReleased;
 
@@ -31,12 +36,11 @@ namespace akila::internal {
 
 		static void init();
 
-		//glfwSetWindowSizeCallback(window, [](GLFWwindow *window, int width, int height)
+		static void resizeCallback(GLFWwindow *window, int width, int height);
 		static void keyCallback(GLFWwindow *window, int key, int scancode, int action, int mods);
 		static void mouseButtonCallback(GLFWwindow *window, int button, int action, int mods);
 		static void cursorPosCallback(GLFWwindow *window, double xpos, double ypos);
 		static void scrollCallback(GLFWwindow *window, double xoffset, double yoffset);
-
 
 		struct MouseData {
 			Vec2 lastPosition;

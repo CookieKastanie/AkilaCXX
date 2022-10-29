@@ -1,18 +1,17 @@
 # Akila
+
 ## Sommaire
- - [Code de départ](#code-de-départ)
- - [Fenêtre principale](#fenêtre-principale)
- - [ECS](#ecs)
-	 - [Création d'une entité](#création-dune-entité)
-	 - [Création d'un système](#création-dun-système)
- - [Signaux](#signaux)
-	 - [Utilisation](#utilisation)
-	 - [Les Stacks](#les-stacks)
-	 - [Signaux intégrés](#signaux-intégrés)
- - [Gestion des ressources](#gestion-des-ressources)
-	 - [Création de ressources](#création-de-ressources)
-	 - [Charger des ressources depuis un JSON](#charger-des-ressources-depuis-un-json)
-- [Threadpool](#threadpool)
+
+- [Code de départ](#code-de-départ)
+- [Fenêtre de l'application](#fenêtre-de-lapplication)
+- [Ressources](#ressources)
+	- [Création de ressources](#création-de-ressources)
+	- [Charger des ressources depuis un JSON](#charger-des-ressources-depuis-un-json)
+- [Signaux](#signaux)
+	- [Utilisation](#utilisation)
+	- [Les Stacks](#les-stacks)
+	- [Signaux intégrés](#signaux-intégrés)
+- [Inputs](#inputs)
 - [Rendu](#rendu)
 	- [Renderer](#renderer)
 	- [Buffers](#buffers)
@@ -21,8 +20,16 @@
 	- [Materiaux](#Materiaux)
 	- [FrameBuffers](#framebuffers)
 - [Audio](#audio)
+- [ECS](#ecs)
+	- [Création d'une entité](#création-dune-entité)
+	- [Création d'un système](#création-dun-système)
 - [Coroutines](#coroutines)
+- [Threadpool](#threadpool)
+
+
+
 ## Code de départ
+
 ```cpp
 #include <akila/akila.hpp>
 using namespace akila;
@@ -41,7 +48,11 @@ int main() {
 	});
 }
 ```
-## Fenêtre principale
+
+
+
+## Fenêtre de l'application
+
 ```cpp
 Window::setTitle("Title");
 
@@ -51,84 +62,13 @@ IVec2 size = Window::getSize();
 // ferme la fenêtre, et par extension, l'application
 Window::close();
 ```
-## ECS
-### Création d'une entité
-#### Basic
-```cpp
-Entity e = ECS::createEntity();
-e.addComponent<MyStruct>();
-e.addComponent<MyOtherStruct>({"Value"});
-```
-#### Par signature (plus performant)
-```cpp
-Signature s = ECS::createSignature<MyStruct, MyOtherStruct>();
-Entity e = ECS::createEntity(s);
-e.getComponent<MyOtherStruct>() = {"Value"};
-```
-### Création d'un système
-L'attribut `entities` est hérité de la classe System. Il est automatiquement agrémenté des entités compatibles avec la signature du système.
-```cpp
-class MySystem: public System {
-public:
-	MySystem(): System{ECS::createSignature<MyStruct>()} {};
 
-	void myMethode() {
-		for(Entity e : entities) {
-			auto &... = e.getComponent<...>();
-			// logic here
 
-			if(...) {
-				ECS::addToEraseQueue(e);
-			}
-		}
 
-		ECS::flushEraseQueue();
-	}
+## Ressources
 
-	void onAdd(Entity entity) override {
-		//...
-	}
-
-	void onRemove(Entity entity) override {
-		//...
-	}
-}
-
-//...
-
-ECS::createSystem<MySystem>();
-
-//...
-
-MySystem *system = ECS::getSystem<MySystem>();
-```
-## Signaux
-### Utilisation
-```cpp
-// création d'un nouveau type de signal
-// indiquer dans quelle pile sera ajoutés les signaux
-Signals::registerType<MySignalType>(Signals::Stack::BEFORE_TICK);
-
-// écoute d'un type de signal
-Listener listener = Signals::listen<MySignalType>([] (MySignalType const &e){
-	//code
-});
-
-// emission d'un signal
-Signals::emit<MySignalType>(Args...);
-```
-### Les Stacks
-```
-BEFORE_TICK
-BEFORE_FRAME
-```
-### Signaux intégrés
-```
-KeyPressSignal
-KeyReleaseSignal
-```
-## Gestion des ressources
 ### Création de ressources
+
 ```cpp
 Ref<MyResource> r1 = Resources::create<MyResource>("name1");
 Ref<MyResource> r2 = Resources::create<MyResource>("name2", ConstructorArgs...);
@@ -137,7 +77,9 @@ Ref<MyResource> r2 = Resources::create<MyResource>("name2", ConstructorArgs...);
 
 Ref<MyResource> r = Resources::get<MyResource>("name1");
 ```
+
 ### Charger des ressources depuis un JSON
+
 ```cpp
 // Définition d'un Loader
 class MyLoader: public Loader {
@@ -162,7 +104,46 @@ Resources::load({"path/file1.json", "path/file2.json"}, []() {
 	// callback
 });
 ```
+
+
+
+## Signaux
+
+### Utilisation
+
+```cpp
+// création d'un nouveau type de signal
+// indiquer dans quelle pile sera ajoutés les signaux
+Signals::registerType<MySignalType>(Signals::Stack::BEFORE_TICK);
+
+// écoute d'un type de signal
+Listener listener = Signals::listen<MySignalType>([] (MySignalType const &signal){
+	//code
+});
+
+// emission d'un signal
+Signals::emit<MySignalType>(Args...);
+```
+
+### Les Stacks
+
+```
+BEFORE_TICK
+BEFORE_FRAME
+```
+
+### Signaux intégrés
+
+```
+WindowResizeSignal
+KeyPressSignal
+KeyReleaseSignal
+```
+
+
+
 ## Inputs
+
 ```cpp
 if(Inputs::isPressed(Inputs::Key::A) {
 	//...
@@ -178,23 +159,22 @@ Listener l = Signals::listen<KeyPressSignal>(KeyPressSignal const &s) {
 Vec2 pos = Inputs::getMousePosition();
 Vec2 vel = Inputs::getMouseVelocity();
 ```
-## Threadpool
-```cpp
-Threadpool::submit([]() {
-	// execution dans un thread
-}, ()[] {
-	// execution dans le thread principal
-});
-```
+
+
+
 ## Rendu
+
 ### Renderer
+
 ```cpp
 Renderer::useDefaultFrameBuffer();
 Renderer::setClearColor(1.0f, 0.5f, 0.2f, 1.0f);
 Renderer::enable(Renderer::Capability::DEPTH_TEST);
 Renderer::clear();
 ```
+
 ### Buffers
+
 ```cpp
 Ptr<VBO> positions = createPtr<VBO>(3, 0); // vec3 sur l'attribut 0
 positions->setData(std::vector<Vec2>({
@@ -218,9 +198,11 @@ vao->unbind();
 vao->draw();
 
 ```
+
 ### Textures
+
 ```cpp
-Ref<Texture2D> tex = Ressources::create<Texture2D>(); // Texture2DArray, Cubemap, ...
+Ref<Texture2D> tex = Ressources::create<Texture2D>(); // Texture2DArray, TextureCubemap, ...
 
 tex->setSize(256, 256);
 
@@ -238,15 +220,20 @@ params.wrapS = TextureBuffer::WrapMode::REPEAT;
 params.wrapT = TextureBuffer::WrapMode::REPEAT;
 tex->setParameters(params);
 ```
+
 ### Shaders
+
 #### Instancier un shader
+
 ```cpp
 // les shaders ont une bonne place dans resources (mais ce n'est pas obligatoire)
 Ref<Shader> shader = Rersources::create<Shader>("#full_shader_code"); // passe par un preproc basique
 // ou
 Ref<Shader> shader = Rersources::create<Shader>("#vertex_shader", "#fragment_shader", "#geometry_shader");
 ```
+
 #### Exemple de shader
+
 ```glsl
 #akila_vertex
 
@@ -271,6 +258,7 @@ void main() {
 	fragColor = vec4(texCoord, 0.0, 1.0);
 }
 ```
+
 #### Exemple avec un template
 
 `path/unlit.glsl` qui sert de template :
@@ -319,7 +307,9 @@ void main() {
 }
 
 ```
+
 ### Materiaux
+
 ```cpp
 Material mat{shader}; // shader est de type Ref<Shader>
 
@@ -335,11 +325,15 @@ mat.affect("mySampler2D", Resources::get<Texture2D>("myTexture")); // ajoute une
 
 mat.send(); // envoi au shader les data enregistrés dans le material
 ```
+
 ### FrameBuffers
+
 ```cpp
 FrameBuffer framebuffer{};
 framebuffer.setTexture(Resources::create<Texture2D>("colorTarget"), 0); // 0 = index d'attachment
-framebuffer.setDepthTexture(Resources::create<Texture2D>("depthTarget", TextureBuffer::Format::DEPTH_COMPONENT));
+framebuffer.setDepthTexture(
+	Resources::create<Texture2D>("depthTarget", TextureBuffer::Format::DEPTH_COMPONENT)
+);
 framebuffer.resizeAll(Window::getSize());
 framebuffer.prepare(); // appeler 1 fois pour commencer à render
 
@@ -350,7 +344,11 @@ framebuffer.bind(0);
 
 frambuffer.blitToDefault(0);
 ```
+
+
+
 ## Audio
+
 (non fonctionnelle)
 ```cpp
 Ref<AudioSource> source = Resources::get<AudioSource>("mySource");
@@ -362,10 +360,75 @@ emitter.setPosition({1, 0, 5});
 // jouer le sons :
 emitter.play();
 // ou
-Audio::detath(emitter); // detach permet de lancer des instances, pour simultanément jouer le même son plusieurs fois
+Audio::detath(emitter); // detach permet de lancer des instances,
+// pour simultanément jouer le même son plusieurs fois
 ```
 
+
+
+## ECS
+
+### Création d'une entité
+
+#### Par ajout de composants
+
+```cpp
+Entity e = ECS::createEntity();
+e.addComponent<MyStruct>();
+e.addComponent<MyOtherStruct>({"Value"});
+```
+
+#### Par signature (plus performant)
+
+```cpp
+Signature s = ECS::createSignature<MyStruct, MyOtherStruct>();
+Entity e = ECS::createEntity(s);
+e.getComponent<MyOtherStruct>() = {"Value"};
+```
+
+### Création d'un système
+
+L'attribut `entities` est hérité de la classe System. Il est automatiquement agrémenté des entités compatibles avec la signature du système.
+```cpp
+class MySystem: public System {
+public:
+	MySystem(): System{ECS::createSignature<MyStruct>()} {};
+
+	void myMethode() {
+		for(Entity e : entities) {
+			auto &... = e.getComponent<...>();
+			// logic here
+
+			if(...) {
+				ECS::addToEraseQueue(e);
+			}
+		}
+
+		ECS::flushEraseQueue();
+	}
+
+	void onAdd(Entity entity) override {
+		//...
+	}
+
+	void onRemove(Entity entity) override {
+		//...
+	}
+}
+
+//...
+
+ECS::createSystem<MySystem>();
+
+//...
+
+MySystem *system = ECS::getSystem<MySystem>();
+```
+
+
+
 ## Coroutines
+
 ```cpp
 Coroutine co;
 
@@ -381,4 +444,16 @@ co.resume(Time::delta); // si dans frame
 co.resume(); // Time::delta par defaut
 co.resume(Time::fixedDelta); // si dans tick
 co.resume(0.1f); // ou bien sur n'importe quel delta 
+```
+
+
+
+## Threadpool
+
+```cpp
+Threadpool::submit([]() {
+	// execution dans un thread
+}, ()[] {
+	// execution dans le thread principal
+});
 ```

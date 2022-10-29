@@ -13,8 +13,9 @@ namespace akila {
 		Entity(): id{internal::INVALID_ENTITY_ID} {};
 
 		template<typename T>
-		inline void addComponent(T const &data = T{}) const {
+		inline T &addComponent(T const &data = T{}) const {
 			internal::Coordinator::addComponentToEntity<T>(id, data);
+			return internal::Coordinator::getEntityComponent<T>(id);
 		}
 
 		template<typename T>

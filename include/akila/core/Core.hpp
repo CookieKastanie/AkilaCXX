@@ -1,8 +1,11 @@
 #pragma once
 
+#include "akila/window/window.hpp"
+
 namespace akila {
 	class Core {
 	public:
+		static int run(Window::InitValues const &initVals, void (*init)(void));
 		static int run(void (*init)(void));
 		static void restart();
 

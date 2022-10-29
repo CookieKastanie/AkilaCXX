@@ -21,12 +21,12 @@ using namespace akila::internal;
 
 bool Core::restartFlag;
 
-int Core::run(void (*init)(void)) {
+int Core::run(Window::InitValues const &initVals, void (*init)(void)) {
 start:
 	restartFlag = false;
 
 	Threadpool::init();
-	Window::initWindow();
+	Window::initWindow(initVals);
 	//Audio::init();
 	FileSystem::init();
 	Random::init();
@@ -109,6 +109,10 @@ start:
 	if(restartFlag) goto start;
 
 	return EXIT_SUCCESS;
+}
+
+int Core::run(void (*init)(void)) {
+	return run({}, init);
 }
 
 void Core::restart() {

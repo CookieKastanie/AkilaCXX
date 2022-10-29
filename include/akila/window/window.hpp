@@ -13,6 +13,16 @@ namespace akila {
 
 	class Window {
 	public:
+		struct InitValues {
+			InitValues();
+
+			IVec2 size;
+			std::string title;
+			bool visible;
+			bool vSync;
+			int samples;
+		};
+
 		static void close();
 
 		static void setSize(IVec2 const &size);
@@ -35,6 +45,12 @@ namespace akila {
 		static bool isMouseGrabbed();
 		static void setMouseGrab(bool grab);
 
+		static bool isVisible();
+		static void setVisibility(bool visible);
+
+		static bool isDecoarated();
+		static void setDecoaration(bool decoration);
+
 		static float getDPI();
 
 		static void loadImGuiFont(std::string const &path);
@@ -51,7 +67,7 @@ namespace akila {
 
 		static bool mouseGrab;
 
-		static void initWindow();
+		static void initWindow(InitValues const &initVals);
 		static void initGraphicContext();
 		static void makeCurrent();
 		static bool shouldClose();
