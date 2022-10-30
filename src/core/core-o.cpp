@@ -27,7 +27,7 @@ start:
 
 	Threadpool::init();
 	Window::initWindow(initVals);
-	//Audio::init();
+	Audio::init();
 	FileSystem::init();
 	Random::init();
 	Signals::init();
@@ -103,7 +103,7 @@ start:
 	Signals::terminate();
 	Threadpool::terminate();
 	ImGuiHandler::terminate();
-	//Audio::terminate();
+	Audio::terminate();
 	Window::terminate();
 
 	if(restartFlag) goto start;
