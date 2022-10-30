@@ -93,6 +93,7 @@ namespace akila {
 				for(auto it = layers.begin(); it != layers.end(); ++it) {
 					if(it->get()->depth > layer->depth) {
 						layers.emplace(it, layer);
+						layer->onMount();
 						return;
 					}
 				}
