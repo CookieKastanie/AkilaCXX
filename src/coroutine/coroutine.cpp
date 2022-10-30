@@ -9,6 +9,10 @@ Coroutine::Context::Context(): delay{0}, waiting{false}, mco{nullptr} {
 }
 
 Coroutine::Context::~Context() {
+	deleteMCO();
+}
+
+void Coroutine::Context::deleteMCO() {
 	mco_state state = mco_status(mco);
 	if(state == MCO_DEAD || state == MCO_SUSPENDED) {
 		if(mco != nullptr) mco_destroy(mco);
@@ -23,10 +27,7 @@ void Coroutine::retrieveCoroFunc(mco_coro *mco) {
 }
 
 void Coroutine::start(std::size_t stackSize, Function const &function) {
-	mco_state state = mco_status(context->mco);
-	if(state == MCO_DEAD || state == MCO_SUSPENDED) {
-		if(context->mco != nullptr) mco_destroy(context->mco);
-	}
+	context->deleteMCO();
 
 	mco_desc desc = mco_desc_init(retrieveCoroFunc, stackSize);
 
@@ -45,6 +46,11 @@ void Coroutine::start(std::size_t stackSize, Function const &function) {
 
 void Coroutine::start(Function const &function) {
 	start(0, function);
+}
+
+bool Coroutine::isAlive() {
+	mco_state state = mco_status(context->mco);
+	return state != mco_state::MCO_DEAD;
 }
 
 void Coroutine::Context::yield() const {
@@ -71,4 +77,8 @@ void Coroutine::resume(float delta) {
 	}
 
 	mco_resume(context->mco);
+}
+
+void Coroutine::kill() {
+	context->deleteMCO();
 }

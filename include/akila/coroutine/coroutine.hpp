@@ -24,6 +24,7 @@ namespace akila {
 			std::function<void(Context const &)> function;
 
 			Context();
+			void deleteMCO();
 		};
 
 		Coroutine();
@@ -36,8 +37,9 @@ namespace akila {
 		using Function = std::function<void(Context const &)>;
 		void start(std::size_t stackSize, Function const &function);
 		void start(Function const &function);
-
+		bool isAlive();
 		void resume(float delta = Time::delta);
+		void kill();
 
 	private:
 		std::unique_ptr<Context> context;
