@@ -12,7 +12,6 @@ namespace akila {
 			static_assert(std::is_base_of<Layer, T>::value, "T must derive from akila::Layer");
 
 			remove<T>();
-			//updateUnmounts();
 
 			Layer *layer = new T{args...};
 			layer->depth = depth;
@@ -28,9 +27,7 @@ namespace akila {
 			unmounts.push_back(typeId);
 		}
 
-		static std::vector<std::unique_ptr<Layer>> const &listing() {
-			return layers;
-		}
+		static std::vector<std::unique_ptr<Layer>> const &listing();
 
 	private:
 		friend class Core;
@@ -39,63 +36,13 @@ namespace akila {
 		static std::vector<Layer*> mounts;
 		static std::vector<TypeId> unmounts;
 
-		static void init() {
-
-		}
-
-		static void terminate() {
-			layers.clear();
-			mounts.clear();
-			unmounts.clear();
-		}
-
-		static void updateMounts() {
-			while(!mounts.empty()) {
-				Layer *layer = mounts.back();
-				mounts.pop_back();
-
-				for(auto it = layers.begin(); it != layers.end(); ++it) {
-					if(it->get()->depth > layer->depth) {
-						layers.emplace(it, layer);
-						layer->onMount();
-						return;
-					}
-				}
-
-				layers.emplace_back(layer);
-				layer->onMount();
-			}
-		}
-
-		static void updateUnmounts() {
-			while(!unmounts.empty()) {
-				TypeId typeId = unmounts.back();
-				unmounts.pop_back();
-
-				for(auto &it = layers.begin(); it != layers.end(); ++it) {
-					if(it->get()->typeId == typeId) {
-						it->get()->onUnmount();
-						layers.erase(it);
-						break;
-					}
-				}
-			}
-		}
-
-		static void tick() {
-			for(auto const &layer : layers) layer->tick();
-		}
-
-		static void frame() {
-			for(auto const &layer : layers) layer->frame();
-		}
-
-		static void gui() {
-			for(auto const &layer : layers) layer->gui();
-		}
-
-		static void removeAll() {
-			layers.clear();
-		}
+		static void init();
+		static void terminate();
+		static void updateMounts();
+		static void updateUnmounts();
+		static void tick();
+		static void frame();
+		static void gui();
+		static void removeAll();
 	};
 }
