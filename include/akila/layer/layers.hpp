@@ -7,42 +7,6 @@
 namespace akila {
 	class Layers {
 	public:
-		/*/
-		template<typename T, typename ...Args>
-		static void add(Layer::Depth depth = Layer::Depth::MIDDLE, Args&& ...args) {
-			static_assert(std::is_base_of<Layer, T>::value, "T must derive from akila::Layer");
-
-			remove<T>();
-
-			//insert dans le vecteur selon depth
-			Layer *layer = new T{args...};
-			layer->depth = depth;
-			layer->typeId = getTypeId<T>();
-			layer->typeName = getTypeName<T>();
-
-			for(auto it = layers.begin(); it != layers.end(); ++it) {
-				if(it->get()->depth > depth) {
-					layers.emplace(it, layer);
-					return;
-				}
-			}
-
-			layers.emplace_back(layer);
-		}
-
-		template<typename T>
-		static void remove() {
-			TypeId typeId = getTypeId<T>();
-
-			for(auto &it = layers.begin(); it != layers.end(); ++it) {
-				if(it->get()->typeId == typeId) {
-					layers.erase(it);
-					break;
-				}
-			}
-		}
-		//*/
-
 		template<typename T, typename ...Args>
 		static void add(Layer::Depth depth = Layer::Depth::MIDDLE, Args&& ...args) {
 			static_assert(std::is_base_of<Layer, T>::value, "T must derive from akila::Layer");
@@ -118,15 +82,15 @@ namespace akila {
 			}
 		}
 
-		static void Layers::tick() {
+		static void tick() {
 			for(auto const &layer : layers) layer->tick();
 		}
 
-		static void Layers::frame() {
+		static void frame() {
 			for(auto const &layer : layers) layer->frame();
 		}
 
-		static void Layers::gui() {
+		static void gui() {
 			for(auto const &layer : layers) layer->gui();
 		}
 

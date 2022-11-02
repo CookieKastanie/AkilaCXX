@@ -19,28 +19,28 @@ namespace akila {
 		using ReverseIterator = std::vector<Entity>::reverse_iterator;
 		using ConstReverseIterator = std::vector<Entity>::const_reverse_iterator;
 
-		inline Iterator begin() { return data.begin(); }
-		inline ConstIterator begin() const { return data.begin(); }
-		inline ConstIterator cbegin() const { return data.cbegin(); }
-		inline Iterator end() { return data.end(); }
-		inline ConstIterator end() const { return data.end(); }
-		inline ConstIterator cend() const { return data.cend(); }
+		Iterator begin() { return data.begin(); }
+		ConstIterator begin() const { return data.begin(); }
+		ConstIterator cbegin() const { return data.cbegin(); }
+		Iterator end() { return data.end(); }
+		ConstIterator end() const { return data.end(); }
+		ConstIterator cend() const { return data.cend(); }
 
-		inline ReverseIterator rbegin() { return data.rbegin(); }
-		inline ConstReverseIterator rbegin() const { return data.rbegin(); }
-		inline ConstReverseIterator crbegin() const { return data.crbegin(); }
-		inline ReverseIterator rend() { return data.rend(); }
-		inline ConstReverseIterator rend() const { return data.rend(); }
-		inline ConstReverseIterator crend() const { return data.crend(); }
+		ReverseIterator rbegin() { return data.rbegin(); }
+		ConstReverseIterator rbegin() const { return data.rbegin(); }
+		ConstReverseIterator crbegin() const { return data.crbegin(); }
+		ReverseIterator rend() { return data.rend(); }
+		ConstReverseIterator rend() const { return data.rend(); }
+		ConstReverseIterator crend() const { return data.crend(); }
 
 		Entity front() const { return data.front(); }
 		Entity back() const { return data.back(); }
 
-		inline bool empty() { return data.empty(); }
-		inline std::size_t size() { return data.size(); }
+		bool empty() { return data.empty(); }
+		std::size_t size() { return data.size(); }
 
-		inline Entity at(std::size_t index) { return data.at(index); }
-		inline Entity operator [](std::size_t index) { return data[index]; }
+		Entity at(std::size_t index) { return data.at(index); }
+		Entity operator [](std::size_t index) { return data[index]; }
 
 	private:
 		friend class System;

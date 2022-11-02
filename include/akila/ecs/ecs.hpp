@@ -8,47 +8,47 @@
 namespace akila {
 	class ECS {
 	public:
-		static inline Entity createEntity() {
+		static Entity createEntity() {
 			return internal::Coordinator::createEntity();
 		}
 
-		static inline Entity createEntity(Signature const &signature) {
+		static Entity createEntity(Signature const &signature) {
 			return internal::Coordinator::createEntity(signature);
 		}
 
-		static inline void addToEraseQueue(Entity entity) {
+		static void addToEraseQueue(Entity entity) {
 			internal::Coordinator::addEntityToEraseQueue(entity);
 		}
 
-		static inline void flushEraseQueue() {
+		static void flushEraseQueue() {
 			internal::Coordinator::flushEntityEraseQueue();
 		}
 
-		static inline void eraseEntity(Entity const &entity) {
+		static void eraseEntity(Entity const &entity) {
 			return internal::Coordinator::eraseEntity(entity);
 		}
 
 		template<typename T>
-		static inline T *createSystem() {
+		static T *createSystem() {
 			return internal::Coordinator::createSystem<T>();
 		}
 
 		template<typename T>
-		static inline T *getSystem() {
+		static T *getSystem() {
 			return internal::Coordinator::getSystem<T>();
 		}
 
 		template<typename T>
-		static inline void eraseSystem() {
+		static void eraseSystem() {
 			internal::Coordinator::eraseSystem<T>();
 		}
 
 		template<typename ...Ts>
-		static inline Signature createSignature() {
+		static Signature createSignature() {
 			return internal::Coordinator::createSignature<Ts...>();
 		}
 
-		static inline void resetAll() {
+		static void resetAll() {
 			internal::Coordinator::eraseAllSystem();
 			internal::Coordinator::eraseAllEntities();
 		}
