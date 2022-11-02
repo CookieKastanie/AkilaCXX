@@ -25,16 +25,18 @@ std::string procPath() {
 #if WIN32
 	GetModuleFileName(NULL, buffer, MAX_PATH);
 
-	std::size_t i = strlen(buffer);
+	std::size_t i = MAX_PATH - 1;
 	while(i && buffer[i] != '\\') {
 		buffer[i--] = 0;
 	}
 
 	while(i) {
-		if(buffer[i] == '\\') buffer[i] = '/';
+		if(buffer[i] == '\\') {
+			buffer[i] = '/';
+		}
 		--i;
 	}
-
+	
 	return std::string(buffer);
 #else
 	// ???
