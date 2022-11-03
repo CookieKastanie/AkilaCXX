@@ -1,6 +1,6 @@
 #pragma once
 
-#include <miniaudio/miniaudio.h>
+#include "akila/audio/audio.hpp"
 #include <string>
 
 namespace akila {
@@ -9,8 +9,16 @@ namespace akila {
 		AudioSource();
 		~AudioSource();
 
+		AudioSource(AudioSource const &other) = delete;
+		AudioSource &operator=(AudioSource const &other) = delete;
+		
+		AudioSource(AudioSource const &&other) noexcept = delete;
+		AudioSource &operator=(AudioSource const &&other) noexcept = delete;
+
 		bool decodeFile(std::string const &path);
 		bool play();
+		bool stop();
+		bool isFinished();
 		void setVolume(float volume);
 		void setLooping(bool loop);
 
@@ -18,9 +26,6 @@ namespace akila {
 		friend class Audio;
 		friend class AudioEmitter;
 
-		std::string path;
-		ma_sound sound;
-
-		bool initSound(ma_sound *otherSound) const;
+		Audio::KeepedSound *sound;
 	};
 }

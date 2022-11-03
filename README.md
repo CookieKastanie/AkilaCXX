@@ -36,6 +36,9 @@ using namespace akila;
 
 class MyLayer: public Layer {
 public:
+	void onMount() override {}
+	void onUnmount() override {}
+
 	void tick() override {}
 	void frame() override {}
 	void gui() override {}
@@ -349,7 +352,6 @@ frambuffer.blitToDefault(0);
 
 ## Audio
 
-(non fonctionnelle)
 ```cpp
 Ref<AudioSource> source = Resources::get<AudioSource>("mySource");
 

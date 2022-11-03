@@ -3,42 +3,39 @@
 
 using namespace akila;
 
-AudioSource::AudioSource(): sound{} {}
+AudioSource::AudioSource(): sound{nullptr} {}
 
 AudioSource::~AudioSource() {
-	ma_sound_stop(&sound);
-	ma_sound_uninit(&sound);
+	Audio::eraseKeepedSound(sound);
 }
 
 bool AudioSource::decodeFile(std::string const &p) {
-	path = p;
-	bool r = initSound(&sound);
-	ma_sound_set_spatialization_enabled(&sound, false);
-	return r;
+	if(sound != nullptr) {
+		std::cerr << p << " already decoded" << std::endl;
+		return false;
+	}
+
+	sound = Audio::createKeepedSound(p);
+
+	return sound != nullptr;
 }
 
 bool AudioSource::play() {
-	return ma_sound_start(&sound) == MA_SUCCESS;
+	return ma_sound_start(&sound->maSound) == MA_SUCCESS;
 }
 
-bool AudioSource::initSound(ma_sound *otherSound) const {
-	ma_uint32 const flags =
-		MA_RESOURCE_MANAGER_DATA_SOURCE_FLAG_DECODE |
-		MA_RESOURCE_MANAGER_DATA_SOURCE_FLAG_ASYNC |
-		MA_RESOURCE_MANAGER_DATA_SOURCE_FLAG_STREAM;
+bool AudioSource::stop() {
+	return ma_sound_stop(&sound->maSound) == MA_SUCCESS;
+}
 
-	ma_result const result = ma_sound_init_from_file(
-		&Audio::engine, path.c_str(),
-		flags, NULL, NULL, otherSound
-	);
-
-	return result == MA_SUCCESS;
+bool AudioSource::isFinished() {
+	return ma_sound_at_end(&sound->maSound) == MA_TRUE;
 }
 
 void AudioSource::setVolume(float volume) {
-	ma_sound_set_volume(&sound, volume);
+	ma_sound_set_volume(&sound->maSound, volume);
 }
 
 void AudioSource::setLooping(bool loop) {
-	ma_sound_set_looping(&sound, loop);
+	ma_sound_set_looping(&sound->maSound, loop);
 }
