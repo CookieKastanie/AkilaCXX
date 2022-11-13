@@ -36,7 +36,9 @@ void MeshLoader::onEntry(JSON json, LoaderCallback cb) {
 		BufferLocator vertex;
 		BufferLocator normal;
 		BufferLocator tangent;
-		BufferLocator uv;
+		BufferLocator uv0;
+		BufferLocator uv1;
+		BufferLocator uv2;
 		BufferLocator index;
 	};
 
@@ -99,7 +101,9 @@ void MeshLoader::onEntry(JSON json, LoaderCallback cb) {
 		std::size_t vertexBufferIndex = -1;
 		std::size_t normalBufferIndex = -1;
 		std::size_t tangentBufferIndex = -1;
-		std::size_t uvBufferIndex = -1;
+		std::size_t uv0BufferIndex = -1;
+		std::size_t uv1BufferIndex = -1;
+		std::size_t uv2BufferIndex = -1;
 		std::size_t indicesBufferIndex = -1;
 		{
 			JSON &jsonAttrs = json["meshes"][0]["primitives"][0]["attributes"];
@@ -107,7 +111,9 @@ void MeshLoader::onEntry(JSON json, LoaderCallback cb) {
 			if(jsonAttrs["POSITION"].is_number_integer()) vertexBufferIndex = jsonAttrs["POSITION"];
 			if(jsonAttrs["NORMAL"].is_number_integer()) normalBufferIndex = jsonAttrs["NORMAL"];
 			if(jsonAttrs["TANGENT"].is_number_integer()) tangentBufferIndex = jsonAttrs["TANGENT"];
-			if(jsonAttrs["TEXCOORD_0"].is_number_integer()) uvBufferIndex = jsonAttrs["TEXCOORD_0"];
+			if(jsonAttrs["TEXCOORD_0"].is_number_integer()) uv0BufferIndex = jsonAttrs["TEXCOORD_0"];
+			if(jsonAttrs["TEXCOORD_1"].is_number_integer()) uv1BufferIndex = jsonAttrs["TEXCOORD_1"];
+			if(jsonAttrs["TEXCOORD_2"].is_number_integer()) uv2BufferIndex = jsonAttrs["TEXCOORD_2"];
 
 			JSON &jsonIndices = json["meshes"][0]["primitives"][0]["indices"];
 			if(jsonIndices.is_number_integer()) indicesBufferIndex = jsonIndices;
@@ -119,7 +125,9 @@ void MeshLoader::onEntry(JSON json, LoaderCallback cb) {
 			affectBL(p->vertex, views, vertexBufferIndex);
 			affectBL(p->normal, views, normalBufferIndex);
 			affectBL(p->tangent, views, tangentBufferIndex);
-			affectBL(p->uv, views, uvBufferIndex);
+			affectBL(p->uv0, views, uv0BufferIndex);
+			affectBL(p->uv1, views, uv1BufferIndex);
+			affectBL(p->uv2, views, uv2BufferIndex);
 			affectBL(p->index, views, indicesBufferIndex);
 		}
 
@@ -181,11 +189,31 @@ void MeshLoader::onEntry(JSON json, LoaderCallback cb) {
 			mesh->addVBO(tangentVBO);
 		}
 
-		if(p->uv.byteLength) {
-			auto uvVBO = createPtr<VBO>(2, StaticMesh::Attributes::UV);
+		if(p->uv0.byteLength) {
+			auto uvVBO = createPtr<VBO>(2, StaticMesh::Attributes::UV_0);
 			uvVBO->setRawData(
-				p->raw.data() + p->uv.byteOffset,
-				static_cast<int>(p->uv.byteLength),
+				p->raw.data() + p->uv0.byteOffset,
+				static_cast<int>(p->uv0.byteLength),
+				0, sizeof(float) * 2
+			);
+			mesh->addVBO(uvVBO);
+		}
+
+		if(p->uv1.byteLength) {
+			auto uvVBO = createPtr<VBO>(2, StaticMesh::Attributes::UV_1);
+			uvVBO->setRawData(
+				p->raw.data() + p->uv1.byteOffset,
+				static_cast<int>(p->uv1.byteLength),
+				0, sizeof(float) * 2
+			);
+			mesh->addVBO(uvVBO);
+		}
+
+		if(p->uv2.byteLength) {
+			auto uvVBO = createPtr<VBO>(2, StaticMesh::Attributes::UV_2);
+			uvVBO->setRawData(
+				p->raw.data() + p->uv2.byteOffset,
+				static_cast<int>(p->uv2.byteLength),
 				0, sizeof(float) * 2
 			);
 			mesh->addVBO(uvVBO);

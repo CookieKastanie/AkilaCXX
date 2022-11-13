@@ -235,7 +235,7 @@ void DebugLayer::gui() {
 	//}
 
 	//ImGui::EndTabBar();
-
+	
 	guiTimings();
 	ImGui::Separator();
 	guiResources();

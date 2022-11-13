@@ -81,6 +81,16 @@ namespace akila {
 		}
 
 		template<typename T>
+		static bool remove(std::string const &name, bool force = false) {
+			TypeId id = getTypeId<T>();
+
+			auto it = maps.find(id);
+			if(it == maps.end()) return false;
+
+			return it->second->remove(name, force);
+		}
+
+		template<typename T>
 		static void clean(bool force = false) {
 			TypeId id = getTypeId<T>();
 

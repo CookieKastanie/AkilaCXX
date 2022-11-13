@@ -14,7 +14,10 @@ namespace akila {
 			UV = 1,
 			NORMAL = 2,
 			TANGENT = 3,
-			COLOR = 4
+			COLOR = 4,
+			UV_0 = UV,
+			UV_1 = 5,
+			UV_2 = 6,
 		};
 
 		StaticMesh();

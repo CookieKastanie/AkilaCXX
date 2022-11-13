@@ -42,7 +42,7 @@ public:
 	void tick() override {}
 	void frame() override {}
 	void gui() override {}
-}
+};
 
 int main() {
 	return Core::run([]() {
