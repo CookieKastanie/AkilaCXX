@@ -5,12 +5,14 @@
 using namespace akila;
 
 struct BufferLocator {
+	BufferObject::Type componentType = BufferObject::Type::UNSIGNED_SHORT;
 	std::size_t byteLength = 0;
 	std::size_t byteOffset = 0;
 };
 
-void affectBL(BufferLocator &bl, nlohmann::json &views, std::size_t index) {
+void affectBL(BufferLocator &bl, JSON &accessors, JSON &views, std::size_t index) {
 	if(index != -1) {
+		bl.componentType = accessors[index]["componentType"];
 		bl.byteLength = views[index]["byteLength"];
 		bl.byteOffset = views[index]["byteOffset"];
 	}
@@ -44,6 +46,8 @@ void MeshLoader::onEntry(JSON json, LoaderCallback cb) {
 
 	Ptr<_> p = createPtr<_>();
 	//p->path = json["path"];
+
+	StaticMesh *mesh = Resources::create<StaticMesh>(name);
 
 	Threadpool::submit([=]() {
 		std::ifstream file(FileSystem::path(path), std::ios::binary);
@@ -91,7 +95,7 @@ void MeshLoader::onEntry(JSON json, LoaderCallback cb) {
 			file.read(reinterpret_cast<char *>(p->raw.data()), chunkLength);
 		}
 
-		//std::cout << json.dump(4) << std::endl;
+		//std::cout << json.dump(4) << std::endl; pretty print json
 
 		if(!json["meshes"].is_array() ||
 			!json["accessors"].is_array() ||
@@ -121,19 +125,35 @@ void MeshLoader::onEntry(JSON json, LoaderCallback cb) {
 
 		{
 			JSON &views = json["bufferViews"];
+			JSON &accessors = json["accessors"];
 
-			affectBL(p->vertex, views, vertexBufferIndex);
-			affectBL(p->normal, views, normalBufferIndex);
-			affectBL(p->tangent, views, tangentBufferIndex);
-			affectBL(p->uv0, views, uv0BufferIndex);
-			affectBL(p->uv1, views, uv1BufferIndex);
-			affectBL(p->uv2, views, uv2BufferIndex);
-			affectBL(p->index, views, indicesBufferIndex);
+			affectBL(p->vertex, accessors, views, vertexBufferIndex);
+			affectBL(p->normal, accessors, views, normalBufferIndex);
+			affectBL(p->tangent, accessors, views, tangentBufferIndex);
+			affectBL(p->uv0, accessors, views, uv0BufferIndex);
+			affectBL(p->uv1, accessors, views, uv1BufferIndex);
+			affectBL(p->uv2, accessors, views, uv2BufferIndex);
+			affectBL(p->index, accessors, views, indicesBufferIndex);
+		}
+
+		if(vertexBufferIndex != -1) {
+			JSON &accessor = json["accessors"][vertexBufferIndex];
+
+			mesh->mins.x = accessor["min"][0];
+			mesh->mins.y = accessor["min"][1];
+			mesh->mins.z = accessor["min"][2];
+
+			mesh->maxs.x = accessor["max"][0];
+			mesh->maxs.y = accessor["max"][1];
+			mesh->maxs.z = accessor["max"][2];
+
+			mesh->radius = max(mesh->maxs.x, max(mesh->maxs.y, mesh->maxs.z));
+			mesh->radius = max(mesh->radius, max(abs(mesh->mins.x), max(abs(mesh->mins.y), abs(mesh->mins.z))));
+
+			mesh->squaredRadius = mesh->radius * mesh->radius;
 		}
 
 	}, [=]() {
-		StaticMesh *mesh = new StaticMesh{};
-
 		if(p->vertex.byteLength) {
 			auto vertexVBO = createPtr<VBO>(3, StaticMesh::Attributes::POSITION);
 			vertexVBO->setRawData(
@@ -142,25 +162,6 @@ void MeshLoader::onEntry(JSON json, LoaderCallback cb) {
 				0, sizeof(float) * 3
 			);
 			mesh->addVBO(vertexVBO);
-			
-			// calcule la AABB et la bounding sphere
-			Vec3 *data = (Vec3 *)(p->raw.data() + p->vertex.byteOffset);
-			for(std::size_t i = 0; i < p->vertex.byteLength / (sizeof(float) * 3); ++i) {
-				Vec3 *vec = data + i;
-
-				mesh->mins.x = min(mesh->mins.x, vec->x);
-				mesh->mins.y = min(mesh->mins.y, vec->y);
-				mesh->mins.z = min(mesh->mins.z, vec->z);
-
-				mesh->maxs.x = max(mesh->maxs.x, vec->x);
-				mesh->maxs.y = max(mesh->maxs.y, vec->y);
-				mesh->maxs.z = max(mesh->maxs.z, vec->z);
-			}
-
-			mesh->radius = max(mesh->maxs.x, max(mesh->maxs.y, mesh->maxs.z));
-			mesh->radius = max(mesh->radius, max(abs(mesh->mins.x), max(abs(mesh->mins.y), abs(mesh->mins.z))));
-
-			mesh->squaredRadius = mesh->radius * mesh->radius;
 		}
 
 		if(p->normal.byteLength) {
@@ -221,11 +222,7 @@ void MeshLoader::onEntry(JSON json, LoaderCallback cb) {
 
 		if(p->index.byteLength) {
 			auto ibo = createPtr<IBO>();
-
-			std::size_t const ushortMaxValue = 65535;
-			if(p->index.byteLength > ushortMaxValue) {
-				ibo->setDataType(BufferObject::Type::UNSIGNED_INT);
-			}
+			ibo->setDataType(p->index.componentType);
 
 			ibo->setRawData(
 				p->raw.data() + p->index.byteOffset,
@@ -236,9 +233,7 @@ void MeshLoader::onEntry(JSON json, LoaderCallback cb) {
 		}
 
 		mesh->prepare();
-
-		Resources::set(name, mesh);
-
+		
 		cb.success();
 	});
 }
