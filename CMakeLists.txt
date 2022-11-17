@@ -47,7 +47,8 @@ add_library(akila STATIC
 	"src/default/loaders/mesh_loader.cpp"
 	"src/renderer/framebuffer.cpp"
 	"src/coroutine/coroutine.cpp"
-	"src/default/layers/debug_timings.cpp")
+	"src/default/layers/debug_timings.cpp"
+	"src/window/cursor.cpp")
 
 target_include_directories(akila PRIVATE "include")
 

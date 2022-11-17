@@ -80,7 +80,7 @@ void MeshLoader::onEntry(JSON json, LoaderCallback cb) {
 			std::string jsonText;
 			jsonText.resize(chunkLength);
 			file.read(jsonText.data(), chunkLength);
-			json = nlohmann::json::parse(jsonText);
+			json = JSON::parse(jsonText);
 		}
 
 		{ // le second de type BIN
@@ -146,7 +146,7 @@ void MeshLoader::onEntry(JSON json, LoaderCallback cb) {
 			mesh->maxs.x = accessor["max"][0];
 			mesh->maxs.y = accessor["max"][1];
 			mesh->maxs.z = accessor["max"][2];
-
+			
 			mesh->radius = max(mesh->maxs.x, max(mesh->maxs.y, mesh->maxs.z));
 			mesh->radius = max(mesh->radius, max(abs(mesh->mins.x), max(abs(mesh->mins.y), abs(mesh->mins.z))));
 

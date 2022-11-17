@@ -1,4 +1,5 @@
 #include "akila/random/random.hpp"
+#include <chrono>
 
 using namespace akila;
 
@@ -28,4 +29,17 @@ Vec3 Random::getVec3(float from, float to) {
 
 float Random::getAngle() {
 	return getFloat(0, PI * 2.f);
+}
+
+std::uint64_t Random::getUid() {
+	using namespace std::chrono;
+	time_point now = time_point_cast<seconds>(system_clock::now());
+
+	seconds value = now.time_since_epoch();
+	std::uint64_t uid = value.count() << 32;
+
+	std::uniform_int_distribution<std::uint32_t> dist{0, static_cast<std::uint32_t>(-1)};
+	uid |= static_cast<std::uint64_t>(dist(engine));
+
+	return uid;
 }

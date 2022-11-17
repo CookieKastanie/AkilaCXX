@@ -5,6 +5,7 @@
 #include <glm/gtx/string_cast.hpp>
 #include <iostream>
 
+#define NOMINMAX
 #undef min
 #undef max
 
@@ -61,8 +62,8 @@ namespace akila {
 	using glm::to_string;
 
 
-	float const PI = 3.14159265359f;
-	float const HALF_PI = 1.57079632679f;
+	constexpr float const PI = 3.14159265359f;
+	constexpr float const HALF_PI = 1.57079632679f;
 
 	inline float toRadians(float degree) { return degree * (PI / 180.f); }
 }

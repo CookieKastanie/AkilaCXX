@@ -119,4 +119,3 @@ void Core::restart() {
 	restartFlag = true;
 	Window::close();
 }
-

@@ -14,6 +14,7 @@
 #include "akila/resource/file_system.hpp"
 
 #include "akila/window/window.hpp"
+#include "akila/window/cursor.hpp"
 
 #include "akila/layer/layers.hpp"
 

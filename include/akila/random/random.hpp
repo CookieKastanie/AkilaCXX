@@ -15,6 +15,8 @@ namespace akila {
 		static Vec3 getVec3(float from = 0.f, float to = 1.f);
 		static float getAngle();
 
+		static std::uint64_t getUid();
+
 	private:
 		friend class Core;
 

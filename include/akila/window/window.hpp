@@ -58,6 +58,7 @@ namespace akila {
 	private:
 		friend class Core;
 		friend class internal::ImGuiHandler;
+		friend class Cursor;
 
 		static GLFWwindow *window;
 		static bool vSync;
