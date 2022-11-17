@@ -46,6 +46,12 @@ namespace akila {
 		TextureBuffer(Kind type, Format internalFormat);
 		virtual ~TextureBuffer();
 
+		TextureBuffer(TextureBuffer &&other) noexcept;
+		TextureBuffer &operator=(TextureBuffer &&other) noexcept;
+
+		TextureBuffer(TextureBuffer const &other) = delete;
+		TextureBuffer &operator=(TextureBuffer const &other) = delete;
+
 		unsigned int getId() const;
 
 		void bind(unsigned int unit = 0) const;

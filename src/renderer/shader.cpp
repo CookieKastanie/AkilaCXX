@@ -167,6 +167,28 @@ Shader::~Shader() {
 	glDeleteProgram(id);
 }
 
+Shader::Shader(Shader &&other) noexcept:
+	id{other.id},
+	uniformBindings{other.uniformBindings},
+	totalByteCount{other.totalByteCount},
+	fileName{other.fileName},
+	templateFileName{other.templateFileName} {
+
+	other.id = 0;
+}
+
+Shader &Shader::operator=(Shader &&other) noexcept {
+	id = other.id;
+	uniformBindings = other.uniformBindings;
+	totalByteCount = other.totalByteCount;
+	fileName = other.fileName;
+	templateFileName = other.templateFileName;
+
+	other.id = 0;
+
+	return *this;
+}
+
 void Shader::bind() const {
 	glUseProgram(id);
 	bindedId = id;

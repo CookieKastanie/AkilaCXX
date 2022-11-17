@@ -19,6 +19,12 @@ namespace akila {
 		VAO();
 		~VAO();
 
+		VAO(VAO &&other) noexcept;
+		VAO &operator=(VAO &&other) noexcept;
+
+		VAO(VAO const &other) = delete;
+		VAO &operator=(VAO const &other) = delete;
+
 		void setDrawMode(Mode mode);
 		void bind() const;
 		void registerVBO(VBO const *vbo);

@@ -10,6 +10,12 @@ namespace akila {
 		FrameBuffer();
 		~FrameBuffer();
 
+		FrameBuffer(FrameBuffer &&other) noexcept;
+		FrameBuffer &operator=(FrameBuffer &&other) noexcept;
+
+		FrameBuffer(FrameBuffer const &other) = delete;
+		FrameBuffer &operator=(FrameBuffer const &other) = delete;
+
 		enum class Attachement: GLenum {
 			TEXTURE = GL_TEXTURE_2D,
 			CUBE_MAP_POSITIVE_X = GL_TEXTURE_CUBE_MAP_POSITIVE_X,

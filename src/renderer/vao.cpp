@@ -11,6 +11,30 @@ VAO::~VAO() {
 	glDeleteVertexArrays(1, &id);
 }
 
+VAO::VAO(VAO &&other) noexcept:
+	id{other.id},
+	drawMode{other.drawMode},
+	length{other.length},
+	useIndices{other.useIndices},
+	indicesType{other.indicesType},
+	drawFunc{other.drawFunc} {
+
+	other.id = 0;
+}
+
+VAO &VAO::operator=(VAO &&other) noexcept {
+	id = other.id;
+	drawMode = other.drawMode;
+	length = other.length;
+	useIndices = other.useIndices;
+	indicesType = other.indicesType;
+	drawFunc = other.drawFunc;
+
+	other.id = 0;
+
+	return *this;
+}
+
 void VAO::setDrawMode(Mode mode) {
 	drawMode = static_cast<GLuint>(mode);
 }

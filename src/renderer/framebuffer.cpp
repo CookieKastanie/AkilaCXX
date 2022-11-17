@@ -13,6 +13,27 @@ FrameBuffer::~FrameBuffer() {
     glDeleteFramebuffers(1, &id);
 }
 
+FrameBuffer::FrameBuffer(FrameBuffer &&other) noexcept: id{other.id}, depthTexture{other.depthTexture} {
+    for(std::size_t i = 0; i < MAX_ATTACHMENT_COUNT; ++i) {
+        textures[i] = other.textures[i];
+    }
+
+    other.id = 0;
+}
+
+FrameBuffer &FrameBuffer::operator=(FrameBuffer &&other) noexcept {
+    id = other.id;
+    depthTexture = other.depthTexture;
+
+    for(std::size_t i = 0; i < MAX_ATTACHMENT_COUNT; ++i) {
+        textures[i] = other.textures[i];
+    }
+
+    other.id = 0;
+
+    return *this;
+}
+
 FrameBuffer::Attachement FrameBuffer::nextAttachement(Attachement attachement) {
     if(attachement == Attachement::CUBE_MAP_NEGATIVE_Z) return Attachement::CUBE_MAP_POSITIVE_X;
 

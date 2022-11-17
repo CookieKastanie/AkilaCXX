@@ -11,6 +11,28 @@ BufferObject::~BufferObject() {
 	glDeleteBuffers(1, &id);
 }
 
+BufferObject::BufferObject(BufferObject &&other) noexcept:
+	id{other.id},
+	kind{other.kind},
+	length{other.length},
+	usage{other.usage},
+	dataType{other.dataType} {
+
+	other.id = 0;
+}
+
+BufferObject &BufferObject::operator=(BufferObject &&other) noexcept {
+	id = other.id;
+	kind = other.kind;
+	length = other.length;
+	usage = other.usage;
+	dataType = other.dataType;
+
+	other.id = 0;
+
+	return *this;
+}
+
 void BufferObject::bind() const {
 	glBindBuffer(kind, id);
 }
@@ -42,6 +64,21 @@ BufferObject::Type BufferObject::getDataType() const {
 VBO::VBO(int tupleSize, unsigned int attributeLocation, Usage usage): BufferObject{GL_ARRAY_BUFFER, usage},
 tupleSize{tupleSize}, location{attributeLocation} {
 
+}
+
+VBO::VBO(VBO &&other) noexcept:
+	BufferObject{std::move(other)},
+	tupleSize{other.tupleSize},
+	location{other.location} {
+
+}
+
+VBO &VBO::operator=(VBO &&other) noexcept {
+	BufferObject::operator=(std::move(other));
+	tupleSize = other.tupleSize;
+	location = other.location;
+
+	return *this;
 }
 
 template<typename T>
@@ -92,6 +129,19 @@ UBO::UBO(unsigned int bindingPoint, unsigned int size, BufferObject::Usage usage
 	setRawData(NULL, size);
 	length = size;
 	glBindBufferBase(GL_UNIFORM_BUFFER, bindingPoint, id);
+}
+
+UBO::UBO(UBO &&other) noexcept:
+	BufferObject{std::move(other)},
+	bindingPoint{other.bindingPoint} {
+
+}
+
+UBO &UBO::operator=(UBO &&other) noexcept {
+	BufferObject::operator=(std::move(other));
+	bindingPoint = other.bindingPoint;
+
+	return *this;
 }
 
 void UBO::setData(void const *data) {

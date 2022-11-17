@@ -14,6 +14,26 @@ TextureBuffer::~TextureBuffer() {
 	glDeleteTextures(1, &id);
 }
 
+TextureBuffer::TextureBuffer(TextureBuffer &&other) noexcept:
+	id{other.id},
+	kind{other.kind},
+	internalFormat{other.internalFormat},
+	size{other.size} {
+
+	other.id = 0;
+}
+
+TextureBuffer &TextureBuffer::operator=(TextureBuffer &&other) noexcept {
+	id = other.id;
+	kind = other.kind;
+	internalFormat = other.internalFormat;
+	size = other.size;
+
+	other.id = 0;
+
+	return *this;
+}
+
 unsigned int TextureBuffer::getId() const {
 	return id;
 }

@@ -37,6 +37,12 @@ namespace akila {
 		Shader(std::string const &shaderTxt);
 		~Shader();
 
+		Shader(Shader &&other) noexcept;
+		Shader &operator=(Shader &&other) noexcept;
+
+		Shader(Shader const &other) = delete;
+		Shader &operator=(Shader const &other) = delete;
+
 		void bind() const;
 		bool isBinded() const;                                              
 

@@ -21,6 +21,13 @@ namespace akila {
 
 		BufferObject(unsigned int kind, Usage usage);
 		virtual ~BufferObject();
+
+		BufferObject(BufferObject &&other) noexcept;
+		virtual BufferObject &operator=(BufferObject &&other) noexcept;
+
+		BufferObject(BufferObject const &other) = delete;
+		virtual BufferObject &operator=(BufferObject const &other) = delete;
+
 		virtual void bind() const;
 		virtual void setRawData(void const *data, int size, int offset = 0, int typeSize = sizeof(char));
 		virtual int getLength() const;
@@ -39,6 +46,9 @@ namespace akila {
 	class VBO: public BufferObject {
 	public:
 		VBO(int tupleSize, unsigned int attributeLocation, Usage usage = Usage::STATIC);
+
+		VBO(VBO &&other) noexcept;
+		VBO &operator=(VBO &&other) noexcept;
 
 		template<typename T>
 		void setData(std::vector<T> const &data);
@@ -64,6 +74,9 @@ namespace akila {
 	class UBO: public BufferObject {
 	public:
 		UBO(unsigned int bindingPoint, unsigned int size, BufferObject::Usage usage = Usage::DYNAMIC);
+
+		UBO(UBO &&other) noexcept;
+		UBO &operator=(UBO &&other) noexcept;
 
 		void setData(void const *data);
 		unsigned int getBindingPoint();

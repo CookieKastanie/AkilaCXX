@@ -13,6 +13,17 @@ Cursor::~Cursor() {
 	}
 }
 
+Cursor::Cursor(Cursor &&other) noexcept: cursor{other.cursor} {
+	other.cursor = nullptr;
+}
+
+Cursor &Cursor::operator=(Cursor &&other) noexcept {
+	cursor = other.cursor;
+	other.cursor = nullptr;
+
+	return *this;
+}
+
 void Cursor::setData(IVec2 size, unsigned char *data, IVec2 center) {
 	if(cursor != nullptr) {
 		glfwDestroyCursor(cursor);
