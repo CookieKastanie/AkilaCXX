@@ -79,6 +79,11 @@ namespace akila {
 		System(Signature signature): signature{signature}, entities{} {};
 		virtual ~System() = default;
 
+		System(System const &) = default;
+		virtual System &operator=(System const &) = default;
+		System(System &&) = default;
+		virtual System &operator=(System &&) = default;
+
 	protected:
 		EntitySet entities;
 

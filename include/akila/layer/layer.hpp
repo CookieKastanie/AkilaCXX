@@ -14,6 +14,11 @@ namespace akila {
 		Layer();
 		virtual ~Layer() = default;
 
+		Layer(Layer const &) = default;
+		virtual Layer &operator=(Layer const &) = default;
+		Layer(Layer &&) = default;
+		virtual Layer &operator=(Layer &&) = default;
+
 		virtual void onMount();
 		virtual void onUnmount();
 
