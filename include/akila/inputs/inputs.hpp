@@ -77,9 +77,9 @@ namespace akila {
 		static bool isPressed(Key key);
 		//static bool isPressed(std::string const &name); pour du key mapping
 
-		static Vec2 getMousePosition();
-		static Vec2 getMouseVelocity();
-		static Vec2 getMouseScrollVelocity();
+		static Vec2 const &getMousePosition();
+		static Vec2 const &getMouseVelocity();
+		static Vec2 const &getMouseScrollVelocity();
 
 	private:
 		friend class internal::WindowEvents;

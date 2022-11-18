@@ -15,7 +15,7 @@ void OrbitCameraSystem::update() {
 	Vec3 &eye = cam.position;
 
 	if(Inputs::isPressed(Inputs::Key::LEFT_CLICK)) {
-		Vec2 &d = Inputs::getMouseVelocity();
+		Vec2 const &d = Inputs::getMouseVelocity();
 
 		cam.movement.x -= d.x * 0.006f;
 		cam.movement.y -= d.y * 0.006f;
@@ -28,7 +28,7 @@ void OrbitCameraSystem::update() {
 	float dz = 0;
 
 	if(Inputs::isPressed(Inputs::Key::RIGHT_CLICK)) {
-		Vec2 &d = Inputs::getMouseVelocity();
+		Vec2 const &d = Inputs::getMouseVelocity();
 
 		float speedCurve = 0.005f * (0.227297f * cam.distance + 0.533723f);
 		dx = -d.x * speedCurve;

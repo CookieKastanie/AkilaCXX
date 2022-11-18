@@ -33,14 +33,14 @@ void Inputs::setMouseScrollVelocity(Vec2 const &scrollVel) {
 	mouseScrollVelocity = scrollVel;
 }
 
-Vec2 Inputs::getMousePosition() {
+Vec2 const &Inputs::getMousePosition() {
 	return mousePosition;
 }
 
-Vec2 Inputs::getMouseVelocity() {
+Vec2 const &Inputs::getMouseVelocity() {
 	return mouseVelocity;
 }
 
-Vec2 Inputs::getMouseScrollVelocity() {
+Vec2 const &Inputs::getMouseScrollVelocity() {
 	return mouseScrollVelocity;
 }
