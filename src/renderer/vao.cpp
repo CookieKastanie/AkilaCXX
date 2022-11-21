@@ -60,18 +60,22 @@ void VAO::unbind() const {
 	glBindVertexArray(0);
 }
 
-void VAO::drawArray(VAO const &vao) {
+void VAO::drawArray(VAO const &vao, int length) {
 	vao.bind();
-	glDrawArrays(vao.drawMode, 0, vao.length);
+	glDrawArrays(vao.drawMode, 0, length);
 	vao.unbind();
 }
 
-void VAO::drawElements(VAO const &vao) {
+void VAO::drawElements(VAO const &vao, int length) {
 	vao.bind();
-	glDrawElements(vao.drawMode, vao.length, vao.indicesType, nullptr);
+	glDrawElements(vao.drawMode, length, vao.indicesType, nullptr);
 	vao.unbind();
 }
 
 void VAO::draw() const {
-	drawFunc(*this);
+	drawFunc(*this, length);
+}
+
+void VAO::draw(int length) const {
+	drawFunc(*this, length);
 }

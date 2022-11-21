@@ -6,8 +6,8 @@ TextureBuffer::TextureBuffer(Kind kind, Format internalFormat):
 	kind{static_cast<GLenum>(kind)},
 	internalFormat{static_cast<GLenum>(internalFormat)},
 	size{0, 0} {
+
 	glGenTextures(1, &id);
-	setParameters({});
 }
 
 TextureBuffer::~TextureBuffer() {
@@ -43,7 +43,7 @@ void TextureBuffer::bind(unsigned int unit) const {
 	glBindTexture(kind, id);
 }
 
-IVec2 TextureBuffer::getSize() const {
+IVec2 const &TextureBuffer::getSize() const {
 	return size;
 }
 
@@ -57,12 +57,12 @@ Ptr<std::uint8_t> TextureBuffer::getData(unsigned int mip) const {
 	return buffer;
 }
 
-TextureBuffer::Parameters::Parameters():
-	wrapS{WrapMode::REPEAT},
-	wrapT{WrapMode::REPEAT},
-	wrapR{WrapMode::REPEAT},
-	minFilter{FilterMode::LINEAR},
-	magFilter{FilterMode::LINEAR} {}
+TextureBuffer::Parameters::Parameters(WrapMode wrapS, WrapMode wrapT, WrapMode wrapR, FilterMode minFilter, FilterMode magFilter):
+	wrapS{wrapS},
+	wrapT{wrapT},
+	wrapR{wrapR},
+	minFilter{minFilter},
+	magFilter{magFilter} {}
 
 void TextureBuffer::setParameters(Parameters const &params) {
 	bind();
@@ -89,9 +89,11 @@ int TextureBuffer::calculatMipmapCount() {
 
 /////
 
-Texture2D::Texture2D(Format format): TextureBuffer{Kind::TEXTURE_2D, format} {}
+Texture2D::Texture2D(Format format): TextureBuffer{Kind::TEXTURE_2D, format} {
+	setParameters({});
+}
 
-void Texture2D::setSize(IVec2 size) {
+void Texture2D::setSize(IVec2 const &size) {
 	bind();
 
 	glTexImage2D(
@@ -114,9 +116,11 @@ void Texture2D::setData(void const *data, Format format, Type type, unsigned int
 
 /////
 
-TextureCubmap::TextureCubmap(Format format): TextureBuffer{Kind::TEXTURE_CUBE_MAP, format} {}
+TextureCubmap::TextureCubmap(Format format): TextureBuffer{Kind::TEXTURE_CUBE_MAP, format} {
+	setParameters({});
+}
 
-void TextureCubmap::setSize(IVec2 size) {
+void TextureCubmap::setSize(IVec2 const &size) {
 	bind();
 	for(unsigned int i = 0; i < 6; ++i) {
 		glTexImage2D(
@@ -138,4 +142,39 @@ void TextureCubmap::setData(const void *data, Face face, Format format, Type typ
 		static_cast<GLenum>(face), mipLevel, 0, 0, size.x, size.y,
 		static_cast<GLenum>(format), static_cast<GLenum>(type), data
 	);
+}
+
+/////
+
+Texture2DMultisample::Texture2DMultisample(int samples, Format format):
+	TextureBuffer{Kind::TEXTURE_2D_MULTISAMPLE, format},
+	samples{samples} {
+
+}
+
+Texture2DMultisample::Texture2DMultisample(Texture2DMultisample &&other) noexcept:
+	TextureBuffer{static_cast<Kind>(other.kind), static_cast<Format>(other.internalFormat)},
+	samples{other.samples} {
+
+}
+
+Texture2DMultisample &Texture2DMultisample::operator=(Texture2DMultisample &&other) noexcept {
+	TextureBuffer::operator=(std::move(other));
+	samples = other.samples;
+
+	return *this;
+}
+
+void Texture2DMultisample::setSize(IVec2 const &size) {
+	bind();
+	glTexImage2DMultisample(kind, samples, internalFormat, size.x, size.y, GL_TRUE);
+	this->size = size;
+}
+
+void Texture2DMultisample::setData(void const *data, Format format, Type type, unsigned int mipLevel) {
+	std::cerr << "Can't set data to multisampled texture" << std::endl;
+}
+
+int Texture2DMultisample::getSampleCount() {
+	return samples;
 }

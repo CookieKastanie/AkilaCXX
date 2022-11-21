@@ -18,6 +18,7 @@ namespace akila {
 
 		enum class Attachement: GLenum {
 			TEXTURE = GL_TEXTURE_2D,
+			MULTISAMPLED_TEXTURE = GL_TEXTURE_2D_MULTISAMPLE,
 			CUBE_MAP_POSITIVE_X = GL_TEXTURE_CUBE_MAP_POSITIVE_X,
 			CUBE_MAP_NEGATIVE_X = GL_TEXTURE_CUBE_MAP_NEGATIVE_X,
 			CUBE_MAP_POSITIVE_Y = GL_TEXTURE_CUBE_MAP_POSITIVE_Y,
@@ -29,20 +30,25 @@ namespace akila {
 		static Attachement nextAttachement(Attachement attachement);
 		
 		void setTexture(Ref<TextureBuffer> const &texture, int unit = 0, Attachement attachment = Attachement::TEXTURE);
+		void setTextureWeak(TextureBuffer const *texture, int unit = 0, Attachement attachment = Attachement::TEXTURE, unsigned int mip = 0);
 		Ref<TextureBuffer> &getTexture(int unit);
 
-		void setDepthTexture(Ref<TextureBuffer> const &texture);
+		void setDepthTexture(Ref<TextureBuffer> const &texture, Attachement attachment = Attachement::TEXTURE);
 		Ref<TextureBuffer> &getDepthTexture();
 
 		void changeAttachment(int unit, Attachement attachment, unsigned int mipLevel = 0);
 
 		void prepare();
 
-		void bind(int unit = 0);
-		void bindWithSize(IVec2 size);
+		void bind();
+		void bind(int unit);
+		void bind(IVec2 size);
 		void unbind();
 
-		void blitToDefault(int unit, TextureBuffer::FilterMode filter = TextureBuffer::FilterMode::NEAREST);
+		void setViewport(int unit);
+		void setViewport(IVec2 size);
+
+		void blitToDefault(int unit = 0, TextureBuffer::FilterMode filter = TextureBuffer::FilterMode::NEAREST);
 		void blitTo(int seflUnit, FrameBuffer *fb, TextureBuffer::FilterMode filter = TextureBuffer::FilterMode::NEAREST);
 
 		void resizeAll(IVec2 size);

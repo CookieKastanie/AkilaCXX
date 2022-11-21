@@ -39,6 +39,10 @@ void Renderer::blendFunc(BlendFactor sfactor, BlendFactor dfactor) {
 	glBlendFunc(static_cast<GLenum>(sfactor), static_cast<GLenum>(dfactor));
 }
 
+void Renderer::blendEquation(BlendEquation eq) {
+	glBlendEquation(static_cast<GLenum>(eq));
+}
+
 void Renderer::depthFunc(DepthFunc func) {
 	glDepthFunc(static_cast<GLenum>(func));
 }

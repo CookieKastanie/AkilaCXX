@@ -55,12 +55,12 @@ namespace akila {
 		unsigned int getId() const;
 
 		void bind(unsigned int unit = 0) const;
-		virtual void setSize(IVec2 size) = 0;
+		virtual void setSize(IVec2 const &size) = 0;
 		virtual void setData(void const *data, Format format, Type type, unsigned int mipLevel = 0) = 0;
 
 		virtual Ptr<std::uint8_t> getData(unsigned int mip = 0) const;
 
-		IVec2 getSize() const;
+		IVec2 const &getSize() const;
 
 		enum class WrapMode: GLint {
 			CLAMP_TO_EDGE = GL_CLAMP_TO_EDGE,
@@ -77,7 +77,13 @@ namespace akila {
 			LINEAR_MIPMAP_LINEAR = GL_LINEAR_MIPMAP_LINEAR
 		};
 		struct Parameters {
-			Parameters();
+			Parameters(
+				WrapMode wrapS = WrapMode::REPEAT,
+				WrapMode wrapT = WrapMode::REPEAT,
+				WrapMode wrapR = WrapMode::REPEAT,
+				FilterMode minFilter = FilterMode::LINEAR,
+				FilterMode magFilter = FilterMode::LINEAR
+			);
 
 			WrapMode wrapS;
 			WrapMode wrapT;
@@ -107,7 +113,7 @@ namespace akila {
 	public:
 		Texture2D(Format format = Format::RGB);
 
-		void setSize(IVec2 size) override;
+		void setSize(IVec2 const &size) override;
 		void setData(void const *data, Format format, Type type, unsigned int mipLevel = 0) override;
 	};
 
@@ -117,7 +123,7 @@ namespace akila {
 	public:
 		TextureCubmap(Format format = Format::RGB);
 
-		void setSize(IVec2 size) override;
+		void setSize(IVec2 const &size) override;
 		void setData(void const *data, Format format, Type type, unsigned int mipLevel = 0) override;
 
 		enum class Face: GLenum {
@@ -132,17 +138,21 @@ namespace akila {
 		void setData(const void *data, Face face, Format format, Type type, unsigned int mipLevel = 0);
 	};
 
-	/* TODO
-	class Texture3D: public TextureBuffer {
-
-	};
+	/////
 
 	class Texture2DMultisample: public TextureBuffer {
+	public:
+		Texture2DMultisample(int samples = 4, Format format = Format::RGB);
 
+		Texture2DMultisample(Texture2DMultisample &&other) noexcept;
+		Texture2DMultisample &operator=(Texture2DMultisample &&other) noexcept;
+
+		void setSize(IVec2 const &size) override;
+		void setData(void const *data, Format format, Type type, unsigned int mipLevel = 0) override;
+
+		int getSampleCount();
+
+	private:
+		GLsizei samples;
 	};
-
-	class Texture2DArray: public TextureBuffer {
-
-	};
-	*/
 }

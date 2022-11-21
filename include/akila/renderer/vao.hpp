@@ -32,6 +32,7 @@ namespace akila {
 		void unbind() const;
 
 		void draw() const;
+		void draw(int length) const;
 
 	private:
 		GLuint id;
@@ -40,8 +41,8 @@ namespace akila {
 		bool useIndices;
 		GLenum indicesType;
 
-		static void drawArray(VAO const &vao);
-		static void drawElements(VAO const &vao);
-		std::function<void(VAO const &vao)> drawFunc;
+		static void drawArray(VAO const &vao, int length);
+		static void drawElements(VAO const &vao, int length);
+		std::function<void(VAO const &vao, int length)> drawFunc;
 	};
 }

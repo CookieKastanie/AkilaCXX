@@ -46,6 +46,10 @@ void FrameBuffer::setTexture(Ref<TextureBuffer> const &texture, int unit, Attach
     changeAttachment(unit, attachment);
 }
 
+void FrameBuffer::setTextureWeak(TextureBuffer const *texture, int unit, Attachement attachment, unsigned int mip) {
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0 + unit, static_cast<GLenum>(attachment), texture->getId(), mip);
+}
+
 Ref<TextureBuffer> &FrameBuffer::getTexture(int unit) {
     return textures[unit];
 }
@@ -54,9 +58,9 @@ void FrameBuffer::changeAttachment(int unit, Attachement attachment, unsigned in
     glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0 + unit, static_cast<GLenum>(attachment), textures[unit]->getId(), mip);
 }
 
-void FrameBuffer::setDepthTexture(Ref<TextureBuffer> const &texture) {
+void FrameBuffer::setDepthTexture(Ref<TextureBuffer> const &texture, Attachement attachment) {
     depthTexture = texture;
-    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, texture->getId(), 0);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, static_cast<GLenum>(attachment), texture->getId(), 0);
 }
 
 Ref<TextureBuffer> &FrameBuffer::getDepthTexture() {
@@ -95,19 +99,32 @@ void FrameBuffer::prepare() {
     }
 }
 
+void FrameBuffer::bind() {
+    glBindFramebuffer(GL_FRAMEBUFFER, id);
+}
+
 void FrameBuffer::bind(int unit) {
     IVec2 texSize = textures[unit]->getSize();
     glBindFramebuffer(GL_FRAMEBUFFER, id);
     glViewport(0, 0, texSize.x, texSize.y);
 }
 
-void FrameBuffer::bindWithSize(IVec2 size) {
+void FrameBuffer::bind(IVec2 size) {
     glBindFramebuffer(GL_FRAMEBUFFER, id);
     glViewport(0, 0, size.x, size.y);
 }
 
 void FrameBuffer::unbind() {
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
+}
+
+void FrameBuffer::setViewport(int unit) {
+    IVec2 texSize = textures[unit]->getSize();
+    glViewport(0, 0, texSize.x, texSize.y);
+}
+
+void FrameBuffer::setViewport(IVec2 size) {
+    glViewport(0, 0, size.x, size.y);
 }
 
 void FrameBuffer::blitToDefault(int unit, TextureBuffer::FilterMode filter) {
