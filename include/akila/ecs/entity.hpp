@@ -37,7 +37,7 @@ namespace akila {
 			return id != internal::INVALID_ENTITY_ID;
 		}
 
-		constexpr operator internal::EntityId() const {
+		operator internal::EntityId() const {
 			return id;
 		}
 

@@ -25,7 +25,7 @@ void WindowEvents::init() {
 
 void WindowEvents::resizeCallback(GLFWwindow *window, int width, int height) {
 	std::scoped_lock<std::mutex> lock(mux);
-	resizes.push_back({{width, height}});
+	resizes.push_back({max(IVec2{width, height}, IVec2{1, 1})});
 }
 
 void WindowEvents::keyCallback(GLFWwindow *window, int key, int scancode, int action, int mods) {

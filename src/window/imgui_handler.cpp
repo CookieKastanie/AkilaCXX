@@ -108,6 +108,8 @@ void ImGuiHandler::init() {
 	//io.ConfigViewportsNoTaskBarIcon = true;
 	io->ConfigFlags |= ImGuiConfigFlags_NoMouseCursorChange;
 
+	io->IniFilename = "gui.ini";
+
 	ImGui::StyleColorsClassic();
 
 	ImGuiStyle &style = ImGui::GetStyle();
