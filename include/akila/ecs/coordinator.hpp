@@ -52,17 +52,20 @@ namespace akila {
 				return entityId;
 			}
 
-			static void eraseEntity(EntityId id) {
-				// retire un par un les components de l'entity...
+			static void eraseEntity(EntityId id) {			
 				Signature &signature = entityManager->getSignature(id);
+
+				// retire l'entity des systems
+				systemManager->erase(id, signature);
+
+				// retire un par un les components de l'entity
 				for(ComponentType type = 0; type < signature.size(); ++type) {
 					if(signature[type]) {
 						componentManager->removeComponent(id, type);
 					}
 				}
 
-				// puis suppression de l'entity dans les autres managers
-				systemManager->erase(id, signature);
+				// suppression de l'entity
 				entityManager->erase(id);
 			}
 
