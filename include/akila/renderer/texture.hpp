@@ -78,19 +78,22 @@ namespace akila {
 		};
 		struct Parameters {
 			Parameters(
+				FilterMode minFilter = FilterMode::LINEAR,
+				FilterMode magFilter = FilterMode::LINEAR,
 				WrapMode wrapS = WrapMode::REPEAT,
 				WrapMode wrapT = WrapMode::REPEAT,
 				WrapMode wrapR = WrapMode::REPEAT,
-				FilterMode minFilter = FilterMode::LINEAR,
-				FilterMode magFilter = FilterMode::LINEAR
+				Vec4 const &borderColor = {0, 0, 0, 1}
 			);
+
+			FilterMode minFilter;
+			FilterMode magFilter;
 
 			WrapMode wrapS;
 			WrapMode wrapT;
 			WrapMode wrapR;
 
-			FilterMode minFilter;
-			FilterMode magFilter;
+			Vec4 borderColor;
 		};
 		void setParameters(Parameters const &params);
 

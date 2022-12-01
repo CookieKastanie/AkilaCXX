@@ -9,7 +9,7 @@ namespace akila {
 		Mat4 projection;
 		Mat4 view;
 		Mat4 pv;
-		Vec3 position; float __pad0; // Vec3 + float = virtually a vec4 (opengl alignment)
+		Vec3 position;
 		float ratio;
 	};
 

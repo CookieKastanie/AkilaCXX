@@ -57,21 +57,31 @@ Ptr<std::uint8_t> TextureBuffer::getData(unsigned int mip) const {
 	return buffer;
 }
 
-TextureBuffer::Parameters::Parameters(WrapMode wrapS, WrapMode wrapT, WrapMode wrapR, FilterMode minFilter, FilterMode magFilter):
+TextureBuffer::Parameters::Parameters(FilterMode minFilter, FilterMode magFilter, WrapMode wrapS, WrapMode wrapT, WrapMode wrapR, Vec4 const &borderColor):
+	minFilter{minFilter},
+	magFilter{magFilter},
 	wrapS{wrapS},
 	wrapT{wrapT},
 	wrapR{wrapR},
-	minFilter{minFilter},
-	magFilter{magFilter} {}
+	borderColor{borderColor} {}
 
 void TextureBuffer::setParameters(Parameters const &params) {
 	bind();
 
+	glTexParameteri(kind, GL_TEXTURE_MIN_FILTER, static_cast<GLint>(params.minFilter));
+	glTexParameteri(kind, GL_TEXTURE_MAG_FILTER, static_cast<GLint>(params.magFilter));
+
 	glTexParameteri(kind, GL_TEXTURE_WRAP_S, static_cast<GLint>(params.wrapS));
 	glTexParameteri(kind, GL_TEXTURE_WRAP_T, static_cast<GLint>(params.wrapT));
 	glTexParameteri(kind, GL_TEXTURE_WRAP_R, static_cast<GLint>(params.wrapR));
-	glTexParameteri(kind, GL_TEXTURE_MIN_FILTER, static_cast<GLint>(params.minFilter));
-	glTexParameteri(kind, GL_TEXTURE_MAG_FILTER, static_cast<GLint>(params.magFilter));
+
+	if(
+		params.wrapS == TextureBuffer::WrapMode::CLAMP_TO_BORDER ||
+		params.wrapT == TextureBuffer::WrapMode::CLAMP_TO_BORDER ||
+		params.wrapR == TextureBuffer::WrapMode::CLAMP_TO_BORDER) {
+
+		glTexParameterfv(kind, GL_TEXTURE_BORDER_COLOR, &params.borderColor[0]);
+	}
 }
 
 TextureBuffer::Format TextureBuffer::getInternalFormat() {

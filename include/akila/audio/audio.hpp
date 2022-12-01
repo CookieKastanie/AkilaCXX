@@ -1,6 +1,10 @@
 #pragma once
 
 #include <miniaudio/miniaudio.h>
+// clean windows.h bullshit
+#undef near
+#undef far
+
 #include "akila/math/math.hpp"
 #include <string>
 #include <array>
