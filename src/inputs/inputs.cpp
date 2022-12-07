@@ -4,6 +4,7 @@ using namespace akila;
 
 std::array<bool, 512> Inputs::keysState;
 Vec2 Inputs::mousePosition = {0, 0};
+Vec2 Inputs::clipSpaceMousePosition = {0, 0};
 Vec2 Inputs::mouseVelocity = {0, 0};
 Vec2 Inputs::mouseScrollVelocity = {0, 0};
 
@@ -25,6 +26,10 @@ void Inputs::setMousePosition(Vec2 const &pos) {
 	mousePosition = pos;
 }
 
+void Inputs::setClipSpaceMousePosition(Vec2 const &pos) {
+	clipSpaceMousePosition = pos;
+}
+
 void Inputs::setMouseVelocity(Vec2 const &vel) {
 	mouseVelocity = vel;
 }
@@ -35,6 +40,10 @@ void Inputs::setMouseScrollVelocity(Vec2 const &scrollVel) {
 
 Vec2 const &Inputs::getMousePosition() {
 	return mousePosition;
+}
+
+Vec2 const &Inputs::getClipSpaceMousePosition() {
+	return clipSpaceMousePosition;
 }
 
 Vec2 const &Inputs::getMouseVelocity() {

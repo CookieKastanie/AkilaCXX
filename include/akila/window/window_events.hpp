@@ -1,6 +1,6 @@
 #pragma once
 
-#include <GLFW/glfw3.h>
+#include "akila/window/window.hpp"
 #include <vector>
 #include "akila/inputs/inputs.hpp"
 #include <mutex>

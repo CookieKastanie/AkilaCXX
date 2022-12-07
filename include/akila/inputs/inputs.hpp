@@ -1,6 +1,6 @@
 #pragma once
 
-#include <GLFW/glfw3.h>
+#include "akila/window/window.hpp"
 #include <array>
 #include <string>
 #include "akila/math/math.hpp"
@@ -78,6 +78,7 @@ namespace akila {
 		//static bool isPressed(std::string const &name); pour du key mapping
 
 		static Vec2 const &getMousePosition();
+		static Vec2 const &getClipSpaceMousePosition();
 		static Vec2 const &getMouseVelocity();
 		static Vec2 const &getMouseScrollVelocity();
 
@@ -86,6 +87,7 @@ namespace akila {
 
 		static std::array<bool, 512> keysState;
 		static Vec2 mousePosition;
+		static Vec2 clipSpaceMousePosition;
 		static Vec2 mouseVelocity;
 		static Vec2 mouseScrollVelocity;
 
@@ -93,6 +95,7 @@ namespace akila {
 
 		static void setInputState(Key key, bool state);
 		static void setMousePosition(Vec2 const &pos);
+		static void setClipSpaceMousePosition(Vec2 const &pos);
 		static void setMouseVelocity(Vec2 const &vel);
 		static void setMouseScrollVelocity(Vec2 const &scrollVel);
 	};

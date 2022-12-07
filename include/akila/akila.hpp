@@ -15,6 +15,9 @@
 
 #include "akila/window/window.hpp"
 #include "akila/window/cursor.hpp"
+#include "akila/window/window_events.hpp"
+
+#include "akila/inputs/inputs.hpp"
 
 #include "akila/layer/layers.hpp"
 

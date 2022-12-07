@@ -34,7 +34,10 @@ namespace akila {
 			SRGB_ALPHA = GL_SRGB_ALPHA,
 
 			RGB16F = GL_RGB16F,
-			RGBA16F = GL_RGBA16F
+			RGBA16F = GL_RGBA16F,
+
+			RGB32F = GL_RGB32F,
+			RGBA32F = GL_RGBA32F
 		};
 
 		enum class Type: GLenum {
@@ -157,5 +160,25 @@ namespace akila {
 
 	private:
 		GLsizei samples;
+	};
+
+	/////
+
+	class Texture3D: public TextureBuffer {
+	public:
+		Texture3D(Format format = Format::RGB);
+
+		Texture3D(Texture3D &&other) noexcept;
+		Texture3D &operator=(Texture3D &&other) noexcept;
+
+		void setSize(IVec2 const &size) override;
+		void setSize(IVec3 const &size);
+
+		int getDepth() const;
+
+		void setData(void const *data, Format format, Type type, unsigned int mipLevel = 0) override;
+
+	private:
+		GLsizei depth;
 	};
 }

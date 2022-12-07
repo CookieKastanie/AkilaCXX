@@ -1,10 +1,9 @@
 #pragma once
 
-//#define GLFW_INCLUDE_NONE
 #include <glad/glad.h>
+#define GLFW_INCLUDE_NONE
 #include <GLFW/glfw3.h>
 #include "akila/math/math.hpp"
-#include "akila/window/window_events.hpp"
 
 namespace akila {
 	namespace internal {

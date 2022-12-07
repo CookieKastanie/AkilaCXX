@@ -1,6 +1,7 @@
 #include "akila/window/window_events.hpp"
 #include "akila/signal/signals.hpp"
 #include "akila/window/imgui_handler.hpp"
+#include "akila/window/window.hpp"
 #include <iostream>
 
 using namespace akila::internal;
@@ -125,12 +126,24 @@ void WindowEvents::beforeTick() {
 	Inputs::setMousePosition(interpoledMouse.position);
 	Inputs::setMouseVelocity(interpoledMouse.velocity);
 	Inputs::setMouseScrollVelocity(interpoledMouse.scrollVelocity);
+
+	Vec2 const &size = akila::Window::getSize();
+	Inputs::setClipSpaceMousePosition({
+		(      interpoledMouse.position.x / size.x) * 2.f - 1.f,
+		(1.f - interpoledMouse.position.y / size.y) * 2.f - 1.f
+	});
 }
 
 void WindowEvents::beforeFrame() {
 	Inputs::setMousePosition(frameMouse.position);
 	Inputs::setMouseVelocity(frameMouse.velocity);
 	Inputs::setMouseScrollVelocity(frameMouse.scrollVelocity);
+
+	Vec2 const &size = akila::Window::getSize();
+	Inputs::setClipSpaceMousePosition({
+		(      frameMouse.position.x / size.x) * 2.f - 1.f,
+		(1.f - frameMouse.position.y / size.y) * 2.f - 1.f
+	});
 }
 
 void WindowEvents::MouseData::resetVels() {

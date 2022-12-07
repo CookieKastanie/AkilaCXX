@@ -188,3 +188,53 @@ void Texture2DMultisample::setData(void const *data, Format format, Type type, u
 int Texture2DMultisample::getSampleCount() {
 	return samples;
 }
+
+/////
+
+Texture3D::Texture3D(Format format): TextureBuffer{Kind::TEXTURE_3D, format}, depth{1} {
+	setParameters({});
+}
+
+Texture3D::Texture3D(Texture3D &&other) noexcept:
+	TextureBuffer{static_cast<Kind>(other.kind), static_cast<Format>(other.internalFormat)},
+	depth{other.depth} {
+
+}
+
+Texture3D &Texture3D::operator=(Texture3D &&other) noexcept {
+	TextureBuffer::operator=(std::move(other));
+	depth = other.depth;
+
+	return *this;
+}
+
+void Texture3D::setSize(IVec2 const &size) {
+	setSize({size.x, size.y, 1});
+}
+
+void Texture3D::setSize(IVec3 const &size) {
+	bind();
+
+	glTexImage3D(
+		kind, 0, internalFormat, size.x, size.y, size.y, 0,
+		internalFormat == GL_DEPTH_COMPONENT ?
+		GL_DEPTH_COMPONENT : static_cast<GLenum>(Format::RGB),
+		static_cast<GLenum>(Type::UNSIGNED_BYTE), nullptr
+	);
+
+	this->size = size;
+	this->depth = size.z;
+}
+
+int Texture3D::getDepth() const {
+	return depth;
+}
+
+void Texture3D::setData(void const *data, Format format, Type type, unsigned int mipLevel) {
+	bind();
+
+	glTexSubImage3D(
+		kind, mipLevel, 0, 0, 0, size.x, size.y, depth,
+		static_cast<GLenum>(format), static_cast<GLenum>(type), data
+	);
+}
