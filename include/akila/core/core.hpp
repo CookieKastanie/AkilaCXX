@@ -1,6 +1,6 @@
 #pragma once
 
-#include "akila/window/window.hpp"
+#include "akila/core/window/window.hpp"
 
 namespace akila {
 	class Core {

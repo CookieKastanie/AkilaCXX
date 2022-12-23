@@ -1,17 +1,16 @@
 #include "akila/core/core.hpp"
-#include "akila/window/window.hpp"
-#include "akila/window/window_events.hpp"
-#include "akila/layer/layers.hpp"
-#include "akila/time/time.hpp"
-#include "akila/signal/signals.hpp"
-#include "akila/ecs/ecs.hpp"
-#include "akila/window/imgui_handler.hpp"
-#include "akila/threadpool/threadpool.hpp"
-#include "akila/resource/file_system.hpp"
-#include "akila/resource/resources.hpp"
-#include "akila/renderer/renderer.hpp"
-#include "akila/random/random.hpp"
-#include "akila/audio/audio.hpp"
+#include "akila/core/window/window.hpp"
+#include "akila/core/window/window_events.hpp"
+#include "akila/core/layer/layers.hpp"
+#include "akila/core/time/time.hpp"
+#include "akila/core/signal/signals.hpp"
+#include "akila/core/ecs/ecs.hpp"
+#include "akila/core/window/imgui_handler.hpp"
+#include "akila/core/threadpool/threadpool.hpp"
+#include "akila/core/resource/file_system.hpp"
+#include "akila/core/resource/resources.hpp"
+#include "akila/core/renderer/renderer.hpp"
+#include "akila/core/audio/audio.hpp"
 
 #include <thread>
 #include <atomic>
@@ -29,7 +28,6 @@ start:
 	Window::initWindow(initVals);
 	Audio::init();
 	FileSystem::init();
-	Random::init();
 	Signals::init();
 	Resources::init();
 	ECS::init();
