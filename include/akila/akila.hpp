@@ -2,6 +2,8 @@
 
 #include "akila/math/math.hpp"
 
+#include "common/small_vector.hpp"
+
 #include "akila/memory/ptr.hpp"
 #include "akila/memory/ref.hpp"
 
