@@ -1,4 +1,4 @@
-#include "akila/core/renderer/framebuffer.hpp"
+#include "akila/core/rhi/framebuffer.hpp"
 #include "akila/core/window/window.hpp"
 #include <iostream>
 

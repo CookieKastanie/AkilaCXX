@@ -1,6 +1,7 @@
 #pragma once
 
 #include "akila/core/layer/layer.hpp"
+#include "akila/engine/systems/render_system.hpp"
 
 namespace akila {
 	class GameLayer: public Layer {
@@ -12,6 +13,6 @@ namespace akila {
 		void gui() final;
 
 	private:
-		
+		RenderSystem *renderSystem;
 	};
 }

@@ -9,7 +9,7 @@
 #include "akila/core/threadpool/threadpool.hpp"
 #include "akila/core/resource/file_system.hpp"
 #include "akila/core/resource/resources.hpp"
-#include "akila/core/renderer/renderer.hpp"
+#include "akila/core/rhi/renderer.hpp"
 #include "akila/core/audio/audio.hpp"
 
 #include <thread>

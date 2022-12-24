@@ -1,4 +1,4 @@
-#include "akila/core/renderer/texture.hpp"
+#include "akila/core/rhi/texture.hpp"
 
 using namespace akila;
 

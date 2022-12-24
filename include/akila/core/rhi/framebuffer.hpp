@@ -1,7 +1,7 @@
 #pragma once
 
 #include "akila/core/memory/ref.hpp"
-#include "akila/core/renderer/texture.hpp"
+#include "akila/core/rhi/texture.hpp"
 #include "akila/core/math/math.hpp"
 
 namespace akila {

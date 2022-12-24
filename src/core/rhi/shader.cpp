@@ -1,5 +1,4 @@
-#include "akila/core/renderer/shader.hpp"
-#include "akila/core/renderer/shader_preproc.hpp"
+#include "akila/core/rhi/shader.hpp"
 #include <iostream>
 
 using namespace akila;
@@ -79,39 +78,12 @@ bool checkErrors(GLuint shader, std::string type) {
 /////////////////////////////////////////
 
 Shader::Shader(): id{0}, totalByteCount{0} {
-	std::string prog = R"---(
-		#akila_vertex
-		out vec2 texCoord;
-		void main() {
-			texCoord.x = (gl_VertexID == 1) ? 2.0 : 0.0;
-			texCoord.y = (gl_VertexID == 2) ? 2.0 : 0.0;
-			gl_Position = vec4(texCoord * vec2(2.0) + vec2(-1.0), 1.0, 1.0);
-		}
-		#akila_fragment
-		in vec2 texCoord;
-		out vec4 fragColor;
-		void main() {
-			fragColor = vec4(texCoord, 0.0, 1.0);
-		}
-	)---";
-
-	ShaderPreproc::ShaderSources sources;
-	ShaderPreproc::process(prog, sources);
-	build(sources.vertexShader, sources.fragmentShader, sources.geometryShader);
+	build("", "", "");
 }
 
 Shader::Shader(std::string const &vertexTxt, std::string const &fragmentTxt, std::string const &geometryTxt):
 	id{0}, totalByteCount{0} {
 	build(vertexTxt, fragmentTxt, geometryTxt);
-}
-
-Shader::Shader(std::string const &shaderTxt):
-	id{0}, totalByteCount{0} {
-
-	ShaderPreproc::ShaderSources sources;
-	ShaderPreproc::process(shaderTxt, sources);
-	build(sources.vertexShader, sources.fragmentShader, sources.geometryShader);
-	templateFileName = sources.templateName;
 }
 
 void Shader::build(std::string const &vertexTxt, std::string const &fragmentTxt, std::string const &geometryTxt) {
@@ -170,9 +142,7 @@ Shader::~Shader() {
 Shader::Shader(Shader &&other) noexcept:
 	id{other.id},
 	uniformBindings{other.uniformBindings},
-	totalByteCount{other.totalByteCount},
-	fileName{other.fileName},
-	templateFileName{other.templateFileName} {
+	totalByteCount{other.totalByteCount} {
 
 	other.id = 0;
 }
@@ -181,8 +151,6 @@ Shader &Shader::operator=(Shader &&other) noexcept {
 	id = other.id;
 	uniformBindings = other.uniformBindings;
 	totalByteCount = other.totalByteCount;
-	fileName = other.fileName;
-	templateFileName = other.templateFileName;
 
 	other.id = 0;
 
@@ -302,16 +270,4 @@ bool Shader::readInt(std::string const &name, int *value) const {
 
 	glGetUniformiv(id, infos.location, value);
 	return true;
-}
-
-void Shader::setFileName(std::string const &name) {
-	fileName = name;
-}
-
-std::string const &Shader::getFileName() const {
-	return fileName;
-}
-
-std::string const &Shader::getTemplateFileName() const {
-	return templateFileName;
 }

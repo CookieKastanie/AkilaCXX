@@ -1,4 +1,4 @@
-#include "akila/core/renderer/vao.hpp"
+#include "akila/core/rhi/vao.hpp"
 
 using namespace akila;
 

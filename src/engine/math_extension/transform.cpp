@@ -61,25 +61,3 @@ Mat4 const &Transform::calcMatrixFromOrigin(Mat4 const &o) {
 	matrix = o * calcMatrix();
 	return matrix;
 }
-
-void Transform::savePrevious() {
-	prevPosition = position;
-	prevRotation = rotation;
-	prevScale = scale;
-}
-
-Mat4 const &Transform::calcMatrixMix(float t) {
-	Vec3 lerpedPos = mix(prevPosition, position, t);
-	Quat lerpedRot = slerp(prevRotation, rotation, t);
-	Vec3 lerpedSca = mix(prevScale, scale, t);
-
-	matrix = toMat4(lerpedRot);
-
-	matrix[3].x = lerpedPos.x;
-	matrix[3].y = lerpedPos.y;
-	matrix[3].z = lerpedPos.z;
-
-	matrix = akila::scale(matrix, lerpedSca);
-
-	return matrix;
-}

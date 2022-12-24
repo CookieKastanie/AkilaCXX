@@ -1,4 +1,4 @@
-#include "akila/core/renderer/buffer_object.hpp"
+#include "akila/core/rhi/buffer_object.hpp"
 
 using namespace akila;
 

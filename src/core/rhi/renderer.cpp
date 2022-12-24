@@ -1,5 +1,5 @@
-#include "akila/core/renderer/renderer.hpp"
-#include "akila/core/renderer/shader.hpp"
+#include "akila/core/rhi/renderer.hpp"
+#include "akila/core/rhi/shader.hpp"
 #include "akila/core/window/window.hpp"
 
 using namespace akila;

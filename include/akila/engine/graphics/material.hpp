@@ -2,9 +2,9 @@
 
 #include "akila/core/memory/ref.hpp"
 #include "akila/core/memory/ptr.hpp"
-#include "akila/core/renderer/shader.hpp"
+#include "akila/core/rhi/shader.hpp"
 #include "akila/core/math/math.hpp"
-#include "akila/core/renderer/texture.hpp"
+#include "akila/core/rhi/texture.hpp"
 
 namespace akila {
 	class Material {

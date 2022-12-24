@@ -1,5 +1,5 @@
-#include "akila/core/renderer/material.hpp"
-#include "akila/core/resource/resources.hpp"
+#include "akila/engine/graphics/material.hpp"
+#include <algorithm>
 
 using namespace akila;
 

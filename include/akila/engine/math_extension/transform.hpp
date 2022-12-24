@@ -1,7 +1,6 @@
 #pragma once
 
 #include "akila/core/math/math.hpp"
-#include "akila/core/time/time.hpp"
 
 namespace akila {
 	class Transform {
@@ -24,14 +23,7 @@ namespace akila {
 		Mat4 const &calcMatrix();
 		Mat4 const &calcMatrixFromOrigin(Mat4 const &o);
 
-		void savePrevious();
-		Mat4 const &calcMatrixMix(float t = Time::mix);
-
-	private:
-		Vec3 prevPosition;
-		Quat prevRotation;
-		Vec3 prevScale;
-
+	protected:
 		Vec3 position;
 		Quat rotation;
 		Vec3 scale;

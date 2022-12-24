@@ -26,14 +26,12 @@
 
 #include "akila/core/threadpool/threadpool.hpp"
 
-#include "akila/core/renderer/renderer.hpp"
-#include "akila/core/renderer/shader.hpp"
-#include "akila/core/renderer/material.hpp"
-#include "akila/core/renderer/texture.hpp"
-#include "akila/core/renderer/buffer_object.hpp"
-#include "akila/core/renderer/vao.hpp"
-#include "akila/core/renderer/shader_preproc.hpp"
-#include "akila/core/renderer/framebuffer.hpp"
+#include "akila/core/rhi/renderer.hpp"
+#include "akila/core/rhi/shader.hpp"
+#include "akila/core/rhi/texture.hpp"
+#include "akila/core/rhi/buffer_object.hpp"
+#include "akila/core/rhi/vao.hpp"
+#include "akila/core/rhi/framebuffer.hpp"
 
 #include "akila/core/audio/audio.hpp"
 #include "akila/core/audio/audio_source.hpp"
@@ -55,3 +53,6 @@
 
 #include "akila/engine/containers/small_vector.hpp"
 #include "akila/engine/containers/image.hpp"
+
+#include "akila/engine/graphics/material.hpp"
+#include "akila/engine/graphics/shader_preproc.hpp"

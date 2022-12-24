@@ -20,24 +20,26 @@ add_library(akila STATIC
 	"src/core/resource/file_system.cpp"
 	"src/core/resource/loader.cpp"
 	"src/core/resource/loading_instance.cpp"
-	"src/core/renderer/renderer.cpp"
-	"src/core/renderer/shader.cpp" 
-	"src/core/renderer/material.cpp"
-	"src/core/renderer/shader_preproc.cpp"
-	"src/core/renderer/texture.cpp"
-	"src/core/renderer/buffer_object.cpp"
-	"src/core/renderer/vao.cpp"
+	"src/core/rhi/renderer.cpp"
+	"src/core/rhi/shader.cpp" 
+	"src/core/rhi/texture.cpp"
+	"src/core/rhi/buffer_object.cpp"
+	"src/core/rhi/vao.cpp"
 	"src/core/audio/audio.cpp"
 	"src/core/audio/audio_source.cpp"
 	"src/core/audio/audio_emitter.cpp"
-	"src/core/renderer/framebuffer.cpp"
+	"src/core/rhi/framebuffer.cpp"
 	"src/core/coroutine/coroutine.cpp"
 	"src/core/window/cursor.cpp"
 	
 	"src/engine/engine.cpp"
 	"src/engine/math_extension/easing.cpp"
 	"src/engine/math_extension/distribution.cpp"
-	"src/engine/containers/image.cpp")
+	"src/engine/containers/image.cpp"
+	"src/engine/systems/render_system.cpp"
+	"src/engine/components/transform_component.cpp"
+	"src/engine/graphics/material.cpp"
+	"src/engine/graphics/shader_preproc.cpp")
 
 target_include_directories(akila PRIVATE "include")
 
