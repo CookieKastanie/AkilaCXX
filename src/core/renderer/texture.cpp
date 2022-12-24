@@ -48,7 +48,7 @@ IVec2 const &TextureBuffer::getSize() const {
 }
 
 Ptr<std::uint8_t> TextureBuffer::getData(unsigned int mip) const {
-	std::size_t byteSize = size.x * size.y * 4 * sizeof(GLuint);
+	std::size_t byteSize = static_cast<std::size_t>(size.x * size.y * 4) * sizeof(GLuint);
 	Ptr<std::uint8_t> buffer = Ptr<std::uint8_t>(new std::uint8_t[byteSize]);
 
 	glBindTexture(kind, id);
@@ -103,17 +103,17 @@ Texture2D::Texture2D(Format format): TextureBuffer{Kind::TEXTURE_2D, format} {
 	setParameters({});
 }
 
-void Texture2D::setSize(IVec2 const &size) {
+void Texture2D::setSize(IVec2 const &newSize) {
 	bind();
 
 	glTexImage2D(
-		kind, 0, internalFormat, size.x, size.y, 0,
+		kind, 0, internalFormat, newSize.x, newSize.y, 0,
 		internalFormat == GL_DEPTH_COMPONENT ?
 		GL_DEPTH_COMPONENT : static_cast<GLenum>(Format::RGB),
 		static_cast<GLenum>(Type::UNSIGNED_BYTE), nullptr
 	);
 
-	this->size = size;
+	size = newSize;
 }
 
 void Texture2D::setData(void const *data, Format format, Type type, unsigned int mipLevel) {
@@ -130,16 +130,16 @@ TextureCubmap::TextureCubmap(Format format): TextureBuffer{Kind::TEXTURE_CUBE_MA
 	setParameters({});
 }
 
-void TextureCubmap::setSize(IVec2 const &size) {
+void TextureCubmap::setSize(IVec2 const &newSize) {
 	bind();
 	for(unsigned int i = 0; i < 6; ++i) {
 		glTexImage2D(
 			GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, internalFormat,
-			size.x, size.y, 0, static_cast<GLenum>(Format::RGB), static_cast<GLenum>(Type::UNSIGNED_BYTE), nullptr
+			newSize.x, newSize.y, 0, static_cast<GLenum>(Format::RGB), static_cast<GLenum>(Type::UNSIGNED_BYTE), nullptr
 		);
 	}
 
-	this->size = size;
+	size = newSize;
 }
 
 void TextureCubmap::setData(void const *data, Format format, Type type, unsigned int mipLevel) {
@@ -175,13 +175,18 @@ Texture2DMultisample &Texture2DMultisample::operator=(Texture2DMultisample &&oth
 	return *this;
 }
 
-void Texture2DMultisample::setSize(IVec2 const &size) {
+void Texture2DMultisample::setSize(IVec2 const &newSize) {
 	bind();
-	glTexImage2DMultisample(kind, samples, internalFormat, size.x, size.y, GL_TRUE);
-	this->size = size;
+	glTexImage2DMultisample(kind, samples, internalFormat, newSize.x, newSize.y, GL_TRUE);
+	size = newSize;
 }
 
 void Texture2DMultisample::setData(void const *data, Format format, Type type, unsigned int mipLevel) {
+	(void)data;
+	(void)format;
+	(void)type;
+	(void)mipLevel;
+
 	std::cerr << "Can't set data to multisampled texture" << std::endl;
 }
 
@@ -208,22 +213,22 @@ Texture3D &Texture3D::operator=(Texture3D &&other) noexcept {
 	return *this;
 }
 
-void Texture3D::setSize(IVec2 const &size) {
-	setSize({size.x, size.y, 1});
+void Texture3D::setSize(IVec2 const &newSize) {
+	setSize({newSize.x, newSize.y, 1});
 }
 
-void Texture3D::setSize(IVec3 const &size) {
+void Texture3D::setSize(IVec3 const &newSize) {
 	bind();
 
 	glTexImage3D(
-		kind, 0, internalFormat, size.x, size.y, size.y, 0,
+		kind, 0, internalFormat, newSize.x, newSize.y, newSize.y, 0,
 		internalFormat == GL_DEPTH_COMPONENT ?
 		GL_DEPTH_COMPONENT : static_cast<GLenum>(Format::RGB),
 		static_cast<GLenum>(Type::UNSIGNED_BYTE), nullptr
 	);
 
-	this->size = size;
-	this->depth = size.z;
+	size = newSize;
+	depth = newSize.z;
 }
 
 int Texture3D::getDepth() const {

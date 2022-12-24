@@ -1,5 +1,8 @@
 #include "akila/core/time/Time.hpp"
+
+#pragma warning(push, 0)
 #include <GLFW/glfw3.h>
+#pragma warning(pop)
 
 using namespace akila;
 

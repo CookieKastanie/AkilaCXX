@@ -1,5 +1,9 @@
 #include "akila/core/coroutine/coroutine.hpp"
+
+#pragma warning(push, 0)
 #include <minicoro/minicoro.h>
+#pragma warning(pop)
+
 #include <iostream>
 
 using namespace akila;

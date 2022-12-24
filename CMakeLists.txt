@@ -36,7 +36,8 @@ add_library(akila STATIC
 	
 	"src/engine/engine.cpp"
 	"src/engine/math_extension/easing.cpp"
-	"src/engine/math_extension/distribution.cpp")
+	"src/engine/math_extension/distribution.cpp"
+	"src/engine/containers/image.cpp")
 
 target_include_directories(akila PRIVATE "include")
 

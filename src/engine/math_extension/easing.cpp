@@ -265,6 +265,8 @@ float Easing::easeInOutElastic(float start, float end, float value) {
 }
 
 float Easing::linearD(float start, float end, float value) {
+	(void)value;
+
 	return end - start;
 }
 

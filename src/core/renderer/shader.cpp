@@ -4,7 +4,7 @@
 
 using namespace akila;
 
-GLuint Shader::bindedId = -1;
+GLuint Shader::bindedId = 0;
 
 void override_glUniformMatrix2fv(GLint id, GLint l, GLsizei s, void *d) {
 	glProgramUniformMatrix2fv(id, l, s, false, (GLfloat *)d);

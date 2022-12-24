@@ -76,6 +76,6 @@ void VAO::draw() const {
 	drawFunc(*this, length);
 }
 
-void VAO::draw(int length) const {
-	drawFunc(*this, length);
+void VAO::draw(int overridedlength) const {
+	drawFunc(*this, overridedlength);
 }

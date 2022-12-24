@@ -11,7 +11,7 @@
 namespace akila {
 	namespace internal {
 		using ComponentIndex = EntityId; // il ne peut pas y avoir plus d'index de component que d'entity
-		const ComponentIndex NULL_COMPONENT_INDEX = -1;
+		const ComponentIndex NULL_COMPONENT_INDEX = static_cast<ComponentIndex>(-1);
 
 		using ComponentType = std::uint8_t;
 		const ComponentType MAX_COMPONENT_TYPES = 64;

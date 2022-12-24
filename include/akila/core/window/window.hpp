@@ -1,8 +1,11 @@
 #pragma once
 
+#pragma warning(push, 0)
 #include <glad/glad.h>
 #define GLFW_INCLUDE_NONE
 #include <GLFW/glfw3.h>
+#pragma warning(pop)
+
 #include "akila/core/math/math.hpp"
 
 namespace akila {

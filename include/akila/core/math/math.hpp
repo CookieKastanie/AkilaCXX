@@ -1,8 +1,11 @@
 #pragma once
 
+#pragma warning(push, 0)
 #include <glm/glm.hpp>
 #include <glm/gtx/quaternion.hpp>
 #include <glm/gtx/string_cast.hpp>
+#pragma warning(pop)
+
 #include <iostream>
 
 #define NOMINMAX

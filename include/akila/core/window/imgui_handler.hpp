@@ -1,6 +1,9 @@
 #pragma once
 
+#pragma warning(push, 0)
 #include <imgui/imgui.h>
+#pragma warning(pop)
+
 #include "akila/core/math/math.hpp"
 
 namespace akila::internal {

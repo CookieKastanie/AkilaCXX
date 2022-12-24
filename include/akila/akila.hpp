@@ -2,8 +2,6 @@
 
 #include "akila/core/math/math.hpp"
 
-#include "akila/core/common/small_vector.hpp"
-
 #include "akila/core/memory/ptr.hpp"
 #include "akila/core/memory/ref.hpp"
 
@@ -43,7 +41,9 @@
 
 #include "akila/core/coroutine/coroutine.hpp"
 
+#pragma warning(push, 0)
 #include <imgui/imgui.h>
+#pragma warning(pop)
 
 ///
 
@@ -52,3 +52,6 @@
 #include "akila/engine/math_extension/distribution.hpp"
 #include "akila/engine/math_extension/easing.hpp"
 #include "akila/engine/math_extension/transform.hpp"
+
+#include "akila/engine/containers/small_vector.hpp"
+#include "akila/engine/containers/image.hpp"

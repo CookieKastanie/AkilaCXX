@@ -50,6 +50,8 @@ void ShaderPreproc::parseLine(std::string &line, std::string *&currentSource, Sh
 }
 
 void ShaderPreproc::process(std::string const &source, ShaderSources &sources, std::string const &currentPath) {
+	(void)currentPath;
+
 	std::istringstream iss(source);
 
 	std::string garbage;
@@ -70,12 +72,12 @@ void ShaderPreproc::process(std::string const &source, ShaderSources &sources, s
 
 	if(!shaderTemplatePath.empty()) {
 		std::string templateSource = readShaderSource(shaderTemplatePath);
-		std::istringstream iss(templateSource);
+		std::istringstream iss2(templateSource);
 
 		ShaderSources templateSources;
 		currentSource = &garbage;
 
-		while(std::getline(iss, line)) {
+		while(std::getline(iss2, line)) {
 			parseLine(line, currentSource, templateSources);
 			if(!line.compare("#akila_user_code")) {
 				if(&templateSources.vertexShader == currentSource)

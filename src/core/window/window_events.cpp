@@ -25,11 +25,17 @@ void WindowEvents::init() {
 }
 
 void WindowEvents::resizeCallback(GLFWwindow *window, int width, int height) {
+	(void)window;
+
 	std::scoped_lock<std::mutex> lock(mux);
 	resizes.push_back({max(IVec2{width, height}, IVec2{1, 1})});
 }
 
 void WindowEvents::keyCallback(GLFWwindow *window, int key, int scancode, int action, int mods) {
+	(void)window;
+	(void)scancode;
+	(void)mods;
+
 	std::scoped_lock<std::mutex> lock(mux);
 
 	switch(action) {
@@ -47,6 +53,9 @@ void WindowEvents::keyCallback(GLFWwindow *window, int key, int scancode, int ac
 }
 
 void WindowEvents::mouseButtonCallback(GLFWwindow *window, int button, int action, int mods) {
+	(void)window;
+	(void)mods;
+
 	if(ImGuiHandler::wantCaptureMouse()) return;
 
 	std::scoped_lock<std::mutex> lock(mux);
@@ -63,6 +72,8 @@ void WindowEvents::mouseButtonCallback(GLFWwindow *window, int button, int actio
 }
 
 void WindowEvents::cursorPosCallback(GLFWwindow *window, double xpos, double ypos) {
+	(void)window;
+
 	if(ImGuiHandler::wantCaptureMouse()) return;
 
 	std::scoped_lock<std::mutex> lock(mux);
@@ -75,6 +86,8 @@ void WindowEvents::cursorPosCallback(GLFWwindow *window, double xpos, double ypo
 }
 
 void WindowEvents::scrollCallback(GLFWwindow *window, double xoffset, double yoffset) {
+	(void)window;
+
 	if(ImGuiHandler::wantCaptureMouse()) return;
 
 	std::scoped_lock<std::mutex> lock(mux);

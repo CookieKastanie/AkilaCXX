@@ -240,7 +240,7 @@ Audio::DetachedSound *Audio::createDetachedSound(KeepedSound *keepedSound) {
 	sound->used = true;
 
 	ma_uint32 const flags = MA_RESOURCE_MANAGER_DATA_SOURCE_FLAG_DECODE;
-	ma_result const result = ma_sound_init_from_file(
+	ma_sound_init_from_file(
 		&Audio::engine, keepedSound->path.c_str(),
 		flags, NULL, NULL, &sound->maSound
 	);

@@ -4,7 +4,8 @@
 #include "akila/core/time/time.hpp"
 
 namespace akila {
-	struct Transform {
+	class Transform {
+	public:
 		Transform();
 
 		void translate(Vec3 const &vec);
@@ -13,9 +14,12 @@ namespace akila {
 		void rotateY(float a);
 		void rotateZ(float a);
 
+		void rotate(Quat const &r);
+
 		void setRotationZYX(Vec3 const &r);
 
 		void setScale(float s);
+		void setScale(Vec3 const &s);
 
 		Mat4 const &calcMatrix();
 		Mat4 const &calcMatrixFromOrigin(Mat4 const &o);
@@ -23,6 +27,7 @@ namespace akila {
 		void savePrevious();
 		Mat4 const &calcMatrixMix(float t = Time::mix);
 
+	private:
 		Vec3 prevPosition;
 		Quat prevRotation;
 		Vec3 prevScale;

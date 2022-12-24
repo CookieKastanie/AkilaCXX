@@ -87,8 +87,8 @@ namespace akila {
 	protected:
 		EntitySet entities;
 
-		virtual void onAdd(Entity entity) {};
-		virtual void onRemove(Entity entity) {};
+		virtual void onAdd(Entity entity) { (void)(entity); };
+		virtual void onRemove(Entity entity) { (void)(entity); };
 
 	private:
 		friend class internal::SystemManager;

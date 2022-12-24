@@ -25,6 +25,10 @@ void Transform::rotateZ(float a) {
 	rotation *=  angleAxis(a, Vec3{0, 0, 1});
 }
 
+void Transform::rotate(Quat const &r) {
+	rotation *= r;
+}
+
 void Transform::setRotationZYX(Vec3 const &r) {
 	rotation = {1, 0, 0, 0};
 	rotateZ(r.z);
@@ -34,6 +38,10 @@ void Transform::setRotationZYX(Vec3 const &r) {
 
 void Transform::setScale(float s) {
 	scale = {s, s, s};
+}
+
+void Transform::setScale(Vec3 const &s) {
+	scale = s;
 }
 
 Mat4 const &Transform::calcMatrix() {

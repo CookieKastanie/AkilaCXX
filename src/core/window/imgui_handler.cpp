@@ -1,7 +1,10 @@
 #include "akila/core/window/imgui_handler.hpp"
 #include "akila/core/window/window.hpp"
+
+#pragma warning(push, 0)
 #include <imgui/imgui_impl_glfw.h>
 #include <imgui/imgui_impl_opengl3.h>
+#pragma warning(pop)
 
 using namespace akila::internal;
 
@@ -154,13 +157,12 @@ void ImGuiHandler::endFrame() {
 }
 
 bool ImGuiHandler::wantCaptureMouse() {
-	return ImGui::GetIO().WantCaptureMouse;
+	return io->WantCaptureMouse;
 }
 
 void ImGuiHandler::loadFont(std::string const &path, float dpi) {
-	ImGuiIO &io = ImGui::GetIO();
-	io.Fonts->ClearFonts();
-	ImFont *font = io.Fonts->AddFontFromFileTTF(path.c_str(), 22 * dpi);
+	io->Fonts->ClearFonts();
+	io->Fonts->AddFontFromFileTTF(path.c_str(), 22 * dpi);
 }
 
 void ImGuiHandler::terminate() {

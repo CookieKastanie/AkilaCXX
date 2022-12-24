@@ -1,6 +1,9 @@
 #pragma once
 
+#pragma warning(push, 0)
 #include <miniaudio/miniaudio.h>
+#pragma warning(pop)
+
 // clean windows.h bullshit
 #undef near
 #undef far
