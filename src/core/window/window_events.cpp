@@ -1,5 +1,5 @@
 #include "akila/core/window/window_events.hpp"
-#include "akila/core/signal/signals.hpp"
+#include "akila/core/signals/signals.hpp"
 #include "akila/core/window/imgui_handler.hpp"
 #include "akila/core/window/window.hpp"
 #include <iostream>

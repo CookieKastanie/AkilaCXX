@@ -1,4 +1,4 @@
-#include "akila/core/resource/resources.hpp"
+#include "akila/core/resources/resources.hpp"
 
 using namespace akila;
 

@@ -20,6 +20,8 @@ namespace akila {
 		static Vec3 randomSphere(float radius = 1.f);
 		static Vec3 randomBall(float radius = 1.f);
 
+		//static randomString() TODO
+
 		static std::uint64_t randomUint64();
 
 		///

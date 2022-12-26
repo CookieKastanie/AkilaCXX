@@ -7,9 +7,9 @@
 
 #include "akila/core/ecs/ecs.hpp"
 
-#include "akila/core/resource/resources.hpp"
-#include "akila/core/resource/loader.hpp"
-#include "akila/core/resource/file_system.hpp"
+#include "akila/core/resources/resources.hpp"
+#include "akila/core/resources/loader.hpp"
+#include "akila/core/resources/file_system.hpp"
 
 #include "akila/core/window/window.hpp"
 #include "akila/core/window/cursor.hpp"
@@ -21,8 +21,8 @@
 
 #include "akila/core/time/time.hpp"
 
-#include "akila/core/signal/signals.hpp"
-#include "akila/core/signal/listener.hpp"
+#include "akila/core/signals/signals.hpp"
+#include "akila/core/signals/listener.hpp"
 
 #include "akila/core/threadpool/threadpool.hpp"
 

@@ -52,6 +52,8 @@ int main() {
 }
 ```
 
+> **⚠️ Important : l'API ne doit pas être utilisé en dehors du runtime de Core. Il est donc obligatoire d'avoir au moins un Layer.**
+
 
 
 ## Fenêtre de l'application
@@ -123,6 +125,21 @@ Signals::registerType<MySignalType>(Signals::Stack::BEFORE_TICK);
 Listener listener = Signals::listen<MySignalType>([] (MySignalType const &signal){
 	//code
 });
+
+// écoute d'un type de signal via une méthode
+class MyClass {
+public:
+	MyClass() {
+		listener = Signals::listen<MySignalType>(&MyClass::listenMethod, this);
+	}
+
+	listenMethod(MySignalType const &signal) {
+		// code
+	}
+
+private:
+	Listener listener;
+}
 
 // emission d'un signal
 Signals::emit<MySignalType>(Args...);

@@ -1,5 +1,5 @@
-#include "akila/core/signal/listener.hpp"
-#include "akila/core/signal/signals.hpp"
+#include "akila/core/signals/listener.hpp"
+#include "akila/core/signals/signals.hpp"
 
 using namespace akila;
 

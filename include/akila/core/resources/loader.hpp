@@ -1,7 +1,7 @@
 #pragma once
 
 #include <string>
-#include "akila/core/resource/json.hpp"
+#include "akila/core/resources/json.hpp"
 
 namespace akila {
 	namespace internal {

@@ -1,8 +1,8 @@
 #pragma once
 
-#include "akila/core/signal/listener.hpp"
-#include "akila/core/signal/signal_dispatcher.hpp"
-#include "akila/core/signal/signal_queue.hpp"
+#include "akila/core/signals/listener.hpp"
+#include "akila/core/signals/signal_dispatcher.hpp"
+#include "akila/core/signals/signal_queue.hpp"
 #include "akila/core/common/type_infos.hpp"
 #include <unordered_map>
 
@@ -44,6 +44,15 @@ namespace akila {
 
 			internal::SignalQueue<T> *q = static_cast<internal::SignalQueue<T>*>(allQueues[indexIt->second].get());
 			return q->addListener(callback);
+		}
+
+		template<typename T, class F, class E>
+		static Listener listen(F &&callback, E &&type) {
+			return listen<T>(std::bind(
+				std::forward<F>(callback),
+				std::forward<E>(type),
+				std::placeholders::_1
+			));
 		}
 
 		template<typename T, typename ...Args>

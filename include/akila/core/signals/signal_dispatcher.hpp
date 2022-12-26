@@ -1,6 +1,6 @@
 #pragma once
 
-#include "akila/core/signal/signal_listener.hpp"
+#include "akila/core/signals/signal_listener.hpp"
 
 namespace akila {
 	namespace internal {

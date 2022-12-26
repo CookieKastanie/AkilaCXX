@@ -1,5 +1,5 @@
-#include "akila/core/resource/loader.hpp"
-#include "akila/core/resource/loading_instance.hpp"
+#include "akila/core/resources/loader.hpp"
+#include "akila/core/resources/loading_instance.hpp"
 
 using namespace akila;
 

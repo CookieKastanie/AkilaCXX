@@ -1,8 +1,8 @@
 #pragma once
 
-#include "akila/core/signal/listener.hpp"
-#include "akila/core/signal/signal_listener.hpp"
-#include "akila/core/signal/signal_callback.hpp"
+#include "akila/core/signals/listener.hpp"
+#include "akila/core/signals/signal_listener.hpp"
+#include "akila/core/signals/signal_callback.hpp"
 #include "akila/core/common/type_infos.hpp"
 #include <vector>
 

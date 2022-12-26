@@ -4,22 +4,22 @@ project(akila VERSION 0.0.1 DESCRIPTION "Development kit for graphics applicatio
 add_library(akila STATIC
 	"src/core/core.cpp"
 	"src/core/ecs/coordinator.cpp"
-	"src/core/resource/resources.cpp"
+	"src/core/resources/resources.cpp"
 	"src/core/math/math.cpp"
 	"src/core/window/window.cpp"
 	"src/core/layer/layer.cpp"
 	"src/core/layer/layers.cpp"
 	"src/core/time/time.cpp"
-	"src/core/signal/listener.cpp"
-	"src/core/signal/signals.cpp"
-	"src/core/signal/signal_listener.cpp"
+	"src/core/signals/listener.cpp"
+	"src/core/signals/signals.cpp"
+	"src/core/signals/signal_listener.cpp"
 	"src/core/window/window_events.cpp"
 	"src/core/inputs/inputs.cpp"
 	"src/core/window/imgui_handler.cpp"
 	"src/core/threadpool/threadpool.cpp"
-	"src/core/resource/file_system.cpp"
-	"src/core/resource/loader.cpp"
-	"src/core/resource/loading_instance.cpp"
+	"src/core/resources/file_system.cpp"
+	"src/core/resources/loader.cpp"
+	"src/core/resources/loading_instance.cpp"
 	"src/core/rhi/renderer.cpp"
 	"src/core/rhi/shader.cpp" 
 	"src/core/rhi/texture.cpp"
@@ -39,7 +39,9 @@ add_library(akila STATIC
 	"src/engine/systems/render_system.cpp"
 	"src/engine/components/transform_component.cpp"
 	"src/engine/graphics/material.cpp"
-	"src/engine/graphics/shader_preproc.cpp")
+	"src/engine/graphics/shader_preproc.cpp"
+	"src/engine/graphics/shader_factory.cpp"
+	"src/engine/tools/string_tools.cpp")
 
 target_include_directories(akila PRIVATE "include")
 

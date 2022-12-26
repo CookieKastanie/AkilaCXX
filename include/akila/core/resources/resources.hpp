@@ -3,10 +3,10 @@
 #include <memory>
 #include "akila/core/memory/ref.hpp"
 #include <unordered_map>
-#include "akila/core/resource/resource_map.hpp"
+#include "akila/core/resources/resource_map.hpp"
 #include "akila/core/common/type_infos.hpp"
-#include "akila/core/resource/loader.hpp"
-#include "akila/core/resource/loading_instance.hpp"
+#include "akila/core/resources/loader.hpp"
+#include "akila/core/resources/loading_instance.hpp"
 
 namespace akila {
 	namespace internal {

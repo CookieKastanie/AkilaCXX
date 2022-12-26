@@ -1,7 +1,7 @@
-#include "akila/core/resource/loading_instance.hpp"
-#include "akila/core/resource/file_system.hpp"
-#include "akila/core/resource/json.hpp"
-#include "akila/core/resource/resources.hpp"
+#include "akila/core/resources/loading_instance.hpp"
+#include "akila/core/resources/file_system.hpp"
+#include "akila/core/resources/json.hpp"
+#include "akila/core/resources/resources.hpp"
 #include <iostream>
 
 using namespace akila::internal;

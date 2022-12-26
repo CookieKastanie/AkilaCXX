@@ -1,4 +1,4 @@
-#include "akila/core/signal/signals.hpp"
+#include "akila/core/signals/signals.hpp"
 
 using namespace akila;
 
