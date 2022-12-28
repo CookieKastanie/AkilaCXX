@@ -18,3 +18,11 @@ void StringTools::trim(std::string &s) {
 	leftTrim(s);
 	rightTrim(s);
 }
+
+void StringTools::replaceAll(std::string &s, std::string const &search, std::string const &replace) {
+	std::size_t pos = 0;
+	while((pos = s.find(search, pos)) != std::string::npos) {
+		s.replace(pos, search.length(), replace);
+		pos += replace.length();
+	}
+}
