@@ -55,4 +55,4 @@
 #include "akila/engine/containers/image.hpp"
 
 #include "akila/engine/graphics/material.hpp"
-#include "akila/engine/graphics/shader_preproc.hpp"
+#include "akila/engine/graphics/material_factory.hpp"

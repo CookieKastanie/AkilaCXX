@@ -1,7 +1,7 @@
 #pragma once
 
 #include <string>
-#include "akila/core/rhi/shader.hpp"
+#include "akila/engine/graphics/material.hpp"
 #include "akila/core/resources/resources.hpp"
 #include <unordered_map>
 #include <set>
@@ -9,7 +9,7 @@
 #include <iostream>
 
 namespace akila {
-	class ShaderFactory {
+	class MaterialFactory {
 	public:
 		static std::string const SHADER_VERSION;
 
@@ -45,7 +45,7 @@ namespace akila {
 		};
 
 		static ShaderSources buildSources(std::string const &name);
-		static Ref<Shader> build(std::string const &name);
+		static Ref<Material> build(std::string const &name);
 
 	private:
 		static std::unordered_map<std::string, std::string> defines;
@@ -55,7 +55,7 @@ namespace akila {
 
 		static void recursiveInclude(
 			std::string &out,
-			std::string const &sourceName, 
+			std::string const &sourceName,
 			std::set<std::string> &includeStack,
 			int sourceIndex);
 	};

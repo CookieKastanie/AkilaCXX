@@ -3,6 +3,7 @@
 
 using namespace akila;
 
+/*/
 Material::Material(Ref<Shader> shader): shader{shader} {
 	uniformData.resize(shader->getTotalByteCount(), 0);
 }
@@ -171,5 +172,32 @@ void Material::send() {
 
 	for(TextureBinding const &binding : textures) {
 		binding.textureBuffer->bind(binding.unit);
+	}
+}
+//*/
+
+Material::Id Material::nextId = 0;
+
+Material::Material(): internal::MaterialContainer{}, id{0}, shader{} {
+
+}
+
+Material::Material(
+	std::string const &vertexShader,
+	std::string const &geometrieShader,
+	std::string const &fragmentShader,
+	std::set<std::string> const &reservedUniforms):
+	internal::MaterialContainer{},
+	id{++nextId},
+	shader{
+		vertexShader,
+		geometrieShader,
+		fragmentShader
+	} {
+
+	uniforms = shader.retreiveUniformInfos();
+	for(UniformInfos &infos : uniforms) {
+		bool reserved = reservedUniforms.find(infos.name) != reservedUniforms.end();
+		infos.userFlags[Flags::RESERVED] = reserved;
 	}
 }

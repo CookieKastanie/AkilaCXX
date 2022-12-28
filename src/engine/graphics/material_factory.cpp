@@ -1,40 +1,40 @@
-#include "akila/engine/graphics/shader_factory.hpp"
+#include "akila/engine/graphics/material_factory.hpp"
 #include "akila/engine/tools/string_tools.hpp"
 #include "akila/core/math/math.hpp"
 
 using namespace akila;
 
-std::string const ShaderFactory::SHADER_VERSION = "#version 450\n";
+std::string const MaterialFactory::SHADER_VERSION = "#version 450";
 
-std::string const ShaderFactory::VERTEX_DELIMITER = "#akila_vertex";
-std::string const ShaderFactory::GEOMETRIE_DELIMITER = "#akila_geometrie";
-std::string const ShaderFactory::FRAGMENT_DELIMITER = "#akila_fragment";
+std::string const MaterialFactory::VERTEX_DELIMITER = "#akila_vertex";
+std::string const MaterialFactory::GEOMETRIE_DELIMITER = "#akila_geometrie";
+std::string const MaterialFactory::FRAGMENT_DELIMITER = "#akila_fragment";
 
-std::string const ShaderFactory::INCLUDE_DIRECTIVE = "#akila_include";
-std::string const ShaderFactory::TEMPLATE_DIRECTIVE = "#akila_template";
-std::string const ShaderFactory::USER_CODE_DIRECTIVE = "#akila_user_code";
-std::string const ShaderFactory::USE_TEMPLATE_DIRECTIVE = "#akila_use_template";
+std::string const MaterialFactory::INCLUDE_DIRECTIVE = "#akila_include";
+std::string const MaterialFactory::TEMPLATE_DIRECTIVE = "#akila_template";
+std::string const MaterialFactory::USER_CODE_DIRECTIVE = "#akila_user_code";
+std::string const MaterialFactory::USE_TEMPLATE_DIRECTIVE = "#akila_use_template";
 
-std::unordered_map<std::string, std::string> ShaderFactory::defines;
-std::set<std::string> ShaderFactory::reservedUniforms;
-std::unordered_map<std::string, ShaderFactory::ShaderSources> ShaderFactory::sources;
-std::unordered_map<std::string, ShaderFactory::ShaderSources> ShaderFactory::templates;
+std::unordered_map<std::string, std::string> MaterialFactory::defines;
+std::set<std::string> MaterialFactory::reservedUniforms;
+std::unordered_map<std::string, MaterialFactory::ShaderSources> MaterialFactory::sources;
+std::unordered_map<std::string, MaterialFactory::ShaderSources> MaterialFactory::templates;
 
 ////
 
-std::string &ShaderFactory::ShaderSources::operator[](int index) {
+std::string &MaterialFactory::ShaderSources::operator[](int index) {
 	if(index == 0) return vertex;
 	if(index == 1) return geometrie;
 	return fragment;
 }
 
-int ShaderFactory::ShaderSources::size() {
+int MaterialFactory::ShaderSources::size() {
 	return 3;
 }
 
 ////
 
-// helper only used in ShaderFactory::setSource
+// helper only used in MaterialFactory::setSource
 std::size_t nextDelimiterIndex(std::size_t base, std::size_t a, std::size_t b, std::size_t strlen) {
 	std::size_t da = a - base;
 	std::size_t db = b - base;
@@ -65,7 +65,7 @@ bool isMin(std::size_t base, std::size_t a, std::size_t b, std::size_t c) {
 	return true;
 }
 
-void ShaderFactory::setSource(std::string const &name, std::string const &source) {
+void MaterialFactory::setSource(std::string const &name, std::string const &source) {
 	ShaderSources *sh = nullptr;
 
 	std::size_t templateDirIndex = source.find(TEMPLATE_DIRECTIVE);
@@ -129,31 +129,31 @@ void ShaderFactory::setSource(std::string const &name, std::string const &source
 	}
 }
 
-void ShaderFactory::define(std::string const &name, const std::string &value) {
+void MaterialFactory::define(std::string const &name, const std::string &value) {
 	defines[name] = value;
 }
 
-void ShaderFactory::define(std::string const &name, float value) {
+void MaterialFactory::define(std::string const &name, float value) {
 	defines[name] = std::to_string(value);
 }
 
-void ShaderFactory::define(std::string const &name, int value) {
+void MaterialFactory::define(std::string const &name, int value) {
 	defines[name] = std::to_string(value);
 }
 
-void ShaderFactory::define(std::string const &name, unsigned int value) {
+void MaterialFactory::define(std::string const &name, unsigned int value) {
 	defines[name] = std::to_string(value);
 }
 
-void ShaderFactory::define(std::string const &name, bool value) {
+void MaterialFactory::define(std::string const &name, bool value) {
 	defines[name] = std::to_string(value);
 }
 
-void ShaderFactory::reserveUniform(std::string const &name) {
+void MaterialFactory::reserveUniform(std::string const &name) {
 	reservedUniforms.insert(name);
 }
 
-void ShaderFactory::recursiveInclude(
+void MaterialFactory::recursiveInclude(
 	std::string &out,
 	std::string const &sourceName,
 	std::set<std::string> &includeStack,
@@ -176,8 +176,8 @@ void ShaderFactory::recursiveInclude(
 			continue;
 		}
 
-		for(auto def : defines) {
-			StringTools::replaceAll(line, def.first, def.second);
+		for(auto &[name, value] : defines) {
+			StringTools::replaceAll(line, name, value);
 		}
 
 		out += line;
@@ -185,7 +185,7 @@ void ShaderFactory::recursiveInclude(
 	}
 }
 
-ShaderFactory::ShaderSources ShaderFactory::buildSources(std::string const &name) {
+MaterialFactory::ShaderSources MaterialFactory::buildSources(std::string const &name) {
 	std::string templateName = sources[name].usedTemplateName;
 
 	ShaderSources sh{templateName, "", "", "", ""};
@@ -220,8 +220,8 @@ ShaderFactory::ShaderSources ShaderFactory::buildSources(std::string const &name
 					continue;
 				}
 
-				for(auto def : defines) {
-					StringTools::replaceAll(line, def.first, def.second);
+				for(auto &[name, value] : defines) {
+					StringTools::replaceAll(line, name, value);
 				}
 
 				sh[i] += line;
@@ -234,21 +234,21 @@ ShaderFactory::ShaderSources ShaderFactory::buildSources(std::string const &name
 	}
 
 	if(sh.vertex.empty() == false) {
-		sh.vertex = SHADER_VERSION + sh.vertex;
+		sh.vertex = (SHADER_VERSION + "\n") + sh.vertex;
 	}
 
 	if(sh.geometrie.empty() == false) {
-		sh.geometrie = SHADER_VERSION + sh.geometrie;
+		sh.geometrie = (SHADER_VERSION + "\n") + sh.geometrie;
 	}
 
 	if(sh.fragment.empty() == false) {
-		sh.fragment = SHADER_VERSION + sh.fragment;
+		sh.fragment = (SHADER_VERSION + "\n") + sh.fragment;
 	}
 
 	return sh;
 }
 
-Ref<Shader> ShaderFactory::build(std::string const &name) {
+Ref<Material> MaterialFactory::build(std::string const &name) {
 	ShaderSources sh = buildSources(name);
-	return Resources::create<Shader>(name, sh.vertex, sh.geometrie, sh.fragment);
+	return Resources::set<Material>(name, new Material{sh.vertex, sh.geometrie, sh.fragment, reservedUniforms});
 }

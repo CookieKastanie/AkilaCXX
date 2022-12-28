@@ -39,8 +39,7 @@ add_library(akila STATIC
 	"src/engine/systems/render_system.cpp"
 	"src/engine/components/transform_component.cpp"
 	"src/engine/graphics/material.cpp"
-	"src/engine/graphics/shader_preproc.cpp"
-	"src/engine/graphics/shader_factory.cpp"
+	"src/engine/graphics/material_factory.cpp"
 	"src/engine/tools/string_tools.cpp")
 
 target_include_directories(akila PRIVATE "include")

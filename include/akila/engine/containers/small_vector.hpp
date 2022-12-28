@@ -8,8 +8,8 @@ namespace akila {
 	template <class T, std::size_t N, class Allocator = std::allocator<T>>
 	class SmallVector {
 	private:
-		std::array<T, N> stack_;
-		std::vector<T, Allocator> heap_;
+		std::array<T, N> stack_{};
+		std::vector<T, Allocator> heap_{};
 		std::size_t size_{0};
 
 	public:
