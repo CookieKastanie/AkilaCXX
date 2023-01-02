@@ -22,7 +22,6 @@ namespace akila {
 
 	using SendFunction = void(*)(GLint, GLint, GLsizei, void *);
 	struct UniformInfos {
-		std::bitset<8> userFlags;
 		std::string name; // nom de la variable
 		unsigned int location; // adresse dans le shader
 		UniformUnderlyingType baseType;
@@ -50,39 +49,14 @@ namespace akila {
 
 		void bind() const;
 
-		/*/
-		void send(std::string const &name, int value) const;
-		void send(std::string const &name, float value) const;
-		void send(std::string const &name, std::vector<float> const &values) const;
-		void send(std::string const &name, Vec2 const &value) const;
-		void send(std::string const &name, Vec3 const &value) const;
-		void send(std::string const &name, std::vector<Vec3> const &values) const;
-		void send(std::string const &name, Mat4 const &mat) const;
-		void send(std::string const &name, bool value) const;
-		
-		bool uniformExist(std::string const &name) const;
-		//UniformInfos const &getUniforminfos(std::string const &name) const;
-		//*/
-
 		std::vector<UniformInfos> retreiveUniformInfos();
 
-		//std::size_t getTotalByteCount() const;
-
-		void send(UniformInfos const &infos, void *data) const;
-		//void sendRaw(std::string const &name, void *data) const;
-
-		//bool readInt(std::string const &name, int *value) const;
+		void send(UniformInfos const &infos, void const *data) const;
 		bool readInt(UniformInfos const &infos, int *value) const;
 
 	private:
-		friend class Renderer;
-
 		GLuint id;
 
-		//std::unordered_map<std::string, UniformInfos> uniformBindings;
-		//std::size_t totalByteCount;
-
 		void build(std::string const &vertexTxt, std::string const &fragmentTxt, std::string const &geometryTxt = "");
-		//void cacheUniformsLocations();
 	};
 }

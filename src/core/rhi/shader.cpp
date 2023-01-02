@@ -148,121 +148,6 @@ void Shader::bind() const {
 	glUseProgram(id);
 }
 
-/*/
-#define FIND_INFOS \
-auto it = uniformBindings.find(name); \
-if(it == uniformBindings.end()) return; \
-UniformInfos const &infos = it->second;
-
-void Shader::send(std::string const &name, int value) const {
-	FIND_INFOS;
-	glProgramUniform1i(id, infos.location, value);
-}
-
-void Shader::send(std::string const &name, float value) const {
-	FIND_INFOS;
-	glProgramUniform1f(id, infos.location, value);
-}
-
-void Shader::send(std::string const &name, std::vector<float> const &values) const {
-	FIND_INFOS;
-	glProgramUniform1fv(id, infos.location, (GLsizei)values.size(), (GLfloat *)values.data());
-}
-
-void Shader::send(std::string const &name, Vec2 const &value) const {
-	FIND_INFOS;
-	glProgramUniform2fv(id, infos.location, 1, &value[0]);
-}
-
-void Shader::send(std::string const &name, Vec3 const &value) const {
-	FIND_INFOS;
-	glProgramUniform3fv(id, infos.location, 1, &value[0]);
-}
-
-void Shader::send(std::string const &name, std::vector<Vec3> const &values) const {
-	FIND_INFOS;
-	glProgramUniform3fv(id, infos.location, (GLsizei)values.size(), (GLfloat *)values.data());
-}
-
-void Shader::send(std::string const &name, Mat4 const &mat) const {
-	FIND_INFOS;
-	glProgramUniformMatrix4fv(id, infos.location, 1, GL_FALSE, &mat[0][0]);
-}
-
-void Shader::send(std::string const &name, bool value) const {
-	FIND_INFOS;
-	glProgramUniform1i(id, infos.location, value);
-}
-//*/
-
-/*/
-void Shader::cacheUniformsLocations() {
-	GLint size; // size of the variable (array length)
-	GLenum type; // (float, vec3 or mat4, etc)
-
-	GLsizei const bufSize = 256; //GL_UNIFORM_NAME_LENGTH stupidement trop grand
-	GLchar name[bufSize];
-	GLsizei length;
-
-	GLint count;
-	glGetProgramiv(id, GL_ACTIVE_UNIFORMS, &count);
-
-	uniformBindings.reserve(count);
-
-	std::size_t byteOffset = 0;
-	for(GLuint i = 0; i < static_cast<GLuint>(count); ++i) {
-		glGetActiveUniform(id, i, bufSize, &length, &size, &type, name);
-
-		unsigned int location = glGetUniformLocation(id, name); // a cause de la suppression des uniforms inutilises,
-																// il faut query le shader pour avoir la vraie location
-		if(location != -1) {
-			UniformInfos &infos = uniformBindings[name];
-
-			infos.location = location;
-			infos.length = size;
-			setUniformInfos(type, infos);
-			infos.byteOffset = byteOffset;
-			byteOffset += infos.byteCount;
-		}
-	}
-
-	totalByteCount = byteOffset;
-}
-
-bool Shader::uniformExist(std::string const &name) const {
-	return uniformBindings.find(name) != uniformBindings.end();
-}
-
-UniformInfos const &Shader::getUniforminfos(std::string const &name) const {
-	return uniformBindings.at(name);
-}
-
-std::size_t Shader::getTotalByteCount() const {
-	return totalByteCount;
-}
-
-void Shader::sendRaw(UniformInfos const &infos, void *data) const {
-	infos.sendFunctionPointer(id, infos.location, infos.length, data);
-}
-
-void Shader::sendRaw(std::string const &name, void *data) const {
-	UniformInfos const &infos = uniformBindings.at(name);
-	infos.sendFunctionPointer(id, infos.location, infos.length, data);
-}
-
-bool Shader::readInt(std::string const &name, int *value) const {
-	auto it = uniformBindings.find(name);
-	if(it == uniformBindings.end()) return false;
-
-	UniformInfos const &infos = it->second;
-	if(infos.baseType != UniformUnderlyingType::INT
-		&& infos.baseType != UniformUnderlyingType::SAMPLER) return false;
-
-	glGetUniformiv(id, infos.location, value);
-	return true;
-}
-//*/
-
 std::vector<UniformInfos> Shader::retreiveUniformInfos() {
 	std::vector<UniformInfos> uniformBindings;
 
@@ -288,7 +173,6 @@ std::vector<UniformInfos> Shader::retreiveUniformInfos() {
 		if(location != -1) {
 			UniformInfos infos;
 
-			infos.userFlags = 0;
 			infos.name = name;
 			infos.location = location;
 			infos.length = size;
@@ -303,8 +187,8 @@ std::vector<UniformInfos> Shader::retreiveUniformInfos() {
 	return uniformBindings;
 }
 
-void Shader::send(UniformInfos const &infos, void *data) const {
-	infos.sendFunctionPointer(id, infos.location, infos.length, data);
+void Shader::send(UniformInfos const &infos, void const *data) const {
+	infos.sendFunctionPointer(id, infos.location, infos.length, const_cast<void *>(data));
 }
 
 bool Shader::readInt(UniformInfos const &infos, int *value) const {

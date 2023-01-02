@@ -3,180 +3,16 @@
 
 using namespace akila;
 
-/*/
-Material::Material(Ref<Shader> shader): shader{shader} {
-	uniformData.resize(shader->getTotalByteCount(), 0);
+void internal::MaterialContainer::writeRaw(UniformInfos const &infos, void const *data, std::size_t byteCount) {
+	std::memcpy(uniformData.data() + infos.byteOffset, data, byteCount);
 }
 
-Material::Material(Ref<Material> other):
-	shader{other->shader},
-	usedUniforms{other->usedUniforms},
-	uniforms{other->uniforms},
-	uniformData{other->uniformData},
-	textures{other->textures} {
 
-}
+///
 
-Material::Material(Material &&other) noexcept:
-	shader{other.shader},
-	usedUniforms{other.usedUniforms},
-	uniforms{other.uniforms},
-	uniformData{other.uniformData},
-	textures{other.textures} {
-
-}
-
-Material &Material::operator=(Material &&other) noexcept {
-	shader = other.shader;
-	usedUniforms = other.usedUniforms;
-	uniforms = other.uniforms;
-	uniformData = other.uniformData;
-	textures = other.textures;
-
-	return *this;
-}
-
-Material::Material(Material const &other):
-	shader{other.shader},
-	usedUniforms{other.usedUniforms},
-	uniforms{other.uniforms},
-	uniformData{other.uniformData},
-	textures{other.textures} {
-
-}
-
-Material &Material::operator=(Material const &other) {
-	shader = other.shader;
-	usedUniforms = other.usedUniforms;
-	uniforms = other.uniforms;
-	uniformData = other.uniformData;
-	textures = other.textures;
-
-	return *this;
-}
-
-Ref<Shader> Material::getShaderRef() const {
-	return shader;
-}
-
-Shader *Material::getShader() const {
-	return shader.raw();
-}
-
-Ptr<Material> Material::copy() {
-	Ptr<Material> mat = createPtr<Material>(shader);
-	mat->textures = textures;
-	mat->uniformData = uniformData;
-	mat->uniforms = uniforms;
-	mat->usedUniforms = usedUniforms;
-
-	return mat;
-}
-
-bool Material::use(std::string const &name) {
-	if(!shader->uniformExist(name)) {
-		std::cerr << "uniform : " << name << " is not present in shader" << std::endl;
-		return false;
-	}
-
-	if(uniforms.find(name) != uniforms.end()) return true;
-
-	UniformInfos const *infos = &shader->getUniforminfos(name);
-	usedUniforms.push_back(infos);
-	uniforms[name] = infos;
-
-	// tri pour avoir une lecture sequentiel dans la methode send
-	std::sort(usedUniforms.begin(), usedUniforms.end(), [](UniformInfos const *i1, UniformInfos const *i2) {
-		return i1->byteOffset < i2->byteOffset;
-	});
-
-	return true;
-}
-
-inline void Material::writeRaw(UniformInfos const *infos, void const *data, std::size_t byteCount) {
-	std::memcpy(uniformData.data() + infos->byteOffset, data, byteCount);
-}
-
-void Material::write(std::string const &name, int data) {
-	writeRaw(uniforms.at(name), &data, sizeof(int));
-}
-
-void Material::write(std::string const &name, float data) {
-	writeRaw(uniforms.at(name), &data, sizeof(float));
-}
-
-void Material::write(std::string const &name, Vec2 const &data) {
-	writeRaw(uniforms.at(name), &data, sizeof(Vec2));
-}
-
-void Material::write(std::string const &name, std::vector<Vec2> const &data) {
-	writeRaw(uniforms.at(name), data.data(), data.size() * sizeof(Vec2));
-}
-
-void Material::write(std::string const &name, Vec3 const &data) {
-	writeRaw(uniforms.at(name), &data, sizeof(Vec3));
-}
-
-void Material::write(std::string const &name, std::vector<Vec3> const &data) {
-	writeRaw(uniforms.at(name), data.data(), data.size() * sizeof(Vec3));
-}
-
-void Material::write(std::string const &name, Vec4 const &data) {
-	writeRaw(uniforms.at(name), &data, sizeof(Vec4));
-}
-
-void Material::write(std::string const &name, std::vector<Vec4> const &data) {
-	writeRaw(uniforms.at(name), data.data(), data.size() * sizeof(Vec4));
-}
-
-void Material::write(std::string const &name, Mat4 const &data) {
-	writeRaw(uniforms.at(name), &data, sizeof(Mat4));
-}
-
-void Material::write(std::string const &name, std::vector<Mat4> const &data) {
-	writeRaw(uniforms.at(name), data.data(), data.size() * sizeof(Mat4));
-}
-
-void Material::affect(Ref<TextureBuffer> const &texRef, int unit) {
-	textures.push_back({unit, texRef});
-}
-
-void Material::affect(Ref<TextureBuffer> const &texRef, std::string const &name) {
-	if(!shader->uniformExist(name)) {
-		std::cerr << "uniform " << name << " do not exist" << std::endl;
-		return;
-	}
-
-	UniformInfos const &infos = shader->getUniforminfos(name);
-	if(infos.baseType != UniformUnderlyingType::SAMPLER) {
-		std::cerr << "uniform " << name << " is not a sampler" << std::endl;
-		return;
-	}
-
-	int unit = 0;
-	if(uniforms.find(name) != uniforms.end()) {
-		unit = *(uniformData.data() + infos.byteOffset);
-	} else {
-		shader->readInt(name, &unit);
-	}
-
-	textures.push_back({unit, texRef});
-}
-
-void Material::send() {
-	if(!shader->isBinded()) shader->bind();
-
-	for(UniformInfos const *infos : usedUniforms) {
-		shader->sendRaw(*infos, uniformData.data() + infos->byteOffset);
-	}
-
-	for(TextureBinding const &binding : textures) {
-		binding.textureBuffer->bind(binding.unit);
-	}
-}
-//*/
 
 Material::Id Material::nextId = 0;
+Material::Id Material::lastSended = 0;
 
 Material::Material(): internal::MaterialContainer{}, id{0}, shader{} {
 
@@ -193,11 +29,243 @@ Material::Material(
 		vertexShader,
 		geometrieShader,
 		fragmentShader
-	} {
+} {
 
-	uniforms = shader.retreiveUniformInfos();
-	for(UniformInfos &infos : uniforms) {
-		bool reserved = reservedUniforms.find(infos.name) != reservedUniforms.end();
-		infos.userFlags[Flags::RESERVED] = reserved;
+	std::size_t count = 0;
+	for(UniformInfos const &infos : shader.retreiveUniformInfos()) {
+		count += infos.byteCount;
+
+		if(reservedUniforms.find(infos.name) != reservedUniforms.end()) {
+			reservedUniformDescriptors.push_back(infos);
+			continue;
+		}
+
+		if(infos.baseType == UniformUnderlyingType::SAMPLER) {
+			int unit = 0;
+			shader.readInt(infos, &unit);
+			textures.push_back({infos.name, unit});
+		} else {
+			uniformDescriptors.push_back(infos);
+		}
 	}
+
+	uniformData.resize(count);
+	
+	for(std::size_t i = 0; i < reservedUniformDescriptors.size(); ++i) {
+		UniformInfos const &infos = reservedUniformDescriptors[i];
+		reservedUniformsNamesToIndex[infos.name] = i;
+	}
+
+	for(std::size_t i = 0; i < uniformDescriptors.size(); ++i) {
+		UniformInfos const &infos = uniformDescriptors[i];
+		uniformsNamesToIndex[infos.name] = i;
+	}
+
+	for(std::size_t i = 0; i < textures.size(); ++i) {
+		TextureBinding const &tb = textures[i];
+		texturesNamesToIndex[tb.name] = i;
+	}
+}
+
+
+#define MATERIAL_WRITE_BODY(X) \
+auto it = uniformsNamesToIndex.find(name); \
+if(it == uniformsNamesToIndex.end()) return; \
+writeRaw(uniformDescriptors[it->second], &data, X);
+
+void Material::write(std::string const &name, int data) {
+	MATERIAL_WRITE_BODY(sizeof(int));
+}
+
+void Material::write(std::string const &name, float data) {
+	MATERIAL_WRITE_BODY(sizeof(float));
+}
+
+void Material::write(std::string const &name, Vec2 const &data) {
+	MATERIAL_WRITE_BODY(sizeof(Vec2));
+}
+
+void Material::write(std::string const &name, std::vector<Vec2> const &data) {
+	MATERIAL_WRITE_BODY(data.size() * sizeof(Vec2));
+}
+
+void Material::write(std::string const &name, Vec3 const &data) {
+	MATERIAL_WRITE_BODY(sizeof(Vec3));
+}
+
+void Material::write(std::string const &name, std::vector<Vec3> const &data) {
+	MATERIAL_WRITE_BODY(data.size() * sizeof(Vec3));
+}
+
+void Material::write(std::string const &name, Vec4 const &data) {
+	MATERIAL_WRITE_BODY(sizeof(Vec4));
+}
+
+void Material::write(std::string const &name, std::vector<Vec4> const &data) {
+	MATERIAL_WRITE_BODY(data.size() * sizeof(Vec4));
+}
+
+void Material::write(std::string const &name, Mat4 const &data) {
+	MATERIAL_WRITE_BODY(sizeof(Mat4));
+}
+
+void Material::affect(std::string const &name, Ref<TextureBuffer> texRef) {
+	auto it = texturesNamesToIndex.find(name);
+	if(it == texturesNamesToIndex.end()) return;
+	textures[it->second].textureBuffer = texRef;
+}
+
+void Material::send() {
+	if(lastSended != id) {
+		shader.bind();
+		lastSended = id;
+	}
+
+	for(UniformInfos const &infos : uniformDescriptors) {
+		shader.send(infos, uniformData.data() + infos.byteOffset);
+	}
+
+	for(TextureBinding const &binding : textures) {
+		binding.textureBuffer->bind(binding.unit);
+	}
+}
+
+
+#define MATERIAL_SEND_RESERVED_BODY(X) \
+auto it = reservedUniformsNamesToIndex.find(name); \
+if(it == reservedUniformsNamesToIndex.end()) return; \
+shader.send(reservedUniformDescriptors[it->second], X);
+
+void Material::sendReserved(std::string const &name, int data) {
+	MATERIAL_SEND_RESERVED_BODY(&data);
+}
+
+void Material::sendReserved(std::string const &name, float data) {
+	MATERIAL_SEND_RESERVED_BODY(&data);
+}
+
+void Material::sendReserved(std::string const &name, Vec2 const &data) {
+	MATERIAL_SEND_RESERVED_BODY(&data[0]);
+}
+
+void Material::sendReserved(std::string const &name, std::vector<Vec2> const &data) {
+	MATERIAL_SEND_RESERVED_BODY(data.data());
+}
+
+void Material::sendReserved(std::string const &name, Vec3 const &data) {
+	MATERIAL_SEND_RESERVED_BODY(&data[0]);
+}
+
+void Material::sendReserved(std::string const &name, std::vector<Vec3> const &data) {
+	MATERIAL_SEND_RESERVED_BODY(data.data());
+}
+
+void Material::sendReserved(std::string const &name, Vec4 const &data) {
+	MATERIAL_SEND_RESERVED_BODY(&data[0]);
+}
+
+void Material::sendReserved(std::string const &name, std::vector<Vec4> const &data) {
+	MATERIAL_SEND_RESERVED_BODY(data.data());
+}
+
+void Material::sendReserved(std::string const &name, Mat4 const &data) {
+	MATERIAL_SEND_RESERVED_BODY(&data[0]);
+}
+
+
+///
+
+
+MaterialInstance::MaterialInstance(Ref<Material> mat): internal::MaterialContainer{}, material{mat} {
+	overridedUniforms.resize(material->uniformDescriptors.size(), false);
+	overridedTextures.resize(material->textures.size(), false);
+
+	uniformData.resize(material->uniformData.size());
+	textures.resize(material->textures.size());
+}
+
+void MaterialInstance::send() {
+	Shader const &shader = material->shader;
+	auto const &uniformDescriptors = material->uniformDescriptors;
+	auto *matUniformData = material->uniformData.data();
+	auto const &matTextures = material->textures;
+
+	if(Material::lastSended != material->id) {
+		shader.bind();
+		Material::lastSended = material->id;
+	}
+
+	for(std::size_t i = 0; i < overridedUniforms.size(); ++i) {
+		UniformInfos const &infos = uniformDescriptors[i];
+		if(overridedUniforms[i] != 0) {
+			shader.send(infos, uniformData.data() + infos.byteOffset);
+		} else {
+			shader.send(infos, matUniformData + infos.byteOffset);
+		}
+	}
+
+	for(std::size_t i = 0; i < overridedTextures.size(); ++i) {
+		if(overridedTextures[i] != 0) {
+			TextureBinding const &tb = textures[i];
+			tb.textureBuffer->bind(tb.unit);
+		} else {
+			TextureBinding const &tb = matTextures[i];
+			tb.textureBuffer->bind(tb.unit);
+		}
+	}
+}
+
+#define MATERIAL_INSTANCE_WRITE_BODY(X) \
+auto const &uniformsNamesToIndex = material->uniformsNamesToIndex; \
+auto it = uniformsNamesToIndex.find(name); \
+if(it == uniformsNamesToIndex.end()) return; \
+std::size_t index = it->second; \
+overridedUniforms[index] = true; \
+writeRaw(material->uniformDescriptors[index], &data, X);
+
+void MaterialInstance::write(std::string const &name, int data) {
+	MATERIAL_INSTANCE_WRITE_BODY(sizeof(int));
+}
+
+void MaterialInstance::write(std::string const &name, float data) {
+	MATERIAL_INSTANCE_WRITE_BODY(sizeof(float));
+}
+
+void MaterialInstance::write(std::string const &name, Vec2 const &data) {
+	MATERIAL_INSTANCE_WRITE_BODY(sizeof(Vec2));
+}
+
+void MaterialInstance::write(std::string const &name, std::vector<Vec2> const &data) {
+	MATERIAL_INSTANCE_WRITE_BODY(data.size() * sizeof(Vec2));
+}
+
+void MaterialInstance::write(std::string const &name, Vec3 const &data) {
+	MATERIAL_INSTANCE_WRITE_BODY(sizeof(Vec3));
+}
+
+void MaterialInstance::write(std::string const &name, std::vector<Vec3> const &data) {
+	MATERIAL_INSTANCE_WRITE_BODY(data.size() * sizeof(Vec3));
+}
+
+void MaterialInstance::write(std::string const &name, Vec4 const &data) {
+	MATERIAL_INSTANCE_WRITE_BODY(sizeof(Vec4));
+}
+
+void MaterialInstance::write(std::string const &name, std::vector<Vec4> const &data) {
+	MATERIAL_INSTANCE_WRITE_BODY(data.size() * sizeof(Vec4));
+}
+
+void MaterialInstance::write(std::string const &name, Mat4 const &data) {
+	MATERIAL_INSTANCE_WRITE_BODY(sizeof(Mat4));
+}
+
+void MaterialInstance::affect(std::string const &name, Ref<TextureBuffer> texRef) {
+	auto const &texturesNamesToIndex = material->texturesNamesToIndex;
+
+	auto it = texturesNamesToIndex.find(name);
+	if(it == texturesNamesToIndex.end()) return;
+
+	std::size_t index = it->second;
+	textures[index].textureBuffer = texRef;
+	overridedTextures[index] = true;
 }

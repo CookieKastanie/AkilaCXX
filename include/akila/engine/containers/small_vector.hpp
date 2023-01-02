@@ -96,7 +96,7 @@ namespace akila {
 
 		reference at(size_type pos) {
 			if(size_ < N) {
-				eturn stack_.at(pos);
+				return stack_.at(pos);
 			} else {
 				return heap_.at(pos);
 			}
