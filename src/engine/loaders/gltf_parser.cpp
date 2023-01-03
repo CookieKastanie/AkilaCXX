@@ -1,4 +1,5 @@
 #include "akila/engine/loaders/gltf_parser.hpp"
+#include <fstream>
 
 using namespace akila;
 
@@ -31,19 +32,17 @@ int nameToComponentCount(std::string const &name) {
 	return 16; // MAT4
 }
 
-GlTFParser::GlTFParser(): invertTexCoords{true} {
+GlTFParser::GlTFParser(): invertTexcoord{true} {
 
 }
 
-void GlTFParser::setInvertTexcoords(bool invert) {
-	invertTexCoords = invert;
+void GlTFParser::setInvertTexcoord(bool invert) {
+	invertTexcoord = invert;
 }
 
 std::vector<GlTF> const &GlTFParser::getResult() {
 	return result;
 }
-
-#include "akila/core/resources/file_system.hpp"
 
 bool GlTFParser::loadFile(std::string const &path) {
 	result.clear();
@@ -151,7 +150,7 @@ bool GlTFParser::loadFile(std::string const &path) {
 				case Mesh::Attributes::TEXCOORD_0:
 				case Mesh::Attributes::TEXCOORD_1:
 				case Mesh::Attributes::TEXCOORD_2:
-					texcoordsSpecialCase(buffer);
+					texcoordSpecialCase(buffer);
 					break;
 			}
 		}
@@ -208,8 +207,8 @@ void GlTFParser::tangentSpecialCase(GlTF::Buffer &buffer) {
 	buffer.byteCount = count * sizeof(Vec3);
 }
 
-void GlTFParser::texcoordsSpecialCase(GlTF::Buffer &buffer) {
-	if(invertTexCoords == false) return;
+void GlTFParser::texcoordSpecialCase(GlTF::Buffer &buffer) {
+	if(invertTexcoord == false) return;
 
 	Vec2 *vec2View = reinterpret_cast<Vec2 *>(buffer.data);
 	for(std::size_t byteCount = 0; byteCount < buffer.byteCount; byteCount += sizeof(Vec2)) {

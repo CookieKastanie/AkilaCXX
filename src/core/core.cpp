@@ -20,7 +20,7 @@ using namespace akila::internal;
 
 bool Core::restartFlag;
 
-int Core::run(Window::InitValues const &initVals, void (*init)(void)) {
+int Core::run(Window::InitValues const &initVals, std::function<void()> init) {
 start:
 	restartFlag = false;
 
@@ -109,7 +109,7 @@ start:
 	return EXIT_SUCCESS;
 }
 
-int Core::run(void (*init)(void)) {
+int Core::run(std::function<void()> init) {
 	return run({}, init);
 }
 

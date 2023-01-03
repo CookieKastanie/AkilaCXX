@@ -32,17 +32,17 @@ namespace akila {
 	class GlTFParser {
 	public:
 		GlTFParser();
-		void setInvertTexcoords(bool invert);
+		void setInvertTexcoord(bool invert);
 		bool loadFile(std::string const &path);
 		std::vector<GlTF> const &getResult();
 
 	private:
 		std::vector<std::uint8_t> raw;
 		std::vector<GlTF> result;
-		bool invertTexCoords;
+		bool invertTexcoord;
 
 		void positionSpecialCase(GlTF &mesh, JSON const &accessorJson);
 		void tangentSpecialCase(GlTF::Buffer &buffer);
-		void texcoordsSpecialCase(GlTF::Buffer &buffer);
+		void texcoordSpecialCase(GlTF::Buffer &buffer);
 	};
 }

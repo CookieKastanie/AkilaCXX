@@ -25,9 +25,9 @@ void StaticMeshLoader::onEntry(JSON json, LoaderCallback cb) {
 	Ptr<bool> parserSuccess = createPtr<bool>(false);
 	
 	Threadpool::submit([=]() {
-		if(json["invertTexcoordsY"].is_boolean()) {
-			bool invert = json["invertTexcoordsY"];
-			parser->setInvertTexcoords(invert);
+		if(json["invertTexcoordY"].is_boolean()) {
+			bool invert = json["invertTexcoordY"];
+			parser->setInvertTexcoord(invert);
 		}
 
 		std::string path = json["path"];
