@@ -5,6 +5,7 @@
 #include "akila/core/math/math.hpp"
 #include "akila/core/rhi/texture.hpp"
 #include "akila/engine/containers/small_vector.hpp"
+#include <unordered_map>
 #include <set>
 
 namespace akila {
@@ -14,9 +15,9 @@ namespace akila {
 			SmallVector<std::uint8_t, 512> uniformData;
 			
 			struct TextureBinding {
-				std::string name;
-				int unit;
-				Ref<TextureBuffer> textureBuffer;
+				std::string name = "";
+				int unit = 0;
+				Ref<TextureBuffer> textureBuffer = Ref<TextureBuffer>{};
 			};
 			SmallVector<TextureBinding, 32> textures;
 

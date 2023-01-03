@@ -37,11 +37,14 @@ void BufferObject::bind() const {
 	glBindBuffer(kind, id);
 }
 
-void BufferObject::setRawData(void const *data, int size, int offset, int typeSize) {
+void BufferObject::setRawData(
+	void const *data,
+	std::size_t size, std::size_t offset, std::size_t count) {
+
 	bind();
 	if(length == -1) {
 		glBufferData(kind, size, data, usage);
-		length = size / typeSize;
+		length = static_cast<int>(count);
 	} else {
 		glBufferSubData(kind, offset, size, data);
 	}

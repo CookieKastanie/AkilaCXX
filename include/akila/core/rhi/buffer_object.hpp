@@ -29,7 +29,11 @@ namespace akila {
 		virtual BufferObject &operator=(BufferObject const &other) = delete;
 
 		virtual void bind() const;
-		virtual void setRawData(void const *data, int size, int offset = 0, int typeSize = sizeof(char));
+		/* param count is the number of element (ex : count of Vec3) */
+		virtual void setRawData(
+			void const *data,
+			std::size_t size, std::size_t offset = 0, std::size_t count = 0
+		);
 		virtual int getLength() const;
 
 		void setDataType(Type type);

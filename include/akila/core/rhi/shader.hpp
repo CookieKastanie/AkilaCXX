@@ -2,9 +2,8 @@
 
 #include <glad/glad.h>
 #include <string>
-#include <unordered_map>
+#include <vector>
 #include "akila/core/math/math.hpp"
-#include <bitset>
 
 namespace akila {
 	class Shader;
@@ -22,14 +21,14 @@ namespace akila {
 
 	using SendFunction = void(*)(GLint, GLint, GLsizei, void *);
 	struct UniformInfos {
-		std::string name; // nom de la variable
-		unsigned int location; // adresse dans le shader
-		UniformUnderlyingType baseType;
-		int blockSize; // 1, 2, 3, ..., 16 pour scalair, vecteur, matrice
-		int length; // nombre d'element dans l'array
-		std::size_t byteCount; // nombre total d'octets
-		std::size_t byteOffset; // position dans la memoire
-		SendFunction sendFunctionPointer; // adresse de la fonction opengl correspondante
+		std::string name = ""; // nom de la variable
+		unsigned int location = 0; // adresse dans le shader
+		UniformUnderlyingType baseType = UniformUnderlyingType::FLOAT;
+		int blockSize = 0; // 1, 2, 3, ..., 16 pour scalair, vecteur, matrice
+		int length = 0; // nombre d'element dans l'array
+		std::size_t byteCount = 0; // nombre total d'octets
+		std::size_t byteOffset = 0; // position dans la memoire
+		SendFunction sendFunctionPointer = nullptr; // adresse de la fonction opengl correspondante
 	};
 
 	class Shader {
