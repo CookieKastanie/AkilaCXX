@@ -7,6 +7,8 @@
 
 #include "akila/engine/loaders/static_mesh_loader.hpp"
 #include "akila/engine/loaders/texture_loader.hpp"
+#include "akila/engine/loaders/audio_loader.hpp"
+#include "akila/engine/loaders/material_loader.hpp"
 
 using namespace akila;
 
@@ -14,8 +16,10 @@ int Engine::run(Window::InitValues const &initVals, std::function<void()> init) 
 	return Core::run(initVals, [&]() {
 		FileSystem::setRootFolder("resources");
 
+		Resources::registerLoader<AudioLoader>();
 		Resources::registerLoader<Texture2DLoader>();
 		Resources::registerLoader<StaticMeshLoader>();
+		Resources::registerLoader<MaterialLoader>();
 
 		MaterialFactory::define("a_position_loc", Mesh::Attributes::POSITION);
 		MaterialFactory::define("a_normal_loc", Mesh::Attributes::NORMAL);

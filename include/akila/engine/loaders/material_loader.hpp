@@ -1,11 +1,11 @@
 #pragma once
 
-#include "akila/resource/loader.hpp"
+#include "akila/core/resources/loader.hpp"
 
 namespace akila {
-	class AudioLoader: public Loader {
+	class MaterialLoader: public Loader {
 	public:
-		AudioLoader();
+		MaterialLoader();
 		void onEntry(JSON json, LoaderCallback cb) override;
 	};
 }

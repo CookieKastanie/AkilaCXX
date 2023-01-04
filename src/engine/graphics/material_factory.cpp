@@ -248,7 +248,7 @@ MaterialFactory::ShaderSources MaterialFactory::buildSources(std::string const &
 	return sh;
 }
 
-Ref<Material> MaterialFactory::build(std::string const &name) {
-	ShaderSources sh = buildSources(name);
-	return Resources::set<Material>(name, new Material{sh.vertex, sh.geometrie, sh.fragment, reservedUniforms});
+Ref<Material> MaterialFactory::build(std::string const &matName, std::string const &sourceName) {
+	ShaderSources sh = buildSources(sourceName);
+	return Resources::set<Material>(matName, new Material{sh.vertex, sh.geometrie, sh.fragment, reservedUniforms});
 }

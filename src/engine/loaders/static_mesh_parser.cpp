@@ -23,31 +23,37 @@ void StaticMeshLoader::onEntry(JSON json, LoaderCallback cb) {
 
 	Ptr<GlTFParser> parser = createPtr<GlTFParser>();
 	Ptr<bool> parserSuccess = createPtr<bool>(false);
-	
+
+	if(json["invertTexcoordY"].is_boolean()) {
+		bool invert = json["invertTexcoordY"];
+		parser->setInvertTexcoord(invert);
+	}
+
+	std::string path = json["path"];
+	bool useName = json["name"].is_string();
+
+	std::string name = "";
+	std::string prefix = "";
+	if(useName) {
+		name = json["name"];
+	} else {
+		prefix = json["prefix"];
+	}
+
 	Threadpool::submit([=]() {
-		if(json["invertTexcoordY"].is_boolean()) {
-			bool invert = json["invertTexcoordY"];
-			parser->setInvertTexcoord(invert);
-		}
-
-		std::string path = json["path"];
 		*parserSuccess = parser->loadFile(FileSystem::path(path));
-
 		}, [=]() {
 			if(*parserSuccess == false) {
 				cb.fail();
 				return;
 			}
 
-			bool useName = json["name"].is_string();
-
-			std::vector<GlTF> meshes = parser->getResult();
+			std::vector<GlTF> const &meshes = parser->getResult();
 			for(GlTF const &mesh : meshes) {
 				Ref<StaticMesh> resource;
 				if(useName) {
-					resource = Resources::create<StaticMesh>(json["name"]);
+					resource = Resources::create<StaticMesh>(name);
 				} else {
-					std::string prefix = json["prefix"];
 					resource = Resources::create<StaticMesh>(prefix + mesh.name);
 				}
 				

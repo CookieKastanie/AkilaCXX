@@ -175,6 +175,9 @@ void Material::sendReserved(std::string const &name, Mat4 const &data) {
 
 ///
 
+MaterialInstance::MaterialInstance(): internal::MaterialContainer{}, material{} {
+
+}
 
 MaterialInstance::MaterialInstance(Ref<Material> mat): internal::MaterialContainer{}, material{mat} {
 	overridedUniforms.resize(material->uniformDescriptors.size(), false);
@@ -185,6 +188,10 @@ MaterialInstance::MaterialInstance(Ref<Material> mat): internal::MaterialContain
 }
 
 void MaterialInstance::send() {
+	if(material.isValid() == false) {
+		return;
+	}
+
 	Shader const &shader = material->shader;
 	auto const &uniformDescriptors = material->uniformDescriptors;
 	auto *matUniformData = material->uniformData.data();

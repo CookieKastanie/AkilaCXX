@@ -102,6 +102,7 @@ namespace akila {
 
 	class MaterialInstance: public internal::MaterialContainer {
 	public:
+		MaterialInstance();
 		MaterialInstance(Ref<Material> mat);
 
 		void write(std::string const &name, int data);

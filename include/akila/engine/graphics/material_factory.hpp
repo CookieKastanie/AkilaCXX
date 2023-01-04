@@ -45,7 +45,7 @@ namespace akila {
 		};
 
 		static ShaderSources buildSources(std::string const &name);
-		static Ref<Material> build(std::string const &name);
+		static Ref<Material> build(std::string const &matName, std::string const &sourceName);
 
 	private:
 		static std::unordered_map<std::string, std::string> defines;

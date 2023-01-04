@@ -13,7 +13,7 @@ namespace akila {
 		std::string name;
 
 		Vec3 min = {0.f, 0.f, 0.f};
-		Vec3 max = {0.f, 0.f, 0.f};;
+		Vec3 max = {0.f, 0.f, 0.f};
 		float radius = 0.f;
 		float squaredRadius = 0.f;
 
@@ -32,6 +32,14 @@ namespace akila {
 	class GlTFParser {
 	public:
 		GlTFParser();
+		~GlTFParser() = default;
+
+		GlTFParser(GlTFParser &&other) noexcept = delete;
+		GlTFParser &operator=(GlTFParser &&other) noexcept = delete;
+
+		GlTFParser(GlTFParser const &other) = delete;
+		GlTFParser &operator=(GlTFParser const &other) = delete;
+
 		void setInvertTexcoord(bool invert);
 		bool loadFile(std::string const &path);
 		std::vector<GlTF> const &getResult();

@@ -33,8 +33,9 @@ namespace akila {
 
 	class Shader {
 	public:
+		Shader();
 		Shader(
-			std::string const &vertexTxt = "",
+			std::string const &vertexTxt,
 			std::string const &geometryTxt = "",
 			std::string const &fragmentTxt = ""
 		);
