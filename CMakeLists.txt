@@ -40,7 +40,12 @@ add_library(akila STATIC
 	"src/engine/components/transform_component.cpp"
 	"src/engine/graphics/material.cpp"
 	"src/engine/graphics/material_factory.cpp"
-	"src/engine/tools/string_tools.cpp" "src/engine/loaders/gltf_parser.cpp" "src/engine/graphics/static_mesh.cpp" "src/engine/loaders/static_mesh_parser.cpp")
+	"src/engine/tools/string_tools.cpp"
+	"src/engine/loaders/gltf_parser.cpp"
+	"src/engine/graphics/static_mesh.cpp"
+	"src/engine/loaders/static_mesh_parser.cpp"
+	"src/engine/loaders/bitmap_loader.cpp"
+	"src/engine/loaders/texture_loader.cpp")
 
 target_include_directories(akila PRIVATE "include")
 

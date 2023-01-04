@@ -6,6 +6,7 @@
 #include "akila/engine/graphics/mesh.hpp"
 
 #include "akila/engine/loaders/static_mesh_loader.hpp"
+#include "akila/engine/loaders/texture_loader.hpp"
 
 using namespace akila;
 
@@ -13,6 +14,7 @@ int Engine::run(Window::InitValues const &initVals, std::function<void()> init) 
 	return Core::run(initVals, [&]() {
 		FileSystem::setRootFolder("resources");
 
+		Resources::registerLoader<Texture2DLoader>();
 		Resources::registerLoader<StaticMeshLoader>();
 
 		MaterialFactory::define("a_position_loc", Mesh::Attributes::POSITION);
