@@ -45,7 +45,10 @@ add_library(akila STATIC
 	"src/engine/graphics/static_mesh.cpp"
 	"src/engine/loaders/static_mesh_parser.cpp"
 	"src/engine/loaders/bitmap_loader.cpp"
-	"src/engine/loaders/texture_loader.cpp" "src/engine/loaders/audio_loader.cpp" "src/engine/loaders/material_loader.cpp")
+	"src/engine/loaders/texture_loader.cpp"
+	"src/engine/loaders/audio_loader.cpp"
+	"src/engine/loaders/material_loader.cpp"
+	"src/engine/loaders/shader_source_loader.cpp" "src/engine/graphics/mesh.cpp" "src/engine/graphics/static_mesh_primitive.cpp")
 
 target_include_directories(akila PRIVATE "include")
 

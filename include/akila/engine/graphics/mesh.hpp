@@ -1,5 +1,7 @@
 #pragma once
 
+#include "akila/core/math/math.hpp"
+
 namespace akila {
 	class Mesh {
 	public:
@@ -31,6 +33,20 @@ namespace akila {
 			ANY = 15
 		};
 
+		struct Bounds {
+			Vec3 min = {0.f, 0.f, 0.f};
+			Vec3 max = {0.f, 0.f, 0.f};
+			float radius = 0.f;
+			float squaredRadius = 0.f;
+		};
+
+		Mesh();
+
 		virtual void draw() const = 0;
+		void setBounds(Bounds const &bounds);
+		Bounds const &getBounds();
+
+	protected:
+		Bounds bounds;
 	};
 }

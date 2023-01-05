@@ -9,6 +9,7 @@
 #include "akila/engine/loaders/texture_loader.hpp"
 #include "akila/engine/loaders/audio_loader.hpp"
 #include "akila/engine/loaders/material_loader.hpp"
+#include "akila/engine/loaders/shader_source_loader.hpp"
 
 using namespace akila;
 
@@ -44,6 +45,7 @@ int Engine::run(Window::InitValues const &initVals, std::function<void()> init) 
 		Resources::registerLoader<AudioLoader>();
 		Resources::registerLoader<Texture2DLoader>();
 		Resources::registerLoader<StaticMeshLoader>();
+		Resources::registerLoader<ShaderSourceLoader>();
 		Resources::registerLoader<MaterialLoader>();
 
 		init();

@@ -31,7 +31,7 @@ void MaterialLoader::onEntry(JSON json, LoaderCallback cb) {
 		std::ifstream file;
 		file.open(FileSystem::resources(path).c_str());
 		if(file.good() == false) {
-			std::cerr << "Source loading error : can't read " << path << std::endl;
+			std::cerr << "Source loading error : can't read " << FileSystem::resources(path) << std::endl;
 			cb.fail();
 			return;
 		}

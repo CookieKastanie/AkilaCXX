@@ -72,6 +72,13 @@ void StaticMeshLoader::onEntry(JSON json, LoaderCallback cb) {
 					resource->setIBO(ibo);
 				}
 
+				Mesh::Bounds bounds;
+				bounds.min = mesh.min;
+				bounds.max = mesh.max;
+				bounds.radius = mesh.radius;
+				bounds.squaredRadius = mesh.squaredRadius;
+				resource->setBounds(bounds);
+
 				resource->prepare();
 			}
 

@@ -2,7 +2,7 @@
 
 using namespace akila;
 
-StaticMesh::StaticMesh() {
+StaticMesh::StaticMesh(): Mesh{} {
 
 }
 

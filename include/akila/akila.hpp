@@ -56,3 +56,6 @@
 
 #include "akila/engine/graphics/material.hpp"
 #include "akila/engine/graphics/material_factory.hpp"
+#include "akila/engine/graphics/mesh.hpp"
+#include "akila/engine/graphics/static_mesh.hpp"
+#include "akila/engine/graphics/static_mesh_primitive.hpp"
