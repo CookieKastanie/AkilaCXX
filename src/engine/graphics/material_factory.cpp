@@ -65,6 +65,11 @@ bool isMin(std::size_t base, std::size_t a, std::size_t b, std::size_t c) {
 	return true;
 }
 
+void MaterialFactory::init() {
+	Material::nextId = 0;
+	Material::lastSended = 0;
+}
+
 void MaterialFactory::setSource(std::string const &name, std::string const &source) {
 	ShaderSources *sh = nullptr;
 

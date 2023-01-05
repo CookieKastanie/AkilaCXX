@@ -14,12 +14,7 @@ using namespace akila;
 
 int Engine::run(Window::InitValues const &initVals, std::function<void()> init) {
 	return Core::run(initVals, [&]() {
-		FileSystem::setRootFolder("resources");
-
-		Resources::registerLoader<AudioLoader>();
-		Resources::registerLoader<Texture2DLoader>();
-		Resources::registerLoader<StaticMeshLoader>();
-		Resources::registerLoader<MaterialLoader>();
+		MaterialFactory::init();
 
 		MaterialFactory::define("a_position_loc", Mesh::Attributes::POSITION);
 		MaterialFactory::define("a_normal_loc", Mesh::Attributes::NORMAL);
@@ -41,6 +36,15 @@ int Engine::run(Window::InitValues const &initVals, std::function<void()> init) 
 		MaterialFactory::define("a_weight_1_loc", Mesh::Attributes::WEIGHTS_1);
 		MaterialFactory::define("a_weight_2_loc", Mesh::Attributes::WEIGHTS_2);
 		MaterialFactory::define("a_any_loc", Mesh::Attributes::ANY);
+		
+		FileSystem::setRootFolder("appdata");
+		FileSystem::setResourcesFolder("resources");
+		FileSystem::setUserDataFolder("user");
+
+		Resources::registerLoader<AudioLoader>();
+		Resources::registerLoader<Texture2DLoader>();
+		Resources::registerLoader<StaticMeshLoader>();
+		Resources::registerLoader<MaterialLoader>();
 
 		init();
 	});

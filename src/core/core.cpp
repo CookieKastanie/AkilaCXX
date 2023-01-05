@@ -45,6 +45,8 @@ start:
 
 		init();
 
+		ImGuiHandler::initIniFileName();
+
 		Time::update();
 		float accumulator = 0;
 		while(!stop) {

@@ -2,11 +2,9 @@
 
 #include <iostream>
 #include <fstream>
+#include <filesystem>
 
 using namespace akila;
-
-std::string FileSystem::root;
-
 
 /////////////////
 #if WIN32
@@ -47,19 +45,59 @@ std::string procPath() {
 }
 /////////////////
 
+std::string FileSystem::exePath;
+std::string FileSystem::rootFolder;
+
+std::string FileSystem::resourcesFolder;
+std::string FileSystem::userDataFolder;
+
 void FileSystem::init() {
-	root = procPath();
+	exePath = procPath();
+
+	rootFolder = "";
+	resourcesFolder = "";
+	userDataFolder = "";
 }
 
 void FileSystem::setRootFolder(std::string const &path) {
-	root = procPath() + path + "/";
+	rootFolder = path + "/";
 }
 
-std::string FileSystem::path(std::string const &filePath) {
-	return root + filePath;
+void FileSystem::setResourcesFolder(std::string const &path) {
+	resourcesFolder = path + "/";
 }
 
-bool FileSystem::exist(std::string const &filePath) {
-	std::ifstream f((root + filePath).c_str());
+void FileSystem::setUserDataFolder(std::string const &path) {
+	userDataFolder = path + "/";
+}
+
+std::string FileSystem::root(std::string const &filePath) {
+	return exePath + rootFolder + filePath;
+}
+
+std::string FileSystem::resources(std::string const &filePath) {
+	return exePath + rootFolder + resourcesFolder + filePath;
+}
+
+std::string FileSystem::userData(std::string const &filePath) {
+	return exePath + rootFolder + userDataFolder + filePath;
+}
+
+bool FileSystem::exist(std::string const &path) {
+	std::ifstream f(path);
 	return f.good();
 }
+
+bool FileSystem::createFolder(std::string const &path) {
+	bool success = false;
+
+	try {
+		std::filesystem::create_directories(path);
+		success = true;
+	} catch(std::exception &e) {
+		std::cerr << e.what() << std::endl;
+	}
+
+	return success;
+}
+

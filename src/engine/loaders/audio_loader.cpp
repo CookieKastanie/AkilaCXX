@@ -20,7 +20,7 @@ void AudioLoader::onEntry(JSON json, LoaderCallback cb) {
 	std::string path = json["path"];
 
 	auto audio = Resources::create<AudioSource>(name);
-	if(audio->decodeFile(FileSystem::path(path)) == false) {
+	if(audio->decodeFile(FileSystem::resources(path)) == false) {
 		std::cerr << "Can't load audio : " << path << std::endl;
 		cb.fail();
 		return;

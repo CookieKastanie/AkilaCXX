@@ -80,7 +80,7 @@ void Texture2DLoader::onEntry(JSON json, LoaderCallback cb) {
 	if(json["mips"].is_boolean()) mips = json["mips"];
 
 	Threadpool::submit([=]() {
-			parser->loadFile(FileSystem::path(path));
+			parser->loadFile(FileSystem::resources(path));
 		}, [=]() {
 			Bitmap const &bitmap = parser->getResult();
 

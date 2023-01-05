@@ -41,7 +41,7 @@ void StaticMeshLoader::onEntry(JSON json, LoaderCallback cb) {
 	}
 
 	Threadpool::submit([=]() {
-		*parserSuccess = parser->loadFile(FileSystem::path(path));
+		*parserSuccess = parser->loadFile(FileSystem::resources(path));
 		}, [=]() {
 			if(*parserSuccess == false) {
 				cb.fail();

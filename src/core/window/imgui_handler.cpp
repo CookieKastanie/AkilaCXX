@@ -6,6 +6,8 @@
 #include <imgui/imgui_impl_opengl3.h>
 #pragma warning(pop)
 
+#include "akila/core/resources/file_system.hpp"
+
 using namespace akila::internal;
 
 
@@ -97,10 +99,14 @@ void embraceTheDarkness() {
 
 
 ImGuiIO *ImGuiHandler::io;
+std::string ImGuiHandler::iniFilename;
 
 void ImGuiHandler::init() {
 	IMGUI_CHECKVERSION();
 	ImGui::CreateContext();
+
+	ImGui_ImplGlfw_InitForOpenGL(akila::Window::window, true);
+	ImGui_ImplOpenGL3_Init("#version 130");
 
 	io = &ImGui::GetIO();
 	//io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;     // Enable Keyboard Controls
@@ -111,8 +117,6 @@ void ImGuiHandler::init() {
 	//io.ConfigViewportsNoTaskBarIcon = true;
 	io->ConfigFlags |= ImGuiConfigFlags_NoMouseCursorChange;
 
-	io->IniFilename = "gui.ini";
-
 	ImGui::StyleColorsClassic();
 
 	ImGuiStyle &style = ImGui::GetStyle();
@@ -121,10 +125,7 @@ void ImGuiHandler::init() {
 		style.Colors[ImGuiCol_WindowBg].w = 1.0f;
 	}
 
-
-	ImGui_ImplGlfw_InitForOpenGL(akila::Window::window, true);
-	ImGui_ImplOpenGL3_Init("#version 130");
-
+	embraceTheDarkness();
 	// theme
 	/*
 	fastTheming(
@@ -135,7 +136,12 @@ void ImGuiHandler::init() {
 		{33.f / 255.f, 46.f / 255.f, 60.f / 255.f}
 	);
 	//*/
-	embraceTheDarkness();
+}
+
+void ImGuiHandler::initIniFileName() {
+	FileSystem::createFolder(FileSystem::userData(""));
+	iniFilename = FileSystem::userData("gui.ini");
+	io->IniFilename = iniFilename.c_str();
 }
 
 void ImGuiHandler::beginFrame() {

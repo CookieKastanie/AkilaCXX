@@ -53,6 +53,9 @@ namespace akila {
 		static std::unordered_map<std::string, ShaderSources> sources;
 		static std::unordered_map<std::string, ShaderSources> templates;
 
+		friend class Engine;
+		static void init();
+
 		static void recursiveInclude(
 			std::string &out,
 			std::string const &sourceName,

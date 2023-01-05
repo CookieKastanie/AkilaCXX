@@ -19,7 +19,7 @@ void LoadingInstance::start() {
 	for(std::string const &path : paths) {
 		try {
 			JSON jsonFile;
-			std::ifstream{FileSystem::path(path)} >> jsonFile;
+			std::ifstream{FileSystem::resources(path)} >> jsonFile;
 			
 			if(!jsonFile.is_object()) return;
 
@@ -33,7 +33,7 @@ void LoadingInstance::start() {
 				arr.insert(arr.end(), value.begin(), value.end());
 			}
 		} catch(std::exception const&) {
-			std::cerr << "JSON file error : can't read " << path << std::endl;
+			std::cerr << "JSON file error : can't read " << FileSystem::resources(path) << std::endl;
 		}
 	}
 

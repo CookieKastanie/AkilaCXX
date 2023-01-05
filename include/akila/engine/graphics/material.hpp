@@ -126,7 +126,7 @@ namespace akila {
 
 			auto it = uniformsNamesToIndex.find(name);
 			if(it == uniformsNamesToIndex.end()) {
-				return *reinterpret_cast<T *>(uniformData.data());
+				return *reinterpret_cast<T *>(voidMaterialMemory.data());
 			};
 
 			return *reinterpret_cast<T *>(

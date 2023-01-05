@@ -16,8 +16,10 @@ namespace akila::internal {
 			friend class WindowEvents;
 
 			static ImGuiIO *io;
+			static std::string iniFilename;
 
 			static void init();
+			static void initIniFileName();
 
 			static void beginFrame();
 			static void endFrame();

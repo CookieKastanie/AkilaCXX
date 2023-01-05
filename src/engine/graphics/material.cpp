@@ -1,5 +1,8 @@
 #include "akila/engine/graphics/material.hpp"
 #include <algorithm>
+#include "akila/core/resources/resources.hpp"
+#include "akila/core/rhi/texture.hpp"
+#include <array>
 
 using namespace akila;
 
@@ -10,6 +13,9 @@ void internal::MaterialContainer::writeRaw(UniformInfos const &infos, void const
 
 ///
 
+
+// empty memory space used when user read unvalid material memory
+static std::array<std::uint8_t, 512> const voidMaterialMemory{0};
 
 Material::Id Material::nextId = 0;
 Material::Id Material::lastSended = 0;
@@ -43,7 +49,7 @@ Material::Material(
 		if(infos.baseType == UniformUnderlyingType::SAMPLER) {
 			int unit = 0;
 			shader.readInt(infos, &unit);
-			textures.push_back({infos.name, unit});
+			textures.push_back({infos.name, unit, Resources::get<Texture2D>("__dummy")});
 		} else {
 			uniformDescriptors.push_back(infos);
 		}
@@ -175,7 +181,8 @@ void Material::sendReserved(std::string const &name, Mat4 const &data) {
 
 ///
 
-MaterialInstance::MaterialInstance(): internal::MaterialContainer{}, material{} {
+
+MaterialInstance::MaterialInstance(): internal::MaterialContainer{}, material{Resources::get<Material>("__dummy")} {
 
 }
 
@@ -188,10 +195,6 @@ MaterialInstance::MaterialInstance(Ref<Material> mat): internal::MaterialContain
 }
 
 void MaterialInstance::send() {
-	if(material.isValid() == false) {
-		return;
-	}
-
 	Shader const &shader = material->shader;
 	auto const &uniformDescriptors = material->uniformDescriptors;
 	auto *matUniformData = material->uniformData.data();
