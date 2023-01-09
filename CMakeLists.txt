@@ -51,7 +51,7 @@ add_library(akila STATIC
 	"src/engine/loaders/shader_source_loader.cpp"
 	"src/engine/graphics/mesh.cpp"
 	"src/engine/graphics/static_mesh_primitive.cpp"
-	"src/engine/loaders/material_uniform_parser.cpp")
+	"src/engine/loaders/material_parser.cpp")
 
 target_include_directories(akila PRIVATE "include")
 
@@ -80,3 +80,6 @@ target_link_libraries(akila PUBLIC miniaudio)
 
 add_subdirectory(libs/minicoro)
 target_link_libraries(akila PUBLIC minicoro)
+
+add_subdirectory(libs/llvm)
+target_link_libraries(akila PUBLIC llvm)

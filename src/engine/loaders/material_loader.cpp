@@ -1,6 +1,7 @@
 #include "akila/engine/loaders/material_loader.hpp"
 #include "akila/engine/graphics/material_factory.hpp"
 #include "akila/core/resources/file_system.hpp"
+#include "akila/engine/loaders/material_parser.hpp"
 #include <fstream>
 
 using namespace akila;
@@ -43,25 +44,8 @@ void MaterialLoader::onEntry(JSON json, LoaderCallback cb) {
 		mat = MaterialFactory::build(name, name);
 	}
 
-
-
-
-
-	cb.success();
-
-	/*/
-
-	Parser::parseUniforms(mat->getShaderRef(), json, [&](std::string const &name, UniformInfos const &infos, void *data, std::size_t byteCount) {
-		mat->use(name);
-		mat->writeRaw(&infos, data, byteCount);
-	});
-
-	Parser::parseTextureBinds(mat->getShaderRef(), json, [&](Ref<TextureBuffer> texRef, int unit) {
-		mat->affect(texRef, unit);
-		}, [&](Ref<TextureBuffer> texRef, std::string const &unifName) {
-			mat->affect(texRef, unifName);
-	});
+	MaterialParser::populateUniforms(json, mat);
+	MaterialParser::populateTextures(json, mat);
 
 	cb.success();
-	//*/
 }

@@ -6,6 +6,12 @@
 
 using namespace akila;
 
+std::array<std::uint8_t, 512> const internal::MaterialContainer::voidMaterialMemory{0};
+
+SmallVector<internal::MaterialContainer::TextureBinding, 32> const &internal::MaterialContainer::getTextureBindings() {
+	return textures;
+}
+
 void internal::MaterialContainer::writeRaw(UniformInfos const &infos, void const *data, std::size_t byteCount) {
 	std::memcpy(uniformData.data() + infos.byteOffset, data, byteCount);
 }
@@ -13,9 +19,6 @@ void internal::MaterialContainer::writeRaw(UniformInfos const &infos, void const
 
 ///
 
-
-// empty memory space used when user read unvalid material memory
-static std::array<std::uint8_t, 512> const voidMaterialMemory{0};
 
 Material::Id Material::nextId = 0;
 Material::Id Material::lastSended = 0;
@@ -83,8 +86,24 @@ void Material::write(std::string const &name, int data) {
 	MATERIAL_WRITE_BODY(sizeof(int));
 }
 
+void Material::write(std::string const &name, std::vector<int> const &data) {
+	MATERIAL_WRITE_BODY(data.size() * sizeof(int));
+}
+
+void Material::write(std::string const &name, unsigned int data) {
+	MATERIAL_WRITE_BODY(sizeof(unsigned int));
+}
+
+void Material::write(std::string const &name, std::vector<unsigned int> const &data) {
+	MATERIAL_WRITE_BODY(data.size() * sizeof(unsigned int));
+}
+
 void Material::write(std::string const &name, float data) {
 	MATERIAL_WRITE_BODY(sizeof(float));
+}
+
+void Material::write(std::string const &name, std::vector<float> const &data) {
+	MATERIAL_WRITE_BODY(data.size() * sizeof(float));
 }
 
 void Material::write(std::string const &name, Vec2 const &data) {
@@ -113,6 +132,10 @@ void Material::write(std::string const &name, std::vector<Vec4> const &data) {
 
 void Material::write(std::string const &name, Mat4 const &data) {
 	MATERIAL_WRITE_BODY(sizeof(Mat4));
+}
+
+void Material::write(std::string const &name, std::vector<Mat4> const &data) {
+	MATERIAL_WRITE_BODY(data.size() * sizeof(Mat4));
 }
 
 void Material::affect(std::string const &name, Ref<TextureBuffer> texRef) {
@@ -178,6 +201,13 @@ void Material::sendReserved(std::string const &name, Mat4 const &data) {
 	MATERIAL_SEND_RESERVED_BODY(&data[0]);
 }
 
+void Material::sendReserved(std::string const &name, std::vector<Mat4> const &data) {
+	MATERIAL_SEND_RESERVED_BODY(data.data());
+}
+
+SmallVector<UniformInfos, 16> const &Material::getUniformInfos() {
+	return uniformDescriptors;
+}
 
 ///
 
@@ -207,7 +237,7 @@ void MaterialInstance::send() {
 
 	for(std::size_t i = 0; i < overridedUniforms.size(); ++i) {
 		UniformInfos const &infos = uniformDescriptors[i];
-		if(overridedUniforms[i] != 0) {
+		if(overridedUniforms[i]) {
 			shader.send(infos, uniformData.data() + infos.byteOffset);
 		} else {
 			shader.send(infos, matUniformData + infos.byteOffset);
@@ -237,8 +267,24 @@ void MaterialInstance::write(std::string const &name, int data) {
 	MATERIAL_INSTANCE_WRITE_BODY(sizeof(int));
 }
 
+void MaterialInstance::write(std::string const &name, std::vector<int> const &data) {
+	MATERIAL_INSTANCE_WRITE_BODY(data.size() * sizeof(int));
+}
+
+void MaterialInstance::write(std::string const &name, unsigned int data) {
+	MATERIAL_INSTANCE_WRITE_BODY(sizeof(unsigned int));
+}
+
+void MaterialInstance::write(std::string const &name, std::vector<unsigned int> const &data) {
+	MATERIAL_INSTANCE_WRITE_BODY(data.size() * sizeof(unsigned int));
+}
+
 void MaterialInstance::write(std::string const &name, float data) {
 	MATERIAL_INSTANCE_WRITE_BODY(sizeof(float));
+}
+
+void MaterialInstance::write(std::string const &name, std::vector<float> const &data) {
+	MATERIAL_INSTANCE_WRITE_BODY(data.size() * sizeof(float));
 }
 
 void MaterialInstance::write(std::string const &name, Vec2 const &data) {
@@ -269,6 +315,10 @@ void MaterialInstance::write(std::string const &name, Mat4 const &data) {
 	MATERIAL_INSTANCE_WRITE_BODY(sizeof(Mat4));
 }
 
+void MaterialInstance::write(std::string const &name, std::vector<Mat4> const &data) {
+	MATERIAL_INSTANCE_WRITE_BODY(data.size() * sizeof(Mat4));
+}
+
 void MaterialInstance::affect(std::string const &name, Ref<TextureBuffer> texRef) {
 	auto const &texturesNamesToIndex = material->texturesNamesToIndex;
 
@@ -278,4 +328,8 @@ void MaterialInstance::affect(std::string const &name, Ref<TextureBuffer> texRef
 	std::size_t index = it->second;
 	textures[index].textureBuffer = texRef;
 	overridedTextures[index] = true;
+}
+
+SmallVector<UniformInfos, 16> const &MaterialInstance::getUniformInfos() {
+	return material->uniformDescriptors;
 }

@@ -45,14 +45,17 @@ public:
 };
 
 int main() {
-	return Core::run([]() {
-		FileSystem::setRootFolder("resources");
+	return Engine::run([]() {
+		// dossier racine par defaut : appdata
+		// dossier des resources par defaut : appdata/resources
+		// dossier des données utilisateur par defaut : appdata/user
+
 		Layers::add<MyLayer>();
 	});
 }
 ```
 
-> **⚠️ Important : l'API ne doit pas être utilisé en dehors du runtime de Core. Il est donc obligatoire d'avoir au moins un Layer.**
+> **⚠️ Important : l'API ne doit pas être utilisé en dehors du runtime de Core (démarré par Engine). Il est donc obligatoire d'avoir au moins un Layer.**
 
 
 
@@ -246,13 +249,14 @@ tex->setParameters(params);
 #### Instancier un shader
 
 ```cpp
-// les shaders ont une bonne place dans resources (mais ce n'est pas obligatoire)
-Ref<Shader> shader = Rersources::create<Shader>("#full_shader_code"); // passe par un preproc basique
-// ou
 Ref<Shader> shader = Rersources::create<Shader>("#vertex_shader", "#fragment_shader", "#geometry_shader");
 ```
 
 #### Exemple de shader
+
+```glsl
+float PI = 
+```
 
 ```glsl
 #akila_vertex
@@ -267,8 +271,8 @@ void main() {
 
 #akila_fragment
 
-// inclusion d'un autre fichier (n'est pas récursif cependant)
-#akila_file path/myFile.glsl
+// inclusion d'une source
+#akila_include my_constants
 
 in vec2 texCoord;
 
@@ -283,6 +287,9 @@ void main() {
 
 `path/unlit.glsl` qui sert de template :
 ```glsl
+// declare cette source comme template
+#akila_template
+
 #akila_vertex
 
 layout(location = a_position_loc) in vec4 a_position;
@@ -314,7 +321,7 @@ vec4 brdf(...) {
 
 Un shader qui utilise le template :
 ```glsl
-#akila_template path/unlit.glsl
+#akila_use_template unlit
 
 #akila_fragment
 
@@ -501,3 +508,10 @@ Threadpool::submit([]() {
 	// execution dans le thread principal
 });
 ```
+
+```cpp
+Threadpool::dispatch<5, 1, 1>([](unsigned int x, unsigned int y, unsigned int z) {
+	// execution dans un thread
+});
+```
+
