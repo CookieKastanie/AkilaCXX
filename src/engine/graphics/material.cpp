@@ -8,10 +8,6 @@ using namespace akila;
 
 std::array<std::uint8_t, 512> const internal::MaterialContainer::voidMaterialMemory{0};
 
-SmallVector<internal::MaterialContainer::TextureBinding, 32> const &internal::MaterialContainer::getTextureBindings() {
-	return textures;
-}
-
 void internal::MaterialContainer::writeRaw(UniformInfos const &infos, void const *data, std::size_t byteCount) {
 	std::memcpy(uniformData.data() + infos.byteOffset, data, byteCount);
 }
@@ -138,10 +134,13 @@ void Material::write(std::string const &name, std::vector<Mat4> const &data) {
 	MATERIAL_WRITE_BODY(data.size() * sizeof(Mat4));
 }
 
-void Material::affect(std::string const &name, Ref<TextureBuffer> texRef) {
+bool Material::affect(std::string const &name, Ref<TextureBuffer> texRef) {
 	auto it = texturesNamesToIndex.find(name);
-	if(it == texturesNamesToIndex.end()) return;
+	if(it == texturesNamesToIndex.end()) return false;
+
 	textures[it->second].textureBuffer = texRef;
+
+	return false;
 }
 
 void Material::send() {
@@ -319,15 +318,17 @@ void MaterialInstance::write(std::string const &name, std::vector<Mat4> const &d
 	MATERIAL_INSTANCE_WRITE_BODY(data.size() * sizeof(Mat4));
 }
 
-void MaterialInstance::affect(std::string const &name, Ref<TextureBuffer> texRef) {
+bool MaterialInstance::affect(std::string const &name, Ref<TextureBuffer> texRef) {
 	auto const &texturesNamesToIndex = material->texturesNamesToIndex;
 
 	auto it = texturesNamesToIndex.find(name);
-	if(it == texturesNamesToIndex.end()) return;
+	if(it == texturesNamesToIndex.end()) return false;
 
 	std::size_t index = it->second;
 	textures[index].textureBuffer = texRef;
 	overridedTextures[index] = true;
+
+	return true;
 }
 
 SmallVector<UniformInfos, 16> const &MaterialInstance::getUniformInfos() {

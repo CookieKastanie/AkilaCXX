@@ -41,8 +41,9 @@ namespace akila {
 			virtual void write(std::string const &name, Mat4 const &data) = 0;
 			virtual void write(std::string const &name, std::vector<Mat4> const &data) = 0;
 
+			virtual bool affect(std::string const &name, Ref<TextureBuffer> texRef) = 0;
+
 			virtual SmallVector<UniformInfos, 16> const &getUniformInfos() = 0;
-			SmallVector<TextureBinding, 32> const &getTextureBindings();
 
 			virtual ~MaterialContainer() = default;
 
@@ -94,7 +95,7 @@ namespace akila {
 			return *reinterpret_cast<T const*>(uniformData.data() + uniformDescriptors[it->second].byteOffset);
 		}
 
-		void affect(std::string const &name, Ref<TextureBuffer> texRef);
+		bool affect(std::string const &name, Ref<TextureBuffer> texRef) override;
 
 		void send();
 
@@ -180,7 +181,7 @@ namespace akila {
 			);
 		}
 
-		void affect(std::string const &name, Ref<TextureBuffer> texRef);
+		bool affect(std::string const &name, Ref<TextureBuffer> texRef) override;
 
 		void send();
 

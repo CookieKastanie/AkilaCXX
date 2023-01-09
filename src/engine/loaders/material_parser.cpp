@@ -98,37 +98,33 @@ void MaterialParser::populateUniforms(JSON &json, internal::MaterialContainer *m
 }
 
 Ref<TextureBuffer> getTexture(std::string const &arrayName, std::string const &name) {
-	//if(arrayName == "texture2d") return Resources::get<Texture2D>(name);
-	//else
+	if(arrayName == "texturecubemap") return Resources::get<TextureCubmap>(name);
+	if(arrayName == "texture3d") return Resources::get<Texture3D>(name);
 	return Resources::get<Texture2D>(name);
 }
 
 void MaterialParser::populateTextures(JSON &json, internal::MaterialContainer *mat) {
-	/*/
 	std::array<std::string, 1> acceptedNames = {"texture2d"};
 
-	auto const &textureBindings = mat->getTextureBindings();
-
 	std::string arrayName = "";
-	for(std::string &n : acceptedNames) {
-		if(json[n].is_object()) {
-			arrayName = n;
-			break;
+	for(std::string &arrayName : acceptedNames) {
+		if(json[arrayName].is_object() == false) {
+			continue;
 		}
-	}
-	if(arrayName.empty()) return;
-
-	for(auto &item : json[arrayName].items()) {
-		auto &value = item.value();
-		if(value.is_string()) {
-			if(!shader->uniformExist(value)) {
-				std::cerr << "JSON : " << value << " not in material" << std::endl;
-				return;
+			
+		for(auto &item : json[arrayName].items()) {
+			auto &value = item.value();
+			if(value.is_string() == false) {
+				continue;
 			}
 
+			std::string textureName = value;
+			bool success = mat->affect(item.key(), getTexture(arrayName, textureName));
 
-			//onStr(getTexture(arrayName, item.key()), value);
+			if(success == false) {
+				std::cerr << "JSON : " << item.key() << " not in material" << std::endl;
+				continue;
+			}
 		}
 	}
-	//*/
 }
