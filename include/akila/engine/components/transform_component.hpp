@@ -6,6 +6,7 @@
 namespace akila {
 	class TransformComponent: public Transform {
 	public:
+		TransformComponent();
 		void savePrevious();
 		Mat4 const &calcMatrixMix(float t = Time::mix);
 

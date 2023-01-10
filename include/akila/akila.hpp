@@ -59,3 +59,7 @@
 #include "akila/engine/graphics/mesh.hpp"
 #include "akila/engine/graphics/static_mesh.hpp"
 #include "akila/engine/graphics/static_mesh_primitive.hpp"
+
+#include "akila/engine/layers/scene_layer.hpp"
+#include "akila/engine/layers/debug_layer.hpp"
+

@@ -4,9 +4,9 @@
 #include "akila/engine/systems/render_system.hpp"
 
 namespace akila {
-	class GameLayer: public Layer {
+	class SceneLayer: public Layer {
 	public:
-		GameLayer();
+		SceneLayer();
 
 		void tick() final;
 		void frame() final;

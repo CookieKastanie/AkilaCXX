@@ -35,6 +35,7 @@ add_library(akila STATIC
 	"src/engine/engine.cpp"
 	"src/engine/math_extension/easing.cpp"
 	"src/engine/math_extension/distribution.cpp"
+	"src/engine/math_extension/transform.cpp"
 	"src/engine/containers/image.cpp"
 	"src/engine/systems/render_system.cpp"
 	"src/engine/components/transform_component.cpp"
@@ -51,7 +52,13 @@ add_library(akila STATIC
 	"src/engine/loaders/shader_source_loader.cpp"
 	"src/engine/graphics/mesh.cpp"
 	"src/engine/graphics/static_mesh_primitive.cpp"
-	"src/engine/loaders/material_parser.cpp")
+	"src/engine/loaders/material_parser.cpp"
+	"src/engine/graphics/camera.cpp"
+	"src/engine/systems/camera_system.cpp"
+	"src/engine/assets/camera_controler.cpp"
+	"src/engine/components/camera_component.cpp"
+	"src/engine/layers/debug_layer.cpp"
+	"src/engine/layers/debug_timings.cpp" "src/engine/systems/fast3d_render_system.cpp")
 
 target_include_directories(akila PRIVATE "include")
 

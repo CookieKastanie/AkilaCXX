@@ -185,6 +185,8 @@ namespace akila {
 
 		void send();
 
+		Material *getBaseMaterial();
+
 		SmallVector<UniformInfos, 16> const &getUniformInfos() override;
 
 	private:

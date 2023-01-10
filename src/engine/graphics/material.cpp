@@ -140,7 +140,7 @@ bool Material::affect(std::string const &name, Ref<TextureBuffer> texRef) {
 
 	textures[it->second].textureBuffer = texRef;
 
-	return false;
+	return true;
 }
 
 void Material::send() {
@@ -252,6 +252,10 @@ void MaterialInstance::send() {
 			tb.textureBuffer->bind(tb.unit);
 		}
 	}
+}
+
+Material *MaterialInstance::getBaseMaterial() {
+	return material;
 }
 
 #define MATERIAL_INSTANCE_WRITE_BODY(X) \

@@ -2,6 +2,14 @@
 
 using namespace akila;
 
+TransformComponent::TransformComponent():
+	Transform{},
+	prevPosition{0.f},
+	prevRotation{1.f, 0.f, 0.f, 0.f},
+	prevScale{1.f} {
+
+}
+
 void TransformComponent::savePrevious() {
 	prevPosition = position;
 	prevRotation = rotation;
