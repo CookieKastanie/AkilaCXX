@@ -11,32 +11,13 @@ CameraData::CameraData():
 
 }
 
-Mat4 const &CameraData::getProjection() {
-	return projection;
-}
-
-Mat4 const &CameraData::getView() {
-	return view;
-}
-
-Mat4 const &CameraData::getPV() {
-	return pv;
-}
-
-Vec3 const &CameraData::getPosition() {
-	return position;
-}
-
-float CameraData::getRatio() {
-	return ratio;
-}
-
 CameraData const *CameraData::getData() {
 	return this;
 }
 
 
 ///
+
 
 Camera::Camera(ProjectionType type):
 	CameraData{},
@@ -45,10 +26,6 @@ Camera::Camera(ProjectionType type):
 	far{500.f},
 	fov{toRadians(70.f)} {
 
-}
-
-Camera::ProjectionType Camera::getProjectionType() {
-	return type;
 }
 
 void Camera::resize(IVec2 const &size) {

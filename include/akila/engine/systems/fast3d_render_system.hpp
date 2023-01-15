@@ -8,6 +8,8 @@ namespace akila {
 	public:
 		static unsigned int const CAMERA_LOCATION = 0;
 
+		static void injectShaderSources();
+
 		Fast3dRenderSystem();
 
 		void colorPass(CameraData const *cameraData) override;

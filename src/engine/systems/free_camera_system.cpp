@@ -1,27 +1,28 @@
-#include "akila/engine/assets/camera_controler.hpp"
+#include "akila/engine/systems/free_camera_system.hpp"
 #include "akila/core/inputs/inputs.hpp"
 #include "akila/core/math/math.hpp"
 
 using namespace akila;
 
-CameraControler::CameraControler(): Camera{} {
-
+FreeCameraSystem::FreeCameraSystem():
+	CameraSystem{},
+	camera{} {
+	camera.resize(Window::getSize());
 }
 
+void FreeCameraSystem::update() {
+	float &distance = camera.distance;
+	float &maxDistance = camera.maxDistance;
+	Vec3 &center = camera.center;
+	Vec3 &angles = camera.angles;
+	Vec3 &position = camera.position;
 
-///
+	Mat4 &view = camera.view;
+	Mat4 &projection = camera.projection;
+	Mat4 &pv = camera.pv;
 
+	//
 
-FreeCameraControler::FreeCameraControler():
-	CameraControler{},
-	center{0.f},
-	angles{0.f, HALF_PI, 0.f},
-	distance{10.f},
-	maxDistance{100.f} {
-
-}
-
-void FreeCameraControler::update() {
 	Vec2 angularDelta = {0, 0};
 	Vec3 translateDelta = {0, 0, 0};
 
@@ -75,4 +76,12 @@ void FreeCameraControler::update() {
 
 	view = lookAt(position, center, up);
 	pv = projection * view;
+}
+
+void FreeCameraSystem::onResize(IVec2 const &size) {
+	camera.resize(size);
+}
+
+CameraData const *FreeCameraSystem::getCameraData() {
+	return camera.getData();
 }

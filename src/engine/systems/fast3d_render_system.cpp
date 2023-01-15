@@ -1,7 +1,20 @@
 #include "akila/engine/systems/fast3d_render_system.hpp"
 #include "akila/core/rhi/renderer.hpp"
 
+#include "akila/engine/graphics/material_factory.hpp"
+#include "akila/engine/graphics/shaders/common/camera_struct.glsl"
+#include "akila/engine/graphics/shaders/fast3d_template.glsl"
+
 using namespace akila;
+
+void Fast3dRenderSystem::injectShaderSources() {
+	MaterialFactory::setSource("camera_struct", GLSL_CAMERA_STRUCT);
+	MaterialFactory::setSource("fast3d_template", GLSL_FAST3D_TEMPLATE);
+
+	MaterialFactory::define("u_camera_loc", CAMERA_LOCATION);
+
+	MaterialFactory::reserveUniform("u_modelMatrix");
+}
 
 Fast3dRenderSystem::Fast3dRenderSystem():
 	RenderSystem{},

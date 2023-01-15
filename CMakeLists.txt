@@ -55,10 +55,10 @@ add_library(akila STATIC
 	"src/engine/loaders/material_parser.cpp"
 	"src/engine/graphics/camera.cpp"
 	"src/engine/systems/camera_system.cpp"
-	"src/engine/assets/camera_controler.cpp"
-	"src/engine/components/camera_component.cpp"
+	"src/engine/systems/free_camera_system.cpp"
 	"src/engine/layers/debug_layer.cpp"
-	"src/engine/layers/debug_timings.cpp" "src/engine/systems/fast3d_render_system.cpp")
+	"src/engine/layers/debug_timings.cpp"
+	"src/engine/systems/fast3d_render_system.cpp")
 
 target_include_directories(akila PRIVATE "include")
 

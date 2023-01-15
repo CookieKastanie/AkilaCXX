@@ -1,32 +1,22 @@
 #pragma once
 
 #include "akila/core/ecs/ecs.hpp"
-#include "akila/engine/assets/camera_controler.hpp"
-#include "akila/core/memory/ptr.hpp"
+#include "akila/engine/graphics/camera.hpp"
 #include "akila/core/signals/signals.hpp"
-#include <string>
-#include <unordered_map>
 
 namespace akila {
 	class CameraSystem: public System {
 	public:
-		CameraSystem();
+		CameraSystem(Signature signature = ECS::createSignature<>());
+		virtual ~CameraSystem() = default;
 
-		void addCameraControler(std::string const &name, Ptr<CameraControler> camera);
-		void setCurrentCamera(std::string const &name);
-		void setCurrentCamera(Entity e);
+		virtual void update() = 0;
 
-		void update();
+		virtual CameraData const *getCameraData() = 0;
 
-		CameraData const *getCameraData();
-
-	private:
-		bool currentIsEntity;
-		Ptr<CameraControler> currentCameraControler;
-		Entity currentEntity;
-
-		std::unordered_map<std::string, Ptr<CameraControler>> cameraControlers;
-
+	protected:
 		Listener resizeListener;
+
+		virtual void onResize(IVec2 const &size) = 0;
 	};
 }
