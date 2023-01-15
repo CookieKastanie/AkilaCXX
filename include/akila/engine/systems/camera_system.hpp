@@ -13,6 +13,7 @@ namespace akila {
 		virtual void update() = 0;
 
 		virtual CameraData const *getCameraData() = 0;
+		virtual Vec3 const &getDirection() = 0;
 
 	protected:
 		Listener resizeListener;

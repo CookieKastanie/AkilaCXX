@@ -85,3 +85,7 @@ void FreeCameraSystem::onResize(IVec2 const &size) {
 CameraData const *FreeCameraSystem::getCameraData() {
 	return camera.getData();
 }
+
+Vec3 const &FreeCameraSystem::getDirection() {
+	return normalize(camera.center - camera.position);
+}

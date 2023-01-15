@@ -73,65 +73,65 @@ Material::Material(
 }
 
 
-#define MATERIAL_WRITE_BODY(X) \
+#define MATERIAL_WRITE_BODY(P, X) \
 auto it = uniformsNamesToIndex.find(name); \
 if(it == uniformsNamesToIndex.end()) return; \
-writeRaw(uniformDescriptors[it->second], &data, X);
+writeRaw(uniformDescriptors[it->second], P, X);
 
 void Material::write(std::string const &name, int data) {
-	MATERIAL_WRITE_BODY(sizeof(int));
+	MATERIAL_WRITE_BODY(&data, sizeof(int));
 }
 
 void Material::write(std::string const &name, std::vector<int> const &data) {
-	MATERIAL_WRITE_BODY(data.size() * sizeof(int));
+	MATERIAL_WRITE_BODY(data.data(), data.size() * sizeof(int));
 }
 
 void Material::write(std::string const &name, unsigned int data) {
-	MATERIAL_WRITE_BODY(sizeof(unsigned int));
+	MATERIAL_WRITE_BODY(&data, sizeof(unsigned int));
 }
 
 void Material::write(std::string const &name, std::vector<unsigned int> const &data) {
-	MATERIAL_WRITE_BODY(data.size() * sizeof(unsigned int));
+	MATERIAL_WRITE_BODY(data.data(), data.size() * sizeof(unsigned int));
 }
 
 void Material::write(std::string const &name, float data) {
-	MATERIAL_WRITE_BODY(sizeof(float));
+	MATERIAL_WRITE_BODY(&data, sizeof(float));
 }
 
 void Material::write(std::string const &name, std::vector<float> const &data) {
-	MATERIAL_WRITE_BODY(data.size() * sizeof(float));
+	MATERIAL_WRITE_BODY(data.data(), data.size() * sizeof(float));
 }
 
 void Material::write(std::string const &name, Vec2 const &data) {
-	MATERIAL_WRITE_BODY(sizeof(Vec2));
+	MATERIAL_WRITE_BODY(&data, sizeof(Vec2));
 }
 
 void Material::write(std::string const &name, std::vector<Vec2> const &data) {
-	MATERIAL_WRITE_BODY(data.size() * sizeof(Vec2));
+	MATERIAL_WRITE_BODY(data.data(), data.size() * sizeof(Vec2));
 }
 
 void Material::write(std::string const &name, Vec3 const &data) {
-	MATERIAL_WRITE_BODY(sizeof(Vec3));
+	MATERIAL_WRITE_BODY(&data, sizeof(Vec3));
 }
 
 void Material::write(std::string const &name, std::vector<Vec3> const &data) {
-	MATERIAL_WRITE_BODY(data.size() * sizeof(Vec3));
+	MATERIAL_WRITE_BODY(data.data(), data.size() * sizeof(Vec3));
 }
 
 void Material::write(std::string const &name, Vec4 const &data) {
-	MATERIAL_WRITE_BODY(sizeof(Vec4));
+	MATERIAL_WRITE_BODY(&data, sizeof(Vec4));
 }
 
 void Material::write(std::string const &name, std::vector<Vec4> const &data) {
-	MATERIAL_WRITE_BODY(data.size() * sizeof(Vec4));
+	MATERIAL_WRITE_BODY(data.data(), data.size() * sizeof(Vec4));
 }
 
 void Material::write(std::string const &name, Mat4 const &data) {
-	MATERIAL_WRITE_BODY(sizeof(Mat4));
+	MATERIAL_WRITE_BODY(&data, sizeof(Mat4));
 }
 
 void Material::write(std::string const &name, std::vector<Mat4> const &data) {
-	MATERIAL_WRITE_BODY(data.size() * sizeof(Mat4));
+	MATERIAL_WRITE_BODY(data.data(), data.size() * sizeof(Mat4));
 }
 
 bool Material::affect(std::string const &name, Ref<TextureBuffer> texRef) {
@@ -258,68 +258,68 @@ Material *MaterialInstance::getBaseMaterial() {
 	return material;
 }
 
-#define MATERIAL_INSTANCE_WRITE_BODY(X) \
+#define MATERIAL_INSTANCE_WRITE_BODY(P, X) \
 auto const &uniformsNamesToIndex = material->uniformsNamesToIndex; \
 auto it = uniformsNamesToIndex.find(name); \
 if(it == uniformsNamesToIndex.end()) return; \
 std::size_t index = it->second; \
 overridedUniforms[index] = true; \
-writeRaw(material->uniformDescriptors[index], &data, X);
+writeRaw(material->uniformDescriptors[index], P, X);
 
 void MaterialInstance::write(std::string const &name, int data) {
-	MATERIAL_INSTANCE_WRITE_BODY(sizeof(int));
+	MATERIAL_INSTANCE_WRITE_BODY(&data, sizeof(int));
 }
 
 void MaterialInstance::write(std::string const &name, std::vector<int> const &data) {
-	MATERIAL_INSTANCE_WRITE_BODY(data.size() * sizeof(int));
+	MATERIAL_INSTANCE_WRITE_BODY(data.data(), data.size() * sizeof(int));
 }
 
 void MaterialInstance::write(std::string const &name, unsigned int data) {
-	MATERIAL_INSTANCE_WRITE_BODY(sizeof(unsigned int));
+	MATERIAL_INSTANCE_WRITE_BODY(&data, sizeof(unsigned int));
 }
 
 void MaterialInstance::write(std::string const &name, std::vector<unsigned int> const &data) {
-	MATERIAL_INSTANCE_WRITE_BODY(data.size() * sizeof(unsigned int));
+	MATERIAL_INSTANCE_WRITE_BODY(data.data(), data.size() * sizeof(unsigned int));
 }
 
 void MaterialInstance::write(std::string const &name, float data) {
-	MATERIAL_INSTANCE_WRITE_BODY(sizeof(float));
+	MATERIAL_INSTANCE_WRITE_BODY(&data, sizeof(float));
 }
 
 void MaterialInstance::write(std::string const &name, std::vector<float> const &data) {
-	MATERIAL_INSTANCE_WRITE_BODY(data.size() * sizeof(float));
+	MATERIAL_INSTANCE_WRITE_BODY(data.data(), data.size() * sizeof(float));
 }
 
 void MaterialInstance::write(std::string const &name, Vec2 const &data) {
-	MATERIAL_INSTANCE_WRITE_BODY(sizeof(Vec2));
+	MATERIAL_INSTANCE_WRITE_BODY(&data, sizeof(Vec2));
 }
 
 void MaterialInstance::write(std::string const &name, std::vector<Vec2> const &data) {
-	MATERIAL_INSTANCE_WRITE_BODY(data.size() * sizeof(Vec2));
+	MATERIAL_INSTANCE_WRITE_BODY(data.data(), data.size() * sizeof(Vec2));
 }
 
 void MaterialInstance::write(std::string const &name, Vec3 const &data) {
-	MATERIAL_INSTANCE_WRITE_BODY(sizeof(Vec3));
+	MATERIAL_INSTANCE_WRITE_BODY(&data, sizeof(Vec3));
 }
 
 void MaterialInstance::write(std::string const &name, std::vector<Vec3> const &data) {
-	MATERIAL_INSTANCE_WRITE_BODY(data.size() * sizeof(Vec3));
+	MATERIAL_INSTANCE_WRITE_BODY(data.data(), data.size() * sizeof(Vec3));
 }
 
 void MaterialInstance::write(std::string const &name, Vec4 const &data) {
-	MATERIAL_INSTANCE_WRITE_BODY(sizeof(Vec4));
+	MATERIAL_INSTANCE_WRITE_BODY(&data, sizeof(Vec4));
 }
 
 void MaterialInstance::write(std::string const &name, std::vector<Vec4> const &data) {
-	MATERIAL_INSTANCE_WRITE_BODY(data.size() * sizeof(Vec4));
+	MATERIAL_INSTANCE_WRITE_BODY(data.data(), data.size() * sizeof(Vec4));
 }
 
 void MaterialInstance::write(std::string const &name, Mat4 const &data) {
-	MATERIAL_INSTANCE_WRITE_BODY(sizeof(Mat4));
+	MATERIAL_INSTANCE_WRITE_BODY(&data, sizeof(Mat4));
 }
 
 void MaterialInstance::write(std::string const &name, std::vector<Mat4> const &data) {
-	MATERIAL_INSTANCE_WRITE_BODY(data.size() * sizeof(Mat4));
+	MATERIAL_INSTANCE_WRITE_BODY(data.data(), data.size() * sizeof(Mat4));
 }
 
 bool MaterialInstance::affect(std::string const &name, Ref<TextureBuffer> texRef) {

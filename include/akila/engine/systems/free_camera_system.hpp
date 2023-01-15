@@ -9,6 +9,7 @@ namespace akila {
 
 		void update() override;
 		CameraData const *getCameraData() override;
+		Vec3 const &getDirection() override;
 
 	protected:
 		void onResize(IVec2 const &size) override;

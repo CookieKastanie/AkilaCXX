@@ -15,10 +15,12 @@ namespace akila {
 
 		void rotate(Quat const &r);
 
+		void setPosition(Vec3 const &vec);
 		void setRotationZYX(Vec3 const &r);
-
 		void setScale(float s);
 		void setScale(Vec3 const &s);
+
+		Vec3 const &getPosition();
 
 		Mat4 const &calcMatrix();
 		Mat4 const &calcMatrixFromOrigin(Mat4 const &o);
