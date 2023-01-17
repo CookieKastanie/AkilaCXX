@@ -58,7 +58,8 @@ add_library(akila STATIC
 	"src/engine/systems/free_camera_system.cpp"
 	"src/engine/layers/debug_layer.cpp"
 	"src/engine/layers/debug_timings.cpp"
-	"src/engine/systems/fast3d_render_system.cpp")
+	"src/engine/systems/fast3d_render_system.cpp"
+	"src/engine/systems/scene_system.cpp")
 
 target_include_directories(akila PRIVATE "include")
 

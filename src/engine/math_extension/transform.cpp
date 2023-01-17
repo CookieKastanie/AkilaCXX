@@ -3,9 +3,11 @@
 using namespace akila;
 
 Transform::Transform():
-	position{0, 0, 0}, rotation{1, 0, 0, 0}, scale{1, 1, 1},
-	matrix{1} {
-
+	position{0.f},
+	rotation{1.f, 0.f, 0.f, 0.f},
+	scale{1.f},
+	matrix{1.f} {
+	
 }
 
 void Transform::translate(Vec3 const &vec) {

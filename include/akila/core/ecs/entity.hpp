@@ -13,18 +13,18 @@ namespace akila {
 		Entity(): id{internal::INVALID_ENTITY_ID} {};
 
 		template<typename T>
-		T &addComponent(T const &data = T{}) const {
+		T &addComponent(T const &data = T{}) {
 			internal::Coordinator::addComponentToEntity<T>(id, data);
 			return internal::Coordinator::getEntityComponent<T>(id);
 		}
 
 		template<typename T>
-		T &getComponent() const {
+		T &getComponent() {
 			return internal::Coordinator::getEntityComponent<T>(id);
 		}
 
 		template<typename T>
-		void removeComponent() const {
+		void removeComponent() {
 			internal::Coordinator::removeComponentFromEntity<T>(id);
 		}
 
@@ -39,6 +39,10 @@ namespace akila {
 
 		operator internal::EntityId() const {
 			return id;
+		}
+
+		bool operator==(Entity other) const {
+			return id == other.id;
 		}
 
 	private:
