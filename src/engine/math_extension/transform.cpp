@@ -15,15 +15,15 @@ void Transform::translate(Vec3 const &vec) {
 }
 
 void Transform::rotateX(float a) {
-	rotation *= angleAxis(a, Vec3{1, 0, 0});
+	rotation *= angleAxis(a, LEFT_VECTOR);
 }
 
 void Transform::rotateY(float a) {
-	rotation *= angleAxis(a, Vec3{0, 1, 0});
+	rotation *= angleAxis(a, UP_VECTOR);
 }
 
 void Transform::rotateZ(float a) {
-	rotation *=  angleAxis(a, Vec3{0, 0, 1});
+	rotation *=  angleAxis(a, FORWARD_VECTOR);
 }
 
 void Transform::rotate(Quat const &r) {
@@ -35,7 +35,7 @@ void Transform::setPosition(Vec3 const &vec) {
 }
 
 void Transform::setRotationZYX(Vec3 const &r) {
-	rotation = {1, 0, 0, 0};
+	rotation = {1.f, 0.f, 0.f, 0.f};
 	rotateZ(r.z);
 	rotateY(r.y);
 	rotateX(r.x);
@@ -61,7 +61,9 @@ Mat4 const &Transform::calcMatrix() {
 	matrix[3].z = position.z; // affectation direct,
 	// car une rotation n'a pas de translate de base
 
-	matrix = akila::scale(matrix, scale);
+	matrix[0] *= scale[0];
+	matrix[1] *= scale[1];
+	matrix[2] *= scale[2];
 
 	return matrix;
 }

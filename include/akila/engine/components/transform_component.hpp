@@ -6,30 +6,45 @@
 #include "akila/engine/containers/small_vector.hpp"
 
 namespace akila {
-	class TransformComponent: public Transform {
+	class TransformComponent {
 	public:
 		TransformComponent();
-		void savePrevious();
-		Mat4 const &calcMatrixMix(float t = Time::mix);
 
-		bool isRoot();
+		Vec3 &position();
+		Quat &rotation();
+		Vec3 &scale();
+
+		void rotateX(float a);
+		void rotateY(float a);
+		void rotateZ(float a);
+
+		Vec3 const &getPosition() const;
+		Quat const &getRotation() const;
+		Vec3 const &getScale() const;
+
+		bool hasParent();
 		Entity getParent();
-		std::size_t getChildrenCount();
+		std::size_t getChildCount();
 		Entity getChild(std::size_t index);
 
-	private:
-		Vec3 prevPosition;
-		Quat prevRotation;
-		Vec3 prevScale;
+		Mat4 const &getWorldMatrix();
 
-		friend class TransformComponentParenting;
+	private:
+		friend class SceneSystem;
+
+		Transform local;
+
+		Vec3 prevLocalPosition;
+		Quat prevLocalRotation;
+		Vec3 prevLocalScale;
+
+		Mat4 worldMatrix;
+
 		Entity parent;
 		SmallVector<Entity, 8> children;
-	};
 
-	class TransformComponentParenting {
-	public:
-		static void addChild(Entity perent, Entity child);
-		static void removeChild(Entity perent, Entity child);
+		void savePrevious();
+		Mat4 const &calcMatrixMix(float t = Time::mix);
+		Mat4 const &calcMatrixMixFrom(Mat4 const & origin, float t = Time::mix);
 	};
 }

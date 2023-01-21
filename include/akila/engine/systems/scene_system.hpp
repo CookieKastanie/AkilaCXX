@@ -8,10 +8,18 @@ namespace akila {
 	public:
 		SceneSystem();
 
-		void update();
+		void updateTick();
+		void updateFrame();
+
+		void addChild(Entity parent, Entity child);
+		void removeChild(Entity parent, Entity child);
 
 	protected:
 		void onAdd(Entity entity) override;
 		void onRemove(Entity entity) override;
+
+	private:
+		std::vector<Entity> roots;
+		void recursiveTraverTreeCalcMatrixMix(Entity e, Mat4 const &origin);
 	};
 }

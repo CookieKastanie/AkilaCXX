@@ -63,6 +63,9 @@
 #include "akila/engine/layers/scene_layer.hpp"
 #include "akila/engine/layers/debug_layer.hpp"
 
+#include "akila/engine/components/transform_component.hpp"
+#include "akila/engine/components/mesh_component.hpp"
+
 #include "akila/engine/systems/camera_system.hpp"
 #include "akila/engine/systems/free_camera_system.hpp"
 #include "akila/engine/systems/render_system.hpp"

@@ -10,6 +10,7 @@ using namespace akila;
 TextureBuffer::Format stringToFormat(std::string const &str) {
 	if(str == "DEPTH_COMPONENT") return TextureBuffer::Format::DEPTH_COMPONENT;
 	if(str == "DEPTH_STENCIL") return TextureBuffer::Format::DEPTH_STENCIL;
+
 	if(str == "RED") return TextureBuffer::Format::RED;
 	if(str == "RG") return TextureBuffer::Format::RG;
 	if(str == "RGBA") return TextureBuffer::Format::RGBA;
@@ -17,6 +18,13 @@ TextureBuffer::Format stringToFormat(std::string const &str) {
 	if(str == "SRGB_ALPHA") return TextureBuffer::Format::SRGB_ALPHA;
 	if(str == "RGB16F") return TextureBuffer::Format::RGB16F;
 	if(str == "RGBA16F") return TextureBuffer::Format::RGBA16F;
+
+	if(str == "COMPRESSED_RED") return TextureBuffer::Format::COMPRESSED_RED;
+	if(str == "COMPRESSED_RG") return TextureBuffer::Format::COMPRESSED_RG;
+	if(str == "COMPRESSED_RGB") return TextureBuffer::Format::COMPRESSED_RGB;
+	if(str == "COMPRESSED_RGBA") return TextureBuffer::Format::COMPRESSED_RGBA;
+	if(str == "COMPRESSED_SRGB") return TextureBuffer::Format::COMPRESSED_SRGB;
+	if(str == "COMPRESSED_SRGB_ALPHA") return TextureBuffer::Format::COMPRESSED_SRGB_ALPHA;
 
 	//default
 	return TextureBuffer::Format::RGB;

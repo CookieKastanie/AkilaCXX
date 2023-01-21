@@ -18,6 +18,13 @@ void AudioLoader::onEntry(JSON json, LoaderCallback cb) {
 
 	std::string name = json["name"];
 	std::string path = json["path"];
+	
+	// TODO
+	//bool streamMode = false;
+	//if(json["stream"].is_boolean()) {
+	//	streamMode = json["stream"];
+	//}
+	
 
 	auto audio = Resources::create<AudioSource>(name);
 	if(audio->decodeFile(FileSystem::resources(path)) == false) {

@@ -32,7 +32,7 @@ void Fast3dRenderSystem::colorPass(CameraData const *cameraData) {
 		auto &transform = entity.getComponent<TransformComponent>();
 		auto &model = entity.getComponent<MeshComponent>();
 
-		model.material.getBaseMaterial()->sendReserved("u_modelMatrix", transform.calcMatrixMix());
+		model.material.getBaseMaterial()->sendReserved("u_modelMatrix", transform.getWorldMatrix());
 		model.material.send();
 		model.mesh->draw();
 	}

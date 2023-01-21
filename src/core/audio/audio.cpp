@@ -153,8 +153,8 @@ Audio::KeepedSound *Audio::createKeepedSound(std::string const &path) {
 
 	ma_uint32 const flags =
 		MA_RESOURCE_MANAGER_DATA_SOURCE_FLAG_DECODE |
-		MA_RESOURCE_MANAGER_DATA_SOURCE_FLAG_ASYNC |
-		MA_RESOURCE_MANAGER_DATA_SOURCE_FLAG_STREAM;
+		MA_RESOURCE_MANAGER_DATA_SOURCE_FLAG_ASYNC;// |
+		//MA_RESOURCE_MANAGER_DATA_SOURCE_FLAG_STREAM;
 
 	ma_result const result = ma_sound_init_from_file(
 		&Audio::engine, path.c_str(),
@@ -276,6 +276,9 @@ void Audio::detach(class AudioEmitter const &emitter) {
 void Audio::setListenerPositionDirection(Vec3 const &pos, Vec3 const &dir) {
 	ma_engine_listener_set_position(&engine, 0, pos.x, pos.y, pos.z);
 	ma_engine_listener_set_direction(&engine, 0, dir.x, dir.y, dir.z);
+
+	// TODO
+	//ma_engine_listener_set_world_up(&engine, 0, 0.f, 1.f, 0.f);
 }
 
 void Audio::checkDetachedSounds() {

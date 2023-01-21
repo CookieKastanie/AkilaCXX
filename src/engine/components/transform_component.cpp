@@ -3,38 +3,53 @@
 using namespace akila;
 
 TransformComponent::TransformComponent():
-	Transform{},
-	prevPosition{0.f},
-	prevRotation{1.f, 0.f, 0.f, 0.f},
-	prevScale{1.f},
+	local{},
+	prevLocalPosition{0.f},
+	prevLocalRotation{1.f, 0.f, 0.f, 0.f},
+	prevLocalScale{1.f},
+	worldMatrix{1.f},
 	parent{},
 	children{} {
 
 }
 
-void TransformComponent::savePrevious() {
-	prevPosition = position;
-	prevRotation = rotation;
-	prevScale = scale;
+Vec3 &TransformComponent::position() {
+	return local.position;
 }
 
-Mat4 const &TransformComponent::calcMatrixMix(float t) {
-	Vec3 lerpedPos = mix(prevPosition, position, t);
-	Quat lerpedRot = slerp(prevRotation, rotation, t);
-	Vec3 lerpedSca = mix(prevScale, scale, t);
-
-	matrix = toMat4(lerpedRot);
-
-	matrix[3].x = lerpedPos.x;
-	matrix[3].y = lerpedPos.y;
-	matrix[3].z = lerpedPos.z;
-
-	matrix = akila::scale(matrix, lerpedSca);
-
-	return matrix;
+Quat &TransformComponent::rotation() {
+	return local.rotation;
 }
 
-bool TransformComponent::isRoot() {
+Vec3 &TransformComponent::scale() {
+	return local.scale;
+}
+
+void TransformComponent::rotateX(float a) {
+	local.rotateX(a);
+}
+
+void TransformComponent::rotateY(float a) {
+	local.rotateY(a);
+}
+
+void TransformComponent::rotateZ(float a) {
+	local.rotateZ(a);
+}
+
+Vec3 const &TransformComponent::getPosition() const {
+	return local.position;
+}
+
+Quat const &TransformComponent::getRotation() const {
+	return local.rotation;
+}
+
+Vec3 const &TransformComponent::getScale() const {
+	return local.scale;
+}
+
+bool TransformComponent::hasParent() {
 	return parent.isValid() == false;
 }
 
@@ -42,7 +57,7 @@ Entity TransformComponent::getParent() {
 	return parent;
 }
 
-std::size_t TransformComponent::getChildrenCount() {
+std::size_t TransformComponent::getChildCount() {
 	return children.size();
 }
 
@@ -50,29 +65,35 @@ Entity TransformComponent::getChild(std::size_t index) {
 	return children[index];
 }
 
-void TransformComponentParenting::addChild(Entity perent, Entity child) {
-	if(perent.hasComponent<TransformComponent>() == false) return;
-	if(child.hasComponent<TransformComponent>() == false) return;
-
-	auto &ta = perent.getComponent<TransformComponent>();
-	auto &tb = child.getComponent<TransformComponent>();
-
-	ta.children.push_back(child);
-	tb.parent = perent;
+void TransformComponent::savePrevious() {
+	prevLocalPosition = local.position;
+	prevLocalRotation = local.rotation;
+	prevLocalScale = local.scale;
 }
 
-void TransformComponentParenting::removeChild(Entity perent, Entity child) {
-	if(perent.hasComponent<TransformComponent>() == false) return;
-	if(child.hasComponent<TransformComponent>() == false) return;
+Mat4 const &TransformComponent::calcMatrixMix(float t) {
+	Vec3 lerpedPos = mix(prevLocalPosition, local.position, t);
+	Quat lerpedRot = slerp(prevLocalRotation, local.rotation, t);
+	Vec3 lerpedSca = mix(prevLocalScale, local.scale, t);
 
-	auto &ta = perent.getComponent<TransformComponent>();
-	auto &tb = child.getComponent<TransformComponent>();
+	worldMatrix = toMat4(lerpedRot);
 
-	for(auto it = ta.children.begin(); it != ta.children.end(); ++it) {
-		if(*it == child) {
-			ta.children.erase(it);
-			tb.parent = Entity{};
-			break;
-		}
-	}
+	worldMatrix[3].x = lerpedPos.x;
+	worldMatrix[3].y = lerpedPos.y;
+	worldMatrix[3].z = lerpedPos.z;
+
+	worldMatrix[0] *= lerpedSca[0];
+	worldMatrix[1] *= lerpedSca[1];
+	worldMatrix[2] *= lerpedSca[2];
+
+	return worldMatrix;
+}
+
+Mat4 const &TransformComponent::calcMatrixMixFrom(Mat4 const &origin, float t) {
+	worldMatrix = origin * calcMatrixMix(t);
+	return worldMatrix;
+}
+
+Mat4 const &TransformComponent::getWorldMatrix() {
+	return worldMatrix;
 }

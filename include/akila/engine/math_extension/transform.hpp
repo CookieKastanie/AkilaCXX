@@ -25,7 +25,6 @@ namespace akila {
 		Mat4 const &calcMatrix();
 		Mat4 const &calcMatrixFromOrigin(Mat4 const &o);
 
-	protected:
 		Vec3 position;
 		Quat rotation;
 		Vec3 scale;
