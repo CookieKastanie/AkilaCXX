@@ -22,10 +22,10 @@ namespace akila {
 		Quat const &getRotation() const;
 		Vec3 const &getScale() const;
 
-		bool hasParent();
-		Entity getParent();
-		std::size_t getChildCount();
-		Entity getChild(std::size_t index);
+		bool hasParent() const;
+		Entity getParent() const;
+		std::size_t getChildCount() const;
+		Entity getChild(std::size_t index) const;
 
 		Mat4 const &getWorldMatrix();
 

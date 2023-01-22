@@ -273,12 +273,22 @@ void Audio::detach(class AudioEmitter const &emitter) {
 	detach(&emitter);
 }
 
-void Audio::setListenerPositionDirection(Vec3 const &pos, Vec3 const &dir) {
-	ma_engine_listener_set_position(&engine, 0, pos.x, pos.y, pos.z);
-	ma_engine_listener_set_direction(&engine, 0, dir.x, dir.y, dir.z);
+void Audio::setVolume(float volume) {
+	ma_engine_set_volume(&engine, volume);
+}
 
-	// TODO
-	//ma_engine_listener_set_world_up(&engine, 0, 0.f, 1.f, 0.f);
+void Audio::setListenerAttitude(Vec3 const &position, Vec3 const &forward, Vec3 const &up) {
+	ma_engine_listener_set_position(&engine, 0, position.x, position.y, position.z);
+	ma_engine_listener_set_direction(&engine, 0, forward.x, forward.y, forward.z);
+	ma_engine_listener_set_world_up(&engine, 0, up.x, up.y, up.z);
+}
+
+void Audio::setListenerCone(float innerAngle, float outerAngle, float outerGain) {
+	ma_engine_listener_set_cone(&engine, 0, innerAngle, outerAngle, outerGain);
+}
+
+void Audio::setListenerVelocity(Vec3 const &velocity) {
+	ma_engine_listener_set_velocity(&engine, 0, velocity.x, velocity.y, velocity.z);
 }
 
 void Audio::checkDetachedSounds() {

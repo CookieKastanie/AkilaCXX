@@ -19,7 +19,19 @@ namespace akila {
 		static void detach(class AudioEmitter const *emitter);
 		static void detach(class AudioEmitter const &emitter);
 
-		static void setListenerPositionDirection(Vec3 const &pos, Vec3 const &dir);
+		static void setVolume(float volume);
+
+		static void setListenerAttitude(
+			Vec3 const &position,
+			Vec3 const &forward,
+			Vec3 const &up
+		);
+		static void setListenerCone(
+			float innerAngle = TWO_PI,
+			float outerAngle = TWO_PI,
+			float outerGain = 0.f
+		);
+		static void setListenerVelocity(Vec3 const &velocity);
 
 	private:
 		friend class Core;

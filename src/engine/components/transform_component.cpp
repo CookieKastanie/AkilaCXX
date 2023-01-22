@@ -49,19 +49,19 @@ Vec3 const &TransformComponent::getScale() const {
 	return local.scale;
 }
 
-bool TransformComponent::hasParent() {
-	return parent.isValid() == false;
+bool TransformComponent::hasParent() const {
+	return parent.isValid();
 }
 
-Entity TransformComponent::getParent() {
+Entity TransformComponent::getParent() const {
 	return parent;
 }
 
-std::size_t TransformComponent::getChildCount() {
+std::size_t TransformComponent::getChildCount() const {
 	return children.size();
 }
 
-Entity TransformComponent::getChild(std::size_t index) {
+Entity TransformComponent::getChild(std::size_t index) const {
 	return children[index];
 }
 

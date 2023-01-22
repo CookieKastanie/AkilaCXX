@@ -67,15 +67,19 @@ namespace akila {
 
 	constexpr float const PI = 3.14159265359f;
 	constexpr float const HALF_PI = 1.57079632679f;
+	constexpr float const TWO_PI = 6.28318530718f;
 	constexpr float const NATURAL_LOG_OF_2 = 0.69314718056f;
 	constexpr float const GOLDEN_RATIO = 1.61803398875f;
 
-	constexpr Vec3 const LEFT_VECTOR = Vec3{1.f, 0.f, 0.f};
-	constexpr Vec3 const RIGHT_VECTOR = Vec3{-1.f, 0.f, 0.f};
-	constexpr Vec3 const UP_VECTOR = Vec3{0.f, 1.f, 0.f};
-	constexpr Vec3 const FORWARD_VECTOR = Vec3{0.f, 0.f, 1.f};
+	constexpr Vec4 const LEFT_VECTOR =     Vec4{-1.f,  0.f,  0.f, 0.f};
+	constexpr Vec4 const RIGHT_VECTOR =    Vec4{ 1.f,  0.f,  0.f, 0.f};
+	constexpr Vec4 const UP_VECTOR =       Vec4{ 0.f,  1.f,  0.f, 0.f};
+	constexpr Vec4 const DOWN_VECTOR =     Vec4{ 0.f, -1.f,  0.f, 0.f};
+	constexpr Vec4 const FORWARD_VECTOR =  Vec4{ 0.f,  0.f, -1.f, 0.f};
+	constexpr Vec4 const BACKWARD_VECTOR = Vec4{ 0.f,  0.f,  1.f, 0.f};
 
-	inline float toRadians(float degree) { return degree * (PI / 180.f); }
+	inline float toRadians(float degrees) { return degrees * (PI / 180.f); }
+	inline float toDegrees(float radians) { return radians * (180.f / PI); }
 }
 
 std::ostream &operator<<(std::ostream &os, akila::Vec1 const &v);
