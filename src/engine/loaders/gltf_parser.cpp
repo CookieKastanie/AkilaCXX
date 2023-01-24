@@ -1,4 +1,5 @@
 #include "akila/engine/loaders/gltf_parser.hpp"
+#include "akila/core/resources/file_system.hpp"
 #include <fstream>
 
 using namespace akila;
@@ -32,12 +33,16 @@ int nameToComponentCount(std::string const &name) {
 	return 16; // MAT4
 }
 
-GlTFParser::GlTFParser(): invertTexcoord{true} {
+GlTFParser::GlTFParser(): invertTexcoord{true}, dumpJson{false} {
 
 }
 
 void GlTFParser::setInvertTexcoord(bool invert) {
 	invertTexcoord = invert;
+}
+
+void GlTFParser::setDumpJson(bool dump) {
+	dumpJson = dump;
 }
 
 std::vector<GlTF> const &GlTFParser::getResult() {
@@ -102,6 +107,12 @@ bool GlTFParser::loadFile(std::string const &path) {
 
 		raw.resize(chunkLength);
 		file.read(reinterpret_cast<char *>(raw.data()), chunkLength);
+	}
+
+	if(dumpJson) {
+		std::string fileName = path.substr(path.find_last_of("/") + 1, path.size());
+		std::ofstream dumpFile{FileSystem::userData(fileName + ".json")};
+		dumpFile << json.dump(4);
 	}
 
 	// parsing

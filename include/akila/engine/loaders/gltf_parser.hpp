@@ -41,6 +41,7 @@ namespace akila {
 		GlTFParser &operator=(GlTFParser const &other) = delete;
 
 		void setInvertTexcoord(bool invert);
+		void setDumpJson(bool dump);
 		bool loadFile(std::string const &path);
 		std::vector<GlTF> const &getResult();
 
@@ -48,6 +49,7 @@ namespace akila {
 		std::vector<std::uint8_t> raw;
 		std::vector<GlTF> result;
 		bool invertTexcoord;
+		bool dumpJson;
 
 		void positionSpecialCase(GlTF &mesh, JSON const &accessorJson);
 		void tangentSpecialCase(GlTF::Buffer &buffer);

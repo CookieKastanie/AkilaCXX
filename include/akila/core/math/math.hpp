@@ -62,6 +62,8 @@ namespace akila {
 	using glm::ortho;
 	using glm::lookAt;
 
+	using glm::identity;
+
 	using glm::to_string;
 
 

@@ -44,7 +44,7 @@ add_library(akila STATIC
 	"src/engine/tools/string_tools.cpp"
 	"src/engine/loaders/gltf_parser.cpp"
 	"src/engine/graphics/static_mesh.cpp"
-	"src/engine/loaders/static_mesh_parser.cpp"
+	"src/engine/loaders/static_mesh_loader.cpp"
 	"src/engine/loaders/bitmap_loader.cpp"
 	"src/engine/loaders/texture_loader.cpp"
 	"src/engine/loaders/audio_loader.cpp"

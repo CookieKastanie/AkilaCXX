@@ -4,9 +4,9 @@ using namespace akila;
 
 Transform::Transform():
 	position{0.f},
-	rotation{1.f, 0.f, 0.f, 0.f},
+	rotation{identity<Quat>()},
 	scale{1.f},
-	matrix{1.f} {
+	matrix{identity<Mat4>()} {
 	
 }
 
@@ -35,7 +35,7 @@ void Transform::setPosition(Vec3 const &vec) {
 }
 
 void Transform::setRotationZYX(Vec3 const &r) {
-	rotation = {1.f, 0.f, 0.f, 0.f};
+	rotation = identity<Quat>();
 	rotateZ(r.z);
 	rotateY(r.y);
 	rotateX(r.x);

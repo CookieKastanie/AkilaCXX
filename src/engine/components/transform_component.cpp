@@ -5,9 +5,9 @@ using namespace akila;
 TransformComponent::TransformComponent():
 	local{},
 	prevLocalPosition{0.f},
-	prevLocalRotation{1.f, 0.f, 0.f, 0.f},
+	prevLocalRotation{identity<Quat>()},
 	prevLocalScale{1.f},
-	worldMatrix{1.f},
+	worldMatrix{identity<Mat4>()},
 	parent{},
 	children{} {
 
