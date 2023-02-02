@@ -65,9 +65,11 @@
 
 #include "akila/engine/components/transform_component.hpp"
 #include "akila/engine/components/mesh_component.hpp"
+#include "akila/engine/components/audio_component.hpp"
 
 #include "akila/engine/systems/camera_system.hpp"
 #include "akila/engine/systems/free_camera_system.hpp"
 #include "akila/engine/systems/render_system.hpp"
 #include "akila/engine/systems/fast3d_render_system.hpp"
 #include "akila/engine/systems/scene_system.hpp"
+#include "akila/engine/systems/audio_system.hpp"

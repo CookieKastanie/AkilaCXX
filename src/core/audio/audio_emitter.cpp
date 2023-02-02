@@ -45,15 +45,3 @@ void AudioEmitter::setSource(Ref<AudioSource> s) {
 	source = s;
 	sound = Audio::createInstancedSound(source->sound);
 }
-
-void AudioEmitter::play() {
-	ma_sound_start(&sound->maSound);
-}
-
-bool AudioEmitter::isFinished() {
-	return ma_sound_at_end(&sound->maSound) == MA_TRUE;
-}
-
-void AudioEmitter::setPosition(Vec3 const &p) {
-	ma_sound_set_position(&sound->maSound, p.x, p.y, p.z);
-}

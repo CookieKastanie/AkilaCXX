@@ -252,6 +252,10 @@ void Audio::detach(AudioSource const *source) {
 	checkDetachedSounds();
 	DetachedSound *sound = createDetachedSound(source->sound);
 	if(sound == nullptr) return;
+
+	float volume = ma_sound_get_volume(&source->sound->maSound);
+	ma_sound_set_volume(&sound->maSound, volume);
+
 	ma_sound_start(&sound->maSound);
 }
 
@@ -260,11 +264,23 @@ void Audio::detach(AudioEmitter const *emitter) {
 	DetachedSound *sound = createDetachedSound(emitter->source->sound);
 	if(sound == nullptr) return;
 
-	ma_vec3f pos = ma_sound_get_position(&emitter->sound->maSound);
-	ma_sound_set_position(&sound->maSound, pos.x, pos.y, pos.z);
+	ma_vec3f vec = ma_sound_get_position(&emitter->sound->maSound);
+	ma_sound_set_position(&sound->maSound, vec.x, vec.y, vec.z);
 
-	//ma_sound_set_max_distance(sound, 100);
-	//ma_sound_set_attenuation_model(sound, 10);
+	vec = ma_sound_get_direction(&emitter->sound->maSound);
+	ma_sound_set_position(&sound->maSound, vec.x, vec.y, vec.z);
+
+	vec.x = ma_sound_get_volume(&emitter->sound->maSound);
+	ma_sound_set_volume(&sound->maSound, vec.x);
+
+	ma_sound_get_cone(&emitter->sound->maSound, &vec.x, &vec.y, &vec.z);
+	ma_sound_set_cone(&sound->maSound, vec.x, vec.y, vec.z);
+
+	ma_attenuation_model model = ma_sound_get_attenuation_model(&emitter->sound->maSound);
+	ma_sound_set_attenuation_model(&sound->maSound, model);
+
+	vec.x = ma_sound_get_pitch(&emitter->sound->maSound);
+	ma_sound_set_pitch(&sound->maSound, vec.x);
 
 	ma_sound_start(&sound->maSound);
 }

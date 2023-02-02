@@ -21,6 +21,13 @@ namespace akila {
 
 		static void setVolume(float volume);
 
+		enum class AttenuationModel {
+			NONE = ma_attenuation_model_none,
+			INVERSE = ma_attenuation_model_inverse,
+			LINEAR = ma_attenuation_model_linear,
+			EXPONENTIAL = ma_attenuation_model_exponential
+		};
+
 		static void setListenerAttitude(
 			Vec3 const &position,
 			Vec3 const &forward,
