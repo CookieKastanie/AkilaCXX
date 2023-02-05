@@ -53,5 +53,6 @@ namespace akila {
 		friend class AudioSystem;
 
 		AudioEmitter emitter;
+		Vec3 lastWorldPosition;
 	};
 }

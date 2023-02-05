@@ -210,6 +210,7 @@ Audio::InstancedSound *Audio::createInstancedSound(KeepedSound *keepedSound) {
 	}
 
 	ma_sound_set_spatialization_enabled(&sound->maSound, true);
+	ma_sound_set_doppler_factor(&sound->maSound, 10.f);
 
 	return sound;
 }

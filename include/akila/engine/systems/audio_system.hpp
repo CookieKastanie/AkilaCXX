@@ -14,5 +14,8 @@ namespace akila {
 		void updateFrame(CameraData const *camera);
 
 		void detach(Entity e);
+
+	private:
+		Vec3 lastCameraPosition;
 	};
 }

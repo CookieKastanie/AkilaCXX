@@ -53,7 +53,7 @@ TextureBuffer::FilterMode stringToFilterMode(std::string const &str) {
 Texture2DLoader::Texture2DLoader(): Loader{"texture2d"} {}
 
 void Texture2DLoader::onEntry(JSON json, LoaderCallback cb) {
-	if(!json["name"].is_string()) {
+	if(json["name"].is_string() == false) {
 		cb.fail();
 		return;
 	}
@@ -66,11 +66,21 @@ void Texture2DLoader::onEntry(JSON json, LoaderCallback cb) {
 	}
 
 	TextureBuffer::Parameters params{};
-	if(json["wrapS"].is_string()) params.wrapS = stringToWrapMode(json["wrapS"]);
-	if(json["wrapT"].is_string()) params.wrapT = stringToWrapMode(json["wrapT"]);
-	if(json["wrapR"].is_string()) params.wrapR = stringToWrapMode(json["wrapR"]);
-	if(json["magFilter"].is_string()) params.magFilter = stringToFilterMode(json["magFilter"]);
-	if(json["minFilter"].is_string()) params.minFilter = stringToFilterMode(json["minFilter"]);
+	if(json["wrap_s"].is_string()) params.wrapS = stringToWrapMode(json["wrap_s"]);
+	if(json["wrap_t"].is_string()) params.wrapT = stringToWrapMode(json["wrap_t"]);
+	if(json["wrap_r"].is_string()) params.wrapR = stringToWrapMode(json["wrap_r"]);
+	if(json["mag_filter"].is_string()) params.magFilter = stringToFilterMode(json["mag_filter"]);
+	if(json["min_filter"].is_string()) params.minFilter = stringToFilterMode(json["min_filter"]);
+	if(json["border_color"].is_array()) {
+		JSON const &arr = json["border_color"];
+		for(std::size_t i = 0; i < min(arr.size(), static_cast<std::size_t>(4)); ++i) {
+			if(arr[i].is_number() == false) {
+				break;
+			}
+			
+			params.borderColor[i] = arr[i];
+		}
+	}
 
 	texture->setParameters(params);
 

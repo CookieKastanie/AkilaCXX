@@ -22,7 +22,7 @@ bool BitmapParser::loadFile(std::string const &path, int desiredChannelCount) {
 		stbi_image_free(raw);
 	}
 
-	bool isFloat = stbi_is_16_bit(path.c_str()) == 1;
+	bool isFloat = stbi_is_16_bit(path.c_str()) != 0;
 
 	if(isFloat) {
 		raw = stbi_load_16(path.c_str(), &result.width, &result.height, &result.channelCount, desiredChannelCount);
@@ -38,7 +38,7 @@ bool BitmapParser::loadFile(std::string const &path, int desiredChannelCount) {
 	}
 	
 	std::size_t cmpSize = isFloat ? sizeof(unsigned char) : sizeof(float);
-	result.byteCount = result.width * result.height * result.channelCount * cmpSize;
+	result.byteCount = cmpSize * result.width * result.height * result.channelCount;
 	result.isFloat = isFloat;
 
 	return true;
@@ -50,7 +50,7 @@ Bitmap const &BitmapParser::getResult() {
 
 
 
-//void write(std::string const &path, akila::TextureBuffer *texture, bool invertY) {
+//void writeFile(std::string const &path, akila::TextureBuffer *texture, bool invertY) {
 //	auto buffer = texture->getData();
 //	IVec2 size = texture->getSize();
 

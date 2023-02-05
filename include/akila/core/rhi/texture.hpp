@@ -93,7 +93,7 @@ namespace akila {
 				WrapMode wrapS = WrapMode::REPEAT,
 				WrapMode wrapT = WrapMode::REPEAT,
 				WrapMode wrapR = WrapMode::REPEAT,
-				Vec4 const &borderColor = {0, 0, 0, 1}
+				Vec4 const &borderColor = {0.f, 0.f, 0.f, 1.f}
 			);
 
 			FilterMode minFilter;
