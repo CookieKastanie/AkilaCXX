@@ -24,13 +24,13 @@ void StaticMeshLoader::onEntry(JSON json, LoaderCallback cb) {
 	Ptr<GlTFParser> parser = createPtr<GlTFParser>();
 	Ptr<bool> parserSuccess = createPtr<bool>(false);
 
-	if(json["invertTexcoordY"].is_boolean()) {
-		bool invert = json["invertTexcoordY"];
+	if(json["invert_texcoord_y"].is_boolean()) {
+		bool invert = json["invert_texcoord_y"];
 		parser->setInvertTexcoord(invert);
 	}
 
-	if(json["dumpJson"].is_boolean()) {
-		bool dumpJson = json["dumpJson"];
+	if(json["dump_json"].is_boolean()) {
+		bool dumpJson = json["dump_json"];
 		parser->setDumpJson(dumpJson);
 	}
 

@@ -128,58 +128,64 @@ bool GlTFParser::loadFile(std::string const &path) {
 	JSON const &accessorsJson = json["accessors"];
 
 	for(JSON const &meshJson : json["meshes"]) {
-		GlTF &mesh = result.emplace_back();
-		mesh.name = meshJson["name"];
+		for(std::size_t i = 0; i < meshJson["primitives"].size(); ++i) {
+			GlTF &mesh = result.emplace_back();
+			mesh.name = meshJson["name"];
 
-		for(auto const &attrJson : meshJson["primitives"][0]["attributes"].items()) {
-			std::string const &attrName = attrJson.key();
-			std::size_t accessorsIndex = attrJson.value();
-
-			Mesh::Attributes attribute = nameToAttribute(attrName);
-			GlTF::Buffer &buffer = mesh.attributes[attribute];
-			
-			JSON const &accessorJson = accessorsJson[accessorsIndex];
-			std::size_t bufferViewIndex = accessorJson["bufferView"];
-			JSON const &bufferViewJson = bufferViewsJson[bufferViewIndex];
-
-			buffer.count = accessorJson["count"];
-			buffer.componentTypeCount = nameToComponentCount(accessorJson["type"]);
-			buffer.componentType = accessorJson["componentType"];
-			buffer.byteCount = bufferViewJson["byteLength"];
-			buffer.data = raw.data() + static_cast<std::size_t>(bufferViewJson["byteOffset"]);
-
-			// check special cases
-			switch(attribute) {
-				case Mesh::Attributes::POSITION:
-					positionSpecialCase(mesh, accessorJson);
-					break;
-
-				case Mesh::Attributes::TANGENT:
-					tangentSpecialCase(buffer);
-					break;
-
-				case Mesh::Attributes::TEXCOORD_0:
-				case Mesh::Attributes::TEXCOORD_1:
-				case Mesh::Attributes::TEXCOORD_2:
-					texcoordSpecialCase(buffer);
-					break;
+			if(meshJson["primitives"].size() > 1) {
+				mesh.name += "_" + std::to_string(i);
 			}
-		}
 
-		if(meshJson["primitives"][0]["indices"].is_number()) {
-			std::size_t accessorsIndex = meshJson["primitives"][0]["indices"];
+			for(auto const &attrJson : meshJson["primitives"][i]["attributes"].items()) {
+				std::string const &attrName = attrJson.key();
+				std::size_t accessorsIndex = attrJson.value();
 
-			GlTF::Buffer &buffer = mesh.indices;
+				Mesh::Attributes attribute = nameToAttribute(attrName);
+				GlTF::Buffer &buffer = mesh.attributes[attribute];
 
-			JSON const &accessorJson = accessorsJson[accessorsIndex];
-			std::size_t bufferViewIndex = accessorJson["bufferView"];
-			JSON const &bufferViewJson = bufferViewsJson[bufferViewIndex];
+				JSON const &accessorJson = accessorsJson[accessorsIndex];
+				std::size_t bufferViewIndex = accessorJson["bufferView"];
+				JSON const &bufferViewJson = bufferViewsJson[bufferViewIndex];
 
-			buffer.count = accessorJson["count"];
-			buffer.componentTypeCount = nameToComponentCount(accessorJson["type"]);
-			buffer.componentType = accessorJson["componentType"];
-			buffer.byteCount = bufferViewJson["byteLength"];
-			buffer.data = raw.data() + static_cast<std::size_t>(bufferViewJson["byteOffset"]);
+				buffer.count = accessorJson["count"];
+				buffer.componentTypeCount = nameToComponentCount(accessorJson["type"]);
+				buffer.componentType = accessorJson["componentType"];
+				buffer.byteCount = bufferViewJson["byteLength"];
+				buffer.data = raw.data() + static_cast<std::size_t>(bufferViewJson["byteOffset"]);
+
+				// check special cases
+				switch(attribute) {
+					case Mesh::Attributes::POSITION:
+						positionSpecialCase(mesh, accessorJson);
+						break;
+
+					case Mesh::Attributes::TANGENT:
+						tangentSpecialCase(buffer);
+						break;
+
+					case Mesh::Attributes::TEXCOORD_0:
+					case Mesh::Attributes::TEXCOORD_1:
+					case Mesh::Attributes::TEXCOORD_2:
+						texcoordSpecialCase(buffer);
+						break;
+				}
+			}
+
+			if(meshJson["primitives"][i]["indices"].is_number()) {
+				std::size_t accessorsIndex = meshJson["primitives"][i]["indices"];
+
+				GlTF::Buffer &buffer = mesh.indices;
+
+				JSON const &accessorJson = accessorsJson[accessorsIndex];
+				std::size_t bufferViewIndex = accessorJson["bufferView"];
+				JSON const &bufferViewJson = bufferViewsJson[bufferViewIndex];
+
+				buffer.count = accessorJson["count"];
+				buffer.componentTypeCount = nameToComponentCount(accessorJson["type"]);
+				buffer.componentType = accessorJson["componentType"];
+				buffer.byteCount = bufferViewJson["byteLength"];
+				buffer.data = raw.data() + static_cast<std::size_t>(bufferViewJson["byteOffset"]);
+			}
 		}
 	}
 

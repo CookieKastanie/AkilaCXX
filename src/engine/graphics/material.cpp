@@ -244,7 +244,7 @@ void MaterialInstance::send() {
 	}
 
 	for(std::size_t i = 0; i < overridedTextures.size(); ++i) {
-		if(overridedTextures[i] != 0) {
+		if(overridedTextures[i]) {
 			TextureBinding const &tb = textures[i];
 			tb.textureBuffer->bind(tb.unit);
 		} else {
@@ -331,6 +331,8 @@ bool MaterialInstance::affect(std::string const &name, Ref<TextureBuffer> texRef
 	std::size_t index = it->second;
 	textures[index].textureBuffer = texRef;
 	overridedTextures[index] = true;
+
+	textures[index].unit = material->textures[index].unit;
 
 	return true;
 }

@@ -43,7 +43,7 @@ layout(std140, binding = u_camera_loc) uniform camera_ubo {
 };
 
 vec4 lit(vec3 color) {
-	vec3 N = normalize(v_normal);
+	vec3 N = normalize(v_normal) * (gl_FrontFacing ? 1. : -1.);
 	vec3 V = normalize(u_camera.position - v_worldPos);
 
 	float d = 1.0 - dot(N, V);
