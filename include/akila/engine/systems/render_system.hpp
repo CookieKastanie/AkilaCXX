@@ -10,6 +10,13 @@ namespace akila {
 	public:
 		RenderSystem();
 
-		virtual void colorPass(CameraData const *cameraData) = 0;
+		virtual void updateFrame(CameraData const *cameraData) = 0;
+	};
+
+	class DummyRenderSystem: public RenderSystem {
+	public:
+		DummyRenderSystem();
+
+		void updateFrame(CameraData const *cameraData) override;
 	};
 }

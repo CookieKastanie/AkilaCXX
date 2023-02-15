@@ -12,7 +12,7 @@ namespace akila {
 
 		Fast3dRenderSystem();
 
-		void colorPass(CameraData const *cameraData) override;
+		void updateFrame(CameraData const *cameraData) override;
 
 	private:
 		UBO cameraBuffer;

@@ -24,7 +24,7 @@ Fast3dRenderSystem::Fast3dRenderSystem():
 
 }
 
-void Fast3dRenderSystem::colorPass(CameraData const *cameraData) {
+void Fast3dRenderSystem::updateFrame(CameraData const *cameraData) {
 	Renderer::bindDefaultFrameBuffer();
 	Renderer::clear();
 

@@ -20,4 +20,21 @@ namespace akila {
 
 		virtual void onResize(IVec2 const &size) = 0;
 	};
+
+	class DummyCameraSystem: public CameraSystem {
+	public:
+		DummyCameraSystem();
+		virtual ~DummyCameraSystem() = default;
+
+		void update() override;
+
+		CameraData const *getCameraData() override;
+		Vec3 const &getDirection() override;
+
+	protected:
+		void onResize(IVec2 const &size) override;
+
+	private:
+		CameraData cameraData;
+	};
 }

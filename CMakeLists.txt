@@ -61,7 +61,8 @@ add_library(akila STATIC
 	"src/engine/systems/fast3d_render_system.cpp"
 	"src/engine/systems/scene_system.cpp"
 	"src/engine/components/audio_component.cpp"
-	"src/engine/systems/audio_system.cpp")
+	"src/engine/systems/audio_system.cpp"
+	"src/engine/layers/scene_layer.cpp")
 
 target_include_directories(akila PRIVATE "include")
 
