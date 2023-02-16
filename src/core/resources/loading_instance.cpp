@@ -18,17 +18,16 @@ void LoadingInstance::start() {
 	// concatenation et verification des json
 	for(std::string const &path : paths) {
 		try {
-			JSON jsonFile;
-			std::ifstream{FileSystem::resources(path)} >> jsonFile;
-			
+			JSON jsonFile = JSON::parse(std::ifstream{FileSystem::resources(path)}, nullptr, true, true);
+
 			if(!jsonFile.is_object()) return;
 
 			for(auto &item : jsonFile.items()) {
 				auto &value = item.value();
-				if(!value.is_array()) continue;
+				if(value.is_array() == false) continue;
 
 				auto &arr = completJSON[item.key()];
-				if(!arr.is_array()) arr = JSON::array();
+				if(arr.is_array() == false) arr = JSON::array();
 				count += value.size();
 				arr.insert(arr.end(), value.begin(), value.end());
 			}
@@ -50,7 +49,7 @@ void LoadingInstance::start() {
 			}
 		}
 
-		if(!found) {
+		if(found == false) {
 			std::cerr << "Missing loader for " << json.key() << std::endl;
 			count -= json.value().size() - 1;
 			countDown();
@@ -60,7 +59,7 @@ void LoadingInstance::start() {
 	// appelle des loaders dans l'ordre
 	for(auto &loader : Resources::loaders) {
 		std::string const &listName = loader->getListName();
-		if(!completJSON[listName].is_array()) continue;
+		if(completJSON[listName].is_array() == false) continue;
 
 		for(JSON &value : completJSON[listName]) {
 			loader->onEntry(value, loaderCB);

@@ -8,5 +8,7 @@
 !src/**
 !libs/**
 
+!doc/**
+
 !CmakeLists.txt
 !README.md
