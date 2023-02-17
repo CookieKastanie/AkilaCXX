@@ -1,2 +1,14 @@
-out
-.vs
+*
+!*/
+
+!.gitattibutes
+!.gitignore
+
+!include/**
+!src/**
+!libs/**
+
+!doc/**
+
+!CmakeLists.txt
+!README.md
