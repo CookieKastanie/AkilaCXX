@@ -68,29 +68,29 @@ target_include_directories(akila PRIVATE "include")
 
 target_compile_features(akila PRIVATE cxx_std_17)
 
-add_subdirectory(libs/glm)
+add_subdirectory(lib/glm)
 target_link_libraries(akila PUBLIC glm)
 
-add_subdirectory(libs/glad)
+add_subdirectory(lib/glad)
 target_link_libraries(akila PUBLIC glad)
 
-add_subdirectory(libs/glfw)
+add_subdirectory(lib/glfw)
 target_link_libraries(akila PUBLIC glfw)
 
-add_subdirectory(libs/imgui-docking)
+add_subdirectory(lib/imgui-docking)
 target_link_libraries(akila PUBLIC imgui)
 
-add_subdirectory(libs/json-develop)
+add_subdirectory(lib/json-develop)
 target_link_libraries(akila PUBLIC nlohmann_json)
 
-add_subdirectory(libs/stbimage)
+add_subdirectory(lib/stbimage)
 target_link_libraries(akila PUBLIC stbimage)
 
-add_subdirectory(libs/miniaudio)
+add_subdirectory(lib/miniaudio)
 target_link_libraries(akila PUBLIC miniaudio)
 
-add_subdirectory(libs/minicoro)
+add_subdirectory(lib/minicoro)
 target_link_libraries(akila PUBLIC minicoro)
 
-add_subdirectory(libs/llvm)
+add_subdirectory(lib/llvm)
 target_link_libraries(akila PUBLIC llvm)
