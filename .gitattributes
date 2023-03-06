@@ -5,7 +5,6 @@
 .gitignore text
 .gitconfig text
 .gitmodules text
-libs/** linguist-vendored
 
 ##### Windows
 *.bat text eol=crlf
