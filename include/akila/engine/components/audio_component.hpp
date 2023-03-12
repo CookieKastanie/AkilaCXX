@@ -24,7 +24,6 @@ namespace akila {
 			return emitter.isPlaying();
 		}
 
-
 		bool isFinished() {
 			return emitter.isFinished();
 		}

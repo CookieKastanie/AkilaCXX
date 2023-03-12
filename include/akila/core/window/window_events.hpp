@@ -44,10 +44,13 @@ namespace akila {
 			static void scrollCallback(GLFWwindow *window, double xoffset, double yoffset);
 
 			struct MouseData {
-				Vec2 lastPosition;
-				Vec2 position;
-				Vec2 velocity;
-				Vec2 scrollVelocity;
+				Vec2 lastPosition{0.f};
+				Vec2 position{0.f};
+				Vec2 velocity{0.f};
+
+				Vec2 lastScrollPosition{0.f};
+				Vec2 scrollPosition{0.f};
+				Vec2 scrollVelocity{0.f};
 
 				void resetVels();
 			};

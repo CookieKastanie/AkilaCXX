@@ -8,7 +8,8 @@ AudioSystem::AudioSystem():
 
 }
 
-void AudioSystem::updateTick() {
+void AudioSystem::updateFrame(CameraData const *camera) {
+	// update entities
 	for(Entity e : entities) {
 		auto &a = e.getComponent<AudioComponent>();
 		if(a.isPlaying() == false) {
@@ -27,9 +28,8 @@ void AudioSystem::updateTick() {
 		a.emitter.setDirection(world * FORWARD_VECTOR);
 		a.emitter.setVelocity(velocity);
 	}
-}
 
-void AudioSystem::updateFrame(CameraData const *camera) {
+	// update camera
 	Mat4 const &camMat = inverse(camera->view);
 	Vec3 const velocity = camera->position - lastCameraPosition;
 	lastCameraPosition = camera->position;

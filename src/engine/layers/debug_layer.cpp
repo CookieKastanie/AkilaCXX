@@ -147,7 +147,7 @@ DebugLayer::DebugLayer(): show{false}, tabIndex { 0 } {
 
 int DebugLayer::updateMeanFPS() {
 	if(fpsQueue.size() == 64) fpsQueue.pop_front();
-	fpsQueue.push_back(1.f / Time::delta);
+	fpsQueue.push_back(1.f / Time::delta());
 
 	float mean = 0;
 	for(auto v : fpsQueue) mean += v;

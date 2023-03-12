@@ -309,7 +309,7 @@ void Audio::setListenerVelocity(Vec3 const &velocity) {
 }
 
 void Audio::checkDetachedSounds() {
-	float const now = Time::now;
+	float const now = Time::now();
 	float const delta = .1f;
 	if(lastCheck + delta > now) return;
 

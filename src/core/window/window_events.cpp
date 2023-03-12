@@ -102,12 +102,20 @@ void WindowEvents::process(unsigned int updateCount) {
 	frameMouse.lastPosition = frameMouse.position;
 	frameMouse.position = accumulatedMouse.position;
 	frameMouse.velocity = accumulatedMouse.velocity;
+
+	frameMouse.lastScrollPosition = frameMouse.position;
+	frameMouse.scrollPosition += accumulatedMouse.scrollVelocity;
 	frameMouse.scrollVelocity = accumulatedMouse.scrollVelocity;
 
-	float const delta = 1.f / updateCount;
-	interpoledMouse.position = frameMouse.lastPosition;
-	interpoledMouse.velocity = accumulatedMouse.velocity * delta;
-	interpoledMouse.scrollVelocity = accumulatedMouse.scrollVelocity * delta;
+	if(updateCount > 0) {
+		float const delta = 1.f / updateCount;
+
+		interpoledMouse.lastPosition = interpoledMouse.position;
+		interpoledMouse.velocity = (frameMouse.position - interpoledMouse.lastPosition) * delta;
+
+		interpoledMouse.lastScrollPosition = interpoledMouse.scrollPosition;
+		interpoledMouse.scrollVelocity = (frameMouse.scrollPosition - interpoledMouse.lastScrollPosition) * delta;
+	}
 
 	accumulatedMouse.resetVels();
 
@@ -135,6 +143,7 @@ void WindowEvents::process(unsigned int updateCount) {
 
 void WindowEvents::beforeTick() {
 	interpoledMouse.position += interpoledMouse.velocity;
+	interpoledMouse.scrollPosition += interpoledMouse.scrollVelocity;
 
 	Inputs::setMousePosition(interpoledMouse.position);
 	Inputs::setMouseVelocity(interpoledMouse.velocity);

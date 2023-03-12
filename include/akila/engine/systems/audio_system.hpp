@@ -10,7 +10,6 @@ namespace akila {
 	public:
 		AudioSystem();
 
-		void updateTick();
 		void updateFrame(CameraData const *camera);
 
 		void detach(Entity e);

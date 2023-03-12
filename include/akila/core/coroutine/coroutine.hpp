@@ -38,7 +38,7 @@ namespace akila {
 		void start(std::size_t stackSize, Function const &function);
 		void start(Function const &function);
 		bool isAlive();
-		void resume(float delta = Time::delta);
+		void resume(float delta = Time::delta());
 		void kill();
 
 	private:

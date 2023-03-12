@@ -11,7 +11,6 @@ void SceneLayer::onMount() {
 
 void SceneLayer::tick() {
 	sceneSystem->updateTick();
-	audioSystem->updateTick();
 }
 
 void SceneLayer::frame() {

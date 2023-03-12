@@ -29,6 +29,10 @@ namespace akila {
 
 		Mat4 const &getWorldMatrix();
 
+		void teleport() {
+			savePrevious();
+		}
+
 	private:
 		friend class SceneSystem;
 
@@ -44,7 +48,7 @@ namespace akila {
 		SmallVector<Entity, 8> children;
 
 		void savePrevious();
-		Mat4 const &calcMatrixMix(float t = Time::mix);
-		Mat4 const &calcMatrixMixFrom(Mat4 const & origin, float t = Time::mix);
+		Mat4 const &calcMatrixMix(float t = Time::mix());
+		Mat4 const &calcMatrixMixFrom(Mat4 const & origin, float t = Time::mix());
 	};
 }

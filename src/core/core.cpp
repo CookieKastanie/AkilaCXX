@@ -40,6 +40,7 @@ start:
 		Window::initGraphicContext();
 		Renderer::init();
 		ImGuiHandler::init();
+		Time::init();
 
 		threadReady = true;
 
@@ -47,27 +48,26 @@ start:
 
 		ImGuiHandler::initIniFileName();
 
-		Time::update();
-		float accumulator = 0;
 		while(!stop) {
 			Time::update();
-			accumulator += Time::delta;
 
-			WindowEvents::process(static_cast<unsigned int>(accumulator / Time::fixedDelta));
+			WindowEvents::process(Time::tickCountThisFrame());
 
 			Threadpool::flush();
 
 			Layers::updateUnmounts();
 			Layers::updateMounts();
 
-			while(accumulator >= Time::fixedDelta) {
+			Time::beforeTicksLoop();
+			while(Time::tickTimeRemaining()) {
+				Time::beforeTick();
 				WindowEvents::beforeTick();
 				Signals::flush(Signals::Stack::BEFORE_TICK);
 				Layers::tick();
-				accumulator -= Time::fixedDelta;
 			}
 
-			Time::mix = accumulator / Time::fixedDelta;
+			Time::calculateMix();
+			Time::beforeFrame();
 
 			WindowEvents::beforeFrame();
 			Signals::flush(Signals::Stack::BEFORE_FRAME);
