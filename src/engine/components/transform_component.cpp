@@ -37,6 +37,10 @@ void TransformComponent::rotateZ(float a) {
 	local.rotateZ(a);
 }
 
+void TransformComponent::teleport() {
+	savePrevious();
+}
+
 Vec3 const &TransformComponent::getPosition() const {
 	return local.position;
 }

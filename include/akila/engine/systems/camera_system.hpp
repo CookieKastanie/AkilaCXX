@@ -36,5 +36,6 @@ namespace akila {
 
 	private:
 		CameraData cameraData;
+		Vec3 direction = FORWARD_VECTOR;
 	};
 }

@@ -62,7 +62,7 @@ add_library(akila STATIC
 	"src/engine/systems/scene_system.cpp"
 	"src/engine/components/audio_component.cpp"
 	"src/engine/systems/audio_system.cpp"
-	"src/engine/layers/scene_layer.cpp")
+	"src/engine/layers/scene_layer.cpp" "src/core/ecs/system_manager.cpp")
 
 target_include_directories(akila PRIVATE "include")
 

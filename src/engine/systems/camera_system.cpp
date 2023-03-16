@@ -25,7 +25,7 @@ CameraData const *DummyCameraSystem::getCameraData() {
 }
 
 Vec3 const &DummyCameraSystem::getDirection() {
-	return {0.f, 0.f, -1.f};
+	return direction;
 }
 
 void DummyCameraSystem::onResize(IVec2 const &) {

@@ -84,6 +84,10 @@ namespace akila {
 		System(System &&) = default;
 		virtual System &operator=(System &&) = default;
 
+		Signature getSignature() {
+			return signature;
+		}
+
 	protected:
 		EntitySet entities;
 

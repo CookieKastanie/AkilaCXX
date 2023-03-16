@@ -22,5 +22,7 @@ namespace akila {
 
 			float maxDistance{100.f};
 		} camera;
+
+		Vec3 direction = FORWARD_VECTOR;
 	};
 }

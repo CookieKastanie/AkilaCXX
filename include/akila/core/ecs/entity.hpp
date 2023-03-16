@@ -4,10 +4,6 @@
 #include "akila/core/ecs/coordinator.hpp"
 
 namespace akila {
-	namespace internal {
-		class Coordinator;
-	}
-
 	class Entity {
 	public:
 		Entity(): id{internal::INVALID_ENTITY_ID} {};
@@ -31,6 +27,10 @@ namespace akila {
 		template<typename T>
 		bool hasComponent() const {
 			return internal::Coordinator::entityHasComponent<T>(id);
+		}
+
+		bool hasComponents(Signature signature) const {
+			return internal::Coordinator::entityHasComponents(id, signature);
 		}
 
 		bool isValid() const {

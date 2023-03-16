@@ -1,6 +1,8 @@
 #pragma once
 
-#include "akila/core/ecs/system.hpp"
+#include "akila/core/ecs/entity_id.hpp"
+#include "akila/core/ecs/signature.hpp"
+#include "akila/core/common/type_infos.hpp"
 
 #include <unordered_map>
 #include <memory>
@@ -8,60 +10,59 @@
 #include <iostream>
 
 namespace akila {
+	class System;
+
 	namespace internal {
 		class SystemManager {
 		private:
 			friend class Coordinator;
 
-			std::unordered_map<TypeId, std::unique_ptr<System>> systems;
+			std::unordered_map<TypeId, System*> systems;
+
+			SystemManager() = default;
+			~SystemManager() {
+				eraseAll();
+			}
+
+			SystemManager(SystemManager &&other) = delete;
+			SystemManager &operator=(SystemManager &&other) = delete;
+
+			SystemManager(SystemManager const &other) = delete;
+			SystemManager &operator=(SystemManager const &other) = delete;
 
 			template<typename T>
 			T *createSystem() {
 				static_assert(std::is_base_of<System, T>::value, "T must derive from akila::System");
 
 				TypeId id = getTypeId<T>();
-				systems[id] = std::make_unique<T>();
+				systems[id] = new T();
 
-				System *system = systems.at(id).get();
+				System *system = systems.at(id);
 				return static_cast<T *>(system);
 			}
 
 			template<typename T>
 			T *getSystem() {
 				TypeId id = getTypeId<T>();
-				System *system = systems.at(id).get();
+				System *system = systems.at(id);
 				return static_cast<T *>(system);
 			}
 
 			template<typename T>
 			void eraseSystem() {
 				TypeId id = getTypeId<T>();
-				systems.erase(id);
-			}
 
-			void addIfCompatible(EntityId entityId, Signature const &s) {
-				for(auto it = systems.begin(); it != systems.end(); ++it) {
-					it->second->addIfCompatible(entityId, s);
+				auto it = systems.find(id);
+				if(it != systems.end()) {
+					delete it->second;
+					systems.erase(f);
 				}
 			}
 
-			void erase(EntityId entityId, Signature const &s) {
-				for(auto it = systems.begin(); it != systems.end(); ++it) {
-					if(it->second->isCompatible(s))
-						it->second->eraseEntity(entityId);
-				}
-			}
-
-			void eraseIfNotCompatible(EntityId entityId, Signature const &prevSignature, Signature const &newSignature) {
-				for(auto it = systems.begin(); it != systems.end(); ++it) {
-					if(it->second->isCompatible(prevSignature))
-						it->second->eraseIfNotCompatible(entityId, newSignature);
-				}
-			}
-
-			void eraseAll() {
-				systems.clear();
-			}
+			void addIfCompatible(EntityId entityId, Signature const &s);
+			void erase(EntityId entityId, Signature const &s);
+			void eraseIfNotCompatible(EntityId entityId, Signature const &prevSignature, Signature const &newSignature);
+			void eraseAll();
 		};
 	}
 }

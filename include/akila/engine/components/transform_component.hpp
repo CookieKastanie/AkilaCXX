@@ -18,6 +18,8 @@ namespace akila {
 		void rotateY(float a);
 		void rotateZ(float a);
 
+		void teleport();
+
 		Vec3 const &getPosition() const;
 		Quat const &getRotation() const;
 		Vec3 const &getScale() const;
@@ -28,10 +30,6 @@ namespace akila {
 		Entity getChild(std::size_t index) const;
 
 		Mat4 const &getWorldMatrix();
-
-		void teleport() {
-			savePrevious();
-		}
 
 	private:
 		friend class SceneSystem;

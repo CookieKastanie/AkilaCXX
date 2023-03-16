@@ -7,6 +7,9 @@
 #include <set>
 
 namespace akila {
+	class ECS;
+	class Entity;
+
 	namespace internal {
 		class Coordinator {
 		private:
@@ -106,6 +109,10 @@ namespace akila {
 			template<typename T>
 			static bool entityHasComponent(EntityId id) {
 				return componentManager->hasComponent<T>(id);
+			}
+
+			static bool entityHasComponents(EntityId id, Signature signature) {
+				return (entityManager->getSignature(id) & signature) == signature;
 			}
 
 			template<typename T>

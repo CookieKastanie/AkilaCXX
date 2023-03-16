@@ -87,5 +87,6 @@ CameraData const *FreeCameraSystem::getCameraData() {
 }
 
 Vec3 const &FreeCameraSystem::getDirection() {
-	return normalize(camera.center - camera.position);
+	direction = normalize(camera.center - camera.position);
+	return direction;
 }

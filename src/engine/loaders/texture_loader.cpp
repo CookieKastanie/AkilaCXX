@@ -73,7 +73,7 @@ void Texture2DLoader::onEntry(JSON json, LoaderCallback cb) {
 	if(json["min_filter"].is_string()) params.minFilter = stringToFilterMode(json["min_filter"]);
 	if(json["border_color"].is_array()) {
 		JSON const &arr = json["border_color"];
-		for(std::size_t i = 0; i < min(arr.size(), static_cast<std::size_t>(4)); ++i) {
+		for(int i = 0; i < min(arr.size(), static_cast<std::size_t>(4)); ++i) {
 			if(arr[i].is_number() == false) {
 				break;
 			}

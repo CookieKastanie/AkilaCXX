@@ -5,7 +5,7 @@
 #include <unordered_map>
 #include <memory>
 
-#include "akila/core/ecs/entity.hpp"
+#include "akila/core/ecs/entity_id.hpp"
 #include "akila/core/common/type_infos.hpp"
 
 namespace akila {
