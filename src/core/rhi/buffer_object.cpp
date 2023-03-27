@@ -85,16 +85,16 @@ VBO &VBO::operator=(VBO &&other) noexcept {
 }
 
 template<typename T>
-void VBO::setData(std::vector<T> const &data) {
-	setRawData(data.data(), (int)data.size() * sizeof(T));
-	length = (int)data.size();
+void VBO::setData(std::vector<T> const &data, std::size_t offset, std::size_t count) {
+	setRawData(data.data(), data.size() * sizeof(T), offset * sizeof(T), count * sizeof(T));
+	length = static_cast<int>(data.size());
 }
 
 // declaration de tous les templates possibles
-template void VBO::setData(std::vector<float> const &data);
-template void VBO::setData(std::vector<glm::vec2> const &data);
-template void VBO::setData(std::vector<glm::vec3> const &data);
-template void VBO::setData(std::vector<glm::vec4> const &data);
+template void VBO::setData(std::vector<float> const &data, std::size_t offset, std::size_t count);
+template void VBO::setData(std::vector<Vec2> const &data, std::size_t offset, std::size_t count);
+template void VBO::setData(std::vector<Vec3> const &data, std::size_t offset, std::size_t count);
+template void VBO::setData(std::vector<Vec4> const &data, std::size_t offset, std::size_t count);
 
 int VBO::getTupleSize() const {
 	return tupleSize;

@@ -4,6 +4,10 @@
 #include "akila/core/ecs/coordinator.hpp"
 
 namespace akila {
+	namespace internal{
+		class Coordinator;
+	}
+
 	class Entity {
 	public:
 		Entity(): id{internal::INVALID_ENTITY_ID} {};

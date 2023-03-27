@@ -55,7 +55,7 @@ namespace akila {
 		VBO &operator=(VBO &&other) noexcept;
 
 		template<typename T>
-		void setData(std::vector<T> const &data);
+		void setData(std::vector<T> const &data, std::size_t offset = 0, std::size_t count = 0);
 
 		int getTupleSize() const;
 		unsigned int getLocation() const;
