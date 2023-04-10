@@ -45,6 +45,11 @@ void StaticMeshLoader::onEntry(JSON json, LoaderCallback cb) {
 		prefix = json["prefix"];
 	}
 
+	bool prepareMesh = true;
+	if(json["prepare_mesh"].is_boolean()) {
+		prepareMesh = json["prepare_mesh"];
+	}
+
 	Threadpool::submit([=]() {
 		*parserSuccess = parser->loadFile(FileSystem::resources(path));
 	}, [=]() {
@@ -84,7 +89,9 @@ void StaticMeshLoader::onEntry(JSON json, LoaderCallback cb) {
 			bounds.squaredRadius = mesh.squaredRadius;
 			resource->setBounds(bounds);
 
-			resource->prepare();
+			if(prepareMesh) {
+				resource->prepare();
+			}
 		}
 
 		cb.success();
