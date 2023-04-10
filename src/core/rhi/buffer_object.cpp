@@ -104,9 +104,14 @@ unsigned int VBO::getLocation() const {
 	return location;
 }
 
-void VBO::bindToArrayBuffer() const {
+void VBO::bindToArrayBuffer(unsigned int divisor) const {
 	bind();
 	glVertexAttribPointer(getLocation(), getTupleSize(), static_cast<GLenum>(dataType), GL_FALSE, 0, 0);
+
+	if(divisor != 0) {
+		glVertexAttribDivisor(getLocation(), divisor);
+	}
+
 	glEnableVertexAttribArray(getLocation());
 }
 

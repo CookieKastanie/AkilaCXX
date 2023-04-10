@@ -27,12 +27,15 @@ namespace akila {
 
 		void setDrawMode(Mode mode);
 		void bind() const;
-		void registerVBO(VBO const *vbo);
+		void registerVBO(VBO const *vbo, unsigned int divisor = 0);
 		void registerIBO(IBO const *ibo);
 		void unbind() const;
 
 		void draw() const;
 		void draw(int length) const;
+
+		void drawInstanced(int instanceCount) const;
+		void drawInstanced(int instanceCount, int length) const;
 
 	private:
 		GLuint id;
@@ -44,5 +47,9 @@ namespace akila {
 		static void drawArray(VAO const &vao, int length);
 		static void drawElements(VAO const &vao, int length);
 		std::function<void(VAO const &vao, int length)> drawFunc;
+
+		static void drawInstancedArray(VAO const &vao, int instanceCount, int length);
+		static void drawInstancedElements(VAO const &vao, int instanceCount, int length);
+		std::function<void(VAO const &vao, int instanceCount, int length)> drawInstancedFunc;
 	};
 }

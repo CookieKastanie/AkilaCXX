@@ -9,7 +9,7 @@
 namespace akila {
 	class SceneLayer: public Layer {
 	public:
-		SceneLayer() = default;
+		SceneLayer(): Layer{} {};
 		virtual ~SceneLayer() = default;
 
 		virtual void onMount() override;
@@ -18,9 +18,9 @@ namespace akila {
 		virtual void frame() override;
 
 	protected:
-		SceneSystem *sceneSystem;
-		RenderSystem *renderSystem;
-		AudioSystem *audioSystem;
-		CameraSystem *cameraSystem;
+		SceneSystem *sceneSystem = nullptr;
+		RenderSystem *renderSystem = nullptr;
+		AudioSystem *audioSystem = nullptr;
+		CameraSystem *cameraSystem = nullptr;
 	};
 }

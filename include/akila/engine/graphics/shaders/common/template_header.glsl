@@ -21,6 +21,8 @@ layout(location = a_weight_0_loc) in vec4 a_weight_0;
 layout(location = a_weight_1_loc) in vec4 a_weight_1;
 layout(location = a_weight_2_loc) in vec4 a_weight_2;
 
+layout(location = a_any_loc) in vec4 a_any;
+
 out vec3 v_worldPos;
 out vec3 v_normal;
 out vec3 v_tangent;

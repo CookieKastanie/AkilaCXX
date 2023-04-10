@@ -4,6 +4,7 @@ project(akila VERSION 0.0.1 DESCRIPTION "Development kit for graphics applicatio
 add_library(akila STATIC
 	"src/core/core.cpp"
 	"src/core/ecs/coordinator.cpp"
+	"src/core/ecs/system_manager.cpp"
 	"src/core/resources/resources.cpp"
 	"src/core/math/math.cpp"
 	"src/core/window/window.cpp"
@@ -62,7 +63,7 @@ add_library(akila STATIC
 	"src/engine/systems/scene_system.cpp"
 	"src/engine/components/audio_component.cpp"
 	"src/engine/systems/audio_system.cpp"
-	"src/engine/layers/scene_layer.cpp" "src/core/ecs/system_manager.cpp")
+	"src/engine/layers/scene_layer.cpp" )
 
 target_include_directories(akila PRIVATE "include")
 

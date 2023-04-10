@@ -60,7 +60,7 @@ namespace akila {
 		int getTupleSize() const;
 		unsigned int getLocation() const;
 
-		void bindToArrayBuffer() const;
+		void bindToArrayBuffer(unsigned int divisor) const;
 
 	private:
 		int tupleSize;
