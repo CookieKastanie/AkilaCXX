@@ -4,6 +4,7 @@
 #include <vector>
 #include <unordered_map>
 #include <memory>
+#include <iostream>
 
 #include "akila/core/ecs/entity_id.hpp"
 #include "akila/core/common/type_infos.hpp"

@@ -32,9 +32,9 @@ static Log glLogger;
 void GLAPIENTRY messageCallback(GLenum source, GLenum type, GLuint id,
 	GLenum severity, GLsizei length,
 	const GLchar *msg, const void *data) {
-	char *_source;
-	char *_type;
-	char *_severity;
+	char const *_source;
+	char const *_type;
+	char const *_severity;
 
 	switch(source) {
 		case GL_DEBUG_SOURCE_API:

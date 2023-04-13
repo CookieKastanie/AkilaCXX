@@ -5,8 +5,10 @@
 #include "akila/core/math/math.hpp"
 #include "akila/core/rhi/texture.hpp"
 #include "akila/engine/containers/small_vector.hpp"
+
 #include <unordered_map>
 #include <vector>
+#include <array>
 #include <string>
 #include <set>
 

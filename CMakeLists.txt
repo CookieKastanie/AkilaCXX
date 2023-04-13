@@ -65,7 +65,7 @@ add_library(akila STATIC
 	"src/engine/systems/audio_system.cpp"
 	"src/engine/layers/scene_layer.cpp" )
 
-target_include_directories(akila PRIVATE "include")
+target_include_directories(akila PUBLIC "include")
 
 target_compile_features(akila PRIVATE cxx_std_17)
 

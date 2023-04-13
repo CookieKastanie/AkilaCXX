@@ -1,4 +1,4 @@
-constexpr char * GLSL_BINDLESS_SCREEN_TEMPLATE = R""(
+constexpr char const * GLSL_BINDLESS_SCREEN_TEMPLATE = R""(
 #akila_template
 #akila_vertex
 

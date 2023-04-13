@@ -1,4 +1,4 @@
-constexpr char * GLSL_TEMPLATE_HEADER = R""(
+constexpr char const * GLSL_TEMPLATE_HEADER = R""(
 #akila_vertex
 
 layout(location = a_position_loc) in vec4 a_position;

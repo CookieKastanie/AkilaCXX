@@ -4,7 +4,9 @@
 #include "akila/core/signals/signal_dispatcher.hpp"
 #include "akila/core/signals/signal_queue.hpp"
 #include "akila/core/common/type_infos.hpp"
+
 #include <unordered_map>
+#include <iostream>
 
 namespace akila {
 	class Signals {

@@ -1,4 +1,4 @@
-constexpr char * GLSL_FAST3D_TEMPLATE = R""(
+constexpr char const * GLSL_FAST3D_TEMPLATE = R""(
 #akila_template
 #akila_vertex
 

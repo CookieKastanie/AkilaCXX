@@ -1,4 +1,4 @@
-constexpr char * GLSL_CAMERA_STRUCT = R""(
+constexpr char const * GLSL_CAMERA_STRUCT = R""(
 struct Camera {
 	mat4 projection;
 	mat4 view;

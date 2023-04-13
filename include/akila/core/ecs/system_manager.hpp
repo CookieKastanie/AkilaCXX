@@ -55,7 +55,7 @@ namespace akila {
 				auto it = systems.find(id);
 				if(it != systems.end()) {
 					delete it->second;
-					systems.erase(f);
+					systems.erase(it);
 				}
 			}
 
