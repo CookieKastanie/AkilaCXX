@@ -47,7 +47,7 @@ namespace akila {
 
 			virtual SmallVector<UniformInfos, 16> const &getUniformInfos() = 0;
 
-			virtual ~MaterialContainer() = default;
+			virtual ~MaterialContainer() {};
 
 		protected:
 			// empty memory space used when user read unvalid material memory

@@ -26,25 +26,25 @@ void FreeCameraSystem::update() {
 	Vec2 angularDelta = {0, 0};
 	Vec3 translateDelta = {0, 0, 0};
 
-	if(Inputs::isPressed(Inputs::Key::LEFT_CLICK)) {
-		angularDelta -= Inputs::getMouseVelocity() * 0.006f;
+	if(Inputs::getMouse().getButton(Mouse::Button::LEFT_CLICK)) {
+		angularDelta -= Inputs::getMouse().getVelocity() * 0.006f;
 	}
 
-	distance -= Inputs::getMouseScrollVelocity().y;
+	distance -= Inputs::getMouse().getScrollVelocity().y;
 	if(distance < 1) distance = 1;
 	else if(distance > maxDistance) distance = maxDistance;
 
-	if(Inputs::isPressed(Inputs::Key::RIGHT_CLICK)) {
+	if(Inputs::getMouse().getButton(Mouse::Button::RIGHT_CLICK)) {
 		float speedCurve = 0.005f * (0.227297f * distance + 0.533723f);
-		Vec2 d = Inputs::getMouseVelocity() * speedCurve;
+		Vec2 d = Inputs::getMouse().getVelocity() * speedCurve;
 
 		translateDelta.x = -d.x;
 		translateDelta.z = -d.y;
 	}
 
-	if(Inputs::isPressed(Inputs::Key::MIDDLE_CLICK)) {
+	if(Inputs::getMouse().getButton(Mouse::Button::MIDDLE_CLICK)) {
 		float speedCurve = 0.005f * (0.227297f * distance + 0.533723f);
-		translateDelta.y = Inputs::getMouseVelocity().y * speedCurve;
+		translateDelta.y = Inputs::getMouse().getVelocity().y * speedCurve;
 	}
 
 	center.x += view[0][0] * translateDelta.x + view[0][1] * -translateDelta.z + view[0][2] * translateDelta.z;

@@ -6,9 +6,10 @@
 
 using namespace akila::internal;
 
-std::vector<akila::WindowResizeSignal> WindowEvents::resizes;
-std::vector<akila::KeyPressSignal> WindowEvents::keyPressed;
-std::vector<akila::KeyReleaseSignal> WindowEvents::keyReleased;
+std::vector<akila::WindowResizeSignal> WindowEvents::windowResizeSignals;
+std::vector<akila::KeyboardSignal> WindowEvents::keyboardSignals;
+std::vector<akila::MouseButtonSignal> WindowEvents::mouseButtonSignals;
+std::vector<akila::ControllerSignal> WindowEvents::controllerSignals;
 
 WindowEvents::MouseData WindowEvents::accumulatedMouse;
 WindowEvents::MouseData WindowEvents::frameMouse;
@@ -20,15 +21,25 @@ void WindowEvents::init() {
 	Inputs::init();
 
 	akila::Signals::registerType<WindowResizeSignal>(akila::Signals::Stack::BEFORE_FRAME);
-	akila::Signals::registerType<KeyPressSignal>(akila::Signals::Stack::BEFORE_TICK);
-	akila::Signals::registerType<KeyReleaseSignal>(akila::Signals::Stack::BEFORE_TICK);
+	akila::Signals::registerType<KeyboardSignal>(akila::Signals::Stack::BEFORE_TICK);
+	akila::Signals::registerType<MouseButtonSignal>(akila::Signals::Stack::BEFORE_TICK);
+	akila::Signals::registerType<ControllerSignal>(akila::Signals::Stack::BEFORE_TICK);
 }
 
 void WindowEvents::resizeCallback(GLFWwindow *window, int width, int height) {
 	(void)window;
 
 	std::scoped_lock<std::mutex> lock(mux);
-	resizes.push_back({max(IVec2{width, height}, IVec2{1, 1})});
+
+	IVec2 size;
+	size.x = max(width, 1);
+	size.y = max(height, 1);
+
+	windowResizeSignals.push_back({size});
+}
+
+void WindowEvents::terminate() {
+	Inputs::terminate();
 }
 
 void WindowEvents::keyCallback(GLFWwindow *window, int key, int scancode, int action, int mods) {
@@ -40,11 +51,17 @@ void WindowEvents::keyCallback(GLFWwindow *window, int key, int scancode, int ac
 
 	switch(action) {
 		case GLFW_PRESS:
-			keyPressed.push_back({static_cast<Inputs::Key>(key)});
+			keyboardSignals.push_back({
+				static_cast<Keyboard::Key>(key),
+				KeyboardSignal::Action::PRESS
+			});
 			break;
 
 		case GLFW_RELEASE:
-			keyReleased.push_back({static_cast<Inputs::Key>(key)});
+			keyboardSignals.push_back({
+				static_cast<Keyboard::Key>(key),
+				KeyboardSignal::Action::RELEASE
+			});
 			break;
 
 		case GLFW_REPEAT:
@@ -62,11 +79,17 @@ void WindowEvents::mouseButtonCallback(GLFWwindow *window, int button, int actio
 
 	switch(action) {
 		case GLFW_PRESS:
-			keyPressed.push_back({static_cast<Inputs::Key>(button)});
+			mouseButtonSignals.push_back({
+				static_cast<Mouse::Button>(button),
+				MouseButtonSignal::Action::PRESS
+			});
 			break;
 
 		case GLFW_RELEASE:
-			keyReleased.push_back({static_cast<Inputs::Key>(button)});
+			mouseButtonSignals.push_back({
+				static_cast<Mouse::Button>(button),
+				MouseButtonSignal::Action::RELEASE
+			});
 			break;
 	}
 }
@@ -95,6 +118,46 @@ void WindowEvents::scrollCallback(GLFWwindow *window, double xoffset, double yof
 	accumulatedMouse.scrollVelocity.y += static_cast<float>(yoffset);
 }
 
+void WindowEvents::joystickCallback(int jid, int e) {
+	std::scoped_lock<std::mutex> lock(mux);
+
+	//ControllerSignal signal;
+	//bool recycled = false;
+
+	switch(e) {
+		case GLFW_CONNECTED:
+			Inputs::addController(jid);
+
+			//recycled = Inputs::addController(jid);
+
+			//signal.joystick = Inputs::getJoysticks().at(jid).createReference();
+
+			//if(recycled) signal.state = ControllerSignal::State::RECONNECTED;
+			//else signal.state = ControllerSignal::State::CONNECTED;
+
+			//controllerSignals.push_back(signal);
+
+			//??????
+
+			break;
+
+		case GLFW_DISCONNECTED:
+			//auto it = Inputs::getJoysticks().find(jid);
+
+			//if(it != Inputs::getJoysticks().end()) {
+			//	signal.state = JoystickSignal::State::DISCONNECTED;
+			//	joystickChange.push_back(signal);
+			//	Inputs::removeJoystick(jid);
+			//}
+
+			// ????
+
+			Inputs::removeController(jid);
+
+			break;
+	}
+}
+
 void WindowEvents::process(unsigned int updateCount) {
 	std::scoped_lock<std::mutex> lock(mux);
 
@@ -120,25 +183,33 @@ void WindowEvents::process(unsigned int updateCount) {
 	accumulatedMouse.resetVels();
 
 	// envoi des signaux
-	for(WindowResizeSignal const &signal : resizes) {
+	for(WindowResizeSignal const &signal : windowResizeSignals) {
 		akila::Signals::emit<WindowResizeSignal>(signal);
 	}
 
-	resizes.clear();
+	windowResizeSignals.clear();
 
-	for(KeyPressSignal const &signal : keyPressed) {
-		Inputs::setInputState(signal.key, true);
-		akila::Signals::emit<KeyPressSignal>(signal);
+	for(KeyboardSignal const &signal : keyboardSignals) {
+		Inputs::setKeyboardKey(signal.key, static_cast<bool>(signal.action));
+		akila::Signals::emit<KeyboardSignal>(signal);
 	}
 
-	keyPressed.clear();
+	keyboardSignals.clear();
 
-	for(KeyReleaseSignal const &signal : keyReleased) {
-		Inputs::setInputState(signal.key, false);
-		akila::Signals::emit<KeyReleaseSignal>(signal);
+	for(MouseButtonSignal const &signal : mouseButtonSignals) {
+		Inputs::setMouseButton(signal.key, static_cast<bool>(signal.action));
+		akila::Signals::emit<MouseButtonSignal>(signal);
 	}
 
-	keyReleased.clear();
+	mouseButtonSignals.clear();
+
+	for(ControllerSignal const &signal : controllerSignals) {
+		akila::Signals::emit<ControllerSignal>(signal);
+	}
+
+	controllerSignals.clear();
+
+	Inputs::updateControllers();
 }
 
 void WindowEvents::beforeTick() {

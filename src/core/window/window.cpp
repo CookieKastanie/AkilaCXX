@@ -22,8 +22,11 @@ Window::InitValues::InitValues():
 }
 
 void Window::initWindow(InitValues const &initVals) {
-	if(!glfwInit())
+	glfwInitHint(GLFW_JOYSTICK_HAT_BUTTONS, GLFW_FALSE);
+
+	if(!glfwInit()) {
 		std::exit(EXIT_FAILURE);
+	}
 
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
@@ -43,6 +46,7 @@ void Window::initWindow(InitValues const &initVals) {
 	glfwSetMouseButtonCallback(window, internal::WindowEvents::mouseButtonCallback);
 	glfwSetCursorPosCallback(window, internal::WindowEvents::cursorPosCallback);
 	glfwSetScrollCallback(window, internal::WindowEvents::scrollCallback);
+	glfwSetJoystickCallback(internal::WindowEvents::joystickCallback);
 	
 	setVerticalSync(initVals.vSync);
 
@@ -189,6 +193,7 @@ void Window::loadImGuiFont(std::string const &path) {
 }
 
 void Window::terminate() {
+	internal::WindowEvents::terminate();
 	glfwDestroyWindow(window);
 	glfwTerminate();
 }

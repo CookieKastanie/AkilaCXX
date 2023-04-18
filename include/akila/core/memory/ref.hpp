@@ -99,6 +99,10 @@ namespace akila {
 			resource = res;
 		}
 
+		T *raw() const {
+			return resource;
+		}
+
 		Ref<T> createReference() {
 			return {this};
 		}

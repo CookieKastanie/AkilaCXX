@@ -135,8 +135,10 @@ void GLAPIENTRY messageCallback(GLenum source, GLenum type, GLuint id,
 
 
 DebugLayer::DebugLayer(): show{false}, tabIndex { 0 } {
-	keyListener = Signals::listen<KeyPressSignal>([&](KeyPressSignal const &s) {
-		if(s.key == Inputs::Key::GRAVE_ACCENT) show = !show;
+	keyListener = Signals::listen<KeyboardSignal>([&](KeyboardSignal const &s) {
+		if(s.action != KeyboardSignal::Action::PRESS) return;
+
+		if(s.key == Keyboard::Key::GRAVE_ACCENT) show = !show;
 	});
 
 	//glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, GL_TRUE);

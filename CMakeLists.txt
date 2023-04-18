@@ -32,6 +32,12 @@ add_library(akila STATIC
 	"src/core/rhi/framebuffer.cpp"
 	"src/core/coroutine/coroutine.cpp"
 	"src/core/window/cursor.cpp"
+	"src/core/inputs/joystick.cpp"
+	"src/core/inputs/controller.cpp"
+	"src/core/inputs/mouse.cpp"
+	"src/core/inputs/keyboard.cpp"
+	"src/core/inputs/gamepad.cpp"
+	"src/core/inputs/input_mapping.cpp"
 	
 	"src/engine/engine.cpp"
 	"src/engine/math_extension/easing.cpp"
