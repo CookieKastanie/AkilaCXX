@@ -18,8 +18,6 @@ WindowEvents::MouseData WindowEvents::interpoledMouse;
 std::mutex WindowEvents::mux;
 
 void WindowEvents::init() {
-	Inputs::init();
-
 	akila::Signals::registerType<WindowResizeSignal>(akila::Signals::Stack::BEFORE_FRAME);
 	akila::Signals::registerType<KeyboardSignal>(akila::Signals::Stack::BEFORE_TICK);
 	akila::Signals::registerType<MouseButtonSignal>(akila::Signals::Stack::BEFORE_TICK);
@@ -39,7 +37,7 @@ void WindowEvents::resizeCallback(GLFWwindow *window, int width, int height) {
 }
 
 void WindowEvents::terminate() {
-	Inputs::terminate();
+	
 }
 
 void WindowEvents::keyCallback(GLFWwindow *window, int key, int scancode, int action, int mods) {

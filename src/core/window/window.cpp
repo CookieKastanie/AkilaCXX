@@ -13,14 +13,6 @@ IVec2 Window::positionBeforeFS = {0, 0};
 
 bool Window::mouseGrab = false;
 
-Window::InitValues::InitValues():
-	size{640, 480},
-	title{""},
-	visible{true},
-	vSync{true},
-	samples{0} {
-}
-
 void Window::initWindow(InitValues const &initVals) {
 	glfwInitHint(GLFW_JOYSTICK_HAT_BUTTONS, GLFW_FALSE);
 
@@ -47,8 +39,8 @@ void Window::initWindow(InitValues const &initVals) {
 	glfwSetCursorPosCallback(window, internal::WindowEvents::cursorPosCallback);
 	glfwSetScrollCallback(window, internal::WindowEvents::scrollCallback);
 	glfwSetJoystickCallback(internal::WindowEvents::joystickCallback);
-	
-	setVerticalSync(initVals.vSync);
+
+	vSync = initVals.vSync; // set vSync in initGraphicContext
 
 	internal::WindowEvents::init();
 }
@@ -59,6 +51,8 @@ void Window::initGraphicContext() {
 		std::cerr << "Failed to retrieve OpenGL functions" << std::endl;
 		std::exit(EXIT_FAILURE);
 	}
+
+	setVerticalSync(vSync);
 }
 
 void Window::setSize(IVec2 const &size) {

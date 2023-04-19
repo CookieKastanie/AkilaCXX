@@ -13,7 +13,7 @@
 
 using namespace akila;
 
-int Engine::run(Window::InitValues const &initVals, std::function<void()> init) {
+int Engine::run(Core::InitValues const &initVals, std::function<void()> init) {
 	return Core::run(initVals, [&]() {
 		MaterialFactory::init();
 

@@ -7,6 +7,10 @@
 namespace akila {
 	class FileSystem {
 	public:
+		struct InitValues {
+			std::string useAbsolutePath = "";
+		};
+
 		static void setRootFolder(std::string const &path);
 		static void setResourcesFolder(std::string const &path);
 		static void setUserDataFolder(std::string const &path);
@@ -27,6 +31,6 @@ namespace akila {
 		static std::string resourcesFolder;
 		static std::string userDataFolder;
 
-		static void init();
+		static void init(InitValues const &initVals);
 	};
 }

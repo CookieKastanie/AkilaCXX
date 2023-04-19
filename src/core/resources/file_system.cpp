@@ -51,8 +51,12 @@ std::string FileSystem::rootFolder;
 std::string FileSystem::resourcesFolder;
 std::string FileSystem::userDataFolder;
 
-void FileSystem::init() {
-	exePath = procPath();
+void FileSystem::init(InitValues const &initVals) {
+	if(initVals.useAbsolutePath.empty()) {
+		exePath = procPath();
+	} else {
+		exePath = initVals.useAbsolutePath;
+	}
 
 	rootFolder = "";
 	resourcesFolder = "";

@@ -9,6 +9,10 @@
 namespace akila {
 	class Threadpool {
 	public:
+		struct InitValues {
+			unsigned int maxThreadCount = 4;
+		};
+
 		using Func = std::function<void()>;
 
 		static void submit(Func const asyncPart, Func const syncPart = []() {});
@@ -32,7 +36,7 @@ namespace akila {
 
 		static bool exit;
 		
-		static void init(unsigned int maxThreadCount = 4);
+		static void init(InitValues const &initVals);
 		static void flush();
 		static void terminate();
 	};

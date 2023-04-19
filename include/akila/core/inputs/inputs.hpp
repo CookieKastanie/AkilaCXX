@@ -19,6 +19,10 @@ namespace akila {
 
 	class Inputs {
 	public:
+		struct InitValues {
+			bool gamepadAsJoystick = false;
+		};
+
 		static Keyboard const &getKeyboard() { return keyboard; }
 		static Mouse const &getMouse() { return mouse; }
 
@@ -28,6 +32,7 @@ namespace akila {
 		static std::vector<Controller *> const &getAllControllers() { return controllerAlias; }
 
 	private:
+		friend class Core;
 		friend class internal::WindowEvents;
 
 		static Keyboard keyboard;
@@ -39,7 +44,7 @@ namespace akila {
 
 		static bool gamepadAsJoystick;
 
-		static void init();
+		static void init(InitValues const &initVals);
 		static void terminate();
 
 		static void setKeyboardKey(Keyboard::Key key, bool state) { keyboard.setKey(key, state); }

@@ -16,13 +16,11 @@ namespace akila {
 	class Window {
 	public:
 		struct InitValues {
-			InitValues();
-
-			IVec2 size;
-			std::string title;
-			bool visible;
-			bool vSync;
-			int samples;
+			IVec2 size{640, 480};
+			std::string title = "Akila";
+			bool visible = true;
+			bool vSync = true;
+			int samples = 0;
 		};
 
 		static void close();

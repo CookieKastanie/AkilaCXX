@@ -11,7 +11,9 @@ std::vector<Controller *> Inputs::controllerAlias;
 
 bool Inputs::gamepadAsJoystick = false;
 
-void Inputs::init() {
+void Inputs::init(InitValues const &initVals) {
+	gamepadAsJoystick = initVals.gamepadAsJoystick;
+
 	keyboard.reset();
 	mouse.reset();
 
