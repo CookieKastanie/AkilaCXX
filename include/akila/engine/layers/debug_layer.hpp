@@ -23,5 +23,6 @@ namespace akila {
 		void guiGLLogs();
 		void guiLayers();
 		void guiECS();
+		void guiControllers();
 	};
 }

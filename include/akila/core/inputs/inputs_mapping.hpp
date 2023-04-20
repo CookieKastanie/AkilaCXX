@@ -44,6 +44,8 @@ namespace akila {
 		//*/
 
 	private:
+		friend class Inputs;
+
 		std::unordered_map<std::string, InputBindings> bindings;
 
 		std::unordered_map<std::string, float> axes;

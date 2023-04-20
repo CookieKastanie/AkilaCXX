@@ -7,6 +7,7 @@
 #include "akila/core/inputs/mouse.hpp"
 #include "akila/core/inputs/gamepad.hpp"
 #include "akila/core/inputs/joystick.hpp"
+#include "akila/core/inputs/inputs_mapping.hpp"
 
 #include <array>
 #include <unordered_map>

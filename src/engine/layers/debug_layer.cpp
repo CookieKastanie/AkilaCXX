@@ -226,6 +226,44 @@ void DebugLayer::guiECS() {
 	}
 }
 
+void DebugLayer::guiControllers() {
+	ImGui::TextColored({1., 1., 0., 1.}, "Controllers:");
+
+	int i = 0;
+	for(auto &[guid, joystick] : Inputs::getJoysticks()) {
+		Joystick const &j = *joystick.raw();
+
+		std::string s = "Joysticks " + std::to_string(i++);
+		ImGui::Text(s.c_str());
+
+		ImGui::InputText("GUID", const_cast<char *>(j.getGuid().c_str()), 64, ImGuiInputTextFlags_ReadOnly);
+
+		s = "Name : " + j.getName();
+		ImGui::Text(s.c_str());
+
+		j.isGamepad() ? ImGui::Text("Gamepad : Yes") : ImGui::Text("Gamepad : No");
+
+		for(int i = 0; i < j.getButtonCount(); ++i) {
+			s = "Button " + std::to_string(i) + " : " + std::to_string(j.getButton(i));
+			ImGui::Text(s.c_str());
+		}
+
+		ImGui::Separator();
+
+		for(int i = 0; i < j.getAxisCount(); ++i) {
+			s = "Axis " + std::to_string(i) + " : " + std::to_string(j.getAxis(i));
+			ImGui::Text(s.c_str());
+		}
+
+		ImGui::Separator();
+
+		for(int i = 0; i < j.getHatCount(); ++i) {
+			s = "Hat " + std::to_string(i) + " : " + Controller::getHatPositionString(j.getHat(i));
+			ImGui::Text(s.c_str());
+		}
+	}
+}
+
 void DebugLayer::gui() {
 	if(!show) return;
 
@@ -247,6 +285,8 @@ void DebugLayer::gui() {
 	guiLayers();
 	ImGui::Separator();
 	guiECS();
+	ImGui::Separator();
+	guiControllers();
 	ImGui::Separator();
 
 	if(ImGui::Button("Restart /!\\")) Core::restart();

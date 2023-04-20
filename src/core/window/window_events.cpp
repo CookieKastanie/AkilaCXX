@@ -208,6 +208,7 @@ void WindowEvents::process(unsigned int updateCount) {
 	controllerSignals.clear();
 
 	Inputs::updateControllers();
+	Inputs::updateCurrentBindings();
 }
 
 void WindowEvents::beforeTick() {
