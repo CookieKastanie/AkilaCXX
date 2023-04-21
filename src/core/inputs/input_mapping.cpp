@@ -3,6 +3,18 @@
 
 using namespace akila;
 
+void InputsMapping::setBindings(Controller::Guid const &guid, InputBindings const &bdngs) {
+	bindings[guid] = bdngs;
+}
+
+void InputsMapping::clearBindings(Controller::Guid const &guid) {
+	bindings.erase(guid);
+}
+
+void InputsMapping::clearBindings() {
+	bindings.clear();
+}
+
 void InputsMapping::update() {
 	std::vector<Controller *> const &controllers = Inputs::getAllControllers();
 

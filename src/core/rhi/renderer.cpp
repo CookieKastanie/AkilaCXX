@@ -52,8 +52,16 @@ void Renderer::setClearColor(float r, float g, float b, float a) {
 	glClearColor(r, g, b, a);
 }
 
+void Renderer::setClearColor(Vec3 const &color) {
+	glClearColor(color.r, color.g, color.b, 1.f);
+}
+
+void Renderer::setClearColor(Vec4 const &color) {
+	glClearColor(color.r, color.g, color.b, color.a);
+}
+
 void Renderer::clear() {
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 }
 
 void Renderer::clearColor() {
@@ -62,6 +70,10 @@ void Renderer::clearColor() {
 
 void Renderer::clearDepth() {
 	glClear(GL_DEPTH_BUFFER_BIT);
+}
+
+void Renderer::clearStencil() {
+	glClear(GL_STENCIL_BUFFER_BIT);
 }
 
 void Renderer::memoryBarrier(Barrier barrier) {

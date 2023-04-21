@@ -20,33 +20,20 @@ namespace akila {
 
 	class InputsMapping {
 	public:
-		//InputsMapping() {}
-
 		float getAxis(std::string const &action) { return axes[action]; }
 		bool getButton(std::string const &action) { return buttons[action]; }
 		Controller::HatPosition getHat(std::string const &action) { return hats[action]; }
 
-		/*/
-		void bindKeyboard(std::string_view action, unsigned int key);
-		void bindMouseButton(std::string_view action, unsigned int key);
-
-
-		void bindMouseVelocityXToAxis(std::string_view action);
-		void bindMouseVelocityYToAxis(std::string_view action);
-
-		void bindGamepadButton(std::string_view action, unsigned int key, unsigned int gamepadIndex = 0);
-		void bindGamepadAxis(std::string_view action, unsigned int key, unsigned int gamepadIndex = 0);
-
-		void bindJoystickButton(std::string_view action, unsigned int index, std::string_view joystickGuid = "");
-		void bindJoystickAxis(std::string_view action, unsigned int index, std::string_view joystickGuid = "");
-		void bindJoystickHatToButton(std::string_view action, unsigned int index, std::string_view joystickGuid = "");
-		void bindJoystickHatToAxis(std::string_view action, unsigned int index, std::string_view joystickGuid = "");
-		//*/
+		void setBindings(Controller::Guid const &guid, InputBindings const &bindings);
+		void clearBindings(Controller::Guid const &guid);
+		void clearBindings();
 
 	private:
 		friend class Inputs;
 
-		std::unordered_map<std::string, InputBindings> bindings;
+		InputsMapping() {}
+
+		std::unordered_map<Controller::Guid, InputBindings> bindings;
 
 		std::unordered_map<std::string, float> axes;
 		std::unordered_map<std::string, bool> buttons;

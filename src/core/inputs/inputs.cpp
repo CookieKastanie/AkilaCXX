@@ -9,6 +9,8 @@ std::unordered_map<Controller::Guid, RefAnchor<Joystick>> Inputs::joysticks;
 
 std::vector<Controller *> Inputs::controllerAlias;
 
+InputsMapping Inputs::inputsMapping;
+
 bool Inputs::gamepadAsJoystick = false;
 
 void Inputs::init(InitValues const &initVals) {
@@ -26,6 +28,8 @@ void Inputs::init(InitValues const &initVals) {
 			addController(i);
 		}
 	}
+
+	inputsMapping.clearBindings();
 }
 
 void Inputs::terminate() {
@@ -112,5 +116,5 @@ void Inputs::updateControllers() {
 }
 
 void Inputs::updateCurrentBindings() {
-	//bindings.update();
+	inputsMapping.update();
 }

@@ -1,6 +1,7 @@
 #pragma once
 
 #include <glad/glad.h>
+#include "akila/core/math/math.hpp"
 
 namespace akila {
 	class Renderer {
@@ -72,9 +73,12 @@ namespace akila {
 		static void cullFace(Face face);
 
 		static void setClearColor(float r, float g, float b, float a = 1.f);
+		static void setClearColor(Vec3 const &color);
+		static void setClearColor(Vec4 const &color);
 		static void clear();
 		static void clearColor();
 		static void clearDepth();
+		static void clearStencil();
 
 		enum class Barrier: GLbitfield {
 			VERTEX_ATTRIB_ARRAY = GL_VERTEX_ATTRIB_ARRAY_BARRIER_BIT,

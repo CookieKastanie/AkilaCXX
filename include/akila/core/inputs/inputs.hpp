@@ -32,6 +32,8 @@ namespace akila {
 		
 		static std::vector<Controller *> const &getAllControllers() { return controllerAlias; }
 
+		static InputsMapping &getInputsMapping() { return inputsMapping; }
+
 	private:
 		friend class Core;
 		friend class internal::WindowEvents;
@@ -42,6 +44,8 @@ namespace akila {
 		static std::unordered_map<Controller::Guid, RefAnchor<Joystick>> joysticks;
 
 		static std::vector<Controller *> controllerAlias;
+
+		static InputsMapping inputsMapping;
 
 		static bool gamepadAsJoystick;
 
