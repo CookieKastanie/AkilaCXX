@@ -77,12 +77,12 @@ void SceneSystem::recursiveTraverTreeCalcMatrixMix(Entity e, Mat4 const &origin)
 }
 
 void SceneSystem::updateTick() {
+	ECS::flushEraseQueue();
+
 	for(Entity e : entities) {
 		auto &t = e.getComponent<TransformComponent>();
 		t.savePrevious();
 	}
-
-	ECS::flushEraseQueue();
 }
 
 void SceneSystem::updateFrame() {

@@ -14,6 +14,10 @@ void StaticMesh::setIBO(Ptr<IBO> _ibo) {
 	ibo = _ibo;
 }
 
+void StaticMesh::setMode(VAO::Mode mode) {
+	vao.setDrawMode(mode);
+}
+
 void StaticMesh::prepare() {
 	vao.bind();
 	for(auto &vbo : vbos) {

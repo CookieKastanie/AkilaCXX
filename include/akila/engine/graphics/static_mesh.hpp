@@ -15,6 +15,8 @@ namespace akila {
 		void setIBO(Ptr<IBO> ibo);
 		void prepare();
 
+		void setMode(VAO::Mode mode);
+
 		void draw() const override;
 		void drawInstanced(int instanceCount) const;
 

@@ -48,6 +48,7 @@ namespace akila {
 	using glm::min;
 	using glm::max;
 	using glm::clamp;
+	using glm::smoothstep;
 	using glm::lerp;
 	using glm::slerp;
 	using glm::toMat4;
