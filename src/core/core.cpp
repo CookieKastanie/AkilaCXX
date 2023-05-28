@@ -14,23 +14,131 @@
 
 #include <thread>
 #include <atomic>
+#include <string>
+
+#define CXXOPTS_NO_EXCEPTIONS
+#include <cxxopts.hpp>
 
 using namespace akila;
 using namespace akila::internal;
 
-bool Core::restartFlag;
+bool Core::restartFlag = false;
+
+Core::InitValues Core::parseArguments(int argc, char *argv[]) {
+	InitValues values;
+	parseArguments(values, argc, argv);
+	return values;
+}
+
+void Core::parseArguments(InitValues &initValues, int argc, char *argv[]) {
+	std::string exeName = "Akila";
+	if(argc > 0) {
+		exeName = std::string{argv[0]};
+	}
+
+	cxxopts::Options options{exeName, R"---(                   
+ /\  |  . |  _
+/--\ |< | | (_|
+
+Some of these options can voluntarily be ignored by the application !
+)---"};
+
+	options
+		.allow_unrecognised_options()
+		.add_options()
+		("wSizeX", "Window default X size", cxxopts::value<int>())
+		("wSizeY", "Window default Y size", cxxopts::value<int>())
+		("wPosX", "Window default X position", cxxopts::value<int>())
+		("wPosY", "Window default Y position", cxxopts::value<int>())
+		("wTitle", "Window title", cxxopts::value<std::string>())
+		("wDeco", "Enable / disable window decoration", cxxopts::value<bool>())
+		("wVisib", "Window visibility at start", cxxopts::value<bool>())
+		("wVSync", "Enable / disable vSync", cxxopts::value<bool>())
+		("wSamples", "Samples count of backbuffer", cxxopts::value<int>())
+
+		("fsPath", "Define root of the internal filesystem", cxxopts::value<std::string>())
+
+		("gamepadAsJoystick", "Gamepads will be considered joysticks", cxxopts::value<bool>())
+
+		("maxThreadCount", "Max amount of additional working thread", cxxopts::value<unsigned int>())
+
+		("t,useSystemEventsThread", "Handle system events in a thread", cxxopts::value<bool>())
+		
+		("h,help", "Print help");
+
+	cxxopts::ParseResult result = options.parse(argc, argv);
+
+	///
+
+	if(result.count("wSizeX"))
+		initValues.window.size.x = result["wSizeX"].as<int>();
+
+	if(result.count("wSizeY"))
+		initValues.window.size.y = result["wSizeY"].as<int>();
+
+	if(result.count("wPosX") || result.count("wPosY"))
+		initValues.window.position = IVec2{0, 0};
+
+	if(result.count("wPosX"))
+		initValues.window.position.x = result["wPosX"].as<int>();
+
+	if(result.count("wPosY"))
+		initValues.window.position.y = result["wPosY"].as<int>();
+
+	if(result.count("wTitle"))
+		initValues.window.title = result["wTitle"].as<std::string>();
+
+	if(result.count("wDeco"))
+		initValues.window.decoaration = result["wDeco"].as<bool>();
+
+	if(result.count("wVisib"))
+		initValues.window.visible = result["wVisib"].as<bool>();
+
+	if(result.count("wVSync"))
+		initValues.window.vSync = result["wVSync"].as<bool>();
+
+	if(result.count("wSamples"))
+		initValues.window.samples = result["wSamples"].as<int>();
+
+	///
+
+	if(result.count("fsPath"))
+		initValues.fileSystem.useAbsolutePath = result["fsPath"].as<std::string>();
+
+	///
+
+	if(result.count("gamepadAsJoystick"))
+		initValues.inputs.gamepadAsJoystick = result["gamepadAsJoystick"].as<bool>();
+
+	///
+
+	if(result.count("maxThreadCount"))
+		initValues.threadpool.maxThreadCount = result["maxThreadCount"].as<unsigned int>();
+
+	///
+
+	if(result.count("useSystemEventThread"))
+		initValues.useSystemEventsThread = result["useSystemEventsThread"].as<bool>();
+
+	///
+
+	if(result.count("help")) {
+		std::cout << options.help() << std::endl;
+		std::exit(0);
+	}
+}
 
 int Core::run(InitValues const &initVals, std::function<void()> init) {
-	if(initVals.systemEventSingleThread) {
-		return monoThreadRun(initVals, std::move(init));
+	if(initVals.useSystemEventsThread) {
+		return eventThreadRun(initVals, std::move(init));
 	} else {
-		return defaultRun(initVals, std::move(init));
+		return monoThreadrun(initVals, std::move(init));
 	}
 }
 
 // TODO : duplicated code
 
-int Core::defaultRun(InitValues const &initVals, std::function<void()> init) {
+int Core::eventThreadRun(InitValues const &initVals, std::function<void()> init) {
 start:
 	restartFlag = false;
 
@@ -123,7 +231,7 @@ start:
 	return EXIT_SUCCESS;
 }
 
-int Core::monoThreadRun(InitValues const &initVals, std::function<void()> init) {
+int Core::monoThreadrun(InitValues const &initVals, std::function<void()> init) {
 start:
 	restartFlag = false;
 

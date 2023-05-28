@@ -50,13 +50,16 @@ private:
 	// ...
 };
 
-int main() {
+int main(int argc, char *argv[]) {
 	Window::InitValues init;
 	init.samples = 4;
 	init.size = {1280, 720};
+
+	// modifie les valeurs de init
+	Core::parseArguments(init, argc, argv);
+
+	// force le titre de la fenetre
 	init.title = "Akila Engine !";
-	init.visible = false;
-	init.vSync = true;
 	
 	return Engine::run(init, []() {
 		// dossier racine par defaut : appdata
@@ -68,9 +71,6 @@ int main() {
 		Layers::add<DebugLayer>(Layer::Depth::FRONT);
 
 		Resources::load("main.json", []() {
-			Window::setPositionToCenter();
-			Window::setVisibility(true);
-
 			Layers::add<MyLayer>();
 		});
 	});

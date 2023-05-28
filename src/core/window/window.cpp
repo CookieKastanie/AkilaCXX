@@ -3,6 +3,8 @@
 #include "akila/core/window/imgui_handler.hpp"
 #include <iostream>
 
+#include <limits>
+
 using namespace akila;
 
 GLFWwindow *Window::window = nullptr;
@@ -25,13 +27,24 @@ void Window::initWindow(InitValues const &initVals) {
 	glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GLFW_TRUE);
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 	glfwWindowHint(GLFW_SAMPLES, initVals.samples);
-	glfwWindowHint(GLFW_VISIBLE, initVals.visible ? GLFW_TRUE : GLFW_FALSE);
+	glfwWindowHint(GLFW_VISIBLE, GLFW_FALSE);
 
 	window = glfwCreateWindow(initVals.size.x, initVals.size.y, initVals.title.c_str(), NULL, NULL);
 	if(!window) {
 		glfwTerminate();
 		std::exit(EXIT_FAILURE);
 	}
+	
+	if(
+		initVals.position.x == std::numeric_limits<int>::min() ||
+		initVals.position.y == std::numeric_limits<int>::min()
+	) {
+		setPositionToCenter();
+	} else {
+		setPosition(initVals.position);
+	}
+	setDecoaration(initVals.decoaration);
+	setVisibility(initVals.visible);
 
 	glfwSetWindowSizeCallback(window, internal::WindowEvents::resizeCallback);
 	glfwSetKeyCallback(window, internal::WindowEvents::keyCallback);

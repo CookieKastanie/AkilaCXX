@@ -7,6 +7,7 @@
 #pragma warning(pop)
 
 #include "akila/core/math/math.hpp"
+#include <limits>
 
 namespace akila {
 	namespace internal {
@@ -17,7 +18,9 @@ namespace akila {
 	public:
 		struct InitValues {
 			IVec2 size{640, 480};
+			IVec2 position{std::numeric_limits<int>::min(), std::numeric_limits<int>::min()};
 			std::string title = "Akila";
+			bool decoaration = true;
 			bool visible = true;
 			bool vSync = true;
 			int samples = 0;

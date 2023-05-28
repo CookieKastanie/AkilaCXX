@@ -14,8 +14,11 @@ namespace akila {
 			FileSystem::InitValues fileSystem{};
 			Inputs::InitValues inputs{};
 			Threadpool::InitValues threadpool{};
-			bool systemEventSingleThread = false;
+			bool useSystemEventsThread = false;
 		};
+
+		static InitValues parseArguments(int argc, char *argv[]);
+		static void parseArguments(InitValues &initValues, int argc, char *argv[]);
 
 		static int run(InitValues const &initVals, std::function<void()> init);
 		static int run(std::function<void()> init);
@@ -24,7 +27,7 @@ namespace akila {
 	private:
 		static bool restartFlag;
 
-		static int defaultRun(InitValues const &initVals, std::function<void()> init);
-		static int monoThreadRun(InitValues const &initVals, std::function<void()> init);
+		static int eventThreadRun(InitValues const &initVals, std::function<void()> init);
+		static int monoThreadrun(InitValues const &initVals, std::function<void()> init);
 	};
 }

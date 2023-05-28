@@ -101,3 +101,6 @@ target_link_libraries(akila PUBLIC minicoro)
 
 add_subdirectory(lib/llvm)
 target_link_libraries(akila PUBLIC llvm)
+
+add_subdirectory(lib/cxxopts)
+target_link_libraries(akila PUBLIC cxxopts)
