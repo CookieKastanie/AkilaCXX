@@ -104,9 +104,8 @@ Ref<TextureBuffer> getTexture(std::string const &arrayName, std::string const &n
 }
 
 void MaterialParser::populateTextures(JSON &json, internal::MaterialContainer *mat) {
-	std::array<std::string, 1> acceptedNames = {"texture2d"};
+	std::array<std::string, 3> acceptedNames = {"texture2d", "texturecubemap", "texture3d"};
 
-	std::string arrayName = "";
 	for(std::string &arrayName : acceptedNames) {
 		if(json[arrayName].is_object() == false) {
 			continue;
@@ -122,7 +121,7 @@ void MaterialParser::populateTextures(JSON &json, internal::MaterialContainer *m
 			bool success = mat->affect(item.key(), getTexture(arrayName, textureName));
 
 			if(success == false) {
-				std::cerr << "JSON : " << item.key() << " not in material" << std::endl;
+				std::cerr << "JSON : " << item.key() << " not in material (try to affect " << textureName << ")" << std::endl;
 				continue;
 			}
 		}

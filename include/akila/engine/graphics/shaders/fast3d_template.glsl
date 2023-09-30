@@ -36,6 +36,7 @@ vec4 getPosition() {
 #akila_fragment
 
 #akila_include template_header
+#akila_include dither
 
 #akila_include camera_struct
 layout(std140, binding = u_camera_loc) uniform camera_ubo {
@@ -49,7 +50,11 @@ vec4 lit(vec3 color) {
 	float d = 1.0 - dot(N, V);
 	float frenel = d * d * 0.5;
 
-	return vec4(color * 0.95 + vec3(frenel), 1.0);
+
+	float a = quantify2(dither8(gl_FragCoord.z * 4.5, 0.9)).r;
+	if(a == 0.0) discard;
+
+	return vec4(color * 0.95 + vec3(frenel), 1.);
 }
 
 #akila_user_code
